@@ -1,0 +1,39 @@
+{
+  "seo": {
+    "title": "Dojo da Luz — fr",
+    "description": "Placeholder de scaffold (fr). El contenido real se carga en la migracion."
+  },
+  "hero": {
+    "kicker": "A I K I D O",
+    "title": "Dojo da Luz",
+    "tagline": "Placeholder tagline (fr)"
+  },
+  "values": {
+    "items": [
+      "valor 1",
+      "valor 2",
+      "valor 3"
+    ]
+  },
+  "benefits": {
+    "lead": "Placeholder lead",
+    "items": [
+      "beneficio 1",
+      "beneficio 2"
+    ]
+  },
+  "quote": {
+    "text": "Placeholder de cita.",
+    "author": "Placeholder autor"
+  },
+  "practical": {
+    "schedule": "Placeholder de horarios",
+    "notes": [
+      "placeholder nota 1",
+      "placeholder nota 2"
+    ]
+  },
+  "cta": {
+    "label": "Placeholder CTA"
+  }
+}

@@ -1,0 +1,44 @@
+---
+import Base from '../layouts/Base.astro'
+import { getContent } from '../lib/content'
+import type { Locale } from '../lib/i18n'
+
+interface Props {
+  locale: Locale
+}
+
+const { locale } = Astro.props
+const c = getContent('home', locale)
+---
+
+<Base page="home" locale={locale} title={c.seo.title} description={c.seo.description}>
+  <article>
+    <p class="tracking-[0.4em] text-sm text-neutral-500">{c.hero.kicker}</p>
+    <h1 class="mt-2 text-4xl font-semibold">{c.hero.title}</h1>
+    <p class="mt-4 text-xl text-neutral-700">{c.hero.tagline}</p>
+
+    <section class="mt-10" aria-label={c.hero.title}>
+      <ul class="flex flex-wrap gap-x-4 gap-y-1 text-neutral-700">
+        {c.values.items.map((v) => <li>{v}</li>)}
+      </ul>
+
+      <p class="mt-6 text-neutral-700">{c.benefits.lead}</p>
+      <ul class="mt-1 text-neutral-700">
+        {c.benefits.items.map((b) => <li>{b}</li>)}
+      </ul>
+    </section>
+
+    <blockquote class="mt-10 border-l-2 border-neutral-300 pl-4 italic text-neutral-700">
+      <p>{c.quote.text}</p>
+      <cite class="mt-2 block not-italic text-sm text-neutral-500">{c.quote.author}</cite>
+    </blockquote>
+
+    <section class="mt-10">
+      <p class="font-medium">{c.practical.schedule}</p>
+      <ul class="mt-1 text-neutral-700">
+        {c.practical.notes.map((n) => <li>{n}</li>)}
+      </ul>
+      <p class="mt-6 text-lg font-semibold">{c.cta.label}</p>
+    </section>
+  </article>
+</Base>

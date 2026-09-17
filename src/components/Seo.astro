@@ -1,0 +1,42 @@
+---
+import { HREFLANG, LOCALES, DEFAULT_LOCALE, pathFor, type Locale, type PageKey } from '../lib/i18n'
+import { sportsClubJsonLd } from '../lib/site'
+
+interface Props {
+  page: PageKey
+  locale: Locale
+  title: string
+  description: string
+}
+
+const { page, locale, title, description } = Astro.props
+
+// Astro.site viene de astro.config.mjs; sin el no hay canonical absoluto posible.
+const site = Astro.site
+if (!site) throw new Error('Falta `site` en astro.config.mjs: el canonical debe ser absoluto')
+
+const absolute = (p: string) => new URL(p, site).href.replace(/(.)\/$/, '$1')
+
+const canonical = absolute(pathFor(page, locale))
+
+// hreflang reciproco: cada idioma se apunta a si mismo y a los otros tres.
+const alternates = LOCALES.map((l) => ({ hreflang: HREFLANG[l], href: absolute(pathFor(page, l)) }))
+
+const jsonLd = sportsClubJsonLd(absolute('/'))
+---
+
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+
+{alternates.map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href} />)}
+<link rel="alternate" hreflang="x-default" href={absolute(pathFor(page, DEFAULT_LOCALE))} />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Dojo da Luz" />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:locale" content={HREFLANG[locale].replace('-', '_')} />
+
+<script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />

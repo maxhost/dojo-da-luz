@@ -1,0 +1,51 @@
+---
+import Seo from '../components/Seo.astro'
+import { LOCALES, LOCALE_NAME, HREFLANG, pathFor, type Locale, type PageKey } from '../lib/i18n'
+import '../styles/global.css'
+
+interface Props {
+  page: PageKey
+  locale: Locale
+  title: string
+  description: string
+}
+
+const { page, locale, title, description } = Astro.props
+const year = new Date().getFullYear()
+---
+
+<!doctype html>
+<html lang={HREFLANG[locale]}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <Seo page={page} locale={locale} title={title} description={description} />
+  </head>
+  <body class="min-h-screen bg-white text-neutral-900 antialiased">
+    <a href="#conteudo" class="sr-only focus:not-sr-only">Saltar para o conteudo</a>
+
+    <header class="border-b border-neutral-200">
+      <nav aria-label="Idioma" class="mx-auto flex max-w-3xl justify-end gap-3 px-6 py-3 text-sm">
+        {
+          LOCALES.map((l) =>
+            l === locale ? (
+              <span aria-current="true" class="font-semibold">{LOCALE_NAME[l]}</span>
+            ) : (
+              <a href={pathFor(page, l)} hreflang={HREFLANG[l]} class="underline">{LOCALE_NAME[l]}</a>
+            ),
+          )
+        }
+      </nav>
+    </header>
+
+    <main id="conteudo" class="mx-auto max-w-3xl px-6 py-12">
+      <slot />
+    </main>
+
+    <footer class="border-t border-neutral-200">
+      <p class="mx-auto max-w-3xl px-6 py-6 text-sm text-neutral-600">
+        &copy; {year} Dojo da Luz
+      </p>
+    </footer>
+  </body>
+</html>
