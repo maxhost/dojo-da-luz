@@ -22,8 +22,8 @@ proyecto no acepta.
 **Entra:**
 - `@astrojs/vercel` con `output: 'static'`. Las paginas siguen prerenderizadas; solo las
   rutas marcadas `prerender = false` se vuelven funciones.
-- Proyecto Neon `dojo-da-luz` en `aws-eu-central-1` (Frankfurt, lo mas cerca de Lisboa que
-  ofrece Neon).
+- Proyecto Neon `dojo-da-luz` (`silent-wave-15401445`) en `aws-eu-central-1` (Frankfurt,
+  lo mas cerca de Lisboa que ofrece Neon). Lo creo Maxi; trae **Neon Auth** provisionado.
 - Migracion inicial **como archivo SQL en el repo** (`db/migrations/0001_init.sql`),
   aplicada a Neon. El repo es la fuente de verdad del schema; Neon es donde se aplico.
 - `src/lib/db.ts` — cliente `@neondatabase/serverless`.
@@ -78,9 +78,10 @@ Corrida el 2026-09-17:
 - [x] Las 4 paginas siguen con **0 scripts ejecutables**
 - [x] `/_astro/*` sale con `cache-control: public, max-age=31536000, immutable`
 - [x] Barra final → 308 a la URL sin barra, coherente con el canonical
-- [x] Migracion aplicada: `alumno`, `serie` y `factura` existen en Neon
-- [x] `GET /api/health` contra Neon real → `{"ok":true,"db":"up","ms":919}`
-      (919ms es cold start del compute desde local hasta Frankfurt; desde Vercel EU baja)
+- [x] Migracion aplicada en `silent-wave-15401445`: `alumno` (7 cols), `factura` (12) y
+      `serie` (3) existen en el schema `public`
+- [x] `GET /api/health` contra Neon real → `{"ok":true,"db":"up","ms":1105}` en frio y
+      `{"ok":true,"db":"up","ms":195}` en caliente, desde local hasta Frankfurt
 
 ## Abierto
 

@@ -28,9 +28,9 @@ ejecutable.
 El contenido de `content/` es **placeholder**. La migracion del contenido real es trabajo
 aparte y no forma parte del scaffold.
 
-**Infra lista.** Proyecto Neon `dojo-da-luz` (`bitter-tree-51605379`, aws-eu-central-1,
+**Infra lista.** Proyecto Neon `dojo-da-luz` (`silent-wave-15401445`, aws-eu-central-1,
 pg18) con las 3 tablas aplicadas. El build emite las 4 paginas estaticas y una sola
-funcion, y `/api/health` responde contra Neon.
+funcion, y `/api/health` responde contra Neon: 195ms en caliente desde local.
 
 **Proximo paso: el deploy real.** Falta subir el repo a GitHub y conectar Vercel, y cargar
 `DATABASE_URL` en las env vars del proyecto. El connection string esta en `.env` local
@@ -45,6 +45,7 @@ funcion, y `/api/health` responde contra Neon.
 | 3 | Migracion de contenido: home real + las otras 10 paginas en los 4 idiomas + nav | — | pendiente | Tras baseline. Amplia `ROUTES` en `src/lib/i18n.ts`. |
 | 4 | Diseño visual | — | pendiente | El scaffold es marcado semantico sin maquetar. |
 | 5 | Deploy real: repo a GitHub + conectar Vercel + `DATABASE_URL` en env | — | proximo | Verificar `/api/health` en la URL de produccion. |
+| 5b | Borrar el proyecto Neon huerfano `bitter-tree-51605379` | — | pendiente | Lo cree yo antes de que existiera `silent-wave`. El MCP quedo scopeado y no puede borrarlo: va por consola. |
 | 6 | Spec 0003 — backoffice: auth magic link + contenido -> commit a GitHub | 0003 | pendiente | |
 | 7 | Spec 0004 — alumnos + emision de factura + PDF a R2 + envio Resend | 0004 | pendiente | Necesita una factura de ejemplo real. |
 | 8 | Mapa de redirects 301 de las 34 URLs viejas | — | pendiente | No negociable antes de lanzar. |
@@ -66,10 +67,18 @@ Investigacion previa, para cuando toque migrar contenido:
 | Que | Bloquea |
 |---|---|
 | **Moradas completas, telefono y URLs de redes** de los 3 dojos | JSON-LD, SEO local, pagina de contacto |
-| **Una factura de ejemplo** que emitan hoy | Spec 0003 |
+| **Una factura de ejemplo** que emitan hoy | Spec 0004 |
 | Accesos: registrador del dominio, DNS, cuenta Wix, Search Console, Google Business Profile | Lanzamiento, DKIM, tarea 2 |
 | Direccion de email desde la que se envian las facturas | Config de Resend |
-| Lista de paginas a eliminar | Tarea 7 |
+| Lista de paginas a eliminar | Tarea 8 |
+
+## Abierto — decision pendiente
+
+**Auth del backoffice: Neon Auth o magic link propio.** El proyecto Neon trae `neon_auth`
+provisionado (user, session, account, verification, jwks). El ADR-0001 dijo "magic link,
+1 admin, sin roles" sin saberlo. Neon Auth ya resuelve sesiones y providers, pero mete una
+dependencia de runtime con Neon en el backoffice. Decidir al abrir la spec 0003 — sale un
+ADR que supersede la fila de auth del 0001.
 
 ## Hecho
 
