@@ -1,0 +1,132 @@
+---
+import '../styles/global.css'
+
+const places = [
+  { name: 'Benfica', dojo: 'Dojo da Luz', time: 'Manhã · almoço · noite' },
+  { name: 'Lumiar', dojo: 'Núcleo Lumiar', time: 'Aulas semanais' },
+]
+---
+
+<!doctype html>
+<html lang="pt">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Dojo da Luz — direção de design</title>
+    <style is:inline>
+      :root { --ink:#1d1c19; --paper:#f7f5ed; --line:#cfc9bc; --red:#a32d21; }
+      body { background:var(--paper); }
+      summary::-webkit-details-marker { display:none; }
+      .vertical { writing-mode:vertical-rl; text-orientation:upright; }
+    </style>
+  </head>
+  <body class="m-0 font-sans text-[#1d1c19] antialiased">
+    <a href="#conteudo-c" class="sr-only focus:not-sr-only">Saltar para o conteúdo</a>
+
+    <header class="relative z-20 px-5">
+      <div class="mx-auto flex min-h-[4.75rem] max-w-7xl items-center justify-between border-b border-[#cfc9bc]">
+        <a href="#" class="font-serif text-xl no-underline">Dojo da Luz</a>
+        <div class="flex items-center gap-5">
+          <span class="hidden text-xs font-semibold uppercase tracking-[.12em] text-black/55 sm:inline">Aikido · Lisboa</span>
+          <details class="relative"><summary class="cursor-pointer list-none border-b border-[#1d1c19] py-2 text-xs font-semibold uppercase tracking-[.12em]">Menu</summary><nav aria-label="Principal" class="absolute right-0 top-12 z-30 w-56 border border-[#cfc9bc] bg-[#f7f5ed] p-6"><ul class="space-y-4 p-0 font-serif text-xl"><li><a href="#montanha">A prática</a></li><li><a href="#terra">Aulas</a></li><li><a href="#dojo">O dojo</a></li><li><a href="#umbral">Contacto</a></li></ul></nav></details>
+        </div>
+      </div>
+    </header>
+
+    <main id="conteudo-c">
+      <section class="relative mx-auto min-h-[43rem] max-w-7xl overflow-hidden px-5 pb-24 pt-16 md:min-h-[48rem] md:pt-24">
+        <svg aria-hidden="true" class="pointer-events-none absolute -right-20 -top-28 h-[31rem] w-[31rem] md:-right-16 md:-top-48 md:h-[48rem] md:w-[48rem]" viewBox="0 0 500 500">
+          <circle cx="250" cy="250" r="185" fill="#a32d21" />
+        </svg>
+        <svg aria-hidden="true" class="pointer-events-none absolute bottom-0 left-1/2 h-[19rem] w-px -translate-x-1/2 md:h-[22rem]" viewBox="0 0 1 300" preserveAspectRatio="none"><path d="M.5 0V300" stroke="#a32d21" stroke-width="1" /></svg>
+
+        <div class="relative z-10 md:grid md:grid-cols-12 md:gap-6">
+          <p class="text-xs font-semibold uppercase tracking-[.14em] text-[#a32d21] md:col-span-3 md:col-start-2">Aikido em Lisboa<br />desde 2016</p>
+          <div class="mt-24 md:col-span-7 md:col-start-2 md:mt-32">
+            <h1 class="max-w-[10ch] font-serif text-[3.25rem] font-normal leading-[.99] tracking-[-.04em] md:text-7xl">Entre o céu<br />e a terra,<br /><span class="text-[#a32d21]">presença.</span></h1>
+            <p class="mt-9 max-w-[27rem] text-lg leading-8 text-black/75">Aikido para adultos e crianças. Uma prática sem competição, fundada na atenção, no equilíbrio e na relação.</p>
+          </div>
+          <p lang="ja" class="vertical absolute right-2 top-52 font-serif text-sm tracking-[.22em] text-[#f7f5ed] md:right-8 md:top-64">合気道</p>
+        </div>
+      </section>
+
+      <section id="montanha" class="relative border-t border-[#cfc9bc]">
+        <div class="relative mx-auto max-w-7xl overflow-hidden pt-32 md:pt-44">
+          <svg aria-hidden="true" class="absolute left-0 top-0 h-72 w-full md:h-96" viewBox="0 0 1200 380" preserveAspectRatio="none">
+            <path d="M600 0 L600 68 L305 330 L895 330 Z" fill="none" stroke="#1d1c19" stroke-width="1.5" />
+            <path d="M600 68 L895 330 L1200 330 L1200 380 L0 380 L0 330 L305 330 Z" fill="#e7e2d7" />
+            <path d="M0 330 H1200" stroke="#1d1c19" stroke-width="1.5" />
+            <path d="M600 0 V68" stroke="#a32d21" stroke-width="2" />
+          </svg>
+          <div class="relative z-10 px-5 pb-24 pt-24 md:grid md:grid-cols-12 md:gap-6 md:pb-32 md:pt-36">
+            <div class="md:col-span-5 md:col-start-2">
+              <p class="text-xs font-semibold uppercase tracking-[.12em] text-[#a32d21]">01 · A montanha</p>
+              <h2 class="mt-7 max-w-[11ch] font-serif text-[2.65rem] font-normal leading-[1.05] md:text-5xl">Não vencer.<br />Encontrar o centro.</h2>
+            </div>
+            <div class="ml-[19.1%] mt-10 max-w-lg border-l border-[#a32d21] pl-5 md:col-span-4 md:col-start-8 md:ml-0 md:mt-24">
+              <p class="text-[1.08rem] leading-[1.75] text-black/75">Como subir uma montanha, a prática não procura atalhos. Repetimos o gesto, observamos e ajustamos.</p>
+              <p class="mt-5 text-[1.08rem] leading-[1.75] text-black/75">A técnica ensina a receber uma força sem entrar em oposição direta com ela.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="terra" class="relative border-y border-[#cfc9bc]">
+        <div class="mx-auto max-w-7xl px-5 py-24 md:py-32">
+          <div class="md:grid md:grid-cols-12 md:gap-6">
+            <div class="md:col-span-4 md:col-start-2"><p class="text-xs font-semibold uppercase tracking-[.12em] text-[#a32d21]">02 · A terra</p><h2 class="mt-7 font-serif text-[2.6rem] font-normal leading-[1.05]">Três lugares<br />para praticar.</h2></div>
+            <p class="mt-8 max-w-sm text-base leading-7 text-black/65 md:col-span-4 md:col-start-8 md:mt-12">O caminho encontra a vida quotidiana em Benfica e Lumiar.</p>
+          </div>
+
+          <div class="relative mt-16 md:ml-[19.1%] md:mt-24">
+            <div aria-hidden="true" class="absolute bottom-0 left-[5px] top-0 w-px bg-[#1d1c19] md:bottom-auto md:left-0 md:right-0 md:top-[5px] md:h-px md:w-auto"></div>
+            <div class="grid gap-12 md:grid-cols-3 md:gap-8">
+              {places.map((place) => (
+                <article class="relative pl-8 md:pl-0 md:pt-9">
+                  <span aria-hidden="true" class="absolute left-0 top-[5px] size-[11px] rounded-full border-2 border-[#a32d21] bg-[#f7f5ed] md:top-0"></span>
+                  <h3 class="font-serif text-2xl font-normal">{place.name}</h3>
+                  <p class="mt-2 text-xs font-semibold uppercase tracking-[.1em] text-black/55">{place.dojo}</p>
+                  <p class="mt-5 text-base text-black/70">{place.time}</p>
+                  <a href="#umbral" class="mt-4 inline-block border-b border-[#1d1c19] pb-1 text-sm">Ver horários</a>
+                </article>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="dojo" class="mx-auto max-w-7xl px-5 pt-24 md:pt-32">
+        <div class="relative border-x border-t border-[#1d1c19] px-5 pb-24 pt-16 md:grid md:grid-cols-12 md:gap-6 md:px-10 md:pb-32 md:pt-20">
+          <div aria-hidden="true" class="absolute left-1/2 top-0 h-10 w-px -translate-x-1/2 bg-[#a32d21]"></div>
+          <div class="md:col-span-4">
+            <p class="text-xs font-semibold uppercase tracking-[.12em] text-[#a32d21]">03 · O dojo</p>
+            <h2 class="mt-7 font-serif text-[2.6rem] font-normal leading-[1.05]">Um espaço<br />de transmissão.</h2>
+          </div>
+          <figure class="m-0 mt-12 md:col-span-4 md:col-start-5 md:mt-0">
+            <div class="aspect-[3/2] overflow-hidden bg-[#c9c4b8]"><img class="h-full w-full object-cover grayscale" src="https://static.wixstatic.com/media/ae7240_de66207c487b4e8086d18ed67c88ea93~mv2.jpg/v1/crop/x_218,y_0,w_1165,h_900/fill/w_1000,h_667,al_c,q_82/IMG_3502_JPG.jpg" alt="Prática partilhada no Dojo da Luz" /></div>
+            <figcaption class="mt-3 text-xs text-black/55">Keiko — treino regular em Lisboa</figcaption>
+          </figure>
+          <div class="mt-12 md:col-span-3 md:col-start-10 md:mt-0">
+            <div class="aspect-[3/4] w-28 overflow-hidden bg-[#c9c4b8]"><img class="h-full w-full object-cover grayscale" src="https://static.wixstatic.com/media/ae7240_4681e435c4ab47dbb9f6db8fe35fa6a5.jpg/v1/fill/w_700,h_934,al_c,q_82/ae7240_4681e435c4ab47dbb9f6db8fe35fa6a5.jpg" alt="Pablo Durán" /></div>
+            <h3 class="mt-5 font-serif text-2xl font-normal">Pablo Durán</h3>
+            <p class="mt-3 text-xs font-semibold uppercase leading-6 tracking-[.09em] text-[#a32d21]">5.º Dan Aikikai<br />Hombu Dojo, Tóquio</p>
+            <p class="mt-5 text-base leading-7 text-black/70">Ensina em Lisboa desde 2015.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="umbral" class="mx-auto max-w-7xl px-5 pb-28 md:pb-40">
+        <div class="relative border-x border-b border-[#1d1c19] px-5 pb-16 pt-24 text-center md:px-12 md:pb-24 md:pt-32">
+          <div aria-hidden="true" class="absolute left-1/2 top-0 h-16 w-px -translate-x-1/2 bg-[#1d1c19]"></div>
+          <p class="text-xs font-semibold uppercase tracking-[.12em] text-[#a32d21]">04 · O umbral</p>
+          <h2 class="mx-auto mt-7 max-w-[13ch] font-serif text-[2.7rem] font-normal leading-[1.05] md:text-6xl">Entrar no dojo é começar.</h2>
+          <p class="mx-auto mt-8 max-w-lg text-[1.08rem] leading-[1.75] text-black/70">Não é preciso experiência. Escolhe o local e nós explicamos tudo o que precisas para a primeira aula.</p>
+          <a href="mailto:EMAIL-PENDENTE" class="mt-9 inline-flex min-h-12 items-center bg-[#a32d21] px-6 text-sm font-semibold text-[#f7f5ed] no-underline">Marcar aula experimental</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="border-t border-[#cfc9bc] px-5 py-10"><div class="mx-auto flex max-w-7xl justify-between gap-6"><p class="font-serif text-lg">Dojo da Luz</p><p class="text-right text-xs leading-5 text-black/55">Benfica · Lumiar<br />Associação sem fins lucrativos</p></div></footer>
+  </body>
+</html>

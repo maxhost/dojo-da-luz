@@ -8,7 +8,7 @@ Si una sesion se cae, se cierra o se compacta, se vuelve aca — no al chat. Hay
 Regla: **marcar `hecho` solo con verificacion real** — tests que pasan, comando corrido,
 cosa vista en pantalla. No "deberia andar".
 
-Ultima actualizacion: 2026-09-17 — scaffold + infra de deploy (specs 0001 y 0002).
+Ultima actualizacion: 2026-09-17 — propuesta de diseño documentada y mockup móvil (spec 0003).
 
 ## Contexto
 
@@ -43,7 +43,7 @@ funcion, y `/api/health` responde contra Neon: 195ms en caliente desde local.
 | 1 | Baseline: crawl de las 34 URLs (texto, title, description, H1) + imagenes originales de wixstatic en alta | — | proximo | No depende de nadie. |
 | 2 | Export de Google Search Console 16 meses | — | bloqueada | Necesita acceso del cliente. |
 | 3 | Migracion de contenido: home real + las otras 10 paginas en los 4 idiomas + nav | — | pendiente | Tras baseline. Amplia `ROUTES` en `src/lib/i18n.ts`. |
-| 4 | Diseño visual | — | pendiente | El scaffold es marcado semantico sin maquetar. |
+| 4 | Diseño visual | 0003–0006 / ADR-0009 | dirección elegida | Diseño C consolidado en `/mockup/`; falta migrarlo a componentes productivos y JSON. |
 | 5 | Deploy real: repo a GitHub + conectar Vercel + `DATABASE_URL` en env | — | proximo | Verificar `/api/health` en la URL de produccion. |
 | 5b | Borrar el proyecto Neon huerfano `bitter-tree-51605379` | — | pendiente | Lo cree yo antes de que existiera `silent-wave`. El MCP quedo scopeado y no puede borrarlo: va por consola. |
 | 6 | Spec 0003 — backoffice: auth magic link + contenido -> commit a GitHub | 0003 | pendiente | |
@@ -88,6 +88,12 @@ ADR que supersede la fila de auth del 0001.
 | 2026-09-17 | ADR-0001/0002/0003 + spec 0001 | Filas en `docs/INDEX.md` |
 | 2026-09-17 | Spec 0001 — scaffold Astro 4 idiomas | `npm run typecheck` 0 errores; `npm run build` 4 paginas; 0 scripts ejecutables en el HTML; JSON invalido → build exit 1 |
 | 2026-09-17 | Spec 0002 — infra de deploy | build: 4 HTML estaticos + 1 funcion en `.vercel/output`; 3 tablas creadas en Neon; `GET /api/health` → `{"ok":true,"db":"up"}` |
+| 2026-09-17 | Spec 0003 — mockup movil de home | `npm run typecheck` sin errores; build genera `/mockup/`; HTML generado sin `<script>` |
+| 2026-09-17 | Documentación integral de rediseño | 7 documentos enlazados desde `docs/design/README.md` y `docs/INDEX.md` |
+| 2026-09-17 | Legibilidad tipográfica de home | Cuerpo principal a 17/30 px; rótulos de sección a 12/18 px; contraste secundario elevado |
+| 2026-09-17 | Comparador de home A/B | Dos rutas prerenderizadas, enlaces recíprocos, `aria-current` correcto y cero scripts |
+| 2026-09-17 | Diseño C — paisaje narrativo | `/mockup-c/` prerenderizado; selector A/B/C; narrativa completa; cero scripts/gradientes/sombras |
+| 2026-09-17 | Consolidación de dirección C | Única ruta `/mockup/`; Encarnação y selector ausentes; docs alineados; typecheck/build limpios |
 
 ## Descartado (y por que)
 
