@@ -6,30 +6,65 @@ const seoSchema = z.object({
   description: z.string().min(1),
 })
 
+const linesSchema = z.array(z.string().min(1)).min(1)
+
 export const homeSchema = z.object({
   seo: seoSchema,
+  chrome: z.object({
+    caption: z.string().min(1),
+    menuLabel: z.string().min(1),
+    skipLink: z.string().min(1),
+    nav: z.array(z.object({ label: z.string().min(1), href: z.string().min(1) })).min(1),
+    footerNote: z.object({
+      areas: z.string().min(1),
+      orgType: z.string().min(1),
+    }),
+  }),
   hero: z.object({
-    kicker: z.string().min(1),
-    title: z.string().min(1),
+    eyebrowLines: linesSchema,
+    titleLines: linesSchema,
+    titleHighlight: z.string().min(1),
     tagline: z.string().min(1),
   }),
-  values: z.object({
-    items: z.array(z.string().min(1)).min(1),
+  practice: z.object({
+    label: z.string().min(1),
+    titleLines: linesSchema,
+    paragraphs: z.array(z.string().min(1)).min(1),
   }),
-  benefits: z.object({
+  places: z.object({
+    label: z.string().min(1),
+    titleLines: linesSchema,
     lead: z.string().min(1),
-    items: z.array(z.string().min(1)).min(1),
+    // Solo el texto: el destino (aula experimental) se cablea cuando exista esa pagina.
+    ctaLabel: z.string().min(1),
+    items: z
+      .array(
+        z.object({
+          name: z.string().min(1),
+          dojo: z.string().min(1),
+          time: z.string().min(1),
+        }),
+      )
+      .min(1),
   }),
-  quote: z.object({
+  dojo: z.object({
+    label: z.string().min(1),
+    titleLines: linesSchema,
+    photoCaption: z.string().min(1),
+    photoAlt: z.string().min(1),
+    teacher: z.object({
+      name: z.string().min(1),
+      credentialsLines: linesSchema,
+      bio: z.string().min(1),
+      photoAlt: z.string().min(1),
+    }),
+  }),
+  threshold: z.object({
+    label: z.string().min(1),
+    titleLines: linesSchema,
     text: z.string().min(1),
-    author: z.string().min(1),
+    ctaLabel: z.string().min(1),
   }),
-  practical: z.object({
-    schedule: z.string().min(1),
-    notes: z.array(z.string().min(1)),
-  }),
-  // Solo el texto: el destino (aula experimental) se cablea cuando exista esa pagina.
-  cta: z.object({ label: z.string().min(1) }),
 })
 
 const SCHEMAS = {

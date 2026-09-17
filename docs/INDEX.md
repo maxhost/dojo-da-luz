@@ -30,6 +30,7 @@ desactualizado es peor que no tenerlo.
 | [0004](specs/0004-home-alternative.md) | 2026-09-17 | Alternativa creativa de home y selector HTML entre propuestas A/B | implementada | si | `src/components/DesignSwitcher.astro`, `src/pages/mockup*.astro` |
 | [0005](specs/0005-home-landscape.md) | 2026-09-17 | Home como paisaje narrativo SVG y selector A/B/C | implementada | si | `src/components/DesignSwitcher.astro`, `src/pages/mockup-c.astro` |
 | [0006](specs/0006-consolidar-diseno-c.md) | 2026-09-17 | Consolidar C, retirar A/B y alinear la documentación del sistema | implementada | no | `src/pages/mockup*.astro`, `docs/design/**` |
+| [0007](specs/0007-home-productiva.md) | 2026-09-17 | Migrar el Diseño C de /mockup/ a la home productiva con JSON validado; retirar /mockup/ | implementada | no | `src/components/HomeView.astro`, `src/layouts/Base.astro`, `src/lib/content.ts`, `content/*/home.json` |
 
 **"Disjunta?"** = si el trabajo no comparte archivos con otra spec abierta. Es lo que
 habilita paralelizar. Lo decide la spec, no el orquestador en runtime.

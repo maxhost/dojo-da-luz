@@ -1,39 +1,63 @@
 {
   "seo": {
-    "title": "Dojo da Luz — pt",
-    "description": "Placeholder de scaffold (pt). El contenido real se carga en la migracion."
+    "title": "Dojo da Luz — Aikido em Lisboa",
+    "description": "Aikido para adultos e crianças em Lisboa. Benfica e Lumiar. Aulas com Pablo Durán, 5.º Dan Aikikai."
+  },
+  "chrome": {
+    "caption": "Aikido · Lisboa",
+    "menuLabel": "Menu",
+    "skipLink": "Saltar para o conteúdo",
+    "nav": [
+      { "label": "A prática", "href": "#montanha" },
+      { "label": "Aulas", "href": "#terra" },
+      { "label": "O dojo", "href": "#dojo" },
+      { "label": "Contacto", "href": "#umbral" }
+    ],
+    "footerNote": {
+      "areas": "Benfica · Lumiar",
+      "orgType": "Associação sem fins lucrativos"
+    }
   },
   "hero": {
-    "kicker": "A I K I D O",
-    "title": "Dojo da Luz",
-    "tagline": "Placeholder tagline (pt)"
+    "eyebrowLines": ["Aikido em Lisboa", "desde 2016"],
+    "titleLines": ["Entre o céu", "e a terra,"],
+    "titleHighlight": "presença.",
+    "tagline": "Aikido para adultos e crianças. Uma prática sem competição, fundada na atenção, no equilíbrio e na relação."
   },
-  "values": {
+  "practice": {
+    "label": "01 · A montanha",
+    "titleLines": ["Não vencer.", "Encontrar o centro."],
+    "paragraphs": [
+      "Como subir uma montanha, a prática não procura atalhos. Repetimos o gesto, observamos e ajustamos.",
+      "A técnica ensina a receber uma força sem entrar em oposição direta com ela."
+    ]
+  },
+  "places": {
+    "label": "02 · A terra",
+    "titleLines": ["Três lugares", "para praticar."],
+    "lead": "O caminho encontra a vida quotidiana em Benfica e Lumiar.",
+    "ctaLabel": "Ver horários",
     "items": [
-      "valor 1",
-      "valor 2",
-      "valor 3"
+      { "name": "Benfica", "dojo": "Dojo da Luz", "time": "Manhã · almoço · noite" },
+      { "name": "Lumiar", "dojo": "Núcleo Lumiar", "time": "Aulas semanais" }
     ]
   },
-  "benefits": {
-    "lead": "Placeholder lead",
-    "items": [
-      "beneficio 1",
-      "beneficio 2"
-    ]
+  "dojo": {
+    "label": "03 · O dojo",
+    "titleLines": ["Um espaço", "de transmissão."],
+    "photoCaption": "Keiko — treino regular em Lisboa",
+    "photoAlt": "Prática partilhada no Dojo da Luz",
+    "teacher": {
+      "name": "Pablo Durán",
+      "credentialsLines": ["5.º Dan Aikikai", "Hombu Dojo, Tóquio"],
+      "bio": "Ensina em Lisboa desde 2015.",
+      "photoAlt": "Pablo Durán"
+    }
   },
-  "quote": {
-    "text": "Placeholder de cita.",
-    "author": "Placeholder autor"
-  },
-  "practical": {
-    "schedule": "Placeholder de horarios",
-    "notes": [
-      "placeholder nota 1",
-      "placeholder nota 2"
-    ]
-  },
-  "cta": {
-    "label": "Placeholder CTA"
+  "threshold": {
+    "label": "04 · O umbral",
+    "titleLines": ["Entrar no dojo", "é começar."],
+    "text": "Não é preciso experiência. Escolhe o local e nós explicamos tudo o que precisas para a primeira aula.",
+    "ctaLabel": "Marcar aula experimental"
   }
 }

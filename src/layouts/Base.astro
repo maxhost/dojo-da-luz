@@ -8,9 +8,21 @@ interface Props {
   locale: Locale
   title: string
   description: string
+  skipLink?: string
+  /** Anclas de seccion de la pagina actual. Vacio = sin menu (paginas sin secciones propias). */
+  nav?: { label: string; href: string }[]
+  menuLabel?: string
 }
 
-const { page, locale, title, description } = Astro.props
+const {
+  page,
+  locale,
+  title,
+  description,
+  skipLink = 'Saltar para o conteudo',
+  nav = [],
+  menuLabel = 'Menu',
+} = Astro.props
 const year = new Date().getFullYear()
 ---
 
@@ -20,32 +32,55 @@ const year = new Date().getFullYear()
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <Seo page={page} locale={locale} title={title} description={description} />
+    <style is:inline>
+      :root { --ink:#1d1c19; --paper:#f7f5ed; --line:#cfc9bc; --red:#a32d21; }
+      summary::-webkit-details-marker { display:none; }
+    </style>
   </head>
-  <body class="min-h-screen bg-white text-neutral-900 antialiased">
-    <a href="#conteudo" class="sr-only focus:not-sr-only">Saltar para o conteudo</a>
+  <body class="m-0 min-h-screen bg-[#f7f5ed] font-sans text-[#1d1c19] antialiased">
+    <a href="#conteudo" class="sr-only focus:not-sr-only">{skipLink}</a>
 
-    <header class="border-b border-neutral-200">
-      <nav aria-label="Idioma" class="mx-auto flex max-w-3xl justify-end gap-3 px-6 py-3 text-sm">
+    <header class="relative z-20 border-b border-[#cfc9bc] px-5">
+      <div class="mx-auto flex min-h-[3.25rem] max-w-7xl items-center justify-end gap-4 py-2">
+        <nav aria-label="Idioma" class="flex gap-3 text-xs uppercase tracking-[.08em]">
+          {
+            LOCALES.map((l) =>
+              l === locale ? (
+                <span aria-current="true" class="font-semibold text-[#a32d21]">{LOCALE_NAME[l]}</span>
+              ) : (
+                <a href={pathFor(page, l)} hreflang={HREFLANG[l]} class="underline">{LOCALE_NAME[l]}</a>
+              ),
+            )
+          }
+        </nav>
         {
-          LOCALES.map((l) =>
-            l === locale ? (
-              <span aria-current="true" class="font-semibold">{LOCALE_NAME[l]}</span>
-            ) : (
-              <a href={pathFor(page, l)} hreflang={HREFLANG[l]} class="underline">{LOCALE_NAME[l]}</a>
-            ),
+          nav.length > 0 && (
+            <details class="relative">
+              <summary class="cursor-pointer list-none border-b border-[#1d1c19] py-1 text-xs font-semibold uppercase tracking-[.12em]">
+                {menuLabel}
+              </summary>
+              <nav aria-label="Principal" class="absolute right-0 top-9 z-30 w-56 border border-[#cfc9bc] bg-[#f7f5ed] p-6">
+                <ul class="space-y-4 p-0 font-serif text-xl">
+                  {nav.map((item) => (
+                    <li><a href={item.href}>{item.label}</a></li>
+                  ))}
+                </ul>
+              </nav>
+            </details>
           )
         }
-      </nav>
+      </div>
     </header>
 
-    <main id="conteudo" class="mx-auto max-w-3xl px-6 py-12">
+    <main id="conteudo">
       <slot />
     </main>
 
-    <footer class="border-t border-neutral-200">
-      <p class="mx-auto max-w-3xl px-6 py-6 text-sm text-neutral-600">
-        &copy; {year} Dojo da Luz
-      </p>
+    <footer class="border-t border-[#cfc9bc] px-5 py-10">
+      <div class="mx-auto flex max-w-7xl flex-wrap items-baseline justify-between gap-6">
+        <p class="font-serif text-lg">&copy; {year} Dojo da Luz</p>
+        <slot name="footer-note" />
+      </div>
     </footer>
   </body>
 </html>

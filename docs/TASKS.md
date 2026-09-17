@@ -8,7 +8,7 @@ Si una sesion se cae, se cierra o se compacta, se vuelve aca — no al chat. Hay
 Regla: **marcar `hecho` solo con verificacion real** — tests que pasan, comando corrido,
 cosa vista en pantalla. No "deberia andar".
 
-Ultima actualizacion: 2026-09-17 — propuesta de diseño documentada y mockup móvil (spec 0003).
+Ultima actualizacion: 2026-09-17 — home productiva con el Diseño C (spec 0007); /mockup/ retirado.
 
 ## Contexto
 
@@ -43,7 +43,7 @@ funcion, y `/api/health` responde contra Neon: 195ms en caliente desde local.
 | 1 | Baseline: crawl de las 34 URLs (texto, title, description, H1) + imagenes originales de wixstatic en alta | — | proximo | No depende de nadie. |
 | 2 | Export de Google Search Console 16 meses | — | bloqueada | Necesita acceso del cliente. |
 | 3 | Migracion de contenido: home real + las otras 10 paginas en los 4 idiomas + nav | — | pendiente | Tras baseline. Amplia `ROUTES` en `src/lib/i18n.ts`. |
-| 4 | Diseño visual | 0003–0006 / ADR-0009 | dirección elegida | Diseño C consolidado en `/mockup/`; falta migrarlo a componentes productivos y JSON. |
+| 4 | Diseño visual | 0003–0007 / ADR-0009 | hecho | Diseño C productivo en `/` (spec 0007); `/mockup/` retirado. Falta contenido real (task 3) y traducir es/fr/en. |
 | 5 | Deploy real: repo a GitHub + conectar Vercel + `DATABASE_URL` en env | — | proximo | Verificar `/api/health` en la URL de produccion. |
 | 5b | Borrar el proyecto Neon huerfano `bitter-tree-51605379` | — | pendiente | Lo cree yo antes de que existiera `silent-wave`. El MCP quedo scopeado y no puede borrarlo: va por consola. |
 | 6 | Spec 0003 — backoffice: auth magic link + contenido -> commit a GitHub | 0003 | pendiente | |
@@ -94,6 +94,7 @@ ADR que supersede la fila de auth del 0001.
 | 2026-09-17 | Comparador de home A/B | Dos rutas prerenderizadas, enlaces recíprocos, `aria-current` correcto y cero scripts |
 | 2026-09-17 | Diseño C — paisaje narrativo | `/mockup-c/` prerenderizado; selector A/B/C; narrativa completa; cero scripts/gradientes/sombras |
 | 2026-09-17 | Consolidación de dirección C | Única ruta `/mockup/`; Encarnação y selector ausentes; docs alineados; typecheck/build limpios |
+| 2026-09-17 | Spec 0007 — home productiva con el Diseño C | `npm run typecheck` 0 errores; build emite `/`, `/es/`, `/fr/`, `/en/` (no `/mockup/`); `rg mockup src/` vacío; HTML sin `<script>` ejecutable; hreflang recíproco correcto |
 
 ## Descartado (y por que)
 

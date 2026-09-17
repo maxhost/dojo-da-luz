@@ -30,7 +30,7 @@ Documentación de producto y dirección de arte para la migración de
 
 ## Artefactos relacionados
 
-- Mockup: [`src/pages/mockup.astro`](../../src/pages/mockup.astro)
-- Alcance del mockup: [`spec 0003`](../specs/0003-home-mockup.md)
+- Home productiva: [`src/components/HomeView.astro`](../../src/components/HomeView.astro)
 - Decisión vigente: [`ADR-0009`](../adr/0009-direccion-paisaje.md)
-- Consolidación: [`spec 0006`](../specs/0006-consolidar-diseno-c.md)
+- Consolidación del mockup: [`spec 0006`](../specs/0006-consolidar-diseno-c.md)
+- Migración a producción: [`spec 0007`](../specs/0007-home-productiva.md)

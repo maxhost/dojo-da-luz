@@ -3,37 +3,58 @@
     "title": "Dojo da Luz — fr",
     "description": "Placeholder de scaffold (fr). El contenido real se carga en la migracion."
   },
+  "chrome": {
+    "caption": "Placeholder caption (fr)",
+    "menuLabel": "Placeholder menu (fr)",
+    "skipLink": "Placeholder skip link (fr)",
+    "nav": [
+      { "label": "Placeholder nav 1 (fr)", "href": "#montanha" },
+      { "label": "Placeholder nav 2 (fr)", "href": "#terra" },
+      { "label": "Placeholder nav 3 (fr)", "href": "#dojo" },
+      { "label": "Placeholder nav 4 (fr)", "href": "#umbral" }
+    ],
+    "footerNote": {
+      "areas": "Placeholder areas (fr)",
+      "orgType": "Placeholder org (fr)"
+    }
+  },
   "hero": {
-    "kicker": "A I K I D O",
-    "title": "Dojo da Luz",
+    "eyebrowLines": ["Placeholder eyebrow 1 (fr)", "Placeholder eyebrow 2 (fr)"],
+    "titleLines": ["Placeholder title 1 (fr)", "Placeholder title 2 (fr)"],
+    "titleHighlight": "Placeholder highlight (fr)",
     "tagline": "Placeholder tagline (fr)"
   },
-  "values": {
+  "practice": {
+    "label": "Placeholder label 01 (fr)",
+    "titleLines": ["Placeholder title 1 (fr)", "Placeholder title 2 (fr)"],
+    "paragraphs": ["Placeholder parrafo 1 (fr)", "Placeholder parrafo 2 (fr)"]
+  },
+  "places": {
+    "label": "Placeholder label 02 (fr)",
+    "titleLines": ["Placeholder title 1 (fr)", "Placeholder title 2 (fr)"],
+    "lead": "Placeholder lead (fr)",
+    "ctaLabel": "Placeholder cta (fr)",
     "items": [
-      "valor 1",
-      "valor 2",
-      "valor 3"
+      { "name": "Benfica", "dojo": "Placeholder dojo 1 (fr)", "time": "Placeholder horario 1 (fr)" },
+      { "name": "Lumiar", "dojo": "Placeholder dojo 2 (fr)", "time": "Placeholder horario 2 (fr)" }
     ]
   },
-  "benefits": {
-    "lead": "Placeholder lead",
-    "items": [
-      "beneficio 1",
-      "beneficio 2"
-    ]
+  "dojo": {
+    "label": "Placeholder label 03 (fr)",
+    "titleLines": ["Placeholder title 1 (fr)", "Placeholder title 2 (fr)"],
+    "photoCaption": "Placeholder caption foto (fr)",
+    "photoAlt": "Placeholder alt foto (fr)",
+    "teacher": {
+      "name": "Pablo Durán",
+      "credentialsLines": ["Placeholder credencial 1 (fr)", "Placeholder credencial 2 (fr)"],
+      "bio": "Placeholder bio (fr)",
+      "photoAlt": "Placeholder alt retrato (fr)"
+    }
   },
-  "quote": {
-    "text": "Placeholder de cita.",
-    "author": "Placeholder autor"
-  },
-  "practical": {
-    "schedule": "Placeholder de horarios",
-    "notes": [
-      "placeholder nota 1",
-      "placeholder nota 2"
-    ]
-  },
-  "cta": {
-    "label": "Placeholder CTA"
+  "threshold": {
+    "label": "Placeholder label 04 (fr)",
+    "titleLines": ["Placeholder title 1 (fr)", "Placeholder title 2 (fr)"],
+    "text": "Placeholder texto (fr)",
+    "ctaLabel": "Placeholder cta (fr)"
   }
 }
