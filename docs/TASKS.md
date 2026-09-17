@@ -8,7 +8,7 @@ Si una sesion se cae, se cierra o se compacta, se vuelve aca — no al chat. Hay
 Regla: **marcar `hecho` solo con verificacion real** — tests que pasan, comando corrido,
 cosa vista en pantalla. No "deberia andar".
 
-Ultima actualizacion: 2026-09-17 — scaffold implementado y verificado (spec 0001).
+Ultima actualizacion: 2026-09-17 — scaffold + infra de deploy (specs 0001 y 0002).
 
 ## Contexto
 
@@ -28,8 +28,13 @@ ejecutable.
 El contenido de `content/` es **placeholder**. La migracion del contenido real es trabajo
 aparte y no forma parte del scaffold.
 
-**Proximo paso: infra de deploy** (adapter de Vercel + Neon), para poder probar en un
-entorno real.
+**Infra lista.** Proyecto Neon `dojo-da-luz` (`bitter-tree-51605379`, aws-eu-central-1,
+pg18) con las 3 tablas aplicadas. El build emite las 4 paginas estaticas y una sola
+funcion, y `/api/health` responde contra Neon.
+
+**Proximo paso: el deploy real.** Falta subir el repo a GitHub y conectar Vercel, y cargar
+`DATABASE_URL` en las env vars del proyecto. El connection string esta en `.env` local
+(ignorado por git) y en la consola de Neon.
 
 ## Siguiente
 
@@ -39,10 +44,11 @@ entorno real.
 | 2 | Export de Google Search Console 16 meses | — | bloqueada | Necesita acceso del cliente. |
 | 3 | Migracion de contenido: home real + las otras 10 paginas en los 4 idiomas + nav | — | pendiente | Tras baseline. Amplia `ROUTES` en `src/lib/i18n.ts`. |
 | 4 | Diseño visual | — | pendiente | El scaffold es marcado semantico sin maquetar. |
-| 5 | Spec 0002 — backoffice: auth magic link + contenido -> commit a GitHub | 0002 | pendiente | |
-| 6 | Spec 0003 — alumnos + emision de factura + PDF a R2 + envio Resend | 0003 | pendiente | Necesita una factura de ejemplo real. |
-| 7 | Mapa de redirects 301 de las 34 URLs viejas | — | pendiente | No negociable antes de lanzar. |
-| 8 | Sitemap + robots.txt | — | pendiente | Con el set completo de paginas. |
+| 5 | Deploy real: repo a GitHub + conectar Vercel + `DATABASE_URL` en env | — | proximo | Verificar `/api/health` en la URL de produccion. |
+| 6 | Spec 0003 — backoffice: auth magic link + contenido -> commit a GitHub | 0003 | pendiente | |
+| 7 | Spec 0004 — alumnos + emision de factura + PDF a R2 + envio Resend | 0004 | pendiente | Necesita una factura de ejemplo real. |
+| 8 | Mapa de redirects 301 de las 34 URLs viejas | — | pendiente | No negociable antes de lanzar. |
+| 9 | Sitemap + robots.txt | — | pendiente | Con el set completo de paginas. |
 
 ## Hallazgos del sitio actual
 
@@ -72,6 +78,7 @@ Investigacion previa, para cuando toque migrar contenido:
 | 2026-09-17 | Inventario del sitio actual: 34 URLs, Wix, 3 idiomas reales, sin hreflang, sin NAP | `curl` a sitemap/robots + extraccion del HTML |
 | 2026-09-17 | ADR-0001/0002/0003 + spec 0001 | Filas en `docs/INDEX.md` |
 | 2026-09-17 | Spec 0001 — scaffold Astro 4 idiomas | `npm run typecheck` 0 errores; `npm run build` 4 paginas; 0 scripts ejecutables en el HTML; JSON invalido → build exit 1 |
+| 2026-09-17 | Spec 0002 — infra de deploy | build: 4 HTML estaticos + 1 funcion en `.vercel/output`; 3 tablas creadas en Neon; `GET /api/health` → `{"ok":true,"db":"up"}` |
 
 ## Descartado (y por que)
 

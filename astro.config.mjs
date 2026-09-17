@@ -1,5 +1,6 @@
 // @ts-check
 import { defineConfig } from 'astro/config'
+import vercel from '@astrojs/vercel'
 import tailwindcss from '@tailwindcss/vite'
 
 // ADR-0001: output estatico y cero APIs propietarias del host. Nada de ISR ni
@@ -7,6 +8,9 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   site: 'https://www.aikido-duran.com',
   output: 'static',
+  // Solo las rutas con `prerender = false` se vuelven funciones. Las paginas del
+  // sitio publico siguen siendo HTML prerenderizado.
+  adapter: vercel(),
   trailingSlash: 'never',
   build: { format: 'directory' },
   i18n: {

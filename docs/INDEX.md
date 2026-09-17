@@ -19,6 +19,7 @@ desactualizado es peor que no tenerlo.
 | # | Fecha | Spec | Estado | Disjunta? | Archivos |
 |---|---|---|---|---|---|
 | [0001](specs/0001-scaffold.md) | 2026-09-17 | Scaffold Astro: i18n 4 idiomas, contenido JSON validado, head de SEO completo | implementada | si | `package.json`, `src/**`, `content/**` |
+| [0002](specs/0002-infra.md) | 2026-09-17 | Infra de deploy: adapter Vercel, Neon en Frankfurt, migracion inicial y /api/health | implementada | si | `astro.config.mjs`, `db/**`, `src/lib/db.ts`, `src/pages/api/**` |
 
 **"Disjunta?"** = si el trabajo no comparte archivos con otra spec abierta. Es lo que
 habilita paralelizar. Lo decide la spec, no el orquestador en runtime.

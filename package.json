@@ -11,10 +11,15 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.9.10",
+    "@astrojs/vercel": "^11.0.10",
+    "@neondatabase/serverless": "^1.1.0",
     "@tailwindcss/vite": "^4.3.3",
     "astro": "^7.3.3",
     "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3",
     "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.1"
   }
 }
