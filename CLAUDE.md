@@ -44,6 +44,11 @@ typecheck, exit code. La auto-revision sin oraculo es negativa neta.
 permanente — un hook si se chequea con un comando, una linea aca si es advisory. Nunca
 la misma correccion dos veces a mano.
 
+**El estado de la infra se lee con el CLI del proveedor, no con su MCP.** El 2026-09-18
+`mcp__vercel__list_projects` devolvio 3 de 8 proyectos y de ahi salio la conclusion falsa
+"no existe proyecto Vercel". `vercel project ls` los lista todos. Un listado vacio o corto
+de un MCP no prueba ausencia: confirmalo con el CLI antes de afirmar que algo no existe.
+
 **Las reglas verificables van en hooks, no aca.** Los hooks corren fuera del contexto,
 cuestan cero tokens y son deterministas; este archivo es advisory. Si una regla se puede
 chequear con un comando, es un hook — no la escribas aca tambien.

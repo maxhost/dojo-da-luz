@@ -8,7 +8,7 @@ Si una sesion se cae, se cierra o se compacta, se vuelve aca — no al chat. Hay
 Regla: **marcar `hecho` solo con verificacion real** — tests que pasan, comando corrido,
 cosa vista en pantalla. No "deberia andar".
 
-Ultima actualizacion: 2026-09-18 — lote publico completo (specs 0008-0018, ADR 0010-0014) verificado y publicado en `origin/main` (commit `4bd7fd3`). Nada esta en produccion todavia: falta el proyecto Vercel.
+Ultima actualizacion: 2026-09-18 — lote publico completo (specs 0008-0018, ADR 0010-0014) publicado en `origin/main` y desplegado en produccion: https://dojo-da-luz.vercel.app
 
 ## Contexto
 
@@ -41,9 +41,19 @@ El lote descrito en `docs/HANDOFF-CLAUDE-CODE.md` ya fue revisado, commiteado y 
 prerenderizadas, `astro check` en 0/0/0 y `git diff --check` limpio. Ese archivo queda como
 registro del corte, no como trabajo pendiente.
 
-**Falta lo operativo del lanzamiento:** no existe proyecto Vercel para este repo (verificado
-el 2026-09-18 contra la cuenta `maxhost27-6230s-projects`: solo `my-55mas`, `check-point` y
-`central-hill`). Hasta conectarlo con `DATABASE_URL`, un push a GitHub no despliega nada.
+**Produccion viva.** Proyecto Vercel `dojo-da-luz` (`prj_q6TX7OfOiiKJob6RxZBde0Umo2nA`,
+equipo `maxhost27-6230s-projects`), conectado al repo `maxhost/dojo-da-luz` y con
+`DATABASE_URL` ya cargada: `GET /api/health` responde `{"ok":true,"db":"up"}` desde la URL
+publica. Las 16 rutas comprobadas devuelven 200 en pt/es/fr/en.
+
+**Ojo con el alias.** La URL publica es `dojo-da-luz.vercel.app`, pero el deploy nuevo no
+la tomo solo: quedo en `dojo-da-l4avxyfws-…` y hubo que asignarla a mano con
+`vercel alias set`. Los dominios `*-maxhost27-6230s-projects.vercel.app` estan detras de
+Vercel Authentication y responden 302: no sirven para verificar nada. Despues de cada
+deploy, comprobar contra `dojo-da-luz.vercel.app`, no contra la URL del deployment.
+
+**Falta para el lanzamiento real:** dominio propio `aikido-duran.com` (hoy en Wix), los
+301 de las 34 URLs viejas, sitemap/robots y los endpoints de formulario.
 
 ## Siguiente
 
@@ -53,12 +63,13 @@ el 2026-09-18 contra la cuenta `maxhost27-6230s-projects`: solo `my-55mas`, `che
 | 2 | Export de Google Search Console 16 meses | — | bloqueada | Necesita acceso del cliente. |
 | 3 | Migración de contenido y páginas: Aulas, Aikido, Dojo, Pablo Durán, Contacto y Otras Artes | 0010–0017 | hecho | Sitemap de páginas completo en pt/es/fr/en. Agenda retirada. Quedan endpoints operativos separados. |
 | 4 | Diseño visual | 0003–0009 / ADR-0010 | hecho | Estructura tradicional productiva, video hero e información práctica en HTML; paridad pt/es/fr/en. |
-| 5 | Deploy real: conectar Vercel al repo + `DATABASE_URL` en env | — | proximo | Repo ya publicado en GitHub (`maxhost/dojo-da-luz`, rama `main`). Falta crear el proyecto Vercel y verificar `/api/health` en la URL de produccion. |
+| 5 | Deploy real: Vercel conectado al repo + `DATABASE_URL` en env | — | hecho | https://dojo-da-luz.vercel.app sirve las 36 rutas y `/api/health` responde contra Neon. Falta el dominio propio (tarea 10). |
 | 5b | Borrar el proyecto Neon huerfano `bitter-tree-51605379` | — | pendiente | Lo cree yo antes de que existiera `silent-wave`. El MCP quedo scopeado y no puede borrarlo: va por consola. |
 | 6 | Spec 0003 — backoffice: auth magic link + contenido -> commit a GitHub | 0003 | pendiente | |
 | 7 | Spec 0004 — alumnos + emision de factura + PDF a R2 + envio Resend | 0004 | pendiente | Necesita una factura de ejemplo real. |
 | 8 | Redirects 301 de las 34 URLs viejas | — | plan definido | Matriz conceptual documentada. Falta crawl final, Search Console e implementación cuando existan todos los destinos. |
 | 9 | Sitemap + robots.txt | — | pendiente | Con el set completo de paginas. |
+| 10 | Apuntar `aikido-duran.com` a Vercel | — | pendiente | Hoy resuelve a Wix. Va junto con la tarea 8: sin los 301 no se corta. Necesita accesos de DNS del cliente. |
 
 ## Hallazgos del sitio actual
 
@@ -120,6 +131,7 @@ ADR que supersede la fila de auth del 0001.
 | 2026-09-18 | ADR-0014 + spec 0018 — idiomas, redes y handoff | 36 páginas con banderas accesibles y Facebook en cabecera/menú móvil/pie; perfiles no verificados omitidos; handoff de push escrito; typecheck/build y `git diff --check` limpios |
 | 2026-09-18 | Revision y commit del lote publico completo (specs 0008-0018, ADR 0010-0014) | `npm run typecheck` 0 errores/0 warnings/0 hints; `npm run build` con 36 `index.html` en `.vercel/output/static`; `git diff --check` limpio; `git status --porcelain -uall` sin archivos ajenos al lote |
 | 2026-09-18 | Push del lote publico a GitHub | `git push origin main` → `6de1c9c..4bd7fd3`; `git ls-remote origin refs/heads/main` devuelve `4bd7fd3` |
+| 2026-09-18 | Deploy de produccion en Vercel | `vercel git connect` (repo ya vinculado) + `vercel alias set` sobre `dpl_55BEsW9Q8mENbx2iUec2aJM3Cbr6`; 16 rutas pt/es/fr/en devuelven 200 en `dojo-da-luz.vercel.app`; `/api/health` → `{"ok":true,"db":"up"}`; home con video, hreflang, Facebook y un unico `<script type="application/ld+json">` |
 
 ## Descartado (y por que)
 
