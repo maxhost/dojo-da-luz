@@ -8,7 +8,7 @@ Si una sesion se cae, se cierra o se compacta, se vuelve aca — no al chat. Hay
 Regla: **marcar `hecho` solo con verificacion real** — tests que pasan, comando corrido,
 cosa vista en pantalla. No "deberia andar".
 
-Ultima actualizacion: 2026-09-18 — sitio publico en produccion; abierto el backoffice: ADR 0015-0017 y specs 0019-0021 cerradas, sin codigo escrito todavia.
+Ultima actualizacion: 2026-09-18 — backoffice con login real (spec 0019 implementada y verificada en `astro dev`). Siguen 0020 (dojos) y 0021 (editor).
 
 ## Contexto
 
@@ -74,6 +74,12 @@ deploy, comprobar contra `dojo-da-luz.vercel.app`, no contra la URL del deployme
 **Falta para el lanzamiento real:** dominio propio `aikido-duran.com` (hoy en Wix), los
 301 de las 34 URLs viejas, sitemap/robots y los endpoints de formulario.
 
+**Backoffice vivo en local.** `/admin` con login real: sesion de 8 h en Neon, cookie
+`bo_session` `HttpOnly`/`SameSite=Lax`, 5 intentos por email cada 15 minutos y
+`X-Robots-Tag: noindex` en todas sus respuestas. El admin se siembra con
+`ADMIN_EMAIL=... ADMIN_PASSWORD=... npm run admin:seed`, que ademas cierra todas las
+sesiones abiertas — hoy es el unico camino de recuperacion hasta la spec 0022.
+
 ## Siguiente
 
 | # | Tarea | Spec | Estado | Notas |
@@ -85,8 +91,9 @@ deploy, comprobar contra `dojo-da-luz.vercel.app`, no contra la URL del deployme
 | 5 | Deploy real: Vercel conectado al repo + `DATABASE_URL` en env | — | hecho | https://dojo-da-luz.vercel.app sirve las 36 rutas y `/api/health` responde contra Neon. Falta el dominio propio (tarea 10). |
 | 5c | Autorizar la GitHub App de Vercel sobre `maxhost/dojo-da-luz` | — | hecho | Autorizada por el cliente. Vercel ya crea deployments con `source: git`. |
 | 5b | Borrar el proyecto Neon huerfano `bitter-tree-51605379` | — | pendiente | Lo cree yo antes de que existiera `silent-wave`. El MCP quedo scopeado y no puede borrarlo: va por consola. |
-| 6 | Spec 0019 — backoffice: login, sesion y recuperacion | 0019 | proximo | Spec cerrada. Primer trabajo del BO. Para verificar el email hace falta `RESEND_API_KEY`. |
-| 6b | Spec 0020 — dojos como entidad y render en la home | 0020 | pendiente | Spec cerrada. Disjunta de 0019: puede ir en paralelo. |
+| 6 | Spec 0019 — backoffice: login y sesion | 0019 | hecho | `/admin` con guard por Host, noindex, rate limit y sesion en Neon. Sin reset por email: eso es la 0022. |
+| 6d | Spec 0022 — recuperacion de contraseña por Resend | 0022 | bloqueada | Decision del cliente: arrancar sin Resend. Necesita `RESEND_API_KEY`. Mientras tanto la contraseña se repone con `npm run admin:seed`. |
+| 6b | Spec 0020 — dojos como entidad y render en la home | 0020 | proximo | Spec cerrada. Es lo siguiente. |
 | 6c | Spec 0021 — editor de Home y CRUD de dojos en el BO | 0021 | pendiente | Spec cerrada. Va despues de 0019 y 0020. Necesita `GITHUB_TOKEN` para publicar. |
 | 7 | Alumnos + emision de factura + PDF a R2 + envio Resend | — | pendiente | Necesita una factura de ejemplo real. Spec sin escribir: el numero 0004 del INDEX es otra cosa. |
 | 8 | Redirects 301 de las 34 URLs viejas | — | plan definido | Matriz conceptual documentada. Falta crawl final, Search Console e implementación cuando existan todos los destinos. |
@@ -156,6 +163,7 @@ contraseña, sesion opaca en Neon.)*
 | 2026-09-18 | Revision y commit del lote publico completo (specs 0008-0018, ADR 0010-0014) | `npm run typecheck` 0 errores/0 warnings/0 hints; `npm run build` con 36 `index.html` en `.vercel/output/static`; `git diff --check` limpio; `git status --porcelain -uall` sin archivos ajenos al lote |
 | 2026-09-18 | Push del lote publico a GitHub | `git push origin main` → `6de1c9c..4bd7fd3`; `git ls-remote origin refs/heads/main` devuelve `4bd7fd3` |
 | 2026-09-18 | Deploy de produccion en Vercel | `vercel git connect` (repo ya vinculado) + `vercel alias set` sobre `dpl_55BEsW9Q8mENbx2iUec2aJM3Cbr6`; 16 rutas pt/es/fr/en devuelven 200 en `dojo-da-luz.vercel.app`; `/api/health` → `{"ok":true,"db":"up"}`; home con video, hreflang, Facebook y un unico `<script type="application/ld+json">` |
+| 2026-09-18 | Spec 0019 — login del backoffice | `npm test` 5/5 en `auth.test.ts`; `astro check` 0/0/0; build con 36 estaticas y `/admin/*` como funcion; en `astro dev`: password mala → 401 sin sesion, buena → 302 + cookie `HttpOnly; SameSite=Lax`, `/admin` sin cookie → 302, salir invalida la cookie vieja, sexto intento fallido → 429, `X-Robots-Tag` presente, y con `BO_HOST` el host correcto da 200 y cualquier otro 404 |
 | 2026-09-18 | GitHub App autorizada: el push dispara deploy | `dpl_tFuJezQqKJC4EDBAGhnhotfysJYF` con `source: git` y `meta.githubCommitSha = ed3b3af`, creado por Vercel sin intervencion. Quedo en cola por el incidente "Elevated Errors Triggering Deployments" del propio Vercel |
 | 2026-09-18 | Diagnostico del auto-deploy | `GET /v9/projects/...` devuelve `link.sourceless: true`; el push de `b7c7ab0` no genero ningun deployment en `vercel ls` |
 

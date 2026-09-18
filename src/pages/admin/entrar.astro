@@ -1,0 +1,94 @@
+---
+export const prerender = false
+
+import Admin from '../../layouts/Admin.astro'
+import { verifyPassword } from '../../lib/auth'
+import {
+  MAX_INTENTOS,
+  buscarAdminPorEmail,
+  crearSesion,
+  intentosFallidos,
+  registrarIntento,
+} from '../../lib/admin'
+
+if (Astro.locals.admin) return Astro.redirect('/admin', 302)
+
+/**
+ * Hash de descarte: cuando el email no existe igual se corre scrypt, para que el tiempo
+ * de respuesta no diga si la cuenta existe.
+ */
+const HASH_SEÑUELO =
+  'scrypt$32768$8$1$AAAAAAAAAAAAAAAAAAAAAA==$' +
+  'ZGVjb3lkZWNveWRlY295ZGVjb3lkZWNveWRlY295ZGVjb3lkZWNveWRlY295ZGVjb3lkZWNveWRlY295ZGU='
+
+let error: string | null = null
+let email = ''
+
+if (Astro.request.method === 'POST') {
+  const form = await Astro.request.formData()
+  email = String(form.get('email') ?? '').trim().toLowerCase()
+  const password = String(form.get('password') ?? '')
+
+  if (await intentosFallidos(email) >= MAX_INTENTOS) {
+    Astro.response.status = 429
+    error = 'Demasiados intentos fallidos. Esperá 15 minutos antes de volver a probar.'
+  } else {
+    const admin = await buscarAdminPorEmail(email)
+    const ok = await verifyPassword(password, admin?.password_hash ?? HASH_SEÑUELO)
+
+    await registrarIntento(email, ok && admin !== null)
+
+    if (ok && admin) {
+      await crearSesion(admin.id, Astro.cookies)
+      return Astro.redirect('/admin', 302)
+    }
+
+    Astro.response.status = 401
+    // Generico a proposito: nunca decir cual de los dos campos esta mal.
+    error = 'Email o contraseña incorrectos.'
+  }
+}
+---
+
+<Admin titulo="Entrar">
+  <h1 class="font-serif text-3xl">Entrar</h1>
+
+  {error && (
+    <p class="mt-6 border border-[#9b3025] bg-[#fdf3f1] px-4 py-3 text-[#9b3025]" role="alert">
+      {error}
+    </p>
+  )}
+
+  <form class="mt-8 max-w-sm" method="post">
+    <label class="block text-sm font-semibold" for="email">Email</label>
+    <input
+      class="mt-2 w-full border border-[#d7cec0] bg-white px-3 py-2"
+      id="email"
+      name="email"
+      type="email"
+      value={email}
+      required
+      autocomplete="username"
+      autofocus
+    />
+
+    <label class="mt-6 block text-sm font-semibold" for="password">Contraseña</label>
+    <input
+      class="mt-2 w-full border border-[#d7cec0] bg-white px-3 py-2"
+      id="password"
+      name="password"
+      type="password"
+      required
+      autocomplete="current-password"
+    />
+
+    <button class="mt-8 w-full bg-[#9b3025] px-4 py-3 font-semibold text-white" type="submit">
+      Entrar
+    </button>
+  </form>
+
+  <p class="mt-6 text-sm text-[#625c55]">
+    ¿Perdiste la contraseña? Todavía no hay recuperación por email (spec 0022): se repone
+    desde la consola con <code>npm run admin:seed</code>.
+  </p>
+</Admin>

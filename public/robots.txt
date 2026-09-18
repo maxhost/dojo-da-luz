@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /admin
+
+# El sitemap se agrega cuando exista (tarea 9 de docs/TASKS.md).

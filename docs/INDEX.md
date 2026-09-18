@@ -50,9 +50,10 @@ desactualizado es peor que no tenerlo.
 | [0016](specs/0016-cta-hero-audiencias.md) | 2026-09-18 | CTA de clase experimental en los heroes de Adultos y Niños, reutilizando su modal contextual | implementada | no | `src/components/AudienceView.astro` |
 | [0017](specs/0017-profesor-pablo-duran.md) | 2026-09-18 | Página localizada de Pablo Durán, enlace desde Dojo y destinos 301 actualizados | implementada | no | `src/**`, `content/*/{dojo,teacher}.json`, `docs/design/09-arquitectura-urls-y-redirects.md` |
 | [0018](specs/0018-iconos-idioma-redes-handoff.md) | 2026-09-18 | Iconos accesibles de idioma, redes verificadas y handoff para Claude Code | implementada | no | `src/layouts/Base.astro`, `src/components/SocialLinks.astro`, `docs/HANDOFF-CLAUDE-CODE.md` |
-| [0019](specs/0019-backoffice-auth.md) | 2026-09-18 | Backoffice en `/admin`: login de un solo admin, sesion en Neon, recuperacion por Resend, rate limit y noindex | cerrada | si | `db/migrations/0002_admin.sql`, `src/lib/{auth,admin-session,email}.ts`, `src/middleware.ts`, `src/pages/admin/**` |
+| [0019](specs/0019-backoffice-auth.md) | 2026-09-18 | Backoffice en `/admin`: login de un solo admin, sesion en Neon, rate limit y noindex | cerrada | si | `db/migrations/0002_admin.sql`, `src/lib/{auth,admin}.ts`, `src/middleware.ts`, `src/pages/admin/**` |
 | [0020](specs/0020-dojos-entidad.md) | 2026-09-18 | Dojos en `content/dojos.json` con horarios estructurados; la home los renderiza y emite JSON-LD por sede | cerrada | si | `content/dojos.json`, `src/lib/{content,dojos,i18n,site}.ts`, `src/components/HomeView.astro`, `content/*/home.json` |
 | [0021](specs/0021-editor-home-dojos.md) | 2026-09-18 | El BO edita la Home en 4 idiomas y hace CRUD de dojos; publica commiteando a `main` via API de GitHub | cerrada | no | `src/lib/publish.ts`, `src/pages/admin/**`, `src/components/admin/**` |
+| [0022](specs/0022-reset-password.md) | 2026-09-18 | Recuperacion de contraseña por email con Resend, token de un solo uso y expulsion de sesiones | borrador | no | `db/migrations/0003_admin_reset.sql`, `src/lib/email.ts`, `src/pages/admin/{recuperar,restablecer}.astro` |
 
 **"Disjunta?"** = si el trabajo no comparte archivos con otra spec abierta. Es lo que
 habilita paralelizar. Lo decide la spec, no el orquestador en runtime.

@@ -1,0 +1,20 @@
+---
+export const prerender = false
+
+import Admin from '../../layouts/Admin.astro'
+
+// El middleware ya garantizo la sesion: aca nunca es null.
+const admin = Astro.locals.admin!
+---
+
+<Admin titulo="Panel" admin={admin}>
+  <h1 class="font-serif text-3xl">Panel</h1>
+  <p class="mt-4 text-[#625c55]">
+    Sesión iniciada como <strong>{admin.email}</strong>.
+  </p>
+
+  <p class="mt-8 border border-[#d7cec0] bg-[#fbf8f2] px-4 py-3 text-sm text-[#625c55]">
+    Todavía no hay nada que editar: los dojos llegan con la spec 0020 y el editor de Home
+    con la 0021. Esta pantalla existe para verificar que la sesión funciona.
+  </p>
+</Admin>

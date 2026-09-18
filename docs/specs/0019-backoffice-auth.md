@@ -2,9 +2,9 @@
 spec: 0019
 fecha: 2026-09-18
 estado: cerrada
-resumen: Backoffice en /admin con login de un solo admin por email y contraseña, sesion en Neon, recuperacion por Resend, rate limit y noindex.
+resumen: Backoffice en /admin con login de un solo admin por email y contraseña, sesion en Neon, rate limit y noindex. La recuperacion queda para la spec 0022.
 disjunta: si
-archivos: db/migrations/0002_admin.sql, src/lib/auth.ts, src/lib/admin-session.ts, src/lib/email.ts, src/middleware.ts, src/pages/admin/**, src/layouts/Admin.astro, scripts/admin-seed.mjs, public/robots.txt
+archivos: db/migrations/0002_admin.sql, src/lib/auth.ts, src/lib/admin.ts, src/middleware.ts, src/pages/admin/**, src/layouts/Admin.astro, scripts/admin-seed.mjs, public/robots.txt
 ---
 
 # 0019 — Backoffice: auth y shell
@@ -22,19 +22,21 @@ el ADR-0015; donde vive el BO, en el ADR-0016.
 
 **Entra:**
 
-- Migracion `0002_admin.sql`: `admin`, `admin_session`, `admin_reset`, `admin_login_attempt`.
+- Migracion `0002_admin.sql`: `admin`, `admin_session`, `admin_login_attempt`. `admin_reset`
+  llega con la 0022: no se crean tablas que hoy nadie escribe.
 - `src/lib/auth.ts`: hash y verificacion `scrypt`, generacion de tokens, hash de tokens.
-- `src/lib/admin-session.ts`: crear, leer, revocar sesion; helper `requireAdmin`.
-- `src/lib/email.ts`: envio por Resend (una funcion, sin SDK: `fetch` a la API).
+- `src/lib/admin.ts`: crear, leer, revocar sesion; helper `requireAdmin`.
 - `src/middleware.ts`: guard por `Host` (`BO_HOST`) y `X-Robots-Tag` en todo `/admin/*`.
-- Pantallas: `/admin/entrar`, `/admin/recuperar`, `/admin/restablecer`, `/admin` (panel
-  vacio con el nombre del admin y salir), `POST /admin/salir`.
+- Pantallas: `/admin/entrar`, `/admin` (panel vacio con el email del admin), `POST /admin/salir`.
 - `scripts/admin-seed.mjs`: crea o actualiza el unico admin leyendo `ADMIN_EMAIL` y
   `ADMIN_PASSWORD` del entorno. No escribe nada al repo.
 - `public/robots.txt` con `Disallow: /admin`.
 
 **No entra:**
 
+- **Recuperacion de contraseña.** Decision del cliente: se arranca sin Resend. Diseñada en
+  el ADR-0015, construida en la spec 0022. Mientras tanto la contraseña se repone con
+  `npm run admin:seed`, que tiene acceso a la DB.
 - Editar contenido. Ni dojos ni Home: eso es 0020 y 0021. El panel queda vacio a proposito.
 - 2FA, roles, invitaciones, registro, "recordarme", sesiones multiples listadas.
 - Alumnos y facturas (specs 0003/0004 originales, hoy sin numero nuevo).
@@ -62,14 +64,6 @@ create table admin_session (
   expira_en    timestamptz not null
 );
 
-create table admin_reset (
-  token_sha256 text primary key,
-  admin_id     uuid        not null references admin (id) on delete cascade,
-  creado_en    timestamptz not null default now(),
-  expira_en    timestamptz not null,
-  usado_en     timestamptz
-);
-
 create table admin_login_attempt (
   id        bigserial   primary key,
   email     text        not null,
@@ -84,9 +78,6 @@ create table admin_login_attempt (
 |---|---|---|
 | `/admin/entrar` | GET | Formulario. Si ya hay sesion valida → 302 a `/admin`. |
 | `/admin/entrar` | POST | 5 fallos del mismo email en 15 min → 429. Credenciales malas → 200 con error generico ("Email o contraseña incorrectos"), nunca cual de los dos. Bien → cookie `bo_session` y 302 a `/admin`. |
-| `/admin/recuperar` | POST | Siempre la misma respuesta y el mismo texto, exista o no el email. Si existe, invalida resets previos y manda uno nuevo. |
-| `/admin/restablecer` | GET | Token invalido, usado o vencido → pagina de error con enlace a pedir otro. |
-| `/admin/restablecer` | POST | Minimo 12 caracteres. Al guardar: marca el token usado, borra **todas** las sesiones y redirige a `/admin/entrar`. |
 | `/admin/salir` | POST | Borra la fila de sesion y la cookie. |
 | `/admin` | GET | Requiere sesion. Sin sesion → 302 a `/admin/entrar`. |
 
@@ -102,8 +93,6 @@ coincide con el header `Host`.
 | Variable | Para que | Sin ella |
 |---|---|---|
 | `DATABASE_URL` | Ya existe | El BO no arranca |
-| `RESEND_API_KEY` | Email de recuperacion | Login funciona; recuperar responde 503 y lo dice en el log |
-| `BO_FROM_EMAIL` | Remitente | idem |
 | `BO_HOST` | Guard de host (ADR-0016) | `/admin` responde en cualquier host |
 
 ## Archivos
@@ -112,14 +101,11 @@ coincide con el header `Host`.
 |---|---|
 | `db/migrations/0002_admin.sql` | crear |
 | `src/lib/auth.ts` | crear |
-| `src/lib/admin-session.ts` | crear |
-| `src/lib/email.ts` | crear |
+| `src/lib/admin.ts` | crear |
 | `src/middleware.ts` | crear |
 | `src/layouts/Admin.astro` | crear |
 | `src/pages/admin/index.astro` | crear |
 | `src/pages/admin/entrar.astro` | crear |
-| `src/pages/admin/recuperar.astro` | crear |
-| `src/pages/admin/restablecer.astro` | crear |
 | `src/pages/admin/salir.ts` | crear |
 | `scripts/admin-seed.mjs` | crear |
 | `public/robots.txt` | crear |
@@ -135,24 +121,17 @@ viven 0020 y 0021.
 Señales que no escribe el agente:
 
 - [ ] `npm run typecheck` limpio y `npm run build` sigue emitiendo las 36 paginas estaticas.
-- [ ] Migracion aplicada: `\dt` en Neon muestra las 4 tablas nuevas.
+- [ ] Migracion aplicada: Neon muestra `admin`, `admin_session` y `admin_login_attempt`.
 - [ ] `node --test` (o script con exit code) sobre `auth.ts`: hash + verify de la misma
       contraseña da `true`; de otra da `false`; dos hashes de la misma contraseña difieren.
 - [ ] `astro dev`: contraseña incorrecta → se ve el error generico y **no** se crea fila en
       `admin_session`; correcta → hay fila y `/admin` responde 200.
 - [ ] Sin cookie, `curl -i /admin` → 302 a `/admin/entrar`.
 - [ ] Seis POST seguidos con contraseña mala → el sexto responde 429.
-- [ ] Flujo de reset completo: email recibido, link abre el formulario, segundo uso del
-      mismo link → error, y la sesion que estaba abierta deja de servir.
 - [ ] `curl -I /admin/entrar` incluye `X-Robots-Tag: noindex, nofollow, noarchive`.
 - [ ] Con `BO_HOST=otro.example` en `.env`, `/admin/entrar` responde 404.
 
 ## Abierto
 
-Nada bloqueante para construir. Para **verificar el email** hace falta del cliente:
-
-- `RESEND_API_KEY` de la cuenta del proyecto.
-- Direccion remitente. Sin dominio propio solo se puede usar el remitente de pruebas de
-  Resend, que entrega unicamente a la casilla verificada de la cuenta. Alcanza para
-  verificar el flujo; el remitente definitivo espera al DKIM del dominio.
-- Email y contraseña inicial del admin (se cargan por entorno, no se commitean).
+Nada. El cliente decidio arrancar sin Resend, asi que no hay dependencia externa: el admin
+se siembra por entorno con `npm run admin:seed` y el reset llega con la spec 0022.

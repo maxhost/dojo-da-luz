@@ -1,0 +1,40 @@
+---
+import '../styles/global.css'
+
+interface Props {
+  titulo: string
+  /** El panel lo pasa; el login no, porque todavia no hay sesion. */
+  admin?: { email: string } | null
+}
+
+const { titulo, admin = null } = Astro.props
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow, noarchive" />
+    <title>{titulo} · Backoffice</title>
+  </head>
+  <body class="min-h-screen bg-[#f4f0e8] text-[#211f1c] antialiased">
+    <header class="border-b border-[#d7cec0] bg-[#fbf8f2]">
+      <div class="mx-auto flex max-w-4xl items-center justify-between px-6 py-4">
+        <a class="font-serif text-xl no-underline" href="/admin">Dojo da Luz · Backoffice</a>
+        {admin && (
+          <form method="post" action="/admin/salir" class="flex items-center gap-4">
+            <span class="text-sm text-[#625c55]">{admin.email}</span>
+            <button class="border border-[#d7cec0] bg-white px-3 py-1 text-sm" type="submit">
+              Salir
+            </button>
+          </form>
+        )}
+      </div>
+    </header>
+
+    <main class="mx-auto max-w-4xl px-6 py-12">
+      <slot />
+    </main>
+  </body>
+</html>
