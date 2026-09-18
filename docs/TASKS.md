@@ -46,21 +46,24 @@ equipo `maxhost27-6230s-projects`), conectado al repo `maxhost/dojo-da-luz` y co
 `DATABASE_URL` ya cargada: `GET /api/health` responde `{"ok":true,"db":"up"}` desde la URL
 publica. Las 16 rutas comprobadas devuelven 200 en pt/es/fr/en.
 
-**Un push a GitHub NO despliega.** El link del proyecto con `maxhost/dojo-da-luz` existe
-(`productionBranch: main`) pero esta marcado `"sourceless": true`: se creo por CLI, sin la
-GitHub App de Vercel instalada sobre el repo, asi que no llega ningun webhook. Comprobado
-el 2026-09-18: el push de `b7c7ab0` no genero deployment. Mientras siga asi, el deploy se
-hace a mano:
+**El push a GitHub ya despliega.** La GitHub App de Vercel quedo autorizada sobre el repo
+el 2026-09-18 y el webhook dispara: hay un deployment con `source: git` y
+`meta.githubCommitSha = ed3b3af` que Vercel creo solo. Antes de eso el link estaba
+`"sourceless": true` y no llegaba nada.
+
+**Si un deployment se queda en `Queued`, mirar primero el estado de Vercel**
+(`https://www.vercel-status.com/api/v2/incidents/unresolved.json`). El 2026-09-18 habia un
+incidente abierto — "Elevated Errors Triggering Deployments" — y `dpl_tFuJezQqKJC4EDBAGhnhotfysJYF`
+llevaba mas de 12 minutos en cola sin empezar a construir. No es del repo ni del proyecto:
+no tiene arreglo local, se espera. Produccion sigue sirviendo el deployment anterior.
+
+Deploy manual, cuando haga falta saltarse el webhook:
 
 ```sh
 vercel --prod                 # build y deploy de produccion
 vercel ls dojo-da-luz         # esperar ● Ready
 vercel alias set <url-del-deployment> dojo-da-luz.vercel.app
 ```
-
-Para que el push despliegue solo hace falta **autorizar la GitHub App de Vercel sobre el
-repo desde el navegador** (Vercel → proyecto → Settings → Git). Es interactivo: lo tiene
-que hacer una persona.
 
 **Ojo con el alias.** La URL publica es `dojo-da-luz.vercel.app`, pero el deploy nuevo no
 la tomo solo: quedo en `dojo-da-l4avxyfws-…` y hubo que asignarla a mano con
@@ -80,7 +83,7 @@ deploy, comprobar contra `dojo-da-luz.vercel.app`, no contra la URL del deployme
 | 3 | Migración de contenido y páginas: Aulas, Aikido, Dojo, Pablo Durán, Contacto y Otras Artes | 0010–0017 | hecho | Sitemap de páginas completo en pt/es/fr/en. Agenda retirada. Quedan endpoints operativos separados. |
 | 4 | Diseño visual | 0003–0009 / ADR-0010 | hecho | Estructura tradicional productiva, video hero e información práctica en HTML; paridad pt/es/fr/en. |
 | 5 | Deploy real: Vercel conectado al repo + `DATABASE_URL` en env | — | hecho | https://dojo-da-luz.vercel.app sirve las 36 rutas y `/api/health` responde contra Neon. Falta el dominio propio (tarea 10). |
-| 5c | Autorizar la GitHub App de Vercel sobre `maxhost/dojo-da-luz` | — | pendiente | Link `sourceless`: el push no dispara deploy. Es un OK en el navegador; hasta entonces, `vercel --prod` a mano. |
+| 5c | Autorizar la GitHub App de Vercel sobre `maxhost/dojo-da-luz` | — | hecho | Autorizada por el cliente. Vercel ya crea deployments con `source: git`. |
 | 5b | Borrar el proyecto Neon huerfano `bitter-tree-51605379` | — | pendiente | Lo cree yo antes de que existiera `silent-wave`. El MCP quedo scopeado y no puede borrarlo: va por consola. |
 | 6 | Spec 0003 — backoffice: auth magic link + contenido -> commit a GitHub | 0003 | pendiente | |
 | 7 | Spec 0004 — alumnos + emision de factura + PDF a R2 + envio Resend | 0004 | pendiente | Necesita una factura de ejemplo real. |
@@ -149,6 +152,7 @@ ADR que supersede la fila de auth del 0001.
 | 2026-09-18 | Revision y commit del lote publico completo (specs 0008-0018, ADR 0010-0014) | `npm run typecheck` 0 errores/0 warnings/0 hints; `npm run build` con 36 `index.html` en `.vercel/output/static`; `git diff --check` limpio; `git status --porcelain -uall` sin archivos ajenos al lote |
 | 2026-09-18 | Push del lote publico a GitHub | `git push origin main` → `6de1c9c..4bd7fd3`; `git ls-remote origin refs/heads/main` devuelve `4bd7fd3` |
 | 2026-09-18 | Deploy de produccion en Vercel | `vercel git connect` (repo ya vinculado) + `vercel alias set` sobre `dpl_55BEsW9Q8mENbx2iUec2aJM3Cbr6`; 16 rutas pt/es/fr/en devuelven 200 en `dojo-da-luz.vercel.app`; `/api/health` → `{"ok":true,"db":"up"}`; home con video, hreflang, Facebook y un unico `<script type="application/ld+json">` |
+| 2026-09-18 | GitHub App autorizada: el push dispara deploy | `dpl_tFuJezQqKJC4EDBAGhnhotfysJYF` con `source: git` y `meta.githubCommitSha = ed3b3af`, creado por Vercel sin intervencion. Quedo en cola por el incidente "Elevated Errors Triggering Deployments" del propio Vercel |
 | 2026-09-18 | Diagnostico del auto-deploy | `GET /v9/projects/...` devuelve `link.sourceless: true`; el push de `b7c7ab0` no genero ningun deployment en `vercel ls` |
 
 ## Descartado (y por que)
