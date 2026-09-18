@@ -8,7 +8,7 @@ Si una sesion se cae, se cierra o se compacta, se vuelve aca — no al chat. Hay
 Regla: **marcar `hecho` solo con verificacion real** — tests que pasan, comando corrido,
 cosa vista en pantalla. No "deberia andar".
 
-Ultima actualizacion: 2026-09-18 — lote publico completo (specs 0008-0018, ADR 0010-0014) publicado en `origin/main` y desplegado en produccion: https://dojo-da-luz.vercel.app
+Ultima actualizacion: 2026-09-18 — sitio publico en produccion; abierto el backoffice: ADR 0015-0017 y specs 0019-0021 cerradas, sin codigo escrito todavia.
 
 ## Contexto
 
@@ -85,8 +85,10 @@ deploy, comprobar contra `dojo-da-luz.vercel.app`, no contra la URL del deployme
 | 5 | Deploy real: Vercel conectado al repo + `DATABASE_URL` en env | — | hecho | https://dojo-da-luz.vercel.app sirve las 36 rutas y `/api/health` responde contra Neon. Falta el dominio propio (tarea 10). |
 | 5c | Autorizar la GitHub App de Vercel sobre `maxhost/dojo-da-luz` | — | hecho | Autorizada por el cliente. Vercel ya crea deployments con `source: git`. |
 | 5b | Borrar el proyecto Neon huerfano `bitter-tree-51605379` | — | pendiente | Lo cree yo antes de que existiera `silent-wave`. El MCP quedo scopeado y no puede borrarlo: va por consola. |
-| 6 | Spec 0003 — backoffice: auth magic link + contenido -> commit a GitHub | 0003 | pendiente | |
-| 7 | Spec 0004 — alumnos + emision de factura + PDF a R2 + envio Resend | 0004 | pendiente | Necesita una factura de ejemplo real. |
+| 6 | Spec 0019 — backoffice: login, sesion y recuperacion | 0019 | proximo | Spec cerrada. Primer trabajo del BO. Para verificar el email hace falta `RESEND_API_KEY`. |
+| 6b | Spec 0020 — dojos como entidad y render en la home | 0020 | pendiente | Spec cerrada. Disjunta de 0019: puede ir en paralelo. |
+| 6c | Spec 0021 — editor de Home y CRUD de dojos en el BO | 0021 | pendiente | Spec cerrada. Va despues de 0019 y 0020. Necesita `GITHUB_TOKEN` para publicar. |
+| 7 | Alumnos + emision de factura + PDF a R2 + envio Resend | — | pendiente | Necesita una factura de ejemplo real. Spec sin escribir: el numero 0004 del INDEX es otra cosa. |
 | 8 | Redirects 301 de las 34 URLs viejas | — | plan definido | Matriz conceptual documentada. Falta crawl final, Search Console e implementación cuando existan todos los destinos. |
 | 9 | Sitemap + robots.txt | — | pendiente | Con el set completo de paginas. |
 | 10 | Apuntar `aikido-duran.com` a Vercel | — | pendiente | Hoy resuelve a Wix. Va junto con la tarea 8: sin los 301 no se corta. Necesita accesos de DNS del cliente. |
@@ -114,11 +116,13 @@ Investigacion previa, para cuando toque migrar contenido:
 
 ## Abierto — decision pendiente
 
-**Auth del backoffice: Neon Auth o magic link propio.** El proyecto Neon trae `neon_auth`
-provisionado (user, session, account, verification, jwks). El ADR-0001 dijo "magic link,
-1 admin, sin roles" sin saberlo. Neon Auth ya resuelve sesiones y providers, pero mete una
-dependencia de runtime con Neon en el backoffice. Decidir al abrir la spec 0003 — sale un
-ADR que supersede la fila de auth del 0001.
+**Repo publico y backoffice que commitea.** El ADR-0002 asumia repo privado; hoy
+`maxhost/dojo-da-luz` es publico. No hay secretos en el arbol, asi que no cambia el diseño,
+pero conviene decidirlo antes de que el BO empiece a escribir el historial de ediciones del
+cliente en un repo abierto.
+
+*(La duda de auth — Neon Auth o propio — quedo cerrada por el ADR-0015: propia, email y
+contraseña, sesion opaca en Neon.)*
 
 ## Hecho
 

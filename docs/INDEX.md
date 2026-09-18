@@ -24,6 +24,9 @@ desactualizado es peor que no tenerlo.
 | [0012](adr/0012-retirar-agenda.md) | 2026-09-18 | Agenda desaparece; sus URLs se mapean individualmente a destinos semánticos vivos | aceptada | `docs/adr/0012-retirar-agenda.md` |
 | [0013](adr/0013-pagina-profesor.md) | 2026-09-18 | Pablo Durán tiene página canónica propia, enlazada desde Dojo, para conservar historia e intención de búsqueda | aceptada | `docs/adr/0013-pagina-profesor.md` |
 | [0014](adr/0014-iconos-idioma-redes.md) | 2026-09-18 | Selector con banderas accesibles y redes sociales sólo con URL oficial verificada | aceptada | `docs/adr/0014-iconos-idioma-redes.md` |
+| [0015](adr/0015-auth-backoffice.md) | 2026-09-18 | Un unico admin con email y contraseña, sesion opaca en Neon y reset por Resend; supersede la fila Auth del 0001 | aceptada | `docs/adr/0015-auth-backoffice.md` |
+| [0016](adr/0016-ubicacion-backoffice.md) | 2026-09-18 | El BO vive en `/admin` con noindex y guard por Host; el subdominio `bo.` se activa por variable de entorno | aceptada | `docs/adr/0016-ubicacion-backoffice.md` |
+| [0017](adr/0017-dojos-entidad.md) | 2026-09-18 | Los dojos son una entidad en `content/dojos.json` con NAP, coordenadas y horarios estructurados; no van a la DB | aceptada | `docs/adr/0017-dojos-entidad.md` |
 
 ## Specs — que se construye
 
@@ -47,6 +50,9 @@ desactualizado es peor que no tenerlo.
 | [0016](specs/0016-cta-hero-audiencias.md) | 2026-09-18 | CTA de clase experimental en los heroes de Adultos y Niños, reutilizando su modal contextual | implementada | no | `src/components/AudienceView.astro` |
 | [0017](specs/0017-profesor-pablo-duran.md) | 2026-09-18 | Página localizada de Pablo Durán, enlace desde Dojo y destinos 301 actualizados | implementada | no | `src/**`, `content/*/{dojo,teacher}.json`, `docs/design/09-arquitectura-urls-y-redirects.md` |
 | [0018](specs/0018-iconos-idioma-redes-handoff.md) | 2026-09-18 | Iconos accesibles de idioma, redes verificadas y handoff para Claude Code | implementada | no | `src/layouts/Base.astro`, `src/components/SocialLinks.astro`, `docs/HANDOFF-CLAUDE-CODE.md` |
+| [0019](specs/0019-backoffice-auth.md) | 2026-09-18 | Backoffice en `/admin`: login de un solo admin, sesion en Neon, recuperacion por Resend, rate limit y noindex | cerrada | si | `db/migrations/0002_admin.sql`, `src/lib/{auth,admin-session,email}.ts`, `src/middleware.ts`, `src/pages/admin/**` |
+| [0020](specs/0020-dojos-entidad.md) | 2026-09-18 | Dojos en `content/dojos.json` con horarios estructurados; la home los renderiza y emite JSON-LD por sede | cerrada | si | `content/dojos.json`, `src/lib/{content,dojos,i18n,site}.ts`, `src/components/HomeView.astro`, `content/*/home.json` |
+| [0021](specs/0021-editor-home-dojos.md) | 2026-09-18 | El BO edita la Home en 4 idiomas y hace CRUD de dojos; publica commiteando a `main` via API de GitHub | cerrada | no | `src/lib/publish.ts`, `src/pages/admin/**`, `src/components/admin/**` |
 
 **"Disjunta?"** = si el trabajo no comparte archivos con otra spec abierta. Es lo que
 habilita paralelizar. Lo decide la spec, no el orquestador en runtime.
