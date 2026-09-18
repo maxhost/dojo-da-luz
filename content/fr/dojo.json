@@ -1,0 +1,43 @@
+{
+  "seo": {
+    "title": "Dojo da Luz et Pablo Durán | Aïkido Lisbonne",
+    "description": "Découvrez le Dojo da Luz, Pablo Durán et la transmission liée à Franck Noël et à l'Aikikai de Tokyo."
+  },
+  "eyebrow": "Dojo da Luz",
+  "title": "Un lieu pour pratiquer la Voie.",
+  "lead": "Plus qu'une salle d'entraînement, le dojo est un espace d'apprentissage, d'attention et de convivialité.",
+  "spaceTitle": "Le lieu de la pratique.",
+  "spaceParagraphs": [
+    "Dojo signifie littéralement lieu où l'on pratique la Voie. C'est un espace consacré au perfectionnement physique, mental et relationnel.",
+    "Le Dojo da Luz comprend aussi un espace convivial pour lire, discuter, voir des films et partager un moment avant ou après la pratique."
+  ],
+  "teacher": {
+    "label": "Enseignant",
+    "name": "Pablo Durán",
+    "credentials": "5e Dan Aikikai · Entraîneur sportif IPDJ",
+    "paragraphs": [
+      "Il commence la pratique à Jaén en 2002. Sa recherche l'amène à suivre Seishiro Endo puis à rencontrer Franck Noël, sa principale référence.",
+      "Il vit six ans et demi à Toulouse, pratiquant quotidiennement au Dojo de la Roseraie et passant une période comme uchideshi. Il s'installe à Lisbonne en 2015 et inaugure le Dojo da Luz en 2016.",
+      "Il continue à participer à des stages européens et a visité l'Aikikai Hombu Dojo et le Saku Dojo au Japon."
+    ],
+    "linkLabel": "Découvrir le parcours de Pablo Durán"
+  },
+  "lineageTitle": "Une transmission vivante.",
+  "lineage": [
+    {
+      "name": "Franck Noël",
+      "role": "Shihan · Dojo de la Roseraie",
+      "text": "Il a pratiqué huit ans au Japon, principalement avec Seigo Yamaguchi, et fondé le Dojo de la Roseraie à Toulouse."
+    },
+    {
+      "name": "Seigo Yamaguchi",
+      "role": "Hombu Dojo",
+      "text": "L'un des enseignants les plus influents de l'Aïkido d'après-guerre et une référence pour une génération d'instructeurs."
+    },
+    {
+      "name": "Famille Ueshiba",
+      "role": "Doshu de l'Aïkido",
+      "text": "Morihei, Kisshomaru et Moriteru Ueshiba assurent la continuité de la discipline depuis sa fondation."
+    }
+  ]
+}

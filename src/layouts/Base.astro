@@ -1,6 +1,7 @@
 ---
 import Seo from '../components/Seo.astro'
-import { LOCALES, LOCALE_NAME, HREFLANG, pathFor, type Locale, type PageKey } from '../lib/i18n'
+import SocialLinks from '../components/SocialLinks.astro'
+import { LOCALES, LOCALE_ICON, LOCALE_NAME, HREFLANG, pathFor, type Locale, type PageKey } from '../lib/i18n'
 import '../styles/global.css'
 
 interface Props {
@@ -9,20 +10,12 @@ interface Props {
   title: string
   description: string
   skipLink?: string
-  /** Anclas de seccion de la pagina actual. Vacio = sin menu (paginas sin secciones propias). */
   nav?: { label: string; href: string }[]
   menuLabel?: string
+  caption?: string
 }
 
-const {
-  page,
-  locale,
-  title,
-  description,
-  skipLink = 'Saltar para o conteudo',
-  nav = [],
-  menuLabel = 'Menu',
-} = Astro.props
+const { page, locale, title, description, skipLink = 'Saltar para o conteúdo', nav = [], menuLabel = 'Menu', caption = 'Aikido · Lisboa' } = Astro.props
 const year = new Date().getFullYear()
 ---
 
@@ -32,54 +25,57 @@ const year = new Date().getFullYear()
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <Seo page={page} locale={locale} title={title} description={description} />
-    <style is:inline>
-      :root { --ink:#1d1c19; --paper:#f7f5ed; --line:#cfc9bc; --red:#a32d21; }
-      summary::-webkit-details-marker { display:none; }
-    </style>
+    <slot name="head" />
+    <style is:inline>summary::-webkit-details-marker{display:none}</style>
   </head>
-  <body class="m-0 min-h-screen bg-[#f7f5ed] font-sans text-[#1d1c19] antialiased">
+  <body class="m-0 min-h-screen bg-[#f6f1e8] font-sans text-[#211f1c] antialiased">
     <a href="#conteudo" class="sr-only focus:not-sr-only">{skipLink}</a>
 
-    <header class="relative z-20 border-b border-[#cfc9bc] px-5">
-      <div class="mx-auto flex min-h-[3.25rem] max-w-7xl items-center justify-end gap-4 py-2">
-        <nav aria-label="Idioma" class="flex gap-3 text-xs uppercase tracking-[.08em]">
-          {
-            LOCALES.map((l) =>
-              l === locale ? (
-                <span aria-current="true" class="font-semibold text-[#a32d21]">{LOCALE_NAME[l]}</span>
-              ) : (
-                <a href={pathFor(page, l)} hreflang={HREFLANG[l]} class="underline">{LOCALE_NAME[l]}</a>
-              ),
-            )
-          }
-        </nav>
-        {
-          nav.length > 0 && (
-            <details class="relative">
-              <summary class="cursor-pointer list-none border-b border-[#1d1c19] py-1 text-xs font-semibold uppercase tracking-[.12em]">
-                {menuLabel}
-              </summary>
-              <nav aria-label="Principal" class="absolute right-0 top-9 z-30 w-56 border border-[#cfc9bc] bg-[#f7f5ed] p-6">
-                <ul class="space-y-4 p-0 font-serif text-xl">
-                  {nav.map((item) => (
-                    <li><a href={item.href}>{item.label}</a></li>
-                  ))}
-                </ul>
-              </nav>
-            </details>
-          )
-        }
+    <header class="relative z-30 border-b-4 border-[#9b3025] bg-[#fffdf9]">
+      <div class="site-shell flex min-h-24 items-center justify-between gap-8 py-4">
+        <a href={pathFor('home', locale)} class="flex items-center gap-4 no-underline">
+          <span aria-hidden="true" class="grid size-14 place-items-center rounded-full border-2 border-[#9b3025] font-serif text-lg font-bold text-[#9b3025]">合気</span>
+          <span>
+            <strong class="block font-serif text-2xl font-normal leading-none md:text-3xl">Dojo da Luz</strong>
+            <span class="mt-1 block text-[.68rem] font-bold uppercase tracking-[.18em] text-[#746d64]">{caption}</span>
+          </span>
+        </a>
+
+        <div class="hidden items-center gap-5 lg:flex">
+          <nav aria-label="Principal">
+            <ul class="flex list-none items-center gap-6 p-0 text-sm font-semibold">
+              {nav.map((item) => <li><a class="hover:text-[#9b3025]" href={item.href}>{item.label}</a></li>)}
+            </ul>
+          </nav>
+          <nav aria-label="Idioma" class="flex items-center gap-1 border-l border-[#d7cec0] pl-5">
+            {LOCALES.map((l) => l === locale
+              ? <span aria-current="page" aria-label={LOCALE_NAME[l]} title={LOCALE_NAME[l]} class="grid size-9 place-items-center rounded-full border border-[#9b3025] bg-[#f6f1e8] text-lg"><span aria-hidden="true">{LOCALE_ICON[l]}</span></span>
+              : <a href={pathFor(page, l)} hreflang={HREFLANG[l]} lang={HREFLANG[l]} aria-label={LOCALE_NAME[l]} title={LOCALE_NAME[l]} class="grid size-9 place-items-center rounded-full border border-transparent text-lg hover:border-[#d7cec0]"><span aria-hidden="true">{LOCALE_ICON[l]}</span><span class="sr-only">{LOCALE_NAME[l]}</span></a>)}
+          </nav>
+          <SocialLinks class="border-l border-[#d7cec0] pl-5" />
+        </div>
+
+        <details class="relative lg:hidden">
+          <summary class="cursor-pointer list-none border border-[#9b3025] px-4 py-2 text-sm font-bold uppercase tracking-wider text-[#9b3025]">{menuLabel}</summary>
+          <div class="absolute right-0 top-12 w-64 border border-[#d7cec0] bg-[#fffdf9] p-6 shadow-xl">
+            <nav aria-label="Principal"><ul class="space-y-4 p-0 font-serif text-xl">{nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}</ul></nav>
+            <nav aria-label="Idioma" class="mt-6 flex items-center gap-2 border-t border-[#d7cec0] pt-5">
+              {LOCALES.map((l) => l === locale
+                ? <span aria-current="page" aria-label={LOCALE_NAME[l]} title={LOCALE_NAME[l]} class="grid size-10 place-items-center rounded-full border border-[#9b3025] bg-[#f6f1e8] text-xl"><span aria-hidden="true">{LOCALE_ICON[l]}</span></span>
+                : <a href={pathFor(page, l)} hreflang={HREFLANG[l]} lang={HREFLANG[l]} aria-label={LOCALE_NAME[l]} title={LOCALE_NAME[l]} class="grid size-10 place-items-center rounded-full border border-transparent text-xl hover:border-[#d7cec0]"><span aria-hidden="true">{LOCALE_ICON[l]}</span><span class="sr-only">{LOCALE_NAME[l]}</span></a>)}
+            </nav>
+            <SocialLinks class="mt-5 border-t border-[#d7cec0] pt-5" />
+          </div>
+        </details>
       </div>
     </header>
 
-    <main id="conteudo">
-      <slot />
-    </main>
+    <main id="conteudo"><slot /></main>
 
-    <footer class="border-t border-[#cfc9bc] px-5 py-10">
-      <div class="mx-auto flex max-w-7xl flex-wrap items-baseline justify-between gap-6">
-        <p class="font-serif text-lg">&copy; {year} Dojo da Luz</p>
-        <slot name="footer-note" />
+    <footer class="bg-[#1f1c19] py-12 text-white">
+      <div class="site-shell flex flex-wrap items-start justify-between gap-8">
+        <div><p class="font-serif text-2xl">Dojo da Luz</p><p class="mt-2 text-sm text-white/55">&copy; {year}</p></div>
+        <div class="flex items-start gap-8"><slot name="footer-note" /><SocialLinks class="text-white/70" /></div>
       </div>
     </footer>
   </body>

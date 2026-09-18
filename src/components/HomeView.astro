@@ -1,8 +1,7 @@
 ---
 import Base from '../layouts/Base.astro'
-import SectionLabel from './SectionLabel.astro'
 import { getContent } from '../lib/content'
-import type { Locale } from '../lib/i18n'
+import { pathFor, siteNav, type Locale } from '../lib/i18n'
 
 interface Props {
   locale: Locale
@@ -11,11 +10,16 @@ interface Props {
 const { locale } = Astro.props
 const c = getContent('home', locale)
 
-// Pendiente task #1 (baseline): descargar estas imagenes del Wix original a repo/R2.
+// Pendiente task #1: descargar los originales del Wix a almacenamiento propio.
 const DOJO_PHOTO =
-  'https://static.wixstatic.com/media/ae7240_de66207c487b4e8086d18ed67c88ea93~mv2.jpg/v1/crop/x_218,y_0,w_1165,h_900/fill/w_1000,h_667,al_c,q_82/IMG_3502_JPG.jpg'
+  'https://static.wixstatic.com/media/ae7240_de66207c487b4e8086d18ed67c88ea93~mv2.jpg/v1/crop/x_218,y_0,w_1165,h_900/fill/w_1600,h_1067,al_c,q_85/IMG_3502_JPG.jpg'
 const TEACHER_PHOTO =
-  'https://static.wixstatic.com/media/ae7240_4681e435c4ab47dbb9f6db8fe35fa6a5.jpg/v1/fill/w_700,h_934,al_c,q_82/ae7240_4681e435c4ab47dbb9f6db8fe35fa6a5.jpg'
+  'https://static.wixstatic.com/media/ae7240_4681e435c4ab47dbb9f6db8fe35fa6a5.jpg/v1/fill/w_900,h_1200,al_c,q_85/ae7240_4681e435c4ab47dbb9f6db8fe35fa6a5.jpg'
+// Pexels 6253397 — "Over the Shoulder Shot of a Man Doing Aikido", Artem Podrez.
+const HERO_VIDEO =
+  'https://videos.pexels.com/video-files/6253397/6253397-uhd_2160_3840_30fps.mp4'
+const classesPath = pathFor('classes', locale)
+const nav = siteNav(locale)
 ---
 
 <Base
@@ -24,124 +28,112 @@ const TEACHER_PHOTO =
   title={c.seo.title}
   description={c.seo.description}
   skipLink={c.chrome.skipLink}
-  nav={c.chrome.nav}
+  nav={nav}
   menuLabel={c.chrome.menuLabel}
+  caption={c.chrome.caption}
 >
-  <style is:inline>
-    .vertical { writing-mode:vertical-rl; text-orientation:upright; }
-  </style>
-
-  <section class="relative mx-auto min-h-[43rem] max-w-7xl overflow-hidden px-5 pb-24 pt-16 md:min-h-[48rem] md:pt-24">
-    <svg aria-hidden="true" class="pointer-events-none absolute -right-20 -top-28 h-[31rem] w-[31rem] md:-right-16 md:-top-48 md:h-[48rem] md:w-[48rem]" viewBox="0 0 500 500">
-      <circle cx="250" cy="250" r="185" fill="#a32d21" />
-    </svg>
-    <svg aria-hidden="true" class="pointer-events-none absolute bottom-0 left-1/2 h-[19rem] w-px -translate-x-1/2 md:h-[22rem]" viewBox="0 0 1 300" preserveAspectRatio="none"><path d="M.5 0V300" stroke="#a32d21" stroke-width="1" /></svg>
-
-    <div class="relative z-10 md:grid md:grid-cols-12 md:gap-6">
-      <p class="text-xs font-semibold uppercase tracking-[.14em] text-[#a32d21] md:col-span-3 md:col-start-2">
-        {c.hero.eyebrowLines.map((line, i) => <>{i > 0 && <br />}{line}</>)}
+  <section class="hero-traditional relative isolate flex min-h-[36rem] items-center overflow-hidden bg-[#292522] md:min-h-[43rem]">
+    <video
+      aria-hidden="true"
+      class="absolute inset-0 -z-20 h-full w-full object-cover"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="metadata"
+      poster={DOJO_PHOTO}
+    >
+      <source src={HERO_VIDEO} type="video/mp4" />
+    </video>
+    <div aria-hidden="true" class="absolute inset-0 -z-10 bg-black/60"></div>
+    <div class="site-shell w-full py-24 text-center text-white md:py-32">
+      <p class="text-sm font-bold uppercase tracking-[.2em] text-[#f2c7b4]">
+        {c.hero.eyebrowLines.join(' · ')}
       </p>
-      <div class="mt-24 md:col-span-7 md:col-start-2 md:mt-32">
-        <h1 class="max-w-[10ch] font-serif text-[3.25rem] font-normal leading-[.99] tracking-[-.04em] md:text-7xl">
-          {c.hero.titleLines.map((line) => <>{line}<br /></>)}
-          <span class="text-[#a32d21]">{c.hero.titleHighlight}</span>
-        </h1>
-        <p class="mt-9 max-w-[27rem] text-lg leading-8 text-black/75">{c.hero.tagline}</p>
-      </div>
-      <p lang="ja" class="vertical absolute right-2 top-52 font-serif text-sm tracking-[.22em] text-[#f7f5ed] md:right-8 md:top-64">合気道</p>
-    </div>
-  </section>
-
-  <section id="montanha" class="relative border-t border-[#cfc9bc]">
-    <div class="relative mx-auto max-w-7xl overflow-hidden pt-32 md:pt-44">
-      <svg aria-hidden="true" class="absolute left-0 top-0 h-72 w-full md:h-96" viewBox="0 0 1200 380" preserveAspectRatio="none">
-        <path d="M600 0 L600 68 L305 330 L895 330 Z" fill="none" stroke="#1d1c19" stroke-width="1.5" />
-        <path d="M600 68 L895 330 L1200 330 L1200 380 L0 380 L0 330 L305 330 Z" fill="#e7e2d7" />
-        <path d="M0 330 H1200" stroke="#1d1c19" stroke-width="1.5" />
-        <path d="M600 0 V68" stroke="#a32d21" stroke-width="2" />
-      </svg>
-      <div class="relative z-10 px-5 pb-24 pt-24 md:grid md:grid-cols-12 md:gap-6 md:pb-32 md:pt-36">
-        <div class="md:col-span-5 md:col-start-2">
-          <SectionLabel text={c.practice.label} />
-          <h2 class="mt-7 max-w-[11ch] font-serif text-[2.65rem] font-normal leading-[1.05] md:text-5xl">
-            {c.practice.titleLines.map((line) => <>{line}<br /></>)}
-          </h2>
-        </div>
-        <div class="ml-[19.1%] mt-10 max-w-lg border-l border-[#a32d21] pl-5 md:col-span-4 md:col-start-8 md:ml-0 md:mt-24">
-          {c.practice.paragraphs.map((p) => (
-            <p class="mt-5 text-[1.08rem] leading-[1.75] text-black/75 first:mt-0">{p}</p>
-          ))}
-        </div>
+      <h1 class="mx-auto mt-5 max-w-[13ch] font-serif text-5xl font-normal leading-[1.02] md:text-7xl">
+        {c.hero.titleLines.join(' ')} <span class="text-[#efb49b]">{c.hero.titleHighlight}</span>
+      </h1>
+      <p class="mx-auto mt-7 max-w-2xl text-lg leading-8 text-white/90 md:text-xl">{c.hero.tagline}</p>
+      <div class="mt-9 flex flex-wrap justify-center gap-3">
+        <a class="button button-primary" href={classesPath}>{c.places.ctaLabel}</a>
+        <a class="button button-light" href="#umbral">{c.threshold.ctaLabel}</a>
       </div>
     </div>
   </section>
 
-  <section id="terra" class="relative border-y border-[#cfc9bc]">
-    <div class="mx-auto max-w-7xl px-5 py-24 md:py-32">
-      <div class="md:grid md:grid-cols-12 md:gap-6">
-        <div class="md:col-span-4 md:col-start-2">
-          <SectionLabel text={c.places.label} />
-          <h2 class="mt-7 font-serif text-[2.6rem] font-normal leading-[1.05]">
-            {c.places.titleLines.map((line) => <>{line}<br /></>)}
-          </h2>
-        </div>
-        <p class="mt-8 max-w-sm text-base leading-7 text-black/65 md:col-span-4 md:col-start-8 md:mt-12">{c.places.lead}</p>
+  <section id="montanha" class="section-pad bg-[#f6f1e8]">
+    <div class="site-shell grid items-start gap-10 md:grid-cols-[.8fr_1.2fr] md:gap-20">
+      <div>
+        <p class="section-kicker">{c.practice.label}</p>
+        <h2 class="section-title mt-4">{c.practice.titleLines.join(' ')}</h2>
       </div>
-
-      <div class="relative mt-16 md:ml-[19.1%] md:mt-24">
-        <div aria-hidden="true" class="absolute bottom-0 left-[5px] top-0 w-px bg-[#1d1c19] md:bottom-auto md:left-0 md:right-0 md:top-[5px] md:h-px md:w-auto"></div>
-        <div class="grid gap-12 md:grid-cols-3 md:gap-8">
-          {c.places.items.map((place) => (
-            <article class="relative pl-8 md:pl-0 md:pt-9">
-              <span aria-hidden="true" class="absolute left-0 top-[5px] size-[11px] rounded-full border-2 border-[#a32d21] bg-[#f7f5ed] md:top-0"></span>
-              <h3 class="font-serif text-2xl font-normal">{place.name}</h3>
-              <p class="mt-2 text-xs font-semibold uppercase tracking-[.1em] text-black/55">{place.dojo}</p>
-              <p class="mt-5 text-base text-black/70">{place.time}</p>
-              <a href="#umbral" class="mt-4 inline-block border-b border-[#1d1c19] pb-1 text-sm">{c.places.ctaLabel}</a>
-            </article>
-          ))}
-        </div>
+      <div class="border-l-2 border-[#9b3025] pl-6 md:pl-9">
+        {c.practice.paragraphs.map((paragraph) => (
+          <p class="mt-5 text-lg leading-8 text-[#4c4741] first:mt-0">{paragraph}</p>
+        ))}
       </div>
     </div>
   </section>
 
-  <section id="dojo" class="mx-auto max-w-7xl px-5 pt-24 md:pt-32">
-    <div class="relative border-x border-t border-[#1d1c19] px-5 pb-24 pt-16 md:grid md:grid-cols-12 md:gap-6 md:px-10 md:pb-32 md:pt-20">
-      <div aria-hidden="true" class="absolute left-1/2 top-0 h-10 w-px -translate-x-1/2 bg-[#a32d21]"></div>
-      <div class="md:col-span-4">
-        <SectionLabel text={c.dojo.label} />
-        <h2 class="mt-7 font-serif text-[2.6rem] font-normal leading-[1.05]">
-          {c.dojo.titleLines.map((line) => <>{line}<br /></>)}
-        </h2>
+  <section id="terra" class="section-pad bg-white">
+    <div class="site-shell">
+      <div class="max-w-3xl">
+        <p class="section-kicker">{c.places.label}</p>
+        <h2 class="section-title mt-4">{c.places.titleLines.join(' ')}</h2>
+        <p class="mt-5 text-lg leading-8 text-[#625c55]">{c.places.lead}</p>
       </div>
-      <figure class="m-0 mt-12 md:col-span-4 md:col-start-5 md:mt-0">
-        <div class="aspect-[3/2] overflow-hidden bg-[#c9c4b8]"><img class="h-full w-full object-cover grayscale" src={DOJO_PHOTO} alt={c.dojo.photoAlt} /></div>
-        <figcaption class="mt-3 text-xs text-black/55">{c.dojo.photoCaption}</figcaption>
+
+      <div class="mt-12 grid gap-6 md:grid-cols-2">
+        {c.places.items.map((place, index) => (
+          <article class="border border-[#d7cec0] bg-[#fbf8f2] p-7 md:p-9">
+            <p class="text-xs font-bold uppercase tracking-[.18em] text-[#9b3025]">0{index + 1}</p>
+            <h3 class="mt-4 font-serif text-3xl font-normal text-[#211f1c]">{place.name}</h3>
+            <p class="mt-2 font-semibold text-[#625c55]">{place.dojo}</p>
+            <div class="mt-7 border-t border-[#d7cec0] pt-5">
+              <p class="text-xs font-bold uppercase tracking-[.16em] text-[#756e66]">{c.places.ctaLabel}</p>
+              <p class="mt-2 text-lg leading-7 text-[#211f1c]">{place.time}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section id="dojo" class="section-pad bg-[#27231f] text-white">
+    <div class="site-shell grid gap-12 md:grid-cols-2 md:items-center md:gap-20">
+      <figure class="m-0">
+        <img class="aspect-[4/3] w-full object-cover" src={DOJO_PHOTO} alt={c.dojo.photoAlt} loading="lazy" />
+        <figcaption class="mt-3 text-sm text-white/60">{c.dojo.photoCaption}</figcaption>
       </figure>
-      <div class="mt-12 md:col-span-3 md:col-start-10 md:mt-0">
-        <div class="aspect-[3/4] w-28 overflow-hidden bg-[#c9c4b8]"><img class="h-full w-full object-cover grayscale" src={TEACHER_PHOTO} alt={c.dojo.teacher.photoAlt} /></div>
-        <h3 class="mt-5 font-serif text-2xl font-normal">{c.dojo.teacher.name}</h3>
-        <p class="mt-3 text-xs font-semibold uppercase leading-6 tracking-[.09em] text-[#a32d21]">
-          {c.dojo.teacher.credentialsLines.map((line, i) => <>{i > 0 && <br />}{line}</>)}
-        </p>
-        <p class="mt-5 text-base leading-7 text-black/70">{c.dojo.teacher.bio}</p>
+      <div>
+        <p class="section-kicker text-[#efb49b]">{c.dojo.label}</p>
+        <h2 class="section-title mt-4 text-white">{c.dojo.titleLines.join(' ')}</h2>
+        <div class="mt-9 grid grid-cols-[6rem_1fr] gap-5 border-t border-white/20 pt-7">
+          <img class="aspect-[3/4] w-24 object-cover" src={TEACHER_PHOTO} alt={c.dojo.teacher.photoAlt} loading="lazy" />
+          <div>
+            <h3 class="font-serif text-2xl">{c.dojo.teacher.name}</h3>
+            <p class="mt-2 text-sm font-bold uppercase leading-6 tracking-[.1em] text-[#efb49b]">
+              {c.dojo.teacher.credentialsLines.join(' · ')}
+            </p>
+            <p class="mt-3 leading-7 text-white/75">{c.dojo.teacher.bio}</p>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
-  <section id="umbral" class="mx-auto max-w-7xl px-5 pb-28 md:pb-40">
-    <div class="relative border-x border-b border-[#1d1c19] px-5 pb-16 pt-24 text-center md:px-12 md:pb-24 md:pt-32">
-      <div aria-hidden="true" class="absolute left-1/2 top-0 h-16 w-px -translate-x-1/2 bg-[#1d1c19]"></div>
-      <SectionLabel text={c.threshold.label} />
-      <h2 class="mx-auto mt-7 max-w-[13ch] font-serif text-[2.7rem] font-normal leading-[1.05] md:text-6xl">
-        {c.threshold.titleLines.map((line) => <>{line}<br /></>)}
+  <section id="umbral" class="section-pad bg-[#9b3025] text-center text-white">
+    <div class="site-shell">
+      <p class="section-kicker text-[#f4c9b6]">{c.threshold.label}</p>
+      <h2 class="mx-auto mt-4 max-w-3xl font-serif text-4xl font-normal leading-tight md:text-6xl">
+        {c.threshold.titleLines.join(' ')}
       </h2>
-      <p class="mx-auto mt-8 max-w-lg text-[1.08rem] leading-[1.75] text-black/70">{c.threshold.text}</p>
-      <a href="mailto:EMAIL-PENDENTE" class="mt-9 inline-flex min-h-12 items-center bg-[#a32d21] px-6 text-sm font-semibold text-[#f7f5ed] no-underline">{c.threshold.ctaLabel}</a>
+      <p class="mx-auto mt-6 max-w-2xl text-lg leading-8 text-white/85">{c.threshold.text}</p>
+      <a href="mailto:EMAIL-PENDENTE" class="button mt-9 bg-white text-[#752219]">{c.threshold.ctaLabel}</a>
     </div>
   </section>
 
-  <p slot="footer-note" class="text-right text-xs leading-5 text-black/55">
+  <p slot="footer-note" class="text-sm leading-6 text-white/65">
     {c.chrome.footerNote.areas}<br />{c.chrome.footerNote.orgType}
   </p>
 </Base>

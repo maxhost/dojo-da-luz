@@ -1,0 +1,43 @@
+{
+  "seo": {
+    "title": "Dojo da Luz and Pablo Durán | Aikido Lisbon",
+    "description": "Discover Dojo da Luz, Pablo Durán and the line of transmission connected to Franck Noël and Tokyo Aikikai."
+  },
+  "eyebrow": "Dojo da Luz",
+  "title": "A place to practise the Way.",
+  "lead": "More than a training room, the dojo is a place of learning, attention and community.",
+  "spaceTitle": "The place of practice.",
+  "spaceParagraphs": [
+    "Dojo literally means the place where the Way is practised. It is dedicated to physical, mental and relational development.",
+    "Dojo da Luz also includes a social space to read, talk, watch films and spend time together before or after practice."
+  ],
+  "teacher": {
+    "label": "Teacher",
+    "name": "Pablo Durán",
+    "credentials": "5th Dan Aikikai · IPDJ sports coach",
+    "paragraphs": [
+      "He began practising in Jaén in 2002. His search led him to follow Seishiro Endo and meet Franck Noël, who became his main reference.",
+      "He lived in Toulouse for six and a half years, practising daily at Dojo de la Roseraie and spending time as an uchideshi. He moved to Lisbon in 2015 and opened Dojo da Luz in 2016.",
+      "He continues to attend seminars across Europe and has visited Aikikai Hombu Dojo and Saku Dojo in Japan."
+    ],
+    "linkLabel": "Read Pablo Durán's story"
+  },
+  "lineageTitle": "A living transmission.",
+  "lineage": [
+    {
+      "name": "Franck Noël",
+      "role": "Shihan · Dojo de la Roseraie",
+      "text": "He practised for eight years in Japan, primarily with Seigo Yamaguchi, and founded Dojo de la Roseraie in Toulouse."
+    },
+    {
+      "name": "Seigo Yamaguchi",
+      "role": "Hombu Dojo",
+      "text": "One of the most influential post-war Aikido teachers and a reference for a generation of Japanese and European instructors."
+    },
+    {
+      "name": "Ueshiba family",
+      "role": "Aikido Doshu",
+      "text": "Morihei, Kisshomaru and Moriteru Ueshiba have carried the discipline forward from its foundation to the present."
+    }
+  ]
+}

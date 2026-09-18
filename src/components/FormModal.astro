@@ -1,0 +1,30 @@
+---
+interface Props { id: string; title: string; trigger: string; url: string; directLabel: string; closeLabel: string }
+const { id, title, trigger, url, directLabel, closeLabel } = Astro.props
+---
+<button class="button bg-white text-[#752219]" type="button" data-modal-open={id}>{trigger}</button>
+<dialog id={id} class="m-auto w-[min(94vw,48rem)] border-0 bg-white p-0 text-[#211f1c] backdrop:bg-black/70">
+  <div class="flex items-center justify-between border-b border-[#d7cec0] p-4">
+    <h2 class="font-serif text-2xl">{title}</h2>
+    <button type="button" class="px-3 py-2 font-bold" data-modal-close={id} aria-label={closeLabel}>×</button>
+  </div>
+  <iframe title={title} data-form-src={url} class="h-[70vh] w-full border-0" loading="lazy"></iframe>
+  <p class="border-t border-[#d7cec0] p-4 text-center text-sm"><a href={url} target="_blank" rel="noopener">{directLabel}</a></p>
+</dialog>
+<script>
+  document.querySelectorAll('[data-modal-open]').forEach((button) => button.addEventListener('click', () => {
+    const target = button.getAttribute('data-modal-open')
+    if (!target) return
+    const dialog = document.getElementById(target)
+    if (!(dialog instanceof HTMLDialogElement)) return
+    const frame = dialog.querySelector('[data-form-src]')
+    if (frame instanceof HTMLIFrameElement && !frame.src) frame.src = frame.dataset.formSrc || ''
+    dialog.showModal()
+  }))
+  document.querySelectorAll('[data-modal-close]').forEach((button) => button.addEventListener('click', () => {
+    const target = button.getAttribute('data-modal-close')
+    if (!target) return
+    const dialog = document.getElementById(target)
+    if (dialog instanceof HTMLDialogElement) dialog.close()
+  }))
+</script>

@@ -8,7 +8,7 @@ Si una sesion se cae, se cierra o se compacta, se vuelve aca — no al chat. Hay
 Regla: **marcar `hecho` solo con verificacion real** — tests que pasan, comando corrido,
 cosa vista en pantalla. No "deberia andar".
 
-Ultima actualizacion: 2026-09-17 — home productiva con el Diseño C (spec 0007); /mockup/ retirado.
+Ultima actualizacion: 2026-09-18 — lote publico completo (specs 0008-0018, ADR 0010-0014) revisado, verificado y commiteado en `main`.
 
 ## Contexto
 
@@ -32,9 +32,18 @@ aparte y no forma parte del scaffold.
 pg18) con las 3 tablas aplicadas. El build emite las 4 paginas estaticas y una sola
 funcion, y `/api/health` responde contra Neon: 195ms en caliente desde local.
 
-**Proximo paso: el deploy real.** Falta subir el repo a GitHub y conectar Vercel, y cargar
-`DATABASE_URL` en las env vars del proyecto. El connection string esta en `.env` local
-(ignorado por git) y en la consola de Neon.
+**Próximo paso de producto: cerrar el inventario de URLs Wix y materializar los 301.**
+Las páginas públicas previstas ya están construidas en cuatro idiomas. El formulario de
+Contacto queda visible pero sin envío hasta confirmar email/endpoint; el formulario de
+Adultos todavía usa el destino Wix heredado. Agenda no se construirá.
+
+El lote descrito en `docs/HANDOFF-CLAUDE-CODE.md` ya fue revisado y commiteado: 36 rutas
+prerenderizadas, `astro check` en 0/0/0 y `git diff --check` limpio. Ese archivo queda como
+registro del corte, no como trabajo pendiente.
+
+**Falta lo operativo del lanzamiento:** no existe proyecto Vercel para este repo (verificado
+el 2026-09-18 contra la cuenta `maxhost27-6230s-projects`: solo `my-55mas`, `check-point` y
+`central-hill`). Hasta conectarlo con `DATABASE_URL`, un push a GitHub no despliega nada.
 
 ## Siguiente
 
@@ -42,13 +51,13 @@ funcion, y `/api/health` responde contra Neon: 195ms en caliente desde local.
 |---|---|---|---|---|
 | 1 | Baseline: crawl de las 34 URLs (texto, title, description, H1) + imagenes originales de wixstatic en alta | — | proximo | No depende de nadie. |
 | 2 | Export de Google Search Console 16 meses | — | bloqueada | Necesita acceso del cliente. |
-| 3 | Migracion de contenido: home real + las otras 10 paginas en los 4 idiomas + nav | — | pendiente | Tras baseline. Amplia `ROUTES` en `src/lib/i18n.ts`. |
-| 4 | Diseño visual | 0003–0007 / ADR-0009 | hecho | Diseño C productivo en `/` (spec 0007); `/mockup/` retirado. Falta contenido real (task 3) y traducir es/fr/en. |
-| 5 | Deploy real: repo a GitHub + conectar Vercel + `DATABASE_URL` en env | — | proximo | Verificar `/api/health` en la URL de produccion. |
+| 3 | Migración de contenido y páginas: Aulas, Aikido, Dojo, Pablo Durán, Contacto y Otras Artes | 0010–0017 | hecho | Sitemap de páginas completo en pt/es/fr/en. Agenda retirada. Quedan endpoints operativos separados. |
+| 4 | Diseño visual | 0003–0009 / ADR-0010 | hecho | Estructura tradicional productiva, video hero e información práctica en HTML; paridad pt/es/fr/en. |
+| 5 | Deploy real: conectar Vercel al repo + `DATABASE_URL` en env | — | proximo | Repo ya publicado en GitHub (`maxhost/dojo-da-luz`, rama `main`). Falta crear el proyecto Vercel y verificar `/api/health` en la URL de produccion. |
 | 5b | Borrar el proyecto Neon huerfano `bitter-tree-51605379` | — | pendiente | Lo cree yo antes de que existiera `silent-wave`. El MCP quedo scopeado y no puede borrarlo: va por consola. |
 | 6 | Spec 0003 — backoffice: auth magic link + contenido -> commit a GitHub | 0003 | pendiente | |
 | 7 | Spec 0004 — alumnos + emision de factura + PDF a R2 + envio Resend | 0004 | pendiente | Necesita una factura de ejemplo real. |
-| 8 | Mapa de redirects 301 de las 34 URLs viejas | — | pendiente | No negociable antes de lanzar. |
+| 8 | Redirects 301 de las 34 URLs viejas | — | plan definido | Matriz conceptual documentada. Falta crawl final, Search Console e implementación cuando existan todos los destinos. |
 | 9 | Sitemap + robots.txt | — | pendiente | Con el set completo de paginas. |
 
 ## Hallazgos del sitio actual
@@ -95,6 +104,21 @@ ADR que supersede la fila de auth del 0001.
 | 2026-09-17 | Diseño C — paisaje narrativo | `/mockup-c/` prerenderizado; selector A/B/C; narrativa completa; cero scripts/gradientes/sombras |
 | 2026-09-17 | Consolidación de dirección C | Única ruta `/mockup/`; Encarnação y selector ausentes; docs alineados; typecheck/build limpios |
 | 2026-09-17 | Spec 0007 — home productiva con el Diseño C | `npm run typecheck` 0 errores; build emite `/`, `/es/`, `/fr/`, `/en/` (no `/mockup/`); `rg mockup src/` vacío; HTML sin `<script>` ejecutable; hreflang recíproco correcto |
+| 2026-09-18 | Spec 0008 — home tradicional y contenido rastreable | `npm run typecheck` 0 errores; `npm run build` emite 4 idiomas; sedes y horarios presentes como HTML; `git diff --check` limpio |
+| 2026-09-18 | Spec 0009 — video centrado en hero | `npm run typecheck` 0 errores; `npm run build` emite 4 idiomas; atributos de video y poster presentes en HTML; `git diff --check` limpio |
+| 2026-09-18 | Arquitectura de URLs y plan de redirects | Matriz por idioma, reglas 301/410/PDF, secuencia de páginas y gate de lanzamiento en `docs/design/09-arquitectura-urls-y-redirects.md`; enlaces actualizados en INDEX/README |
+| 2026-09-18 | Spec 0010 — Aulas productivas | `npm run typecheck` 0 errores; build emite `/aulas`, `/es/clases`, `/fr/cours`, `/en/classes`; canonical/hreflang recíprocos y horarios, cuotas, anchors verificados en HTML |
+| 2026-09-18 | Menú global localizado | Home y Aulas comparten 5 destinos en pt/es/fr/en; paths generados por `siteNav()`; `/es` sustituye el enlace manual erróneo `/es/`; typecheck/build limpios |
+| 2026-09-18 | Spec 0011 — traducciones de Home | Sin `Placeholder` en `content/*/home.json`; H1 y CTAs es/fr/en verificados en HTML; typecheck/build y `git diff --check` limpios |
+| 2026-09-18 | ADR-0011 — audiencias y formularios | Arquitectura corregida: Aulas como resumen, landing pages Adultos/Niños, medios preservados y modal con destino específico por actividad |
+| 2026-09-18 | Spec 0012 — Adultos y Niños | 8 rutas nuevas; formularios diferenciados y lazy; 16 rutas totales en build; typecheck y `git diff --check` limpios |
+| 2026-09-18 | ADR-0012 + spec 0013 | Agenda retirada; Aikido publicado en pt/es/fr/en; build con 20 rutas, canonical/hreflang y menú localizado verificados |
+| 2026-09-18 | Spec 0014 — Dojo y Contacto | 8 rutas nuevas; build con 28 rutas; professor/linaje/transporte/formulario en HTML; canonical, menú y typecheck verificados |
+| 2026-09-18 | Spec 0015 — Otras Artes | 4 rutas nuevas; build con 32 rutas; Shiatsu/Iaido/Tai Chi y horarios en HTML; formularios Iaido/Tai Chi distintos y lazy; canonical/hreflang, menú, typecheck y `git diff --check` verificados |
+| 2026-09-18 | Spec 0016 — CTA en hero de audiencias | Los 8 HTML de Adultos/Niños contienen 2 CTAs y 1 solo modal; formularios por audiencia conservados; typecheck/build y `git diff --check` limpios |
+| 2026-09-18 | ADR-0013 + spec 0017 — Pablo Durán | 4 rutas nuevas y 36 totales; biografía, cronología, formación y linaje en HTML; JSON-LD `Person` parseado; enlaces Dojo, canonical/hreflang y mapa 301 verificados |
+| 2026-09-18 | ADR-0014 + spec 0018 — idiomas, redes y handoff | 36 páginas con banderas accesibles y Facebook en cabecera/menú móvil/pie; perfiles no verificados omitidos; handoff de push escrito; typecheck/build y `git diff --check` limpios |
+| 2026-09-18 | Revision y commit del lote publico completo (specs 0008-0018, ADR 0010-0014) | `npm run typecheck` 0 errores/0 warnings/0 hints; `npm run build` con 36 `index.html` en `.vercel/output/static`; `git diff --check` limpio; `git status --porcelain -uall` sin archivos ajenos al lote |
 
 ## Descartado (y por que)
 

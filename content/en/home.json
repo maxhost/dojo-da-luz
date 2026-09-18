@@ -1,60 +1,63 @@
 {
   "seo": {
-    "title": "Dojo da Luz — en",
-    "description": "Placeholder de scaffold (en). El contenido real se carga en la migracion."
+    "title": "Dojo da Luz — Aikido in Lisbon",
+    "description": "Aikido for adults and children in Lisbon. Benfica and Lumiar. Classes with Pablo Durán, 5th Dan Aikikai."
   },
   "chrome": {
-    "caption": "Placeholder caption (en)",
-    "menuLabel": "Placeholder menu (en)",
-    "skipLink": "Placeholder skip link (en)",
+    "caption": "Aikido · Lisbon",
+    "menuLabel": "Menu",
+    "skipLink": "Skip to content",
     "nav": [
-      { "label": "Placeholder nav 1 (en)", "href": "#montanha" },
-      { "label": "Placeholder nav 2 (en)", "href": "#terra" },
-      { "label": "Placeholder nav 3 (en)", "href": "#dojo" },
-      { "label": "Placeholder nav 4 (en)", "href": "#umbral" }
+      { "label": "The practice", "href": "#montanha" },
+      { "label": "Classes", "href": "#terra" },
+      { "label": "The dojo", "href": "#dojo" },
+      { "label": "Contact", "href": "#umbral" }
     ],
     "footerNote": {
-      "areas": "Placeholder areas (en)",
-      "orgType": "Placeholder org (en)"
+      "areas": "Benfica · Lumiar",
+      "orgType": "Non-profit association"
     }
   },
   "hero": {
-    "eyebrowLines": ["Placeholder eyebrow 1 (en)", "Placeholder eyebrow 2 (en)"],
-    "titleLines": ["Placeholder title 1 (en)", "Placeholder title 2 (en)"],
-    "titleHighlight": "Placeholder highlight (en)",
-    "tagline": "Placeholder tagline (en)"
+    "eyebrowLines": ["Aikido in Lisbon", "since 2016"],
+    "titleLines": ["Between heaven", "and earth,"],
+    "titleHighlight": "presence.",
+    "tagline": "Aikido for adults and children. A non-competitive practice grounded in attention, balance and relationship."
   },
   "practice": {
-    "label": "Placeholder label 01 (en)",
-    "titleLines": ["Placeholder title 1 (en)", "Placeholder title 2 (en)"],
-    "paragraphs": ["Placeholder parrafo 1 (en)", "Placeholder parrafo 2 (en)"]
+    "label": "01 · The mountain",
+    "titleLines": ["Do not defeat.", "Find the centre."],
+    "paragraphs": [
+      "Like climbing a mountain, practice looks for no shortcuts. We repeat the movement, observe and adjust.",
+      "Technique teaches us to receive force without opposing it directly."
+    ]
   },
   "places": {
-    "label": "Placeholder label 02 (en)",
-    "titleLines": ["Placeholder title 1 (en)", "Placeholder title 2 (en)"],
-    "lead": "Placeholder lead (en)",
-    "ctaLabel": "Placeholder cta (en)",
+    "label": "02 · The earth",
+    "titleLines": ["Three places", "to practise."],
+    "lead": "The path meets everyday life in Benfica and Lumiar.",
+    "ctaLabel": "View timetable",
     "items": [
-      { "name": "Benfica", "dojo": "Placeholder dojo 1 (en)", "time": "Placeholder horario 1 (en)" },
-      { "name": "Lumiar", "dojo": "Placeholder dojo 2 (en)", "time": "Placeholder horario 2 (en)" }
+      { "name": "Benfica", "dojo": "Dojo da Luz", "time": "Morning · lunchtime · evening" },
+      { "name": "Lumiar", "dojo": "Núcleo Lumiar", "time": "Weekly classes" }
     ]
   },
   "dojo": {
-    "label": "Placeholder label 03 (en)",
-    "titleLines": ["Placeholder title 1 (en)", "Placeholder title 2 (en)"],
-    "photoCaption": "Placeholder caption foto (en)",
-    "photoAlt": "Placeholder alt foto (en)",
+    "label": "03 · The dojo",
+    "titleLines": ["A place", "of transmission."],
+    "photoCaption": "Keiko — regular practice in Lisbon",
+    "photoAlt": "Shared practice at Dojo da Luz",
     "teacher": {
       "name": "Pablo Durán",
-      "credentialsLines": ["Placeholder credencial 1 (en)", "Placeholder credencial 2 (en)"],
-      "bio": "Placeholder bio (en)",
-      "photoAlt": "Placeholder alt retrato (en)"
+      "credentialsLines": ["5th Dan Aikikai", "Hombu Dojo, Tokyo"],
+      "bio": "Teaching in Lisbon since 2015.",
+      "photoAlt": "Pablo Durán"
     }
   },
   "threshold": {
-    "label": "Placeholder label 04 (en)",
-    "titleLines": ["Placeholder title 1 (en)", "Placeholder title 2 (en)"],
-    "text": "Placeholder texto (en)",
-    "ctaLabel": "Placeholder cta (en)"
+    "label": "04 · The threshold",
+    "titleLines": ["Entering the dojo", "is a beginning."],
+    "text": "No experience is required. Choose a location and we will explain everything you need for your first class.",
+    "ctaLabel": "Book a trial class"
   }
 }

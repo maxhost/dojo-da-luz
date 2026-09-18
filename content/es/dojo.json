@@ -1,0 +1,43 @@
+{
+  "seo": {
+    "title": "Dojo da Luz y Pablo Durán | Aikido Lisboa",
+    "description": "Conoce el Dojo da Luz, Pablo Durán y la línea de transmisión vinculada a Franck Noël y al Aikikai de Tokio."
+  },
+  "eyebrow": "Dojo da Luz",
+  "title": "Un lugar para practicar la Vía.",
+  "lead": "Más que una sala de entrenamiento, el dojo es un espacio de aprendizaje, atención y convivencia.",
+  "spaceTitle": "El lugar de la práctica.",
+  "spaceParagraphs": [
+    "Dojo significa literalmente lugar donde se practica la Vía. Es un espacio dedicado al perfeccionamiento físico, mental y relacional.",
+    "El Dojo da Luz incluye también un espacio de convivencia para leer, conversar, ver películas y compartir tiempo antes o después de la práctica."
+  ],
+  "teacher": {
+    "label": "Profesor",
+    "name": "Pablo Durán",
+    "credentials": "5.º Dan Aikikai · Entrenador deportivo IPDJ",
+    "paragraphs": [
+      "Comenzó la práctica en Jaén en 2002. Su búsqueda le llevó a seguir a Seishiro Endo y a conocer a Franck Noël, su principal referencia.",
+      "Vivió seis años y medio en Toulouse, practicando diariamente en el Dojo de la Roseraie y pasando un periodo como uchideshi. En 2015 se instaló en Lisboa y en 2016 inauguró el Dojo da Luz.",
+      "Continúa participando en seminarios europeos y visitó el Aikikai Hombu Dojo y el Saku Dojo en Japón."
+    ],
+    "linkLabel": "Conocer la trayectoria de Pablo Durán"
+  },
+  "lineageTitle": "Una transmisión viva.",
+  "lineage": [
+    {
+      "name": "Franck Noël",
+      "role": "Shihan · Dojo de la Roseraie",
+      "text": "Practicó ocho años en Japón, principalmente con Seigo Yamaguchi, y fundó el Dojo de la Roseraie en Toulouse."
+    },
+    {
+      "name": "Seigo Yamaguchi",
+      "role": "Hombu Dojo",
+      "text": "Uno de los profesores más influyentes del Aikido de posguerra y referencia de una generación de instructores japoneses y europeos."
+    },
+    {
+      "name": "Familia Ueshiba",
+      "role": "Doshu del Aikido",
+      "text": "Morihei, Kisshomaru y Moriteru Ueshiba aseguran la continuidad de la disciplina desde su fundación hasta hoy."
+    }
+  ]
+}

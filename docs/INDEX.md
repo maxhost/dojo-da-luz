@@ -19,6 +19,11 @@ desactualizado es peor que no tenerlo.
 | [0007](adr/0007-home-alternativa-b.md) | 2026-09-17 | Alternativa B con acento rojo concentrado y comparación estática A/B | propuesta comparativa | `docs/adr/0007-home-alternativa-b.md` |
 | [0008](adr/0008-home-paisaje.md) | 2026-09-17 | Alternativa C como paisaje continuo: sol, montaña, tierra, dojo y umbral | propuesta comparativa | `docs/adr/0008-home-paisaje.md` |
 | [0009](adr/0009-direccion-paisaje.md) | 2026-09-17 | Diseño C elegido; paisaje extendido como gramática oficial de las cinco pantallas | aceptada | `docs/adr/0009-direccion-paisaje.md` |
+| [0010](adr/0010-direccion-tradicional.md) | 2026-09-18 | Dirección tradicional, fotográfica e informativa; datos prácticos en HTML | aceptada | `docs/adr/0010-direccion-tradicional.md` |
+| [0011](adr/0011-audiencias-y-formularios.md) | 2026-09-18 | Aulas separa Adultos/Niños y cada audiencia o disciplina conserva contenido, medios y formulario propios | aceptada | `docs/adr/0011-audiencias-y-formularios.md` |
+| [0012](adr/0012-retirar-agenda.md) | 2026-09-18 | Agenda desaparece; sus URLs se mapean individualmente a destinos semánticos vivos | aceptada | `docs/adr/0012-retirar-agenda.md` |
+| [0013](adr/0013-pagina-profesor.md) | 2026-09-18 | Pablo Durán tiene página canónica propia, enlazada desde Dojo, para conservar historia e intención de búsqueda | aceptada | `docs/adr/0013-pagina-profesor.md` |
+| [0014](adr/0014-iconos-idioma-redes.md) | 2026-09-18 | Selector con banderas accesibles y redes sociales sólo con URL oficial verificada | aceptada | `docs/adr/0014-iconos-idioma-redes.md` |
 
 ## Specs — que se construye
 
@@ -31,6 +36,17 @@ desactualizado es peor que no tenerlo.
 | [0005](specs/0005-home-landscape.md) | 2026-09-17 | Home como paisaje narrativo SVG y selector A/B/C | implementada | si | `src/components/DesignSwitcher.astro`, `src/pages/mockup-c.astro` |
 | [0006](specs/0006-consolidar-diseno-c.md) | 2026-09-17 | Consolidar C, retirar A/B y alinear la documentación del sistema | implementada | no | `src/pages/mockup*.astro`, `docs/design/**` |
 | [0007](specs/0007-home-productiva.md) | 2026-09-17 | Migrar el Diseño C de /mockup/ a la home productiva con JSON validado; retirar /mockup/ | implementada | no | `src/components/HomeView.astro`, `src/layouts/Base.astro`, `src/lib/content.ts`, `content/*/home.json` |
+| [0008](specs/0008-home-tradicional.md) | 2026-09-18 | Home tradicional de dojo con aulas y horarios como HTML semántico | implementada | no | `src/components/HomeView.astro`, `src/layouts/Base.astro`, `src/styles/global.css` |
+| [0009](specs/0009-hero-video.md) | 2026-09-18 | Video de Aikido en el hero y contenido centrado | implementada | no | `src/components/HomeView.astro` |
+| [0010](specs/0010-aulas-productivas.md) | 2026-09-18 | Aulas en cuatro idiomas con horarios, cuotas, niños y primera clase en HTML | implementada | no | `src/lib/i18n.ts`, `src/lib/content.ts`, `src/components/ClassesView.astro`, `src/pages/**`, `content/*/classes.json` |
+| [0011](specs/0011-traducciones-home.md) | 2026-09-18 | Traducciones completas de la Home en español, francés e inglés | implementada | si | `content/{es,fr,en}/home.json` |
+| [0012](specs/0012-aulas-audiencias.md) | 2026-09-18 | Landing pages Adultos/Niños y formularios contextuales en cuatro idiomas | implementada | no | `src/**`, `content/*/{adults,children}.json` |
+| [0013](specs/0013-aikido-productivo.md) | 2026-09-18 | Aikido en cuatro idiomas con historia, principios, O-Sensei y acceso por audiencia | implementada | no | `src/**`, `content/*/aikido.json` |
+| [0014](specs/0014-dojo-contacto.md) | 2026-09-18 | Dojo y Contacto en cuatro idiomas con profesor, linaje, sedes, transporte y formulario | implementada | no | `src/**`, `content/*/{dojo,contact}.json` |
+| [0015](specs/0015-outras-artes.md) | 2026-09-18 | Otras Artes en cuatro idiomas con Shiatsu, Iaido, Tai Chi y formularios específicos | implementada | no | `src/**`, `content/*/other-arts.json` |
+| [0016](specs/0016-cta-hero-audiencias.md) | 2026-09-18 | CTA de clase experimental en los heroes de Adultos y Niños, reutilizando su modal contextual | implementada | no | `src/components/AudienceView.astro` |
+| [0017](specs/0017-profesor-pablo-duran.md) | 2026-09-18 | Página localizada de Pablo Durán, enlace desde Dojo y destinos 301 actualizados | implementada | no | `src/**`, `content/*/{dojo,teacher}.json`, `docs/design/09-arquitectura-urls-y-redirects.md` |
+| [0018](specs/0018-iconos-idioma-redes-handoff.md) | 2026-09-18 | Iconos accesibles de idioma, redes verificadas y handoff para Claude Code | implementada | no | `src/layouts/Base.astro`, `src/components/SocialLinks.astro`, `docs/HANDOFF-CLAUDE-CODE.md` |
 
 **"Disjunta?"** = si el trabajo no comparte archivos con otra spec abierta. Es lo que
 habilita paralelizar. Lo decide la spec, no el orquestador en runtime.
@@ -48,6 +64,8 @@ habilita paralelizar. Lo decide la spec, no el orquestador en runtime.
 | [Datos pendientes](design/06-datos-pendientes.md) | Información a solicitar al cliente |
 | [Preview local](design/07-preview-local.md) | Ejecución y verificación del mockup |
 | [Investigación de composición](design/08-investigacion-composicion.md) | Ma, proporción áurea, módulo japonés y rojo |
+| [Arquitectura de URLs y redirects](design/09-arquitectura-urls-y-redirects.md) | Sitemap objetivo, matriz 301 por idioma, reglas para PDFs/410 y gate de lanzamiento |
+| [Handoff para Claude Code](HANDOFF-CLAUDE-CODE.md) | Estado integral del working tree, rutas, formularios, verificaciones, pendientes y checklist de push |
 
 ## Convenciones
 

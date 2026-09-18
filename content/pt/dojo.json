@@ -1,0 +1,43 @@
+{
+  "seo": {
+    "title": "Dojo da Luz e Pablo Durán | Aikido Lisboa",
+    "description": "Conhece o Dojo da Luz, Pablo Durán e a linha de transmissão ligada a Franck Noël e ao Aikikai de Tóquio."
+  },
+  "eyebrow": "Dojo da Luz",
+  "title": "Um lugar para praticar a Via.",
+  "lead": "Mais do que uma sala de treino, o dojo é um espaço de aprendizagem, atenção e convivência.",
+  "spaceTitle": "O lugar da prática.",
+  "spaceParagraphs": [
+    "Dojo significa literalmente lugar onde se pratica a Via. É um espaço dedicado à procura de aperfeiçoamento físico, mental e relacional.",
+    "O Dojo da Luz inclui também um espaço de convivência para ler, conversar, ver filmes e partilhar tempo antes ou depois da prática."
+  ],
+  "teacher": {
+    "label": "Professor",
+    "name": "Pablo Durán",
+    "credentials": "5.º Dan Aikikai · Treinador desportivo IPDJ",
+    "paragraphs": [
+      "Iniciou a prática em Jaén em 2002. A procura levou-o a seguir Seishiro Endo e a encontrar Franck Noël, que se tornou a sua principal referência.",
+      "Viveu seis anos e meio em Toulouse, praticando diariamente no Dojo de la Roseraie e passando um período como uchideshi. Em 2015 instalou-se em Lisboa e em 2016 inaugurou o Dojo da Luz.",
+      "Continua a participar em estágios na Europa e visitou o Aikikai Hombu Dojo e o Saku Dojo no Japão."
+    ],
+    "linkLabel": "Conhecer a trajetória de Pablo Durán"
+  },
+  "lineageTitle": "Uma transmissão viva.",
+  "lineage": [
+    {
+      "name": "Franck Noël",
+      "role": "Shihan · Dojo de la Roseraie",
+      "text": "Praticou oito anos no Japão, principalmente com Seigo Yamaguchi, e fundou o Dojo de la Roseraie em Toulouse."
+    },
+    {
+      "name": "Seigo Yamaguchi",
+      "role": "Hombu Dojo",
+      "text": "Um dos professores mais influentes do Aikido do pós-guerra e referência de uma geração de instrutores japoneses e europeus."
+    },
+    {
+      "name": "Família Ueshiba",
+      "role": "Doshu do Aikido",
+      "text": "Morihei, Kisshomaru e Moriteru Ueshiba asseguram a continuidade da disciplina desde a fundação até hoje."
+    }
+  ]
+}

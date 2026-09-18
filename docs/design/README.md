@@ -1,11 +1,12 @@
 # Rediseño — Dojo da Luz
 
-Documentación de producto y dirección de arte para la migración de
-`aikido-duran.com` a Astro. Estado: propuesta lista para validación del cliente.
+Documentación de producto, dirección de arte y migración SEO de
+`aikido-duran.com` a Astro. Estado: dirección tradicional aceptada por el cliente.
 
 ## Principios no negociables
 
-- Cinco pantallas públicas: Inicio, Clases, Aikido, Dojo y Contacto.
+- Núcleo público: Inicio, Aulas, Aikido, Dojo y Contacto. Otras Artes conserva URL
+  propia; Agenda fue retirada por ADR-0012.
 - Misma arquitectura y contratos de contenido en pt, es, fr y en.
 - Salida pública 100 % estática y sin JavaScript ejecutable.
 - Mobile first desde 375 px; ningún texto dentro de cajas de altura fija.
@@ -14,8 +15,8 @@ Documentación de producto y dirección de arte para la migración de
 - Contenido visible para Aikido Lisboa, Benfica, Lumiar, Encarnação, Pablo Durán,
   Aikikai, aula experimental, horários y preços.
 - No se inventan direcciones, teléfono ni datos operativos.
-- Dirección oficial: ADR-0009. Paisaje continuo de sol, montaña, tierra, dojo y umbral,
-  extendido con una metáfora propia a cada pantalla.
+- Dirección oficial: ADR-0010. Web tradicional de dojo, hero audiovisual, fotografía,
+  jerarquía clásica y contenido práctico como HTML rastreable.
 
 ## Documentos
 
@@ -27,10 +28,11 @@ Documentación de producto y dirección de arte para la migración de
 6. [Datos pendientes](./06-datos-pendientes.md)
 7. [Previsualización local](./07-preview-local.md)
 8. [Investigación de composición](./08-investigacion-composicion.md)
+9. [Arquitectura de URLs y redirecciones 301](./09-arquitectura-urls-y-redirects.md)
 
 ## Artefactos relacionados
 
 - Home productiva: [`src/components/HomeView.astro`](../../src/components/HomeView.astro)
-- Decisión vigente: [`ADR-0009`](../adr/0009-direccion-paisaje.md)
+- Decisión vigente: [`ADR-0010`](../adr/0010-direccion-tradicional.md)
 - Consolidación del mockup: [`spec 0006`](../specs/0006-consolidar-diseno-c.md)
 - Migración a producción: [`spec 0007`](../specs/0007-home-productiva.md)

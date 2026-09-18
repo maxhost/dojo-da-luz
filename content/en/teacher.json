@@ -1,0 +1,46 @@
+{
+  "seo": {
+    "title": "Pablo Durán, Aikido teacher in Lisbon | Dojo da Luz",
+    "description": "The path of Pablo Durán, 5th Dan Aikikai and IPDJ coach: training at Dojo de la Roseraie, practice in Japan and teaching Aikido in Lisbon."
+  },
+  "eyebrow": "Aikido teacher in Lisbon",
+  "title": "Pablo Durán",
+  "lead": "A path shaped by daily practice, transmission and a commitment to teaching Aikido to adults and children.",
+  "credentials": "5th Dan Tokyo Aikikai · IPDJ sports coach · Professional instructor",
+  "photo": "https://static.wixstatic.com/media/ae7240_4681e435c4ab47dbb9f6db8fe35fa6a5.jpg/v1/fill/w_900,h_1200,al_c,q_85/ae7240_4681e435c4ab47dbb9f6db8fe35fa6a5.jpg",
+  "photoAlt": "Pablo Durán, Aikido teacher and founder of Dojo da Luz in Lisbon",
+  "biographyTitle": "From practice to transmission",
+  "biography": [
+    "Pablo Durán began practising Aikido in December 2002 in Jaén under Jacinto Camacho. His interest in Seishiro Endo's work led him to international seminars and, in Toulouse, to Franck Noël, who became his principal teacher.",
+    "He moved to Toulouse in March 2009. For six and a half years he practised daily at Dojo de la Roseraie, including a period as an uchideshi. From 2011 he began covering classes for Franck Noël and other teachers during their travels and absences.",
+    "In 2015 he moved to Lisbon to teach professionally. In February 2016 he opened Dojo da Luz, offering regular classes for adults, children and teenagers."
+  ],
+  "milestonesTitle": "Path",
+  "milestones": [
+    { "year": "2002", "title": "Beginnings in Jaén", "text": "He starts Aikido with Jacinto Camacho and encounters the teaching of Seishiro Endo." },
+    { "year": "2009–2015", "title": "Dojo de la Roseraie", "text": "He lives in Toulouse, practises daily with Franck Noël and spends a period as an uchideshi." },
+    { "year": "2011", "title": "First teaching responsibilities", "text": "He begins leading classes at Dojo de la Roseraie when its teachers are away." },
+    { "year": "2013", "title": "Practice in Japan", "text": "He visits Saku Dojo and Tokyo Aikikai Hombu Dojo during a month-long study trip." },
+    { "year": "2014", "title": "Teaching children", "text": "He works with the children's teacher and develops specific teaching methods for younger students." },
+    { "year": "2016", "title": "Dojo da Luz", "text": "He opens a Lisbon dojo dedicated to regular Aikido teaching for adults and children." }
+  ],
+  "formationTitle": "Continuing education",
+  "formation": [
+    "Alongside daily practice in Toulouse, he attended seminars with Franck Noël in France, Spain and elsewhere in Europe, and followed teachers connected to Seigo Yamaguchi's approach, including Seishiro Endo, Masatoshi Yasuno, Tsuruzo Miyamoto, Christian Tissier and Bernard Palmier.",
+    "He also attended écoles des cadres led by Franck Noël and Bernard Palmier, focusing on examining practice, building teaching sequences and adapting instruction to different audiences."
+  ],
+  "teachingTitle": "Teaching different audiences",
+  "teaching": [
+    "His experience combines intensive practice, pedagogical training and regular teaching.",
+    "At Dojo da Luz he teaches adults, children and teenagers, aiming to transmit what he received with clarity, attention and respect for each practitioner's pace.",
+    "His work remains connected to the international community through seminars and practice gatherings."
+  ],
+  "lineageTitle": "A living line of transmission",
+  "lineageIntro": "Pablo Durán's teaching belongs to a pedagogical line connecting Dojo da Luz with Dojo de la Roseraie and Tokyo Aikikai.",
+  "lineage": [
+    { "name": "Franck Noël", "role": "Principal teacher · 7th Dan Shihan", "text": "Founder of Dojo de la Roseraie in Toulouse and Pablo Durán's direct reference since 2009." },
+    { "name": "Seigo Yamaguchi", "role": "Aikikai Hombu Dojo teacher", "text": "A central influence on Franck Noël and on many Japanese and European teachers." },
+    { "name": "Tokyo Aikikai", "role": "World Aikido headquarters", "text": "The institution responsible for Pablo Durán's Aikikai grade and the discipline's technical continuity." }
+  ],
+  "dojoCta": { "title": "Discover Dojo da Luz", "text": "Explore the space, practice community and line of transmission of the Lisbon dojo.", "label": "Visit the dojo page" }
+}

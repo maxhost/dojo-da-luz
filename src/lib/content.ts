@@ -67,8 +67,118 @@ export const homeSchema = z.object({
   }),
 })
 
+export const classesSchema = z.object({
+  seo: seoSchema,
+  chrome: z.object({
+    caption: z.string().min(1),
+    menuLabel: z.string().min(1),
+    skipLink: z.string().min(1),
+    nav: z.array(z.object({ label: z.string().min(1), href: z.string().min(1) })).min(1),
+    footerNote: z.object({ areas: z.string().min(1), orgType: z.string().min(1) }),
+  }),
+  hero: z.object({
+    eyebrow: z.string().min(1),
+    title: z.string().min(1),
+    lead: z.string().min(1),
+    season: z.string().min(1),
+    ctaLabel: z.string().min(1),
+  }),
+  schedule: z.object({
+    label: z.string().min(1),
+    title: z.string().min(1),
+    intro: z.string().min(1),
+    venues: z.array(z.object({
+      name: z.string().min(1),
+      area: z.string().min(1),
+      classes: z.array(z.object({ audience: z.string().min(1), time: z.string().min(1) })).min(1),
+    })).min(1),
+  }),
+  pricing: z.object({
+    label: z.string().min(1),
+    title: z.string().min(1),
+    intro: z.string().min(1),
+    items: z.array(z.object({ name: z.string().min(1), price: z.string().min(1), detail: z.string().min(1) })).min(1),
+    notes: z.array(z.string().min(1)).min(1),
+  }),
+  children: z.object({
+    label: z.string().min(1),
+    title: z.string().min(1),
+    paragraphs: z.array(z.string().min(1)).min(1),
+    facts: z.array(z.object({ label: z.string().min(1), value: z.string().min(1) })).min(1),
+  }),
+  trial: z.object({
+    label: z.string().min(1),
+    title: z.string().min(1),
+    text: z.string().min(1),
+    note: z.string().min(1),
+    ctaLabel: z.string().min(1),
+  }),
+})
+
+const audienceEntrySchema = z.object({
+  seo: seoSchema,
+  eyebrow: z.string().min(1), title: z.string().min(1), lead: z.string().min(1),
+  paragraphs: z.array(z.string().min(1)).min(1),
+  goalsTitle: z.string().min(1), goals: z.array(z.string().min(1)).min(1),
+  facts: z.array(z.object({ label: z.string().min(1), value: z.string().min(1) })).min(1),
+  photo: z.url(), photoAlt: z.string().min(1),
+  trialTitle: z.string().min(1), trialText: z.string().min(1), trialLabel: z.string().min(1),
+  formUrl: z.url(), directLabel: z.string().min(1), closeLabel: z.string().min(1),
+})
+
+export const aikidoSchema = z.object({
+  seo: seoSchema,
+  eyebrow: z.string().min(1), title: z.string().min(1), lead: z.string().min(1),
+  sections: z.array(z.object({ id: z.string().min(1), title: z.string().min(1), paragraphs: z.array(z.string().min(1)).min(1) })).min(1),
+  founder: z.object({ label: z.string().min(1), title: z.string().min(1), years: z.string().min(1), paragraphs: z.array(z.string().min(1)).min(1) }),
+  audienceTitle: z.string().min(1), adultsLabel: z.string().min(1), childrenLabel: z.string().min(1),
+})
+
+export const dojoSchema = z.object({
+  seo: seoSchema, eyebrow: z.string().min(1), title: z.string().min(1), lead: z.string().min(1),
+  spaceTitle: z.string().min(1), spaceParagraphs: z.array(z.string().min(1)).min(1),
+  teacher: z.object({ label:z.string().min(1), name:z.string().min(1), credentials:z.string().min(1), paragraphs:z.array(z.string().min(1)).min(1), linkLabel:z.string().min(1) }),
+  lineageTitle:z.string().min(1), lineage:z.array(z.object({ name:z.string().min(1), role:z.string().min(1), text:z.string().min(1) })).min(1),
+})
+
+export const teacherSchema = z.object({
+  seo:seoSchema,
+  eyebrow:z.string().min(1), title:z.string().min(1), lead:z.string().min(1), credentials:z.string().min(1),
+  photo:z.url(), photoAlt:z.string().min(1),
+  biographyTitle:z.string().min(1), biography:z.array(z.string().min(1)).min(1),
+  milestonesTitle:z.string().min(1), milestones:z.array(z.object({ year:z.string().min(1), title:z.string().min(1), text:z.string().min(1) })).min(1),
+  formationTitle:z.string().min(1), formation:z.array(z.string().min(1)).min(1),
+  teachingTitle:z.string().min(1), teaching:z.array(z.string().min(1)).min(1),
+  lineageTitle:z.string().min(1), lineageIntro:z.string().min(1), lineage:z.array(z.object({ name:z.string().min(1), role:z.string().min(1), text:z.string().min(1) })).min(1),
+  dojoCta:z.object({ title:z.string().min(1), text:z.string().min(1), label:z.string().min(1) }),
+})
+
+export const contactSchema = z.object({
+  seo: seoSchema, eyebrow:z.string().min(1), title:z.string().min(1), lead:z.string().min(1),
+  venues:z.array(z.object({ name:z.string().min(1), area:z.string().min(1), transport:z.array(z.string().min(1)).min(1) })).min(1),
+  privateTitle:z.string().min(1), privateText:z.string().min(1), formTitle:z.string().min(1),
+  fields:z.object({ name:z.string().min(1), email:z.string().min(1), subject:z.string().min(1), message:z.string().min(1), submit:z.string().min(1), pending:z.string().min(1) }),
+})
+
+export const otherArtsSchema = z.object({
+  seo:seoSchema, eyebrow:z.string().min(1), title:z.string().min(1), lead:z.string().min(1),
+  activities:z.array(z.object({
+    id:z.string().min(1), name:z.string().min(1), subtitle:z.string().min(1), photo:z.url(), photoAlt:z.string().min(1),
+    paragraphs:z.array(z.string().min(1)).min(1), benefits:z.array(z.string().min(1)), schedule:z.array(z.string().min(1)),
+    teacher:z.string().min(1).optional(), trialLabel:z.string().min(1), formUrl:z.url().nullable(), directLabel:z.string().min(1), closeLabel:z.string().min(1),
+  })).min(1),
+})
+
 const SCHEMAS = {
   home: homeSchema,
+  classes: classesSchema,
+  adults: audienceEntrySchema,
+  children: audienceEntrySchema,
+  aikido: aikidoSchema,
+  dojo: dojoSchema,
+  teacher: teacherSchema,
+  contact: contactSchema,
+  otherArts: otherArtsSchema,
 } as const satisfies Record<PageKey, z.ZodType>
 
 export type ContentOf<P extends PageKey> = z.infer<(typeof SCHEMAS)[P]>
@@ -85,11 +195,17 @@ const modules = import.meta.glob('../../content/*/*.json', {
 
 const store = new Map<string, unknown>()
 
+// Los nombres de archivo pueden usar kebab-case aunque la clave interna sea camelCase.
+const CONTENT_PAGE_KEYS: Record<string, PageKey> = {
+  'other-arts': 'otherArts',
+}
+
 for (const [path, data] of Object.entries(modules)) {
   const match = /\/content\/([^/]+)\/([^/]+)\.json$/.exec(path)
   if (!match) continue
 
-  const [, locale, page] = match as unknown as [string, string, string]
+  const [, locale, filePage] = match as unknown as [string, string, string]
+  const page = CONTENT_PAGE_KEYS[filePage] ?? filePage
 
   if (!isLocale(locale)) {
     throw new Error(`content: idioma desconocido "${locale}" en ${path}`)

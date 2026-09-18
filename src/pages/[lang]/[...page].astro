@@ -1,0 +1,23 @@
+---
+import ClassesView from '../../components/ClassesView.astro'
+import AudienceView from '../../components/AudienceView.astro'
+import AikidoView from '../../components/AikidoView.astro'
+import DojoView from '../../components/DojoView.astro'
+import TeacherView from '../../components/TeacherView.astro'
+import ContactView from '../../components/ContactView.astro'
+import OtherArtsView from '../../components/OtherArtsView.astro'
+import { LOCALES, DEFAULT_LOCALE, ROUTES, type Locale } from '../../lib/i18n'
+
+export function getStaticPaths() {
+  return LOCALES.filter((locale) => locale !== DEFAULT_LOCALE).flatMap((locale) =>
+    (['classes', 'adults', 'children', 'aikido', 'dojo', 'teacher', 'contact', 'otherArts'] as const).map((view) => ({
+      params: { lang: locale, page: ROUTES[view][locale] }, props: { locale, view },
+    })),
+  )
+}
+
+interface Props { locale: Locale; view: 'classes' | 'adults' | 'children' | 'aikido' | 'dojo' | 'teacher' | 'contact' | 'otherArts' }
+const { locale, view } = Astro.props
+---
+
+{view === 'classes' ? <ClassesView locale={locale} /> : view === 'aikido' ? <AikidoView locale={locale} /> : view === 'dojo' ? <DojoView locale={locale} /> : view === 'teacher' ? <TeacherView locale={locale} /> : view === 'contact' ? <ContactView locale={locale} /> : view === 'otherArts' ? <OtherArtsView locale={locale} /> : <AudienceView locale={locale} page={view} />}

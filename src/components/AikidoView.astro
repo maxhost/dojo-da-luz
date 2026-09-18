@@ -1,0 +1,21 @@
+---
+import Base from '../layouts/Base.astro'
+import { getContent } from '../lib/content'
+import { pathFor, siteNav, type Locale } from '../lib/i18n'
+interface Props { locale: Locale }
+const { locale } = Astro.props
+const c = getContent('aikido', locale)
+const ui = {
+  pt:{caption:'Aikido · Lisboa',menu:'Menu',skip:'Saltar para o conteúdo',areas:'Benfica · Lumiar · Encarnação',org:'Associação sem fins lucrativos'},
+  es:{caption:'Aikido · Lisboa',menu:'Menú',skip:'Saltar al contenido',areas:'Benfica · Lumiar · Encarnação',org:'Asociación sin fines de lucro'},
+  fr:{caption:'Aïkido · Lisbonne',menu:'Menu',skip:'Aller au contenu',areas:'Benfica · Lumiar · Encarnação',org:'Association à but non lucratif'},
+  en:{caption:'Aikido · Lisbon',menu:'Menu',skip:'Skip to content',areas:'Benfica · Lumiar · Encarnação',org:'Non-profit association'},
+}[locale]
+---
+<Base page="aikido" locale={locale} title={c.seo.title} description={c.seo.description} skipLink={ui.skip} nav={siteNav(locale)} menuLabel={ui.menu} caption={ui.caption}>
+  <section class="section-pad bg-[#27231f] text-center text-white"><div class="site-shell"><p class="section-kicker text-[#efb49b]">{c.eyebrow}</p><h1 class="mx-auto mt-5 max-w-4xl font-serif text-5xl leading-[1.04] md:text-7xl">{c.title}</h1><p class="mx-auto mt-6 max-w-2xl text-xl leading-9 text-white/75">{c.lead}</p></div></section>
+  <section class="bg-[#f6f1e8]"><div class="site-shell divide-y divide-[#d7cec0]">{c.sections.map((section,index) => <article id={section.id} class="grid gap-8 py-16 md:grid-cols-[.45fr_1fr] md:gap-20 md:py-20"><div><p class="section-kicker">0{index+1}</p><h2 class="mt-4 font-serif text-3xl leading-tight md:text-4xl">{section.title}</h2></div><div>{section.paragraphs.map((p) => <p class="mt-5 text-lg leading-8 text-[#4c4741] first:mt-0">{p}</p>)}</div></article>)}</div></section>
+  <section class="section-pad bg-white"><div class="site-shell grid gap-10 md:grid-cols-[.55fr_1fr] md:gap-20"><div><p class="section-kicker">{c.founder.label}</p><h2 class="mt-4 font-serif text-4xl md:text-5xl">{c.founder.title}</h2><p class="mt-3 text-sm font-bold tracking-[.14em] text-[#9b3025]">{c.founder.years}</p></div><div>{c.founder.paragraphs.map((p)=><p class="mt-5 text-lg leading-8 text-[#4c4741] first:mt-0">{p}</p>)}</div></div></section>
+  <section class="section-pad bg-[#9b3025] text-center text-white"><div class="site-shell"><h2 class="font-serif text-4xl md:text-5xl">{c.audienceTitle}</h2><div class="mt-8 flex flex-wrap justify-center gap-3"><a class="button bg-white text-[#752219]" href={pathFor('adults',locale)}>{c.adultsLabel}</a><a class="button border border-white text-white" href={pathFor('children',locale)}>{c.childrenLabel}</a></div></div></section>
+  <p slot="footer-note" class="text-sm leading-6 text-white/65">{ui.areas}<br />{ui.org}</p>
+</Base>

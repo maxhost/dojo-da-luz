@@ -1,0 +1,82 @@
+---
+import Base from '../layouts/Base.astro'
+import { getContent } from '../lib/content'
+import { pathFor, siteNav, type Locale } from '../lib/i18n'
+
+interface Props { locale: Locale }
+const { locale } = Astro.props
+const c = getContent('teacher', locale)
+const ui = {
+  pt: { caption: 'Aikido · Lisboa', menu: 'Menu', skip: 'Saltar para o conteúdo', org: 'Associação sem fins lucrativos' },
+  es: { caption: 'Aikido · Lisboa', menu: 'Menú', skip: 'Saltar al contenido', org: 'Asociación sin fines de lucro' },
+  fr: { caption: 'Aïkido · Lisbonne', menu: 'Menu', skip: 'Aller au contenu', org: 'Association à but non lucratif' },
+  en: { caption: 'Aikido · Lisbon', menu: 'Menu', skip: 'Skip to content', org: 'Non-profit association' },
+}[locale]
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Pablo Durán',
+  jobTitle: c.eyebrow,
+  description: c.seo.description,
+  image: c.photo,
+  knowsAbout: ['Aikido', 'Aikikai', 'Aikido for children'],
+  worksFor: {
+    '@type': 'SportsActivityLocation',
+    name: 'Dojo da Luz',
+    url: new URL(pathFor('dojo', locale), Astro.site).href,
+  },
+  url: new URL(pathFor('teacher', locale), Astro.site).href,
+}
+---
+
+<Base page="teacher" locale={locale} title={c.seo.title} description={c.seo.description} skipLink={ui.skip} nav={siteNav(locale)} menuLabel={ui.menu} caption={ui.caption}>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(personSchema)} />
+
+  <section class="section-pad bg-[#f6f1e8]">
+    <div class="site-shell grid gap-12 md:grid-cols-[1.05fr_.75fr] md:items-center md:gap-20">
+      <div>
+        <p class="section-kicker">{c.eyebrow}</p>
+        <h1 class="section-title mt-4 text-5xl md:text-7xl">{c.title}</h1>
+        <p class="mt-5 text-sm font-bold uppercase tracking-[.12em] text-[#9b3025]">{c.credentials}</p>
+        <p class="mt-7 max-w-2xl text-xl leading-9 text-[#625c55]">{c.lead}</p>
+      </div>
+      <img src={c.photo} alt={c.photoAlt} class="max-h-[42rem] w-full object-cover" fetchpriority="high" />
+    </div>
+  </section>
+
+  <section class="section-pad bg-white">
+    <div class="site-shell grid gap-10 md:grid-cols-[.7fr_1.3fr] md:gap-20">
+      <h2 class="section-title">{c.biographyTitle}</h2>
+      <div>{c.biography.map((paragraph) => <p class="mt-5 text-lg leading-8 text-[#4c4741] first:mt-0">{paragraph}</p>)}</div>
+    </div>
+  </section>
+
+  <section class="section-pad bg-[#27231f] text-white">
+    <div class="site-shell">
+      <h2 class="section-title">{c.milestonesTitle}</h2>
+      <ol class="mt-12 grid gap-px bg-white/20 md:grid-cols-2">
+        {c.milestones.map((item) => <li class="bg-[#27231f] p-7"><p class="text-sm font-bold tracking-[.12em] text-[#efb49b]">{item.year}</p><h3 class="mt-3 font-serif text-2xl">{item.title}</h3><p class="mt-4 leading-7 text-white/70">{item.text}</p></li>)}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section-pad bg-[#f6f1e8]">
+    <div class="site-shell grid gap-14 md:grid-cols-2 md:gap-20">
+      <article><h2 class="section-title">{c.formationTitle}</h2>{c.formation.map((paragraph) => <p class="mt-5 text-lg leading-8 text-[#4c4741]">{paragraph}</p>)}</article>
+      <article><h2 class="section-title">{c.teachingTitle}</h2>{c.teaching.map((paragraph) => <p class="mt-5 text-lg leading-8 text-[#4c4741]">{paragraph}</p>)}</article>
+    </div>
+  </section>
+
+  <section class="section-pad bg-white">
+    <div class="site-shell">
+      <div class="max-w-3xl"><h2 class="section-title">{c.lineageTitle}</h2><p class="mt-6 text-lg leading-8 text-[#625c55]">{c.lineageIntro}</p></div>
+      <div class="mt-10 grid gap-6 md:grid-cols-3">{c.lineage.map((item) => <article class="border border-[#d7cec0] p-7"><h3 class="font-serif text-2xl">{item.name}</h3><p class="mt-2 text-xs font-bold uppercase tracking-[.12em] text-[#9b3025]">{item.role}</p><p class="mt-5 leading-7 text-[#625c55]">{item.text}</p></article>)}</div>
+    </div>
+  </section>
+
+  <section class="section-pad bg-[#9b3025] text-center text-white">
+    <div class="site-shell"><h2 class="font-serif text-4xl md:text-6xl">{c.dojoCta.title}</h2><p class="mx-auto mt-5 max-w-2xl text-lg leading-8 text-white/85">{c.dojoCta.text}</p><a class="button mt-8 bg-white text-[#752219]" href={pathFor('dojo', locale)}>{c.dojoCta.label}</a></div>
+  </section>
+
+  <p slot="footer-note" class="text-sm text-white/65">Benfica · Lumiar · Encarnação<br />{ui.org}</p>
+</Base>
