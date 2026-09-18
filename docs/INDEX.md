@@ -27,6 +27,7 @@ desactualizado es peor que no tenerlo.
 | [0015](adr/0015-auth-backoffice.md) | 2026-09-18 | Un unico admin con email y contraseña, sesion opaca en Neon y reset por Resend; supersede la fila Auth del 0001 | aceptada | `docs/adr/0015-auth-backoffice.md` |
 | [0016](adr/0016-ubicacion-backoffice.md) | 2026-09-18 | El BO vive en `/admin` con noindex y guard por Host; el subdominio `bo.` se activa por variable de entorno | aceptada | `docs/adr/0016-ubicacion-backoffice.md` |
 | [0017](adr/0017-dojos-entidad.md) | 2026-09-18 | Los dojos son una entidad en `content/dojos.json` con NAP, coordenadas y horarios estructurados; no van a la DB | aceptada | `docs/adr/0017-dojos-entidad.md` |
+| [0018](adr/0018-geo-motores-generativos.md) | 2026-09-18 | GEO = generative engine optimization: datos estructurados, capa factual citable y crawlers de IA permitidos; nada sin evidencia | aceptada | `docs/adr/0018-geo-motores-generativos.md` |
 
 ## Specs — que se construye
 
@@ -54,6 +55,7 @@ desactualizado es peor que no tenerlo.
 | [0020](specs/0020-dojos-entidad.md) | 2026-09-18 | Dojos en `content/dojos.json` con horarios estructurados; la home los renderiza y emite JSON-LD por sede | cerrada | si | `content/dojos.json`, `src/lib/{content,dojos,i18n,site}.ts`, `src/components/HomeView.astro`, `content/*/home.json` |
 | [0021](specs/0021-editor-home-dojos.md) | 2026-09-18 | El BO edita la Home en 4 idiomas y hace CRUD de dojos; publica commiteando a `main` via API de GitHub | cerrada | no | `src/lib/publish.ts`, `src/pages/admin/**`, `src/components/admin/**` |
 | [0022](specs/0022-reset-password.md) | 2026-09-18 | Recuperacion de contraseña por email con Resend, token de un solo uso y expulsion de sesiones | borrador | no | `db/migrations/0003_admin_reset.sql`, `src/lib/email.ts`, `src/pages/admin/{recuperar,restablecer}.astro` |
+| [0023](specs/0023-capa-geo.md) | 2026-09-18 | Capa GEO de la Home: resumen citable, FAQ visible con `FAQPage`, robots con crawlers de IA y `/llms.txt` | cerrada | no | `src/lib/{content,site}.ts`, `src/components/HomeView.astro`, `src/pages/llms.txt.ts`, `public/robots.txt`, `content/*/home.json` |
 
 **"Disjunta?"** = si el trabajo no comparte archivos con otra spec abierta. Es lo que
 habilita paralelizar. Lo decide la spec, no el orquestador en runtime.

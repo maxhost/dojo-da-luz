@@ -24,6 +24,9 @@ dojos, que son los que alimentan la seccion `02 · A terra`.
 - Editor de Home: un formulario por idioma con **todos** los campos de `homeSchema`,
   incluido `seo.title` y `seo.description` con contador de caracteres y el aviso de largo
   recomendado (≤60 / ≤155). Cambiar de idioma no pierde lo escrito sin guardar.
+- **Campos GEO** (spec 0023, ADR-0018): el `resumen` citable y la FAQ, con su propio editor
+  de filas `{pregunta, respuesta}`. El formulario avisa cuando una respuesta es demasiado
+  corta para ser citable, antes de que lo haga el build.
 - CRUD de dojos: listado, alta, edicion, archivado y reactivacion. Campos duros (NAP,
   coordenadas, transporte, horarios) una sola vez, y `i18n.nota` por idioma.
 - Editor de horarios: filas `{audiencia, dias, desde, hasta}` con `<select>` y `<input
@@ -82,8 +85,8 @@ toca el bundle publico, pero tampoco hace falta traer React para seis formulario
 
 ### Disjunta?
 
-**No.** Depende de 0019 (auth y layout del BO) y de 0020 (`dojosSchema`, `getDojos`).
-Se serializa: 0019 → 0020 → 0021.
+**No.** Depende de 0019 (auth y layout del BO), de 0020 (`dojosSchema`, `getDojos`) y de
+0023 (campos `resumen` y `faq`). Se serializa: 0019 → 0020 → 0023 → 0021.
 
 ## Verificacion
 

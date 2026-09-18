@@ -8,7 +8,7 @@ Si una sesion se cae, se cierra o se compacta, se vuelve aca — no al chat. Hay
 Regla: **marcar `hecho` solo con verificacion real** — tests que pasan, comando corrido,
 cosa vista en pantalla. No "deberia andar".
 
-Ultima actualizacion: 2026-09-18 — backoffice con login real (spec 0019 implementada y verificada en `astro dev`). Siguen 0020 (dojos) y 0021 (editor).
+Ultima actualizacion: 2026-09-18 — login del BO implementado (0019). GEO aclarado como generative engine optimization (ADR-0018, spec 0023). Cadena: 0020 → 0023 → 0021.
 
 ## Contexto
 
@@ -94,7 +94,8 @@ sesiones abiertas — hoy es el unico camino de recuperacion hasta la spec 0022.
 | 6 | Spec 0019 — backoffice: login y sesion | 0019 | hecho | `/admin` con guard por Host, noindex, rate limit y sesion en Neon. Sin reset por email: eso es la 0022. |
 | 6d | Spec 0022 — recuperacion de contraseña por Resend | 0022 | bloqueada | Decision del cliente: arrancar sin Resend. Necesita `RESEND_API_KEY`. Mientras tanto la contraseña se repone con `npm run admin:seed`. |
 | 6b | Spec 0020 — dojos como entidad y render en la home | 0020 | proximo | Spec cerrada. Es lo siguiente. |
-| 6c | Spec 0021 — editor de Home y CRUD de dojos en el BO | 0021 | pendiente | Spec cerrada. Va despues de 0019 y 0020. Necesita `GITHUB_TOKEN` para publicar. |
+| 6c | Spec 0023 — capa GEO de la Home (resumen citable, FAQ, robots, llms.txt) | 0023 | pendiente | Spec cerrada. GEO = generative engine optimization (ADR-0018), no SEO geografico. Va despues de 0020. |
+| 6e | Spec 0021 — editor de Home y CRUD de dojos en el BO | 0021 | pendiente | Spec cerrada. Ultimo de la cadena: 0019 → 0020 → 0023 → 0021. Necesita `GITHUB_TOKEN`. |
 | 7 | Alumnos + emision de factura + PDF a R2 + envio Resend | — | pendiente | Necesita una factura de ejemplo real. Spec sin escribir: el numero 0004 del INDEX es otra cosa. |
 | 8 | Redirects 301 de las 34 URLs viejas | — | plan definido | Matriz conceptual documentada. Falta crawl final, Search Console e implementación cuando existan todos los destinos. |
 | 9 | Sitemap + robots.txt | — | pendiente | Con el set completo de paginas. |
