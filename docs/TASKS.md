@@ -8,7 +8,7 @@ Si una sesion se cae, se cierra o se compacta, se vuelve aca — no al chat. Hay
 Regla: **marcar `hecho` solo con verificacion real** — tests que pasan, comando corrido,
 cosa vista en pantalla. No "deberia andar".
 
-Ultima actualizacion: 2026-09-18 — lote publico completo (specs 0008-0018, ADR 0010-0014) revisado, verificado y commiteado en `main`.
+Ultima actualizacion: 2026-09-18 — lote publico completo (specs 0008-0018, ADR 0010-0014) verificado y publicado en `origin/main` (commit `4bd7fd3`). Nada esta en produccion todavia: falta el proyecto Vercel.
 
 ## Contexto
 
@@ -37,7 +37,7 @@ Las páginas públicas previstas ya están construidas en cuatro idiomas. El for
 Contacto queda visible pero sin envío hasta confirmar email/endpoint; el formulario de
 Adultos todavía usa el destino Wix heredado. Agenda no se construirá.
 
-El lote descrito en `docs/HANDOFF-CLAUDE-CODE.md` ya fue revisado y commiteado: 36 rutas
+El lote descrito en `docs/HANDOFF-CLAUDE-CODE.md` ya fue revisado, commiteado y empujado: 36 rutas
 prerenderizadas, `astro check` en 0/0/0 y `git diff --check` limpio. Ese archivo queda como
 registro del corte, no como trabajo pendiente.
 
@@ -119,6 +119,7 @@ ADR que supersede la fila de auth del 0001.
 | 2026-09-18 | ADR-0013 + spec 0017 — Pablo Durán | 4 rutas nuevas y 36 totales; biografía, cronología, formación y linaje en HTML; JSON-LD `Person` parseado; enlaces Dojo, canonical/hreflang y mapa 301 verificados |
 | 2026-09-18 | ADR-0014 + spec 0018 — idiomas, redes y handoff | 36 páginas con banderas accesibles y Facebook en cabecera/menú móvil/pie; perfiles no verificados omitidos; handoff de push escrito; typecheck/build y `git diff --check` limpios |
 | 2026-09-18 | Revision y commit del lote publico completo (specs 0008-0018, ADR 0010-0014) | `npm run typecheck` 0 errores/0 warnings/0 hints; `npm run build` con 36 `index.html` en `.vercel/output/static`; `git diff --check` limpio; `git status --porcelain -uall` sin archivos ajenos al lote |
+| 2026-09-18 | Push del lote publico a GitHub | `git push origin main` → `6de1c9c..4bd7fd3`; `git ls-remote origin refs/heads/main` devuelve `4bd7fd3` |
 
 ## Descartado (y por que)
 
