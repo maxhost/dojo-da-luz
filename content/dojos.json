@@ -1,0 +1,50 @@
+{
+  "dojos": [
+    {
+      "slug": "benfica",
+      "estado": "activo",
+      "orden": 1,
+      "nombre": "Benfica",
+      "dojo": "Dojo da Luz",
+      "instalacion": null,
+      "direccion": { "calle": null, "codigoPostal": null, "localidad": "Lisboa", "pais": "PT" },
+      "geo": null,
+      "telefono": null,
+      "horarios": [
+        { "audiencia": "adultos", "variante": "almuerzo", "dias": ["mar", "jue"], "desde": "12:00", "hasta": "13:30" },
+        { "audiencia": "adultos", "variante": "tarde", "dias": ["mar", "jue"], "desde": "20:00", "hasta": "21:15" },
+        { "audiencia": "criancas", "variante": null, "dias": ["lun", "mar", "mie", "jue", "vie"], "desde": "18:30", "hasta": "19:30" }
+      ]
+    },
+    {
+      "slug": "lumiar",
+      "estado": "activo",
+      "orden": 2,
+      "nombre": "Lumiar",
+      "dojo": "Núcleo Lumiar",
+      "instalacion": "Pista de Atletismo Municipal Prof. Moniz Pereira",
+      "direccion": { "calle": null, "codigoPostal": null, "localidad": "Lisboa", "pais": "PT" },
+      "geo": null,
+      "telefono": null,
+      "horarios": [
+        { "audiencia": "adultos", "variante": null, "dias": ["lun", "mie"], "desde": "20:30", "hasta": "21:45" },
+        { "audiencia": "adultos", "variante": "armas", "dias": ["sab"], "desde": "11:00", "hasta": "12:30" }
+      ]
+    },
+    {
+      "slug": "encarnacao",
+      "estado": "activo",
+      "orden": 3,
+      "nombre": "Encarnação",
+      "dojo": "Dojo da Luz",
+      "instalacion": null,
+      "direccion": { "calle": null, "codigoPostal": null, "localidad": "Lisboa", "pais": "PT" },
+      "geo": null,
+      "telefono": null,
+      "horarios": [
+        { "audiencia": "adultos", "variante": null, "dias": ["mar", "jue"], "desde": "20:30", "hasta": "21:30" },
+        { "audiencia": "criancas", "variante": null, "dias": ["mar", "jue"], "desde": "17:30", "hasta": "18:30" }
+      ]
+    }
+  ]
+}

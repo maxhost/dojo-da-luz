@@ -1,10 +1,10 @@
 ---
 spec: 0020
 fecha: 2026-09-18
-estado: cerrada
+estado: implementada
 resumen: Los dojos pasan a content/dojos.json con NAP, coordenadas y horarios estructurados; la home renderiza las tarjetas desde ahi y emite JSON-LD por sede.
 disjunta: si
-archivos: content/dojos.json, src/lib/content.ts, src/lib/dojos.ts, src/lib/i18n.ts, src/lib/site.ts, src/components/HomeView.astro, content/{pt,es,fr,en}/home.json
+archivos: content/dojos.json, src/lib/dojos.ts, src/lib/content.ts, src/lib/i18n.ts, src/lib/site.ts, src/components/HomeView.astro, content/{pt,es,fr,en}/home.json
 ---
 
 # 0020 — Dojos como entidad
@@ -25,8 +25,9 @@ decidido en el ADR-0017.
 
 - `content/dojos.json`: los dojos existentes migrados, con los campos duros que hoy se
   conocen y `null` en los que faltan (calle, codigo postal, coordenadas, telefono).
-- `dojosSchema` en `src/lib/content.ts` y carga validada igual que el resto del contenido:
-  un JSON invalido **rompe el build**.
+- `dojosSchema` en `src/lib/dojos.ts` (no en `content.ts`: el archivo no es localizado y
+  `content.ts` ya esta cerca del limite de tamaño). Carga validada igual que el resto: un
+  JSON invalido **rompe el build**.
 - `src/lib/dojos.ts`: `getDojos()` (solo activos, ordenados), `getDojo(slug)` y
   `formatHorario(horario, locale)`.
 - Etiquetas de dias y audiencias por idioma en `src/lib/i18n.ts`. Las horas no se traducen.
@@ -89,8 +90,8 @@ existan, calle y transporte. **Si un campo es `null` no se renderiza la etiqueta
 | Archivo | Accion |
 |---|---|
 | `content/dojos.json` | crear |
-| `src/lib/content.ts` | editar (schema + carga del archivo no localizado) |
-| `src/lib/dojos.ts` | crear |
+| `src/lib/dojos.ts` | crear (schema, carga y formateo) |
+| `src/lib/content.ts` | editar (sale `places.items` de `homeSchema`) |
 | `src/lib/i18n.ts` | editar (etiquetas de dias y audiencias) |
 | `src/lib/site.ts` | editar (JSON-LD por sede) |
 | `src/components/HomeView.astro` | editar (seccion 02) |
@@ -103,6 +104,19 @@ existan, calle y transporte. **Si un campo es `null` no se renderiza la etiqueta
 
 **Si** respecto de 0019, que no toca ninguno de estos archivos. **No** respecto de 0021,
 que consume `dojosSchema` y `getDojos()`: 0021 va despues.
+
+## Desviaciones del ADR-0017
+
+Dos campos previstos en el ADR **no entran todavia**, porque hoy nadie los leeria y
+CLAUDE.md prohibe el andamiaje:
+
+- **`transporte`**: lo consume Contacto, que migra en otra spec. Duplicarlo ahora crearia
+  justamente la deriva que esta spec viene a matar.
+- **`i18n.nota`**: no hay ningun campo traducible por dojo que se renderice. Entra con el
+  primer consumidor real.
+
+Y uno que se sumo: **`instalacion`**, porque el Lumiar practica en la "Pista de Atletismo
+Municipal Prof. Moniz Pereira" y ese nombre es la unica forma de encontrar el lugar.
 
 ## Verificacion
 

@@ -35,17 +35,8 @@ export const homeSchema = z.object({
     label: z.string().min(1),
     titleLines: linesSchema,
     lead: z.string().min(1),
-    // Solo el texto: el destino (aula experimental) se cablea cuando exista esa pagina.
+    // Las sedes ya no viven aca: son una entidad en content/dojos.json (ADR-0017).
     ctaLabel: z.string().min(1),
-    items: z
-      .array(
-        z.object({
-          name: z.string().min(1),
-          dojo: z.string().min(1),
-          time: z.string().min(1),
-        }),
-      )
-      .min(1),
   }),
   dojo: z.object({
     label: z.string().min(1),

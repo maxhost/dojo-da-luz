@@ -53,6 +53,53 @@ const NAV_LABELS: Record<Locale, Record<'home' | 'classes' | 'aikido' | 'dojo' |
   en: { home: 'Home', classes: 'Classes', aikido: 'The practice', dojo: 'The dojo', otherArts: 'Other arts', contact: 'Contact' },
 }
 
+/**
+ * Etiquetas de los horarios de dojo (spec 0020). Los datos duros —dias, horas— viven en
+ * `content/dojos.json` sin traducir; aca se traduce como se leen.
+ */
+
+export const DIAS = ['lun', 'mar', 'mie', 'jue', 'vie', 'sab', 'dom'] as const
+export type Dia = (typeof DIAS)[number]
+
+export const AUDIENCIAS = ['adultos', 'criancas'] as const
+export type Audiencia = (typeof AUDIENCIAS)[number]
+
+export const VARIANTES = ['almuerzo', 'tarde', 'armas'] as const
+export type Variante = (typeof VARIANTES)[number]
+
+/** Plural: "Tercas e quintas", no "Terca e quinta". Asi lo dice el sitio actual. */
+export const DIA_LABEL: Record<Locale, Record<Dia, string>> = {
+  pt: { lun: 'Segundas', mar: 'Terças', mie: 'Quartas', jue: 'Quintas', vie: 'Sextas', sab: 'Sábados', dom: 'Domingos' },
+  es: { lun: 'Lunes', mar: 'Martes', mie: 'Miércoles', jue: 'Jueves', vie: 'Viernes', sab: 'Sábados', dom: 'Domingos' },
+  fr: { lun: 'Lundis', mar: 'Mardis', mie: 'Mercredis', jue: 'Jeudis', vie: 'Vendredis', sab: 'Samedis', dom: 'Dimanches' },
+  en: { lun: 'Mondays', mar: 'Tuesdays', mie: 'Wednesdays', jue: 'Thursdays', vie: 'Fridays', sab: 'Saturdays', dom: 'Sundays' },
+}
+
+/** Caso especial de lunes a viernes: la enumeracion completa se lee peor que el rango. */
+export const SEMANA_LABEL: Record<Locale, string> = {
+  pt: 'Segunda a sexta',
+  es: 'De lunes a viernes',
+  fr: 'Du lundi au vendredi',
+  en: 'Monday to Friday',
+}
+
+export const CONJUNCION: Record<Locale, string> = { pt: ' e ', es: ' y ', fr: ' et ', en: ' and ' }
+
+export const AUDIENCIA_LABEL: Record<Locale, Record<Audiencia, string>> = {
+  pt: { adultos: 'Adultos', criancas: 'Crianças' },
+  es: { adultos: 'Adultos', criancas: 'Niños' },
+  fr: { adultos: 'Adultes', criancas: 'Enfants' },
+  en: { adultos: 'Adults', criancas: 'Children' },
+}
+
+/** "Buki Waza" no se traduce: es el nombre de la practica con armas. */
+export const VARIANTE_LABEL: Record<Locale, Record<Variante, string>> = {
+  pt: { almuerzo: 'almoço', tarde: 'tarde', armas: 'Buki Waza' },
+  es: { almuerzo: 'mediodía', tarde: 'tarde', armas: 'Buki Waza' },
+  fr: { almuerzo: 'midi', tarde: 'soir', armas: 'Buki Waza' },
+  en: { almuerzo: 'midday', tarde: 'evening', armas: 'Buki Waza' },
+}
+
 export function isLocale(value: string): value is Locale {
   return (LOCALES as readonly string[]).includes(value)
 }
