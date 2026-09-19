@@ -98,3 +98,20 @@ compro a proposito. Motivo extra para no meter frameworks en el sitio publico.
 - **Como se mide:** no hay ranking. Lo unico honesto es preguntarle periodicamente a los
   motores por consultas reales ("aikido en Lisboa", "clases de aikido para niños Benfica")
   y anotar si citan el sitio. Manual, cualitativo y con fecha.
+
+## Correccion — 2026-09-19
+
+Escrito el mismo dia, antes de implementar nada, a partir de una pregunta del cliente
+("¿por que queres añadir un FAQ?"). Se corrige en el archivo y no en un ADR nuevo porque
+no cambia la decision: la afina y arregla un dato mal puesto.
+
+1. **`FAQPage` vale menos de lo que decia arriba.** Google restringio los rich results de
+   FAQ en 2023 a sitios de gobierno y salud: un dojo no los va a ver. El marcado sigue
+   siendo barato y plausible para motores generativos, pero **no** esta al nivel de los
+   datos estructurados de lugar. Lo que pesa es el texto, no el schema.
+2. **El FAQ va donde vive la pregunta, no en la Home.** El sitio ya responde precio, edad,
+   experiencia previa y primera clase en Aulas, Adultos y Niños. Meter un bloque de FAQ en
+   la Home seria duplicar contenido existente en la pagina mas austera del sitio. La Home
+   se lleva solo el `resumen` citable —que es el hueco real: hoy ninguna oracion dice que
+   es esto, donde queda y para quien— y el trabajo de Q&A cae en las paginas donde la
+   persona ya tiene la duda.

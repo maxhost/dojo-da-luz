@@ -55,7 +55,7 @@ desactualizado es peor que no tenerlo.
 | [0020](specs/0020-dojos-entidad.md) | 2026-09-18 | Dojos en `content/dojos.json` con horarios estructurados; la home los renderiza y emite JSON-LD por sede | implementada | si | `content/dojos.json`, `src/lib/{dojos,content,i18n,site}.ts`, `src/components/HomeView.astro`, `content/*/home.json` |
 | [0021](specs/0021-editor-home-dojos.md) | 2026-09-18 | El BO edita la Home en 4 idiomas y hace CRUD de dojos; publica commiteando a `main` via API de GitHub | cerrada | no | `src/lib/publish.ts`, `src/pages/admin/**`, `src/components/admin/**` |
 | [0022](specs/0022-reset-password.md) | 2026-09-18 | Recuperacion de contraseña por email con Resend, token de un solo uso y expulsion de sesiones | borrador | no | `db/migrations/0003_admin_reset.sql`, `src/lib/email.ts`, `src/pages/admin/{recuperar,restablecer}.astro` |
-| [0023](specs/0023-capa-geo.md) | 2026-09-18 | Capa GEO de la Home: resumen citable, FAQ visible con `FAQPage`, robots con crawlers de IA y `/llms.txt` | cerrada | no | `src/lib/{content,site}.ts`, `src/components/HomeView.astro`, `src/pages/llms.txt.ts`, `public/robots.txt`, `content/*/home.json` |
+| [0023](specs/0023-capa-geo.md) | 2026-09-19 | Capa GEO: resumen citable en Home, Q&A con `FAQPage` en Aulas/Adultos/Niños, robots con crawlers de IA y `/llms.txt` | cerrada | no | `src/lib/{content,site}.ts`, `src/components/{HomeView,ClassesView,AudienceView}.astro`, `src/pages/llms.txt.ts`, `public/robots.txt`, `content/**` |
 
 **"Disjunta?"** = si el trabajo no comparte archivos con otra spec abierta. Es lo que
 habilita paralelizar. Lo decide la spec, no el orquestador en runtime.

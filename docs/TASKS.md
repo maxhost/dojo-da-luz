@@ -95,7 +95,7 @@ sesiones abiertas — hoy es el unico camino de recuperacion hasta la spec 0022.
 | 6d | Spec 0022 — recuperacion de contraseña por Resend | 0022 | bloqueada | Decision del cliente: arrancar sin Resend. Necesita `RESEND_API_KEY`. Mientras tanto la contraseña se repone con `npm run admin:seed`. |
 | 6b | Spec 0020 — dojos como entidad y render en la home | 0020 | hecho | 3 dojos en `content/dojos.json` con horarios estructurados. Falta migrar Aulas y Contacto a la entidad (fila 6f). |
 | 6f | Migrar Aulas y Contacto a la entidad de dojos | — | pendiente | Hoy `classes.schedule.venues` y `contact.venues` siguen duplicando sedes y horarios en 4 idiomas. Ahi entra `transporte` en la entidad. |
-| 6c | Spec 0023 — capa GEO de la Home (resumen citable, FAQ, robots, llms.txt) | 0023 | pendiente | Spec cerrada. GEO = generative engine optimization (ADR-0018), no SEO geografico. Va despues de 0020. |
+| 6c | Spec 0023 — capa GEO (resumen en Home, Q&A en Aulas/Adultos/Niños, robots, llms.txt) | 0023 | proximo | GEO = generative engine optimization (ADR-0018). El FAQ va donde vive la pregunta, no en la Home. |
 | 6e | Spec 0021 — editor de Home y CRUD de dojos en el BO | 0021 | pendiente | Spec cerrada. Ultimo de la cadena: 0019 → 0020 → 0023 → 0021. Necesita `GITHUB_TOKEN`. |
 | 7 | Alumnos + emision de factura + PDF a R2 + envio Resend | — | pendiente | Necesita una factura de ejemplo real. Spec sin escribir: el numero 0004 del INDEX es otra cosa. |
 | 8 | Redirects 301 de las 34 URLs viejas | — | plan definido | Matriz conceptual documentada. Falta crawl final, Search Console e implementación cuando existan todos los destinos. |
