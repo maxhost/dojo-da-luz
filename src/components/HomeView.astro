@@ -75,6 +75,14 @@ const nav = siteNav(locale)
         {c.practice.paragraphs.map((paragraph) => (
           <p class="mt-5 text-lg leading-8 text-[#4c4741] first:mt-0">{paragraph}</p>
         ))}
+
+        {/* Capa factual del ADR-0018: frases autocontenidas que un motor puede citar.
+            Visible, no oculta: estos motores puntuan lo que el usuario ve. */}
+        <div class="mt-9 border-t border-[#d7cec0] pt-7">
+          {c.resumen.map((frase) => (
+            <p class="mt-3 text-base leading-7 text-[#625c55] first:mt-0">{frase}</p>
+          ))}
+        </div>
       </div>
     </div>
   </section>

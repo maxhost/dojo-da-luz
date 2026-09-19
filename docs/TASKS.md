@@ -8,7 +8,7 @@ Si una sesion se cae, se cierra o se compacta, se vuelve aca — no al chat. Hay
 Regla: **marcar `hecho` solo con verificacion real** — tests que pasan, comando corrido,
 cosa vista en pantalla. No "deberia andar".
 
-Ultima actualizacion: 2026-09-19 — dojos como entidad (0020) implementados y la home renderiza las tres sedes. Siguen 0023 (capa GEO) y 0021 (editor).
+Ultima actualizacion: 2026-09-19 — capa GEO (0023) implementada. Queda la 0021: el editor del backoffice.
 
 ## Contexto
 
@@ -95,8 +95,8 @@ sesiones abiertas — hoy es el unico camino de recuperacion hasta la spec 0022.
 | 6d | Spec 0022 — recuperacion de contraseña por Resend | 0022 | bloqueada | Decision del cliente: arrancar sin Resend. Necesita `RESEND_API_KEY`. Mientras tanto la contraseña se repone con `npm run admin:seed`. |
 | 6b | Spec 0020 — dojos como entidad y render en la home | 0020 | hecho | 3 dojos en `content/dojos.json` con horarios estructurados. Falta migrar Aulas y Contacto a la entidad (fila 6f). |
 | 6f | Migrar Aulas y Contacto a la entidad de dojos | — | pendiente | Hoy `classes.schedule.venues` y `contact.venues` siguen duplicando sedes y horarios en 4 idiomas. Ahi entra `transporte` en la entidad. |
-| 6c | Spec 0023 — capa GEO (resumen en Home, Q&A en Aulas/Adultos/Niños, robots, llms.txt) | 0023 | proximo | GEO = generative engine optimization (ADR-0018). El FAQ va donde vive la pregunta, no en la Home. |
-| 6e | Spec 0021 — editor de Home y CRUD de dojos en el BO | 0021 | pendiente | Spec cerrada. Ultimo de la cadena: 0019 → 0020 → 0023 → 0021. Necesita `GITHUB_TOKEN`. |
+| 6c | Spec 0023 — capa GEO (resumen en Home, Q&A en Aulas/Adultos/Niños, robots, llms.txt) | 0023 | hecho | 13 pares Q&A por idioma con `FAQPage`. Falta que el cliente confirme precios y edades: hoy salen del contenido que ya estaba publicado. |
+| 6e | Spec 0021 — editor de Home y CRUD de dojos en el BO | 0021 | proximo | Spec cerrada. Ultimo de la cadena: 0019 → 0020 → 0023 → 0021. Necesita `GITHUB_TOKEN`. |
 | 7 | Alumnos + emision de factura + PDF a R2 + envio Resend | — | pendiente | Necesita una factura de ejemplo real. Spec sin escribir: el numero 0004 del INDEX es otra cosa. |
 | 8 | Redirects 301 de las 34 URLs viejas | — | plan definido | Matriz conceptual documentada. Falta crawl final, Search Console e implementación cuando existan todos los destinos. |
 | 9 | Sitemap + robots.txt | — | pendiente | Con el set completo de paginas. |
@@ -165,6 +165,7 @@ contraseña, sesion opaca en Neon.)*
 | 2026-09-18 | Revision y commit del lote publico completo (specs 0008-0018, ADR 0010-0014) | `npm run typecheck` 0 errores/0 warnings/0 hints; `npm run build` con 36 `index.html` en `.vercel/output/static`; `git diff --check` limpio; `git status --porcelain -uall` sin archivos ajenos al lote |
 | 2026-09-18 | Push del lote publico a GitHub | `git push origin main` → `6de1c9c..4bd7fd3`; `git ls-remote origin refs/heads/main` devuelve `4bd7fd3` |
 | 2026-09-18 | Deploy de produccion en Vercel | `vercel git connect` (repo ya vinculado) + `vercel alias set` sobre `dpl_55BEsW9Q8mENbx2iUec2aJM3Cbr6`; 16 rutas pt/es/fr/en devuelven 200 en `dojo-da-luz.vercel.app`; `/api/health` → `{"ok":true,"db":"up"}`; home con video, hreflang, Facebook y un unico `<script type="application/ld+json">` |
+| 2026-09-19 | Spec 0023 — capa GEO | `astro check` 0/0/0, `npm test` 5/5, build con 36 estaticas + `/llms.txt`; resumen visible en las 4 homes; 6/3/4 preguntas visibles en Aulas/Adultos/Niños × 4 idiomas con un `FAQPage` por pagina; una respuesta de 10 caracteres rompe el build nombrando el campo; `robots.txt` con 7 bloques y ningun `Disallow: /`; `llms.txt` con los 4 idiomas; la home sigue con un solo `<script type="application/ld+json">` |
 | 2026-09-19 | Spec 0020 — dojos como entidad | `astro check` 0/0/0, `npm test` 5/5, build con 36 estaticas; las 4 homes muestran Benfica, Lumiar y Encarnação con sus horarios; dias traducidos y horas identicas en los 4 idiomas; JSON-LD con 3 `SportsActivityLocation` y `openingHoursSpecification`, sin claves nulas; archivar un dojo lo saca de las 4 homes y del JSON-LD; `hasta` anterior a `desde`, slug repetido y cero activos rompen el build nombrando el campo |
 | 2026-09-18 | Spec 0019 — login del backoffice | `npm test` 5/5 en `auth.test.ts`; `astro check` 0/0/0; build con 36 estaticas y `/admin/*` como funcion; en `astro dev`: password mala → 401 sin sesion, buena → 302 + cookie `HttpOnly; SameSite=Lax`, `/admin` sin cookie → 302, salir invalida la cookie vieja, sexto intento fallido → 429, `X-Robots-Tag` presente, y con `BO_HOST` el host correcto da 200 y cualquier otro 404 |
 | 2026-09-18 | GitHub App autorizada: el push dispara deploy | `dpl_tFuJezQqKJC4EDBAGhnhotfysJYF` con `source: git` y `meta.githubCommitSha = ed3b3af`, creado por Vercel sin intervencion. Quedo en cola por el incidente "Elevated Errors Triggering Deployments" del propio Vercel |

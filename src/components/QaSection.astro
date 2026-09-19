@@ -1,0 +1,32 @@
+---
+/**
+ * Preguntas y respuestas visibles (ADR-0018). Sin `<details>`: el contenido colapsado se
+ * extrae peor y no aporta nada en una lista de seis entradas.
+ */
+interface Props {
+  label: string
+  title: string
+  items: { pregunta: string; respuesta: string }[]
+  fondo?: 'blanco' | 'crema'
+}
+
+const { label, title, items, fondo = 'blanco' } = Astro.props
+---
+
+<section id="faq" class:list={['section-pad', fondo === 'crema' ? 'bg-[#f6f1e8]' : 'bg-white']}>
+  <div class="site-shell">
+    <div class="max-w-3xl">
+      <p class="section-kicker">{label}</p>
+      <h2 class="section-title mt-4">{title}</h2>
+    </div>
+
+    <div class="mt-12 grid gap-10 md:grid-cols-2 md:gap-x-16">
+      {items.map((item) => (
+        <div>
+          <h3 class="font-serif text-2xl font-normal leading-snug text-[#211f1c]">{item.pregunta}</h3>
+          <p class="mt-3 text-lg leading-8 text-[#625c55]">{item.respuesta}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

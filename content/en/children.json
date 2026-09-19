@@ -1,1 +1,68 @@
-{"seo":{"title":"Aikido for children in Lisbon | Dojo da Luz","description":"Aikido for children and teenagers aged 5 to 17 in Benfica and Encarnação."},"eyebrow":"Aikido for children and teenagers","title":"Growing without competition.","lead":"A practice that develops the body, attention and relationships with others.","paragraphs":["Aikido supports a child's physical, mental and relational development. It does not rely on physical strength: circular movements receive and guide a partner's energy.","With no competition, each child progresses at their own pace with the teacher's support. Classes combine technique, games and exercises for concentration, imagination, flexibility and reflexes."],"goalsTitle":"Practice goals","goals":["Learn the technical repertoire of Tokyo Aikikai","Develop discipline with enjoyment","Train outdoors and take part in the Aiki garden","Join seminars and exchanges with other children"],"facts":[{"label":"Ages","value":"5 to 17 years"},{"label":"Benfica","value":"Monday to Friday · 18:30–19:30"},{"label":"Encarnação","value":"Tuesdays and Thursdays · 17:30–18:30"},{"label":"Monthly fee","value":"€25 (1 class/week) · €35 (2 classes/week)"}],"photo":"https://static.wixstatic.com/media/ae7240_b0eea689c4ec4721939495f9088211ae~mv2.jpg/v1/fill/w_900,h_1200,al_c,q_85/crian%C3%A7as.jpg","photoAlt":"Children in an Aikido class at Dojo da Luz","trialTitle":"Try a class","trialText":"Book a trial class to meet the teacher and discover the space and practice.","trialLabel":"Book a children's class","formUrl":"https://docs.google.com/forms/d/e/1FAIpQLSfN-rw5gQ82gukAPdRKHsFkXvcjtogv7gWqgELtnek_6i2Biw/viewform","directLabel":"Open the form in a new window","closeLabel":"Close"}
+{
+  "seo": {
+    "title": "Aikido for children in Lisbon | Dojo da Luz",
+    "description": "Aikido for children and teenagers aged 5 to 17 in Benfica and Encarnação."
+  },
+  "eyebrow": "Aikido for children and teenagers",
+  "title": "Growing without competition.",
+  "lead": "A practice that develops the body, attention and relationships with others.",
+  "paragraphs": [
+    "Aikido supports a child's physical, mental and relational development. It does not rely on physical strength: circular movements receive and guide a partner's energy.",
+    "With no competition, each child progresses at their own pace with the teacher's support. Classes combine technique, games and exercises for concentration, imagination, flexibility and reflexes."
+  ],
+  "goalsTitle": "Practice goals",
+  "goals": [
+    "Learn the technical repertoire of Tokyo Aikikai",
+    "Develop discipline with enjoyment",
+    "Train outdoors and take part in the Aiki garden",
+    "Join seminars and exchanges with other children"
+  ],
+  "facts": [
+    {
+      "label": "Ages",
+      "value": "5 to 17 years"
+    },
+    {
+      "label": "Benfica",
+      "value": "Monday to Friday · 18:30–19:30"
+    },
+    {
+      "label": "Encarnação",
+      "value": "Tuesdays and Thursdays · 17:30–18:30"
+    },
+    {
+      "label": "Monthly fee",
+      "value": "€25 (1 class/week) · €35 (2 classes/week)"
+    }
+  ],
+  "photo": "https://static.wixstatic.com/media/ae7240_b0eea689c4ec4721939495f9088211ae~mv2.jpg/v1/fill/w_900,h_1200,al_c,q_85/crian%C3%A7as.jpg",
+  "photoAlt": "Children in an Aikido class at Dojo da Luz",
+  "trialTitle": "Try a class",
+  "trialText": "Book a trial class to meet the teacher and discover the space and practice.",
+  "trialLabel": "Book a children's class",
+  "formUrl": "https://docs.google.com/forms/d/e/1FAIpQLSfN-rw5gQ82gukAPdRKHsFkXvcjtogv7gWqgELtnek_6i2Biw/viewform",
+  "directLabel": "Open the form in a new window",
+  "closeLabel": "Close",
+  "qa": {
+    "label": "Frequently asked questions",
+    "title": "What people usually ask us.",
+    "items": [
+      {
+        "pregunta": "From what age can children practise Aikido?",
+        "respuesta": "Children's and teenagers' classes at Dojo da Luz are for ages 5 to 17 and require no previous experience."
+      },
+      {
+        "pregunta": "What are the timetables for children's classes?",
+        "respuesta": "Children practise in Benfica from Monday to Friday, 18:30 to 19:30, and in Encarnação on Tuesdays and Thursdays, 17:30 to 18:30."
+      },
+      {
+        "pregunta": "How much is the monthly fee for children?",
+        "respuesta": "The monthly fee for children's classes at Dojo da Luz is €25 for one class a week and €35 for two classes a week."
+      },
+      {
+        "pregunta": "Do children compete in the classes?",
+        "respuesta": "Children's classes at Dojo da Luz have no competition: each child progresses at their own pace, combining Aikikai technique, games and concentration exercises."
+      }
+    ]
+  }
+}

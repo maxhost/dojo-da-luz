@@ -1,44 +1,144 @@
 {
-  "seo": { "title": "Aikido class times and prices in Lisbon | Dojo da Luz", "description": "Aikido class times, fees and classes for adults and children in Benfica, Encarnação and Lumiar. 2026–2027 season." },
-  "chrome": {
-    "caption": "Aikido · Lisbon", "menuLabel": "Menu", "skipLink": "Skip to content",
-    "nav": [
-      { "label": "Home", "href": "/en/" }, { "label": "Timetable", "href": "#horarios" },
-      { "label": "Fees", "href": "#fees" }, { "label": "Children", "href": "#criancas" },
-      { "label": "Trial class", "href": "#aula-experimental" }
-    ],
-    "footerNote": { "areas": "Benfica · Lumiar · Encarnação", "orgType": "Non-profit association" }
+  "seo": {
+    "title": "Aikido class times and prices in Lisbon | Dojo da Luz",
+    "description": "Aikido class times, fees and classes for adults and children in Benfica, Encarnação and Lumiar. 2026–2027 season."
   },
-  "hero": { "eyebrow": "Aikido classes in Lisbon", "title": "Times, locations and fees.", "lead": "Regular classes for adults, children and teenagers, from lunchtime to evening.", "season": "2026–2027 season · September to June", "ctaLabel": "View timetable" },
+  "chrome": {
+    "caption": "Aikido · Lisbon",
+    "menuLabel": "Menu",
+    "skipLink": "Skip to content",
+    "nav": [
+      {
+        "label": "Home",
+        "href": "/en/"
+      },
+      {
+        "label": "Timetable",
+        "href": "#horarios"
+      },
+      {
+        "label": "Fees",
+        "href": "#fees"
+      },
+      {
+        "label": "Children",
+        "href": "#criancas"
+      },
+      {
+        "label": "Trial class",
+        "href": "#aula-experimental"
+      }
+    ],
+    "footerNote": {
+      "areas": "Benfica · Lumiar · Encarnação",
+      "orgType": "Non-profit association"
+    }
+  },
+  "hero": {
+    "eyebrow": "Aikido classes in Lisbon",
+    "title": "Times, locations and fees.",
+    "lead": "Regular classes for adults, children and teenagers, from lunchtime to evening.",
+    "season": "2026–2027 season · September to June",
+    "ctaLabel": "View timetable"
+  },
   "schedule": {
-    "label": "Timetable", "title": "Find your place to practise.", "intro": "You can enrol at any point during the year.",
+    "label": "Timetable",
+    "title": "Find your place to practise.",
+    "intro": "You can enrol at any point during the year.",
     "venues": [
-      { "name": "Dojo da Luz", "area": "Benfica", "classes": [
-        { "audience": "Adults · lunchtime", "time": "Tuesdays and Thursdays · 12:00–13:30" },
-        { "audience": "Adults · evening", "time": "Tuesdays and Thursdays · 20:00–21:15" },
-        { "audience": "Children", "time": "Monday to Friday · 18:30–19:30" }
-      ] },
-      { "name": "Dojo da Luz", "area": "Encarnação", "classes": [
-        { "audience": "Adults", "time": "Tuesdays and Thursdays · 20:30–21:30" },
-        { "audience": "Children", "time": "Tuesdays and Thursdays · 17:30–18:30" }
-      ] },
-      { "name": "Prof. Moniz Pereira Municipal Athletics Track", "area": "Lumiar", "classes": [
-        { "audience": "Adults", "time": "Mondays and Wednesdays · 20:30–21:45" },
-        { "audience": "Aikido and Buki Waza", "time": "Saturdays · 11:00–12:30" }
-      ] }
+      {
+        "name": "Dojo da Luz",
+        "area": "Benfica",
+        "classes": [
+          {
+            "audience": "Adults · lunchtime",
+            "time": "Tuesdays and Thursdays · 12:00–13:30"
+          },
+          {
+            "audience": "Adults · evening",
+            "time": "Tuesdays and Thursdays · 20:00–21:15"
+          },
+          {
+            "audience": "Children",
+            "time": "Monday to Friday · 18:30–19:30"
+          }
+        ]
+      },
+      {
+        "name": "Dojo da Luz",
+        "area": "Encarnação",
+        "classes": [
+          {
+            "audience": "Adults",
+            "time": "Tuesdays and Thursdays · 20:30–21:30"
+          },
+          {
+            "audience": "Children",
+            "time": "Tuesdays and Thursdays · 17:30–18:30"
+          }
+        ]
+      },
+      {
+        "name": "Prof. Moniz Pereira Municipal Athletics Track",
+        "area": "Lumiar",
+        "classes": [
+          {
+            "audience": "Adults",
+            "time": "Mondays and Wednesdays · 20:30–21:45"
+          },
+          {
+            "audience": "Aikido and Buki Waza",
+            "time": "Saturdays · 11:00–12:30"
+          }
+        ]
+      }
     ]
   },
   "pricing": {
-    "label": "Fees", "title": "Regular practice, with flexible options.", "intro": "Published fees for the 2026–2027 season.",
+    "label": "Fees",
+    "title": "Regular practice, with flexible options.",
+    "intro": "Published fees for the 2026–2027 season.",
     "items": [
-      { "name": "Standard", "price": "€35/month", "detail": "Up to 3 classes per week" },
-      { "name": "Children", "price": "€25/month", "detail": "1 class per week" },
-      { "name": "Children", "price": "€35/month", "detail": "2 classes per week" },
-      { "name": "Reduced", "price": "€30/month", "detail": "Up to 3 classes per week" },
-      { "name": "Annual", "price": "€330", "detail": "Full-season payment" },
-      { "name": "Six months", "price": "€180", "detail": "Half-season payment" },
-      { "name": "Single class", "price": "€8", "detail": "One class" },
-      { "name": "Unlimited", "price": "€50/month", "detail": "All classes, including weapons" }
+      {
+        "name": "Standard",
+        "price": "€35/month",
+        "detail": "Up to 3 classes per week"
+      },
+      {
+        "name": "Children",
+        "price": "€25/month",
+        "detail": "1 class per week"
+      },
+      {
+        "name": "Children",
+        "price": "€35/month",
+        "detail": "2 classes per week"
+      },
+      {
+        "name": "Reduced",
+        "price": "€30/month",
+        "detail": "Up to 3 classes per week"
+      },
+      {
+        "name": "Annual",
+        "price": "€330",
+        "detail": "Full-season payment"
+      },
+      {
+        "name": "Six months",
+        "price": "€180",
+        "detail": "Half-season payment"
+      },
+      {
+        "name": "Single class",
+        "price": "€8",
+        "detail": "One class"
+      },
+      {
+        "name": "Unlimited",
+        "price": "€50/month",
+        "detail": "All classes, including weapons"
+      }
     ],
     "notes": [
       "The reduced fee is available to unemployed people and students, with proof of status.",
@@ -48,12 +148,66 @@
     ]
   },
   "children": {
-    "label": "Children and teenagers", "title": "Growing with attention, discipline and joy.",
-    "paragraphs": ["With no competition, each child progresses at their own pace with the teacher's support.", "Classes combine technique, games and exercises to develop the body, concentration, imagination, flexibility and reflexes."],
+    "label": "Children and teenagers",
+    "title": "Growing with attention, discipline and joy.",
+    "paragraphs": [
+      "With no competition, each child progresses at their own pace with the teacher's support.",
+      "Classes combine technique, games and exercises to develop the body, concentration, imagination, flexibility and reflexes."
+    ],
     "facts": [
-      { "label": "Ages", "value": "5 to 17 years" }, { "label": "Benfica", "value": "Monday to Friday · 18:30–19:30" },
-      { "label": "Encarnação", "value": "Tuesdays and Thursdays · 17:30–18:30" }, { "label": "Focus", "value": "Aikikai technique, discipline, enjoyment and sharing" }
+      {
+        "label": "Ages",
+        "value": "5 to 17 years"
+      },
+      {
+        "label": "Benfica",
+        "value": "Monday to Friday · 18:30–19:30"
+      },
+      {
+        "label": "Encarnação",
+        "value": "Tuesdays and Thursdays · 17:30–18:30"
+      },
+      {
+        "label": "Focus",
+        "value": "Aikikai technique, discipline, enjoyment and sharing"
+      }
     ]
   },
-  "trial": { "label": "First class", "title": "Try Aikido.", "text": "Come along for a trial class. No previous experience is required.", "note": "The trial class costs €5, deducted from the first monthly payment.", "ctaLabel": "Book a trial class" }
+  "trial": {
+    "label": "First class",
+    "title": "Try Aikido.",
+    "text": "Come along for a trial class. No previous experience is required.",
+    "note": "The trial class costs €5, deducted from the first monthly payment.",
+    "ctaLabel": "Book a trial class"
+  },
+  "qa": {
+    "label": "Frequently asked questions",
+    "title": "What people usually ask us.",
+    "items": [
+      {
+        "pregunta": "How much do Aikido classes at Dojo da Luz cost?",
+        "respuesta": "The standard fee at Dojo da Luz is €35 per month for up to three classes a week. Children pay €25 per month for one weekly class and €35 for two. A reduced fee of €30 is available for students and unemployed people, on proof."
+      },
+      {
+        "pregunta": "Do I need previous experience to start practising Aikido?",
+        "respuesta": "No previous experience is needed to start practising Aikido at Dojo da Luz. You can book a trial class, which costs €5 and is deducted from your first monthly fee."
+      },
+      {
+        "pregunta": "Where are the dojos in Lisbon?",
+        "respuesta": "Dojo da Luz teaches in three locations in Lisbon: Benfica, Lumiar and Encarnação. In Lumiar, practice takes place at the Pista de Atletismo Municipal Prof. Moniz Pereira."
+      },
+      {
+        "pregunta": "From what age can children practise?",
+        "respuesta": "Children's and teenagers' classes at Dojo da Luz are for ages 5 to 17: in Benfica from Monday to Friday, 18:30 to 19:30, and in Encarnação on Tuesdays and Thursdays, 17:30 to 18:30."
+      },
+      {
+        "pregunta": "When can I enrol in the classes?",
+        "respuesta": "Enrolment at Dojo da Luz is open at any time of the year. The 2026–2027 season runs from September to June; in July and August a reduced timetable is published in June."
+      },
+      {
+        "pregunta": "What is Buki Waza?",
+        "respuesta": "Buki Waza is Aikido practice with wooden weapons: the Ken, a wooden sword, and the Jo, a staff about 1.27 m long. Dojo da Luz holds a Buki Waza class in Lumiar on Saturdays, 11:00 to 12:30."
+      }
+    ]
+  }
 }

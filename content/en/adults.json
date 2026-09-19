@@ -1,1 +1,64 @@
-{"seo":{"title":"Aikido for adults in Lisbon | Dojo da Luz","description":"Aikido classes for adults in Benfica, Encarnação and Lumiar, from lunchtime to evening."},"eyebrow":"Aikido for adults","title":"A practice for life.","lead":"Non-competitive and open to beginners and experienced practitioners.","paragraphs":["Aikido prioritises balance, coordination and relationship over strength and speed.","Through repetition, we learn to receive force without opposing it directly, developing calm, concentration and confidence."],"goalsTitle":"What we work on","goals":["Balance, coordination and mobility","Attention, availability and presence","Projection and control techniques","Ken and Jo practice in Buki Waza"],"facts":[{"label":"Benfica","value":"Tuesdays and Thursdays · 12:00 and 20:00"},{"label":"Encarnação","value":"Tuesdays and Thursdays · 20:30"},{"label":"Lumiar","value":"Mondays and Wednesdays · 20:30; Saturdays · 11:00"},{"label":"Standard fee","value":"€35/month · up to 3 classes per week"}],"photo":"https://static.wixstatic.com/media/ae7240_de66207c487b4e8086d18ed67c88ea93~mv2.jpg/v1/fill/w_1200,h_900,al_c,q_85/IMG_3502_JPG.jpg","photoAlt":"Adults practising Aikido at Dojo da Luz","trialTitle":"Your first class","trialText":"The trial class costs €5, deducted from the first monthly payment.","trialLabel":"Book an adult class","formUrl":"https://www.aikido-duran.com/aula-experimental","directLabel":"Open form in a new window","closeLabel":"Close"}
+{
+  "seo": {
+    "title": "Aikido for adults in Lisbon | Dojo da Luz",
+    "description": "Aikido classes for adults in Benfica, Encarnação and Lumiar, from lunchtime to evening."
+  },
+  "eyebrow": "Aikido for adults",
+  "title": "A practice for life.",
+  "lead": "Non-competitive and open to beginners and experienced practitioners.",
+  "paragraphs": [
+    "Aikido prioritises balance, coordination and relationship over strength and speed.",
+    "Through repetition, we learn to receive force without opposing it directly, developing calm, concentration and confidence."
+  ],
+  "goalsTitle": "What we work on",
+  "goals": [
+    "Balance, coordination and mobility",
+    "Attention, availability and presence",
+    "Projection and control techniques",
+    "Ken and Jo practice in Buki Waza"
+  ],
+  "facts": [
+    {
+      "label": "Benfica",
+      "value": "Tuesdays and Thursdays · 12:00 and 20:00"
+    },
+    {
+      "label": "Encarnação",
+      "value": "Tuesdays and Thursdays · 20:30"
+    },
+    {
+      "label": "Lumiar",
+      "value": "Mondays and Wednesdays · 20:30; Saturdays · 11:00"
+    },
+    {
+      "label": "Standard fee",
+      "value": "€35/month · up to 3 classes per week"
+    }
+  ],
+  "photo": "https://static.wixstatic.com/media/ae7240_de66207c487b4e8086d18ed67c88ea93~mv2.jpg/v1/fill/w_1200,h_900,al_c,q_85/IMG_3502_JPG.jpg",
+  "photoAlt": "Adults practising Aikido at Dojo da Luz",
+  "trialTitle": "Your first class",
+  "trialText": "The trial class costs €5, deducted from the first monthly payment.",
+  "trialLabel": "Book an adult class",
+  "formUrl": "https://www.aikido-duran.com/aula-experimental",
+  "directLabel": "Open form in a new window",
+  "closeLabel": "Close",
+  "qa": {
+    "label": "Frequently asked questions",
+    "title": "What people usually ask us.",
+    "items": [
+      {
+        "pregunta": "Are adult classes open to beginners?",
+        "respuesta": "Adult classes at Dojo da Luz are open to beginners and experienced practitioners alike. There is no competition: everyone progresses at their own pace."
+      },
+      {
+        "pregunta": "What are the timetables for adult classes?",
+        "respuesta": "Adults practise in Benfica on Tuesdays and Thursdays at 12:00 and 20:00; in Encarnação on Tuesdays and Thursdays at 20:30; and in Lumiar on Mondays and Wednesdays at 20:30 and on Saturdays at 11:00."
+      },
+      {
+        "pregunta": "How much is the monthly fee for adults?",
+        "respuesta": "The standard adult fee at Dojo da Luz is €35 per month, with up to three classes a week. The trial class costs €5, deducted from the first monthly fee."
+      }
+    ]
+  }
+}

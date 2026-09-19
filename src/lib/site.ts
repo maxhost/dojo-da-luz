@@ -84,3 +84,19 @@ export function sportsClubJsonLd(siteUrl: string) {
     },
   }
 }
+
+/**
+ * FAQPage sobre las preguntas que la pagina ya muestra (ADR-0018). No inventa contenido:
+ * marca el que esta visible. Si no hay preguntas, no hay marcado.
+ */
+export function faqJsonLd(items: { pregunta: string; respuesta: string }[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: items.map((item) => ({
+      '@type': 'Question',
+      name: item.pregunta,
+      acceptedAnswer: { '@type': 'Answer', text: item.respuesta },
+    })),
+  }
+}

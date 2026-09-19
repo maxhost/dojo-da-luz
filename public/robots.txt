@@ -1,4 +1,32 @@
+# Los crawlers de IA estan permitidos a proposito (ADR-0018): esto es una asociacion sin
+# fines de lucro que quiere alumnos. Que la citen es el objetivo, no la amenaza.
+# Van por nombre para que nadie los bloquee por inercia mas adelante.
+
 User-agent: *
+Disallow: /admin
+
+User-agent: GPTBot
+Allow: /
+Disallow: /admin
+
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /admin
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /admin
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /admin
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /admin
+
+User-agent: CCBot
+Allow: /
 Disallow: /admin
 
 # El sitemap se agrega cuando exista (tarea 9 de docs/TASKS.md).

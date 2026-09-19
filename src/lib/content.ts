@@ -8,8 +8,29 @@ const seoSchema = z.object({
 
 const linesSchema = z.array(z.string().min(1)).min(1)
 
+/**
+ * Capa GEO (ADR-0018). Los minimos no son decorativos: una respuesta de cinco palabras no
+ * se puede citar sin el parrafo que la rodea, y ese es el modo de falla previsible cuando
+ * alguien completa el formulario apurado. El build lo frena antes de publicar.
+ */
+const qaSchema = z.object({
+  label: z.string().min(1),
+  title: z.string().min(1),
+  items: z
+    .array(
+      z.object({
+        pregunta: z.string().min(8),
+        respuesta: z.string().min(40),
+      }),
+    )
+    .min(3)
+    .max(12),
+})
+
 export const homeSchema = z.object({
   seo: seoSchema,
+  /** Frases autocontenidas, con sujeto explicito: lo que un motor generativo puede citar. */
+  resumen: z.array(z.string().min(40)).min(2).max(4),
   chrome: z.object({
     caption: z.string().min(1),
     menuLabel: z.string().min(1),
@@ -104,6 +125,7 @@ export const classesSchema = z.object({
     note: z.string().min(1),
     ctaLabel: z.string().min(1),
   }),
+  qa: qaSchema,
 })
 
 const audienceEntrySchema = z.object({
@@ -115,6 +137,7 @@ const audienceEntrySchema = z.object({
   photo: z.url(), photoAlt: z.string().min(1),
   trialTitle: z.string().min(1), trialText: z.string().min(1), trialLabel: z.string().min(1),
   formUrl: z.url(), directLabel: z.string().min(1), closeLabel: z.string().min(1),
+  qa: qaSchema,
 })
 
 export const aikidoSchema = z.object({

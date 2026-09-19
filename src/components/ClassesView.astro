@@ -1,6 +1,8 @@
 ---
 import Base from '../layouts/Base.astro'
+import QaSection from './QaSection.astro'
 import { getContent } from '../lib/content'
+import { faqJsonLd } from '../lib/site'
 import { pathFor, siteNav, type Locale } from '../lib/i18n'
 
 interface Props { locale: Locale }
@@ -113,6 +115,10 @@ const HERO_PHOTO =
       </dl>
     </div>
   </section>
+
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(faqJsonLd(c.qa.items))} />
+
+  <QaSection label={c.qa.label} title={c.qa.title} items={c.qa.items} />
 
   <section id="aula-experimental" class="section-pad bg-[#9b3025] text-center text-white">
     <div class="site-shell">

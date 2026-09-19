@@ -1,1 +1,64 @@
-{"seo":{"title":"Aikido para adultos em Lisboa | Dojo da Luz","description":"Aulas de Aikido para adultos em Benfica, Encarnação e Lumiar, do almoço à noite."},"eyebrow":"Aikido para adultos","title":"Uma prática para a vida.","lead":"Sem competição e aberta a principiantes e praticantes experientes.","paragraphs":["O Aikido privilegia o equilíbrio, a coordenação e a relação em vez da força e da velocidade.","Através da repetição, aprendemos a receber uma força sem entrar em oposição direta com ela, desenvolvendo calma, concentração e confiança."],"goalsTitle":"O que se trabalha","goals":["Equilíbrio, coordenação e mobilidade","Atenção, disponibilidade e presença","Técnicas de projeção e controlo","Prática com Ken e Jo no Buki Waza"],"facts":[{"label":"Benfica","value":"Terças e quintas · 12h00 e 20h00"},{"label":"Encarnação","value":"Terças e quintas · 20h30"},{"label":"Lumiar","value":"Segundas e quartas · 20h30; sábados · 11h00"},{"label":"Quota normal","value":"35 €/mês · até 3 aulas por semana"}],"photo":"https://static.wixstatic.com/media/ae7240_de66207c487b4e8086d18ed67c88ea93~mv2.jpg/v1/fill/w_1200,h_900,al_c,q_85/IMG_3502_JPG.jpg","photoAlt":"Adultos a praticar Aikido no Dojo da Luz","trialTitle":"A tua primeira aula","trialText":"A aula experimental custa 5 €, descontados na primeira mensalidade.","trialLabel":"Marcar aula de adultos","formUrl":"https://www.aikido-duran.com/aula-experimental","directLabel":"Abrir formulário numa nova janela","closeLabel":"Fechar"}
+{
+  "seo": {
+    "title": "Aikido para adultos em Lisboa | Dojo da Luz",
+    "description": "Aulas de Aikido para adultos em Benfica, Encarnação e Lumiar, do almoço à noite."
+  },
+  "eyebrow": "Aikido para adultos",
+  "title": "Uma prática para a vida.",
+  "lead": "Sem competição e aberta a principiantes e praticantes experientes.",
+  "paragraphs": [
+    "O Aikido privilegia o equilíbrio, a coordenação e a relação em vez da força e da velocidade.",
+    "Através da repetição, aprendemos a receber uma força sem entrar em oposição direta com ela, desenvolvendo calma, concentração e confiança."
+  ],
+  "goalsTitle": "O que se trabalha",
+  "goals": [
+    "Equilíbrio, coordenação e mobilidade",
+    "Atenção, disponibilidade e presença",
+    "Técnicas de projeção e controlo",
+    "Prática com Ken e Jo no Buki Waza"
+  ],
+  "facts": [
+    {
+      "label": "Benfica",
+      "value": "Terças e quintas · 12h00 e 20h00"
+    },
+    {
+      "label": "Encarnação",
+      "value": "Terças e quintas · 20h30"
+    },
+    {
+      "label": "Lumiar",
+      "value": "Segundas e quartas · 20h30; sábados · 11h00"
+    },
+    {
+      "label": "Quota normal",
+      "value": "35 €/mês · até 3 aulas por semana"
+    }
+  ],
+  "photo": "https://static.wixstatic.com/media/ae7240_de66207c487b4e8086d18ed67c88ea93~mv2.jpg/v1/fill/w_1200,h_900,al_c,q_85/IMG_3502_JPG.jpg",
+  "photoAlt": "Adultos a praticar Aikido no Dojo da Luz",
+  "trialTitle": "A tua primeira aula",
+  "trialText": "A aula experimental custa 5 €, descontados na primeira mensalidade.",
+  "trialLabel": "Marcar aula de adultos",
+  "formUrl": "https://www.aikido-duran.com/aula-experimental",
+  "directLabel": "Abrir formulário numa nova janela",
+  "closeLabel": "Fechar",
+  "qa": {
+    "label": "Perguntas frequentes",
+    "title": "O que costumam perguntar-nos.",
+    "items": [
+      {
+        "pregunta": "As aulas de adultos são para principiantes?",
+        "respuesta": "As aulas de adultos do Dojo da Luz estão abertas a principiantes e a praticantes experientes. Não há competição: cada pessoa avança ao seu ritmo."
+      },
+      {
+        "pregunta": "Quais são os horários das aulas de adultos?",
+        "respuesta": "Os adultos praticam em Benfica às terças e quintas, às 12h00 e às 20h00; na Encarnação às terças e quintas às 20h30; e no Lumiar às segundas e quartas às 20h30 e aos sábados às 11h00."
+      },
+      {
+        "pregunta": "Quanto custa a mensalidade para adultos?",
+        "respuesta": "A quota normal para adultos no Dojo da Luz é de 35 € por mês, com até três aulas por semana. A aula experimental custa 5 €, descontados na primeira mensalidade."
+      }
+    ]
+  }
+}

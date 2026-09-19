@@ -1,7 +1,7 @@
 ---
 spec: 0023
 fecha: 2026-09-19
-estado: cerrada
+estado: implementada
 resumen: Resumen citable en la Home y respuestas autocontenidas con FAQPage en Aulas, Adultos y Niños; robots con crawlers de IA por nombre y /llms.txt generado.
 disjunta: no
 archivos: src/lib/content.ts, src/lib/site.ts, src/components/{HomeView,ClassesView,AudienceView}.astro, src/pages/llms.txt.ts, public/robots.txt, content/{pt,es,fr,en}/{home,classes,adults,children}.json
@@ -97,6 +97,7 @@ motor documento que lo lea. Cuesta veinte lineas y sale sin costo si no sirve.
 | `src/components/HomeView.astro` | editar (resumen bajo la practica) |
 | `src/components/ClassesView.astro` | editar (seccion Q&A) |
 | `src/components/AudienceView.astro` | editar (seccion Q&A) |
+| `src/components/QaSection.astro` | crear (la seccion es la misma en las tres paginas) |
 | `src/pages/llms.txt.ts` | crear |
 | `public/robots.txt` | editar |
 | `content/*/home.json` | editar (resumen) |
@@ -106,6 +107,15 @@ motor documento que lo lea. Cuesta veinte lineas y sale sin costo si no sirve.
 
 **No.** Comparte `content.ts`, `site.ts` y los `home.json` con la 0020 (ya implementada) y
 precede a la 0021, que tiene que editar estos campos. Orden: 0020 ✅ → 0023 → 0021.
+
+## Desviacion
+
+Se sumo `src/components/QaSection.astro`, que no estaba en la lista: el bloque es identico
+en Aulas, Adultos y Niños y copiarlo tres veces era peor.
+
+Ademas se corrigio la `seo.description` de la Home en los cuatro idiomas, que nombraba
+"Benfica e Lumiar" cuando hay tres sedes — el mismo hueco que la spec 0020 arreglo en el
+lead. Un dato incompleto en la meta description es tambien el que copia un motor.
 
 ## Verificacion
 
