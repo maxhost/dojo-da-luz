@@ -8,7 +8,7 @@ Si una sesion se cae, se cierra o se compacta, se vuelve aca — no al chat. Hay
 Regla: **marcar `hecho` solo con verificacion real** — tests que pasan, comando corrido,
 cosa vista en pantalla. No "deberia andar".
 
-Ultima actualizacion: 2026-09-19 — galerías de Adultos y Crianças (0024) implementadas. Queda la 0021: el editor del backoffice.
+Ultima actualizacion: 2026-09-19 — galerías de Adultos y Crianças (0024) desplegadas y verificadas en producción. Queda la 0021: el editor del backoffice.
 
 ## Contexto
 
@@ -70,6 +70,12 @@ la tomo solo: quedo en `dojo-da-l4avxyfws-…` y hubo que asignarla a mano con
 `vercel alias set`. Los dominios `*-maxhost27-6230s-projects.vercel.app` estan detras de
 Vercel Authentication y responden 302: no sirven para verificar nada. Despues de cada
 deploy, comprobar contra `dojo-da-luz.vercel.app`, no contra la URL del deployment.
+
+**Ojo con `GH_TOKEN`.** El 2026-09-19 `git push` fallo con "Invalid username or token":
+la variable de entorno `GH_TOKEN` del shell esta vencida y tapa al token del keyring de
+`gh`. Se empuja con `env -u GH_TOKEN -u GITHUB_TOKEN git push origin main`. Con el push,
+el webhook crea el deployment y el alias `dojo-da-luz.vercel.app` se actualiza solo — el
+`vercel alias set` a mano solo hizo falta con deploys por CLI.
 
 **Falta para el lanzamiento real:** dominio propio `aikido-duran.com` (hoy en Wix), los
 301 de las 34 URLs viejas, sitemap/robots y los endpoints de formulario.
@@ -171,6 +177,7 @@ contraseña, sesion opaca en Neon.)*
 | 2026-09-18 | GitHub App autorizada: el push dispara deploy | `dpl_tFuJezQqKJC4EDBAGhnhotfysJYF` con `source: git` y `meta.githubCommitSha = ed3b3af`, creado por Vercel sin intervencion. Quedo en cola por el incidente "Elevated Errors Triggering Deployments" del propio Vercel |
 | 2026-09-18 | Diagnostico del auto-deploy | `GET /v9/projects/...` devuelve `link.sourceless: true`; el push de `b7c7ab0` no genero ningun deployment en `vercel ls` |
 | 2026-09-19 | Spec 0024 — galerías de Adultos y Crianças | `astro check` 0/0/0, tests 5/5 y build con 36 páginas; las 8 rutas de audiencia contienen 6 medios, 1 vídeo con controles y carga diferida de imágenes; `git diff --check` limpio |
+| 2026-09-19 | Deploy de las galerías a producción | `git push origin main` → `c1b2266`; deployment `dojo-da-43utj2x3l` ● Ready por webhook de GitHub; las 8 rutas de audiencia en `dojo-da-luz.vercel.app` devuelven 200 con 6 medios, 1 `<video>` y el rótulo de galería en pt/es/fr/en; el mp4 remoto responde 206 |
 
 ## Descartado (y por que)
 
