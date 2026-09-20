@@ -27,6 +27,28 @@ const ui = {
     <div><h2 class="font-serif text-3xl">{c.goalsTitle}</h2><ul class="mt-6 divide-y divide-[#d7cec0] border-y border-[#d7cec0]">{c.goals.map((goal) => <li class="py-4">{goal}</li>)}</ul></div>
   </div></section>
   <section class="section-pad bg-[#27231f] text-white"><div class="site-shell"><dl class="grid gap-px bg-white/20 md:grid-cols-2">{c.facts.map((fact) => <div class="bg-[#27231f] p-6"><dt class="text-xs font-bold uppercase tracking-[.14em] text-[#efb49b]">{fact.label}</dt><dd class="m-0 mt-3 text-lg leading-7">{fact.value}</dd></div>)}</dl></div></section>
+  <section class="section-pad overflow-hidden bg-[#f6f1e8]">
+    <div class="site-shell">
+      <div class="max-w-2xl">
+        <p class="section-kicker">{c.gallery.label}</p>
+        <h2 class="section-title mt-4 text-4xl md:text-6xl">{c.gallery.title}</h2>
+        <p class="mt-5 text-lg leading-8 text-[#625c55]">{c.gallery.intro}</p>
+      </div>
+      <ul class="mt-10 grid grid-cols-2 gap-2 sm:gap-4 md:grid-cols-3" role="list">
+        {c.gallery.items.map((item, index) => (
+          <li class:list={['relative overflow-hidden bg-[#d7cec0]', index === 0 && 'md:col-span-2 md:row-span-2']}>
+            {item.type === 'image' ? (
+              <img src={item.src} alt={item.alt} loading="lazy" decoding="async" class="aspect-square h-full w-full object-cover transition-transform duration-500 hover:scale-[1.02]" />
+            ) : (
+              <video class="aspect-square h-full w-full object-cover" controls playsinline preload="metadata" poster={item.poster} aria-label={item.alt}>
+                <source src={item.src} type="video/mp4" />
+              </video>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(faqJsonLd(c.qa.items))} />
 
   <QaSection label={c.qa.label} title={c.qa.title} items={c.qa.items} />

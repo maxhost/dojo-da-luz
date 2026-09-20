@@ -27,6 +27,16 @@ const qaSchema = z.object({
     .max(12),
 })
 
+const gallerySchema = z.object({
+  label: z.string().min(1),
+  title: z.string().min(1),
+  intro: z.string().min(1),
+  items: z.array(z.discriminatedUnion('type', [
+    z.object({ type: z.literal('image'), src: z.url(), alt: z.string().min(1) }),
+    z.object({ type: z.literal('video'), src: z.url(), poster: z.url(), alt: z.string().min(1) }),
+  ])).length(6),
+})
+
 export const homeSchema = z.object({
   seo: seoSchema,
   /** Frases autocontenidas, con sujeto explicito: lo que un motor generativo puede citar. */
@@ -135,6 +145,7 @@ const audienceEntrySchema = z.object({
   goalsTitle: z.string().min(1), goals: z.array(z.string().min(1)).min(1),
   facts: z.array(z.object({ label: z.string().min(1), value: z.string().min(1) })).min(1),
   photo: z.url(), photoAlt: z.string().min(1),
+  gallery: gallerySchema,
   trialTitle: z.string().min(1), trialText: z.string().min(1), trialLabel: z.string().min(1),
   formUrl: z.url(), directLabel: z.string().min(1), closeLabel: z.string().min(1),
   qa: qaSchema,
