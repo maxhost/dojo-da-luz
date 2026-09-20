@@ -62,6 +62,14 @@ export const homeSchema = z.object({
     titleLines: linesSchema,
     paragraphs: z.array(z.string().min(1)).min(1),
   }),
+  audiences: z.object({
+    label: z.string().min(1),
+    title: z.string().min(1),
+    intro: z.string().min(1),
+    adultsLabel: z.string().min(1),
+    childrenLabel: z.string().min(1),
+    ctaLabel: z.string().min(1),
+  }),
   places: z.object({
     label: z.string().min(1),
     titleLines: linesSchema,

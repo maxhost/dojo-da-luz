@@ -29,6 +29,7 @@ desactualizado es peor que no tenerlo.
 | [0017](adr/0017-dojos-entidad.md) | 2026-09-18 | Los dojos son una entidad en `content/dojos.json` con NAP, coordenadas y horarios estructurados; no van a la DB | aceptada | `docs/adr/0017-dojos-entidad.md` |
 | [0018](adr/0018-geo-motores-generativos.md) | 2026-09-18 | GEO = generative engine optimization: datos estructurados, capa factual citable y crawlers de IA permitidos; nada sin evidencia | aceptada | `docs/adr/0018-geo-motores-generativos.md` |
 | [0019](adr/0019-galerias-audiencias.md) | 2026-09-19 | Galerías de audiencias como contenido estructurado, responsive y sin JavaScript | aceptada | `docs/adr/0019-galerias-audiencias.md` |
+| [0020](adr/0020-accesos-audiencias-home.md) | 2026-09-19 | La Home expone Adultos y Crianças como accesos principales directos, sin obligar a pasar por Aulas | aceptada | `docs/adr/0020-accesos-audiencias-home.md` |
 
 ## Specs — que se construye
 
@@ -58,6 +59,7 @@ desactualizado es peor que no tenerlo.
 | [0022](specs/0022-reset-password.md) | 2026-09-18 | Recuperacion de contraseña por email con Resend, token de un solo uso y expulsion de sesiones | borrador | no | `db/migrations/0003_admin_reset.sql`, `src/lib/email.ts`, `src/pages/admin/{recuperar,restablecer}.astro` |
 | [0023](specs/0023-capa-geo.md) | 2026-09-19 | Capa GEO: resumen citable en Home, Q&A con `FAQPage` en Aulas/Adultos/Niños, robots con crawlers de IA y `/llms.txt` | implementada | no | `src/lib/{content,site}.ts`, `src/components/{HomeView,ClassesView,AudienceView}.astro`, `src/pages/llms.txt.ts`, `public/robots.txt`, `content/**` |
 | [0024](specs/0024-galerias-audiencias.md) | 2026-09-19 | Adultos y Crianças incorporan una galería responsive de seis medios editable desde el contenido | implementada | no | `src/lib/content.ts`, `src/components/AudienceView.astro`, `content/*/{adults,children}.json`, `docs/**` |
+| [0025](specs/0025-accesos-audiencias-home.md) | 2026-09-19 | Accesos directos y destacados a Adultos y Crianças desde la Home | implementada | no | `src/components/HomeView.astro`, `src/lib/content.ts`, `content/*/home.json`, `docs/**` |
 
 **"Disjunta?"** = si el trabajo no comparte archivos con otra spec abierta. Es lo que
 habilita paralelizar. Lo decide la spec, no el orquestador en runtime.

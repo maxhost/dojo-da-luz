@@ -53,8 +53,16 @@
       "Technique teaches us to receive force without opposing it directly."
     ]
   },
+  "audiences": {
+    "label": "02 · Aikido classes",
+    "title": "A practice for every stage of life.",
+    "intro": "Explore the classes, timetables and the best way to begin for you or your children.",
+    "adultsLabel": "Adults",
+    "childrenLabel": "Children and teenagers",
+    "ctaLabel": "Explore the classes"
+  },
   "places": {
-    "label": "02 · The earth",
+    "label": "03 · The earth",
     "titleLines": [
       "Three places",
       "to practise."
@@ -63,7 +71,7 @@
     "ctaLabel": "View timetable"
   },
   "dojo": {
-    "label": "03 · The dojo",
+    "label": "04 · The dojo",
     "titleLines": [
       "A place",
       "of transmission."
@@ -81,7 +89,7 @@
     }
   },
   "threshold": {
-    "label": "04 · The threshold",
+    "label": "05 · The threshold",
     "titleLines": [
       "Entering the dojo",
       "is a beginning."

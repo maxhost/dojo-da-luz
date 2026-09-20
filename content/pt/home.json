@@ -53,8 +53,16 @@
       "A técnica ensina a receber uma força sem entrar em oposição direta com ela."
     ]
   },
+  "audiences": {
+    "label": "02 · Aulas de Aikido",
+    "title": "Uma prática para cada etapa da vida.",
+    "intro": "Descobre as aulas, os horários e a forma de começar mais adequada para ti ou para os teus filhos.",
+    "adultsLabel": "Adultos",
+    "childrenLabel": "Crianças e adolescentes",
+    "ctaLabel": "Conhecer as aulas"
+  },
   "places": {
-    "label": "02 · A terra",
+    "label": "03 · A terra",
     "titleLines": [
       "Três lugares",
       "para praticar."
@@ -63,7 +71,7 @@
     "ctaLabel": "Ver horários"
   },
   "dojo": {
-    "label": "03 · O dojo",
+    "label": "04 · O dojo",
     "titleLines": [
       "Um espaço",
       "de transmissão."
@@ -81,7 +89,7 @@
     }
   },
   "threshold": {
-    "label": "04 · O umbral",
+    "label": "05 · O umbral",
     "titleLines": [
       "Entrar no dojo",
       "é começar."

@@ -53,8 +53,16 @@
       "La technique apprend à recevoir une force sans entrer en opposition directe avec elle."
     ]
   },
+  "audiences": {
+    "label": "02 · Cours d'Aïkido",
+    "title": "Une pratique pour chaque étape de la vie.",
+    "intro": "Découvrez les cours, les horaires et la meilleure façon de commencer pour vous ou pour vos enfants.",
+    "adultsLabel": "Adultes",
+    "childrenLabel": "Enfants et adolescents",
+    "ctaLabel": "Découvrir les cours"
+  },
   "places": {
-    "label": "02 · La terre",
+    "label": "03 · La terre",
     "titleLines": [
       "Trois lieux",
       "pour pratiquer."
@@ -63,7 +71,7 @@
     "ctaLabel": "Voir les horaires"
   },
   "dojo": {
-    "label": "03 · Le dojo",
+    "label": "04 · Le dojo",
     "titleLines": [
       "Un lieu",
       "de transmission."
@@ -81,7 +89,7 @@
     }
   },
   "threshold": {
-    "label": "04 · Le seuil",
+    "label": "05 · Le seuil",
     "titleLines": [
       "Entrer dans le dojo,",
       "c'est commencer."

@@ -8,7 +8,7 @@ Si una sesion se cae, se cierra o se compacta, se vuelve aca — no al chat. Hay
 Regla: **marcar `hecho` solo con verificacion real** — tests que pasan, comando corrido,
 cosa vista en pantalla. No "deberia andar".
 
-Ultima actualizacion: 2026-09-19 — galerías de Adultos y Crianças (0024) desplegadas y verificadas en producción. Queda la 0021: el editor del backoffice.
+Ultima actualizacion: 2026-09-19 — accesos directos a Adultos y Crianças añadidos a la Home y verificados localmente. Queda desplegar este cambio y la 0021: el editor del backoffice.
 
 ## Contexto
 
@@ -178,6 +178,7 @@ contraseña, sesion opaca en Neon.)*
 | 2026-09-18 | Diagnostico del auto-deploy | `GET /v9/projects/...` devuelve `link.sourceless: true`; el push de `b7c7ab0` no genero ningun deployment en `vercel ls` |
 | 2026-09-19 | Spec 0024 — galerías de Adultos y Crianças | `astro check` 0/0/0, tests 5/5 y build con 36 páginas; las 8 rutas de audiencia contienen 6 medios, 1 vídeo con controles y carga diferida de imágenes; `git diff --check` limpio |
 | 2026-09-19 | Deploy de las galerías a producción | `git push origin main` → `c1b2266`; deployment `dojo-da-43utj2x3l` ● Ready por webhook de GitHub; las 8 rutas de audiencia en `dojo-da-luz.vercel.app` devuelven 200 con 6 medios, 1 `<video>` y el rótulo de galería en pt/es/fr/en; el mp4 remoto responde 206 |
+| 2026-09-19 | Spec 0025 — accesos de Adultos y Crianças en la Home | `astro check` 0/0/0, tests 5/5 y build con 36 páginas; las 4 homes contienen los 2 enlaces localizados y las 2 imágenes, sin scripts ejecutables nuevos; `git diff --check` limpio |
 
 ## Descartado (y por que)
 

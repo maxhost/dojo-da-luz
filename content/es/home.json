@@ -53,8 +53,16 @@
       "La técnica enseña a recibir una fuerza sin entrar en oposición directa con ella."
     ]
   },
+  "audiences": {
+    "label": "02 · Clases de Aikido",
+    "title": "Una práctica para cada etapa de la vida.",
+    "intro": "Descubre las clases, los horarios y la mejor forma de empezar para ti o para tus hijos.",
+    "adultsLabel": "Adultos",
+    "childrenLabel": "Niños y adolescentes",
+    "ctaLabel": "Conocer las clases"
+  },
   "places": {
-    "label": "02 · La tierra",
+    "label": "03 · La tierra",
     "titleLines": [
       "Tres lugares",
       "para practicar."
@@ -63,7 +71,7 @@
     "ctaLabel": "Ver horarios"
   },
   "dojo": {
-    "label": "03 · El dojo",
+    "label": "04 · El dojo",
     "titleLines": [
       "Un espacio",
       "de transmisión."
@@ -81,7 +89,7 @@
     }
   },
   "threshold": {
-    "label": "04 · El umbral",
+    "label": "05 · El umbral",
     "titleLines": [
       "Entrar en el dojo",
       "es comenzar."

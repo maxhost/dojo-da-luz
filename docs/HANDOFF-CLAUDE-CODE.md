@@ -1,137 +1,114 @@
-# Handoff para Claude Code — rediseño público
+# Handoff — accesos de audiencias desde la Home
 
-Fecha de corte: 2026-09-18.
+Fecha de corte: 2026-09-19.
 
-Este archivo resume el lote completo que está en el working tree y todavía no fue
-commiteado ni enviado. Antes de tocar código, leer `docs/TASKS.md`, `docs/INDEX.md`, las
-ADR 0010–0014 y las specs 0008–0018. No reconstruir decisiones a partir del chat.
+Este archivo es el punto de reentrada después de `/clear`. Antes de continuar, leer
+`docs/TASKS.md`, `docs/INDEX.md`, `docs/adr/0020-accesos-audiencias-home.md` y
+`docs/specs/0025-accesos-audiencias-home.md`. No reconstruir el estado desde el chat.
 
-## Resultado actual
+## Pedido y resultado
 
-- Sitio Astro con dirección tradicional, fotográfica e informativa inspirada en un dojo.
-- Home con hero de vídeo, texto centrado y contenido práctico rastreable.
-- Cuatro idiomas simétricos: portugués, español, francés e inglés.
-- 36 rutas prerenderizadas.
-- Contenido editorial y horarios en JSON validado por Zod y renderizado como HTML.
-- Canonical y `hreflang` recíprocos generados desde `src/lib/i18n.ts`.
-- Menú global localizado mediante `siteNav()`.
-- Selector de idioma por banderas; conserva nombre accesible, `hreflang`, `lang` y
-  `aria-current`.
-- Facebook oficial en cabecera desktop, menú móvil y pie mediante
-  `src/components/SocialLinks.astro`.
+El cliente pidió hacer visibles las dos páginas principales de práctica —Adultos y
+Crianças— directamente desde la Home, porque hasta ahora estaban escondidas detrás de
+Aulas y su selector.
 
-## Sitemap productivo
+La spec 0025 está implementada localmente:
 
-| Concepto | PT | ES | FR | EN |
-|---|---|---|---|---|
-| Home | `/` | `/es/` | `/fr/` | `/en/` |
-| Aulas | `/aulas/` | `/es/clases/` | `/fr/cours/` | `/en/classes/` |
-| Adultos | `/aulas/adultos/` | `/es/clases/adultos/` | `/fr/cours/adultes/` | `/en/classes/adults/` |
-| Niños | `/aulas/criancas/` | `/es/clases/ninos/` | `/fr/cours/enfants/` | `/en/classes/children/` |
-| Aikido | `/aikido/` | `/es/aikido/` | `/fr/aikido/` | `/en/aikido/` |
-| Dojo | `/dojo/` | `/es/dojo/` | `/fr/dojo/` | `/en/dojo/` |
-| Pablo Durán | `/professor-pablo-duran/` | `/es/profesor-pablo-duran/` | `/fr/professeur-pablo-duran/` | `/en/teacher-pablo-duran/` |
-| Contacto | `/contactos/` | `/es/contacto/` | `/fr/contact/` | `/en/contact/` |
-| Otras artes | `/outras-artes/` | `/es/otras-artes/` | `/fr/autres-arts/` | `/en/other-arts/` |
+- `HomeView.astro` incluye una sección nueva antes de sedes y horarios.
+- La sección muestra dos tarjetas completas enlazables: Adultos y Crianças.
+- Cada tarjeta reutiliza título, introducción, foto y texto alternativo desde
+  `content/*/adults.json` o `content/*/children.json`; no duplica ese contenido en Home.
+- Los textos de encuadre y CTA viven en `home.audiences` y están traducidos en pt/es/fr/en.
+- Los enlaces salen de `pathFor('adults' | 'children', locale)` y respetan las rutas
+  canónicas localizadas.
+- La numeración narrativa posterior de la Home pasó de 02–04 a 03–05.
+- No se añadió JavaScript ejecutable.
 
-Agenda fue retirada deliberadamente por ADR-0012 y no debe reconstruirse.
+## Working tree sin commit
 
-## Páginas y comportamiento
+Todos los cambios actuales pertenecen a este lote:
 
-- `HomeView.astro`: home tradicional con vídeo de Pexels en el hero.
-- `ClassesView.astro`: resumen de horarios, cuotas y accesos a Adultos/Niños.
-- `AudienceView.astro`: landings de Adultos y Niños. Cada una tiene CTA en hero y al
-  final; ambos abren un solo modal contextual.
-- `AikidoView.astro`: historia, principios, fundador y accesos por audiencia.
-- `DojoView.astro`: espacio, resumen de Pablo Durán y linaje. Enlaza directamente a la
-  biografía localizada.
-- `TeacherView.astro`: biografía, cronología, formación, docencia, linaje y JSON-LD
-  `Person` de Pablo Durán.
-- `ContactView.astro`: sedes y transporte; formulario visible todavía sin endpoint.
-- `OtherArtsView.astro`: Shiatsu, Iaido y Tai Chi con información y formularios propios.
-- `FormModal.astro`: carga el iframe externo sólo al abrir el diálogo.
+```text
+ M content/en/home.json
+ M content/es/home.json
+ M content/fr/home.json
+ M content/pt/home.json
+ M docs/HANDOFF-CLAUDE-CODE.md
+ M docs/INDEX.md
+ M docs/TASKS.md
+ M src/components/HomeView.astro
+ M src/lib/content.ts
+?? docs/adr/0020-accesos-audiencias-home.md
+?? docs/specs/0025-accesos-audiencias-home.md
+```
 
-## Formularios
+No hay commit ni push de la spec 0025. El último commit existente al corte es
+`19dafa0 docs: deploy de las galerías verificado en producción`.
 
-- Niños: Google Form confirmado en `content/*/children.json`.
-- Iaido: `https://forms.gle/jbVZnR31896h7p826`.
-- Tai Chi: Google Form confirmado en `content/*/other-arts.json`.
-- Adultos: todavía apunta temporalmente a la página Wix `/aula-experimental`; debe
-  reemplazarse antes de activar su redirect.
-- Contacto: visible pero sin envío hasta confirmar email y endpoint.
+## Archivos clave
 
-## Redes sociales
+- `src/components/HomeView.astro`: carga ambos contenidos de audiencia y renderiza las
+  dos tarjetas.
+- `src/lib/content.ts`: `homeSchema` valida el objeto nuevo `audiences`.
+- `content/{pt,es,fr,en}/home.json`: textos localizados y numeración de secciones.
+- `docs/adr/0020-accesos-audiencias-home.md`: decisión de producto.
+- `docs/specs/0025-accesos-audiencias-home.md`: alcance y verificación, marcada
+  `implementada`.
+- `docs/TASKS.md`: estado actualizado; indica que este lote aún queda por desplegar.
 
-- Facebook oficial verificado:
-  `https://www.facebook.com/aikidopabloduran/`.
-- Instagram y YouTube no tienen URL oficial verificada en las fuentes revisadas. No
-  añadir iconos vacíos ni adivinar handles; incorporarlos a `SocialLinks.astro` cuando el
-  cliente entregue las URLs.
+## Verificación ejecutada
 
-## Redirects
-
-La matriz completa y las reglas están en
-`docs/design/09-arquitectura-urls-y-redirects.md`. No materializar redirects todavía:
-primero falta completar el crawl final de las 34 URLs y revisar Search Console.
-
-Cambio importante del último lote:
-
-- `/prefessorpt` → `/professor-pablo-duran/`
-- `/profesores` → `/es/profesor-pablo-duran/`
-- la URL francesa de Enseignant, aún por identificar →
-  `/fr/professeur-pablo-duran/`
-
-Agenda se resuelve URL por URL hacia destinos semánticos o `410`; nunca mediante un
-redirect masivo a Home.
-
-## Verificación ya ejecutada
+Se ejecutó después de implementar:
 
 ```sh
 npm run typecheck
+npm test
 npm run build
 git diff --check
 ```
 
-Resultado del corte:
+Resultados:
 
-- Astro check: 0 errores, 0 warnings, 0 hints.
-- Build: 36 rutas prerenderizadas.
-- Las 36 páginas contienen cuatro idiomas en desktop y móvil.
-- Las 36 páginas contienen Facebook en cabecera desktop, menú móvil y pie.
-- Canonical/hreflang de las páginas nuevas verificados en el HTML generado.
-- JSON-LD `Person` de las cuatro páginas de Pablo Durán parseado correctamente.
+- Astro check: 0 errores, 0 warnings, 0 hints en 44 archivos.
+- Tests: 5/5.
+- Build: 36 páginas estáticas más `/llms.txt`.
+- Las cuatro Homes generadas contienen sus dos enlaces directos localizados:
+  - PT: `/aulas/adultos` y `/aulas/criancas`
+  - ES: `/es/clases/adultos` y `/es/clases/ninos`
+  - FR: `/fr/cours/adultes` y `/fr/cours/enfants`
+  - EN: `/en/classes/adults` y `/en/classes/children`
+- Las cuatro Homes contienen las fotos de Adultos y Crianças.
+- Cero scripts ejecutables en las Homes; permanece únicamente el JSON-LD existente.
+- `git diff --check` limpio.
 
-## Estado y pendientes reales
+## Próximo paso seguro
 
-Revisar `docs/TASKS.md`; no asumir que “sitio público completo” equivale a “listo para
-lanzar”. Siguen pendientes:
+Revisar visualmente la nueva sección si el cliente lo desea. Si se aprueba, hacer commit,
+push y verificar el deployment automático en `https://dojo-da-luz.vercel.app`.
 
-1. Crawl final de Wix y export de Search Console.
-2. Implementación y prueba automatizada de redirects 301/410.
-3. `sitemap.xml` y `robots.txt` finales.
-4. Endpoint del formulario de Contacto y sustitución del formulario Wix de Adultos.
-5. Moradas, teléfono y redes restantes confirmadas por el cliente para SEO local.
-6. Deploy, variables de entorno y prueba de `/api/health` en producción.
-
-## Checklist de revisión y push
-
-Claude Code debe revisar el working tree completo, incluidos los archivos sin seguimiento;
-no usar comandos destructivos ni descartar cambios. Secuencia sugerida:
+Antes de commitear:
 
 ```sh
 git status --short
-npm ci
 npm run typecheck
+npm test
 npm run build
 git diff --check
-git diff --stat
-git add content docs src package.json package-lock.json astro.config.mjs db
-git status --short
-git diff --cached --check
-git commit -m "feat: rediseña sitio público multilingüe"
-git push
 ```
 
-Antes de `git add`, confirmar con `git status` si existen archivos ajenos a este lote. El
-push requiere que el remoto y la rama sean los correctos; no forzar ni reescribir
-historial.
+No descartar ni sobrescribir el working tree. No usar `git reset --hard` ni
+`git checkout --`. Para el push, recordar que el `GH_TOKEN` del shell estaba vencido y
+tapaba el token válido del keyring:
+
+```sh
+env -u GH_TOKEN -u GITHUB_TOKEN git push origin main
+```
+
+Después del push, esperar el deployment por webhook y comprobar la URL pública, no una
+URL protegida del equipo de Vercel.
+
+## Pendientes generales que no pertenecen a este lote
+
+La fuente de verdad es `docs/TASKS.md`. En especial siguen pendientes el crawl/redirects
+del Wix, sitemap final, endpoints de formularios, datos NAP del cliente y la spec 0021 del
+editor de Home/dojos en el backoffice. No mezclarlos con el commit de la spec 0025.
