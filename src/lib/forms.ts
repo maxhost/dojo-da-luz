@@ -246,9 +246,11 @@ export function aplanar(
 }
 
 /**
- * Lista de parceiros desde el formulario de la seccion 06 (spec 0031). El largo es libre:
- * el editor pinta siempre una fila vacia de mas, y `vacia()` la descarta. Vaciar una fila
- * existente es como se borra un parceiro — no hay boton que apretar sin querer.
+ * Lista de parceiros desde el formulario (specs 0031 y 0033). El largo es libre: el editor
+ * pinta siempre una fila vacia de mas, y se agrega llenandola.
+ *
+ * Una fila sale de la lista por dos caminos: tildando "quitar", o quedandose sin logo. Los
+ * dos son explicitos y ninguno es un boton que se aprieta sin querer.
  *
  * Una `escala` escrita pero ilegible se deja pasar como `NaN` a proposito: que la rechace
  * el schema y se vea el error en la fila, en vez de descartarla en silencio.
@@ -257,12 +259,13 @@ export type FilaParceiro = { nombre: string; src: string; escala?: number }
 
 export function partnersDesdeForm(form: FormData): FilaParceiro[] {
   return filas(form, 'parceiros')
-    .filter((fila) => !fila.vacia())
+    .filter((fila) => !fila.vacia() && fila.uno('quitar') !== 'si' && fila.uno('src') !== '')
     .map((fila) => {
       const bruto = fila.uno('escala')
       const escala = bruto ? Number(bruto.replace(',', '.')) : null
       return {
-        nombre: fila.uno('nombre'),
+        // Un logo nuevo no trae nombre: lleva el generico, que es lo que se lee sin verlo.
+        nombre: fila.uno('nombre') || 'Parceiro do Dojo da Luz',
         src: fila.uno('src'),
         ...(escala === null ? {} : { escala }),
       }
@@ -270,9 +273,10 @@ export function partnersDesdeForm(form: FormData): FilaParceiro[] {
 }
 
 /**
- * Las cinco imagenes de la portada, que son un archivo aparte y no viajan con el idioma
- * (ADR-0028). Se leen todas juntas: publicar media portada no tiene sentido.
+ * Las cinco imagenes de la portada. Viajan con el formulario del idioma —se editan en la
+ * seccion donde se ven (ADR-0029)— pero se guardan una sola vez, en su propio archivo.
+ * El prefijo `media.` es lo que las separa del resto de los campos.
  */
 export function mediaDesdeForm(form: FormData): Record<string, string> {
-  return Object.fromEntries(CLAVES_MEDIA.map((clave) => [clave, texto(form, clave)]))
+  return Object.fromEntries(CLAVES_MEDIA.map((clave) => [clave, texto(form, `media.${clave}`)]))
 }

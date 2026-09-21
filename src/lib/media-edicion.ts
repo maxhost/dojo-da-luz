@@ -9,16 +9,12 @@ import { leerContenido, publicar, serializar } from './publish'
 
 export const RUTA_MEDIA = 'content/media.json'
 
-export type Guardado =
-  | { ok: true }
-  | { ok: false; estado: number; aviso: string; errores: Record<string, string> }
-
 export async function leerMedia(): Promise<{ media: Media; sha: string }> {
   const archivo = await leerContenido(RUTA_MEDIA)
   return { media: JSON.parse(archivo.contenido) as Media, sha: archivo.sha }
 }
 
-function conflicto(): Guardado {
+function conflicto(): { ok: false; estado: number; aviso: string; errores: Record<string, string> } {
   return {
     ok: false,
     estado: 409,
@@ -28,10 +24,24 @@ function conflicto(): Guardado {
   }
 }
 
-export async function guardarMedia(form: FormData, sha: string): Promise<Guardado> {
+/**
+ * Las imagenes viajan en el formulario del idioma y se guardan aparte (ADR-0029). Esto se
+ * llama antes de publicar `home.json`: si nada cambio no escribe nada, y si algo esta mal
+ * corta antes de tocar el archivo del idioma.
+ *
+ * Los errores salen prefijados con `media.` para que caigan al lado del campo que los
+ * produjo, que es como se llama en el formulario.
+ */
+export type ResultadoMedia =
+  | { ok: true; cambio: boolean }
+  | { ok: false; estado: number; aviso: string; errores: Record<string, string> }
+
+export async function publicarMedia(form: FormData, sha: string): Promise<ResultadoMedia> {
   const validado = mediaSchema.safeParse(mediaDesdeForm(form))
   if (!validado.success) {
-    const errores = erroresDe(validado.error)
+    const errores = Object.fromEntries(
+      Object.entries(erroresDe(validado.error)).map(([ruta, m]) => [`media.${ruta}`, m]),
+    )
     return {
       ok: false,
       estado: 422,
@@ -44,10 +54,8 @@ export async function guardarMedia(form: FormData, sha: string): Promise<Guardad
 
   try {
     const actual = await leerContenido(RUTA_MEDIA)
+    if (actual.contenido === contenido) return { ok: true, cambio: false }
     if (actual.sha !== sha) return conflicto()
-    if (actual.contenido === contenido) {
-      return { ok: false, estado: 200, aviso: 'No había cambios: no se publicó nada.', errores: {} }
-    }
 
     const resultado = await publicar({
       ruta: RUTA_MEDIA,
@@ -56,7 +64,7 @@ export async function guardarMedia(form: FormData, sha: string): Promise<Guardad
       sha: actual.sha,
     })
 
-    if (resultado.ok) return { ok: true }
+    if (resultado.ok) return { ok: true, cambio: true }
     if (resultado.motivo === 'conflicto') return conflicto()
 
     return { ok: false, estado: 502, aviso: `No se pudo publicar: ${resultado.detalle}`, errores: {} }

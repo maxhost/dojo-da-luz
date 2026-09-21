@@ -3,14 +3,13 @@ export const prerender = false
 
 import Admin from '../../../layouts/Admin.astro'
 import Aviso from '../../../components/admin/Aviso.astro'
-import EditorMedios from '../../../components/admin/EditorMedios.astro'
 import EditorParcerias from '../../../components/admin/EditorParcerias.astro'
 import FormularioHome from '../../../components/admin/FormularioHome.astro'
 import { homeSchema } from '../../../lib/content'
 import { aplanar, erroresDe, homeDesdeForm, mediaDesdeForm, partnersDesdeForm, resumenDeErrores, type FilaParceiro } from '../../../lib/forms'
 import { LOCALES, LOCALE_NAME, isLocale, type Locale } from '../../../lib/i18n'
 import type { Media } from '../../../lib/media'
-import { guardarMedia, leerMedia } from '../../../lib/media-edicion'
+import { leerMedia, publicarMedia } from '../../../lib/media-edicion'
 import { guardarPartners, leerPartners } from '../../../lib/partners-edicion'
 import { leerContenido, publicar, serializar } from '../../../lib/publish'
 
@@ -26,7 +25,6 @@ let errores: Partial<Record<Locale, Record<string, string>>> = {}
 // viven fuera del mapa por idioma.
 let erroresParcerias: Record<string, string> = {}
 let parceriasEnviadas: FilaParceiro[] | null = null
-let erroresMedios: Record<string, string> = {}
 let mediosEnviados: Media | null = null
 let enviado: Partial<Record<Locale, Enviado>> = {}
 let aviso: { tipo: 'ok' | 'error'; texto: string } | null = null
@@ -35,13 +33,7 @@ let activo: Locale = isLocale(Astro.url.searchParams.get('idioma') ?? '')
   : 'pt'
 
 const publicado = Astro.url.searchParams.get('publicado')
-if (publicado === 'medios') {
-  aviso = {
-    tipo: 'ok',
-    texto:
-      'Imágenes publicadas. Valen para los cuatro idiomas. El sitio tarda 1 o 2 minutos en regenerarse.',
-  }
-} else if (publicado === 'parcerias') {
+if (publicado === 'parcerias') {
   aviso = {
     tipo: 'ok',
     texto:
@@ -59,16 +51,7 @@ if (Astro.request.method === 'POST') {
   const form = await Astro.request.formData()
   const idioma = String(form.get('idioma') ?? '')
 
-  if (form.get('formulario') === 'medios') {
-    const guardado = await guardarMedia(form, String(form.get('sha') ?? ''))
-
-    if (guardado.ok) return Astro.redirect('/admin/paginas/home?publicado=medios', 303)
-
-    Astro.response.status = guardado.estado
-    erroresMedios = guardado.errores
-    mediosEnviados = mediaDesdeForm(form) as Media
-    aviso = { tipo: guardado.estado === 200 ? 'ok' : 'error', texto: guardado.aviso }
-  } else if (form.get('formulario') === 'parcerias') {
+  if (form.get('formulario') === 'parcerias') {
     const guardado = await guardarPartners(form, String(form.get('sha') ?? ''))
 
     if (guardado.ok) return Astro.redirect('/admin/paginas/home?publicado=parcerias', 303)
@@ -89,12 +72,23 @@ if (Astro.request.method === 'POST') {
     const datos = homeDesdeForm(form, base)
     const validado = homeSchema.safeParse(datos)
 
-    if (!validado.success) {
-      Astro.response.status = 422
-      const mapa = erroresDe(validado.error)
+    // Las imagenes son un archivo aparte que viaja en este mismo formulario (ADR-0029):
+    // se resuelven primero, para no dejar publicado el texto y las fotos no.
+    const imagenes = await publicarMedia(form, String(form.get('shaMedia') ?? ''))
+
+    if (!validado.success || !imagenes.ok) {
+      Astro.response.status = imagenes.ok ? 422 : imagenes.estado
+      const mapa = {
+        ...(validado.success ? {} : erroresDe(validado.error)),
+        ...(imagenes.ok ? {} : imagenes.errores),
+      }
       errores = { [idioma]: mapa }
       enviado = { [idioma]: { valores: aplanar(datos) } }
-      aviso = { tipo: 'error', texto: `No se publicó nada. ${resumenDeErrores(mapa)}` }
+      mediosEnviados = mediaDesdeForm(form) as Media
+      aviso = {
+        tipo: 'error',
+        texto: imagenes.ok ? `No se publicó nada. ${resumenDeErrores(mapa)}` : imagenes.aviso,
+      }
     } else {
       try {
       // Se relee para el control de concurrencia: el `sha` del formulario es el de cuando
@@ -109,6 +103,7 @@ if (Astro.request.method === 'POST') {
           texto: 'Alguien editó este archivo mientras tanto. No se pisó nada: recargá la página y volvé a aplicar tu cambio.',
         }
       } else if (actual.contenido === contenido) {
+        if (imagenes.cambio) return Astro.redirect(`/admin/paginas/home?publicado=${idioma}`, 303)
         aviso = { tipo: 'ok', texto: 'No había cambios: no se publicó nada.' }
       } else {
         const resultado = await publicar({
@@ -224,6 +219,7 @@ const TABS = [
         <section class={tab.panel}>
           <FormularioHome
             medios={medios!.media}
+            shaMedia={medios!.sha}
             locale={archivo.locale}
             valores={archivo.valores}
             errores={archivo.errores}
@@ -233,13 +229,6 @@ const TABS = [
       )
     })}
   </div>
-  )}
-
-  {sinRepositorio === null && medios && (
-  <section class="mt-12 border-t border-[#d7cec0] pt-8" id="imagenes-portada">
-    <h2 class="font-serif text-2xl">Imágenes de la portada</h2>
-    <EditorMedios media={medios.media} errores={erroresMedios} sha={medios.sha} />
-  </section>
   )}
 
   {sinRepositorio === null && parcerias && (

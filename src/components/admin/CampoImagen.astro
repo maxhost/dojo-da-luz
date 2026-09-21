@@ -2,15 +2,15 @@
 import { errorDe } from '../../lib/forms'
 
 /**
- * Campo de imagen (specs 0029 y 0030). Tres caminos al mismo sitio: pegar una dirección,
- * subir un archivo, o copiar una de `/admin/medios`.
+ * Una imagen se cambia tocandola (ADR-0029). La miniatura es el boton: abre el selector de
+ * archivos, sube a R2 y deja la direccion en el campo que viaja con el formulario.
  *
- * La subida es una isla porque el formulario de Home es un `POST` normal de 52 campos:
- * mandarlo entero para adjuntar una foto perdería todo lo escrito sin guardar. El
- * `<input type="file">` sube aparte y solo escribe la dirección en el campo de texto.
+ * La subida ocurre al elegir el archivo, no al publicar, y es deliberado: es lo que permite
+ * ver la imagen definitiva antes de guardar. **El sitio no cambia hasta que se publica.**
  *
- * La vista previa importa mas de lo que parece: una URL valida que apunta a la imagen
- * equivocada pasa cualquier validacion, y el unico modo de verlo es verla.
+ * Sin JavaScript el boton no se pinta y queda la direccion escrita a mano, que es lo que el
+ * campo era antes de todo esto. Para el backoffice alcanza: sin JavaScript tampoco hay
+ * subida a R2 posible.
  */
 
 interface Props {
@@ -31,56 +31,60 @@ const error = errorDe(errores, nombre)
 ---
 
 <div class="mt-5" data-campo-imagen>
-  <label class="block text-sm font-semibold" for={id}>
+  <p class="text-sm font-semibold">
     {etiqueta}
     {requerido && <span class="text-[#b3261e]" aria-hidden="true">*</span>}
-  </label>
+  </p>
 
   {ayuda && <p class="mt-1 text-xs text-[#625c55]" id={`${id}-ayuda`}>{ayuda}</p>}
 
-  <div class="mt-2 flex items-start gap-4">
+  {/* Con JavaScript esto es todo lo que se ve: la imagen, y se toca para cambiarla. */}
+  <button
+    class="group mt-2 block w-48 cursor-pointer border border-[#d7cec0] bg-white p-0 text-left"
+    type="button"
+    hidden
+    aria-label={`Cambiar la imagen: ${etiqueta}`}
+    data-abrir
+  >
+    <img class="block h-32 w-full bg-[#f6f1e8] object-cover" src={valor} alt="" loading="lazy" data-previa />
+    <span class="block bg-[#1f1b16] px-3 py-2 text-center text-xs font-semibold text-[#f6f1e8]">
+      {valor ? 'Cambiar imagen' : 'Subir imagen'}
+    </span>
+  </button>
+
+  <input
+    class="sr-only"
+    type="file"
+    accept="image/jpeg,image/png,image/webp,image/avif"
+    tabindex="-1"
+    aria-hidden="true"
+    data-archivo
+  />
+
+  <p class="mt-1 text-xs text-[#625c55]" role="status" data-estado></p>
+
+  {/* Nace abierto: sin JavaScript este es el unico camino y tiene que estar a la vista. */}
+  <details class="mt-2" open data-avanzado>
+    <summary class="cursor-pointer text-xs text-[#625c55]">Dirección de la imagen</summary>
     <img
-      class="h-20 w-28 shrink-0 border border-[#d7cec0] bg-white object-cover"
+      class="mt-2 block h-24 w-36 border border-[#d7cec0] bg-white object-cover"
       src={valor}
       alt=""
       loading="lazy"
       hidden={!valor}
-      data-previa
+      data-previa-estatica
     />
-
-    <div class="w-full">
-      {/* Lo primero es subir: el cliente tiene una foto en el telefono, no una direccion. */}
-      <div class="flex flex-wrap items-center gap-3" hidden data-subida>
-        <input
-          class="text-sm"
-          type="file"
-          accept="image/jpeg,image/png,image/webp,image/avif"
-          aria-label={`Subir una imagen para: ${etiqueta}`}
-          data-archivo
-        />
-        <a class="text-sm" href="/admin/medios" target="_blank" rel="noopener">
-          o elegir una ya subida
-        </a>
-      </div>
-
-      <p class="mt-1 text-xs text-[#625c55]" role="status" data-estado></p>
-
-      {/* Nace abierto: sin JavaScript este es el unico camino y tiene que estar a la vista. */}
-      <details class="mt-2" open data-avanzado>
-        <summary class="cursor-pointer text-xs text-[#625c55]">Pegar una dirección</summary>
-        <input
-          class={`mt-2 w-full border bg-white px-3 py-2 text-sm ${error ? 'border-[#b3261e]' : 'border-[#d7cec0]'}`}
-          id={id}
-          name={nombre}
-          type="url"
-          value={valor}
-          required={requerido}
-          aria-describedby={[ayuda && `${id}-ayuda`, error && `${id}-error`].filter(Boolean).join(' ') || undefined}
-          data-url
-        />
-      </details>
-    </div>
-  </div>
+    <input
+      class={`mt-2 w-full border bg-white px-3 py-2 text-sm ${error ? 'border-[#b3261e]' : 'border-[#d7cec0]'}`}
+      id={id}
+      name={nombre}
+      type="url"
+      value={valor}
+      required={requerido}
+      aria-describedby={[ayuda && `${id}-ayuda`, error && `${id}-error`].filter(Boolean).join(' ') || undefined}
+      data-url
+    />
+  </details>
 
   {error && (
     <p class="mt-1 text-xs font-semibold text-[#b3261e]" id={`${id}-error`} role="alert">{error}</p>
@@ -88,35 +92,43 @@ const error = errorDe(errores, nombre)
 </div>
 
 <script>
-  // Sin JavaScript el campo sigue sirviendo: se pega la direccion a mano y el selector de
-  // archivo ni aparece, para no ofrecer un boton que no haria nada.
   document.querySelectorAll<HTMLElement>('[data-campo-imagen]').forEach((campo) => {
     const url = campo.querySelector<HTMLInputElement>('[data-url]')
     const archivo = campo.querySelector<HTMLInputElement>('[data-archivo]')
-    const caja = campo.querySelector<HTMLElement>('[data-subida]')
+    const abrir = campo.querySelector<HTMLButtonElement>('[data-abrir]')
     const estado = campo.querySelector<HTMLElement>('[data-estado]')
     const previa = campo.querySelector<HTMLImageElement>('[data-previa]')
+    const estatica = campo.querySelector<HTMLImageElement>('[data-previa-estatica]')
     const avanzado = campo.querySelector<HTMLDetailsElement>('[data-avanzado]')
-    if (!url || !archivo || !caja || !estado || !previa) return
+    const rotulo = abrir?.querySelector('span')
+    if (!url || !archivo || !abrir || !estado || !previa) return
 
-    // Con JavaScript, subir es lo que se ofrece y la direccion a mano se pliega. Sin el,
-    // el `details` se queda abierto y el campo es exactamente el de antes.
-    caja.hidden = false
-    // Si el campo trae un error, la direccion queda a la vista: es donde esta el problema.
+    abrir.hidden = false
+    // La direccion a mano queda plegada, salvo que sea donde esta el error.
     if (avanzado && !campo.querySelector('[role="alert"]')) avanzado.open = false
 
+    let temporal = ''
     const mostrar = (valor: string) => {
       previa.src = valor
-      previa.hidden = !valor
+      if (estatica) {
+        estatica.src = valor
+        estatica.hidden = !valor
+      }
+      if (rotulo) rotulo.textContent = valor ? 'Cambiar imagen' : 'Subir imagen'
     }
 
+    abrir.addEventListener('click', () => archivo.click())
     url.addEventListener('change', () => mostrar(url.value))
 
     archivo.addEventListener('change', async () => {
       const elegido = archivo.files?.[0]
       if (!elegido) return
 
+      // Entre elegir y que R2 conteste pasan segundos: se ve la foto elegida, no un cartel.
+      temporal = URL.createObjectURL(elegido)
+      previa.src = temporal
       archivo.disabled = true
+      abrir.disabled = true
       estado.textContent = 'Subiendo…'
 
       try {
@@ -127,17 +139,22 @@ const error = errorDe(errores, nombre)
 
         if (!res.ok || !datos.url) {
           estado.textContent = datos.motivo ?? `Error ${res.status}`
+          mostrar(url.value)
           return
         }
 
         url.value = datos.url
         mostrar(datos.url)
-        estado.textContent = datos.reusado ? 'Ya estaba subida.' : 'Subida. Acordate de publicar.'
+        estado.textContent = 'Lista. No se publica hasta que guardes esta página.'
         archivo.value = ''
       } catch (error) {
         estado.textContent = `No se pudo subir: ${error instanceof Error ? error.message : error}`
+        mostrar(url.value)
       } finally {
+        if (temporal) URL.revokeObjectURL(temporal)
+        temporal = ''
         archivo.disabled = false
+        abrir.disabled = false
       }
     })
   })

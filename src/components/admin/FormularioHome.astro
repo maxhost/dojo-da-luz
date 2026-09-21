@@ -1,5 +1,5 @@
 ---
-import ImagenCompartida from './ImagenCompartida.astro'
+import CampoImagen from './CampoImagen.astro'
 import CampoTexto from './CampoTexto.astro'
 import { errorDe } from '../../lib/forms'
 import { LOCALE_NAME, type Locale } from '../../lib/i18n'
@@ -16,14 +16,15 @@ import type { Media } from '../../lib/media'
 
 interface Props {
   locale: Locale
-  /** Solo para mostrarlas: las imagenes se editan en su propio formulario (ADR-0028). */
+  /** Las imagenes viven en su propio archivo pero se editan aca (ADR-0029). */
   medios: Media
+  shaMedia: string
   valores: Record<string, string>
   errores: Record<string, string>
   sha: string
 }
 
-const { locale, valores, errores, sha, medios } = Astro.props
+const { locale, valores, errores, sha, medios, shaMedia } = Astro.props
 
 const v = (ruta: string) => valores[ruta] ?? ''
 const e = (ruta: string) => errorDe(errores, ruta)
@@ -34,6 +35,7 @@ const seccion = 'mt-8 border border-[#d7cec0] bg-[#fbf8f2] p-4'
 <form method="post">
   <input type="hidden" name="idioma" value={locale} />
   <input type="hidden" name="sha" value={sha} />
+  <input type="hidden" name="shaMedia" value={shaMedia} />
 
   <fieldset class={seccion}>
     <legend class="px-2 text-sm font-semibold">SEO</legend>
@@ -99,7 +101,7 @@ const seccion = 'mt-8 border border-[#d7cec0] bg-[#fbf8f2] p-4'
     <CampoTexto idPrefijo={locale} nombre="hero.titleLines" etiqueta="Titular (una línea por renglón)" valor={v('hero.titleLines')} error={e('hero.titleLines')} tipo="area" filas={2} requerido />
     <CampoTexto idPrefijo={locale} nombre="hero.titleHighlight" etiqueta="Última palabra destacada" valor={v('hero.titleHighlight')} error={e('hero.titleHighlight')} requerido />
     <CampoTexto idPrefijo={locale} nombre="hero.tagline" etiqueta="Bajada" valor={v('hero.tagline')} error={e('hero.tagline')} tipo="area" requerido />
-    <ImagenCompartida etiqueta="Portada del vídeo" valor={medios.heroPoster} />
+    <CampoImagen idPrefijo={locale} nombre="media.heroPoster" etiqueta="Portada del vídeo" valor={medios.heroPoster} errores={errores} ayuda="Se ve mientras carga el vídeo, y en lugar del vídeo si no puede reproducirse. Es la misma en los cuatro idiomas." />
   </fieldset>
 
   <fieldset class={seccion}>
@@ -124,7 +126,7 @@ const seccion = 'mt-8 border border-[#d7cec0] bg-[#fbf8f2] p-4'
     ] as const).map(([clave, titulo]) => (
       <div class="mt-8 border-t border-[#e6ded0] pt-4">
         <p class="text-sm font-semibold">{titulo}</p>
-        <ImagenCompartida etiqueta="Foto de la tarjeta" valor={clave === 'adults' ? medios.adultsPhoto : medios.childrenPhoto} />
+        <CampoImagen idPrefijo={locale} nombre={clave === 'adults' ? 'media.adultsPhoto' : 'media.childrenPhoto'} etiqueta="Foto" valor={clave === 'adults' ? medios.adultsPhoto : medios.childrenPhoto} errores={errores} ayuda="Es la misma en los cuatro idiomas." />
         <CampoTexto idPrefijo={locale} nombre={`audiences.${clave}.photoAlt`} etiqueta="Texto alternativo de la foto" valor={v(`audiences.${clave}.photoAlt`)} error={e(`audiences.${clave}.photoAlt`)} requerido ayuda="Lo que lee quien no ve la imagen." />
         <CampoTexto idPrefijo={locale} nombre={`audiences.${clave}.title`} etiqueta="Título de la tarjeta" valor={v(`audiences.${clave}.title`)} error={e(`audiences.${clave}.title`)} requerido />
         <CampoTexto idPrefijo={locale} nombre={`audiences.${clave}.lead`} etiqueta="Texto de la tarjeta" valor={v(`audiences.${clave}.lead`)} error={e(`audiences.${clave}.lead`)} tipo="area" requerido />
@@ -147,13 +149,13 @@ const seccion = 'mt-8 border border-[#d7cec0] bg-[#fbf8f2] p-4'
     <legend class="px-2 text-sm font-semibold">04 · El dojo</legend>
     <CampoTexto idPrefijo={locale} nombre="dojo.label" etiqueta="Rótulo" valor={v('dojo.label')} error={e('dojo.label')} requerido />
     <CampoTexto idPrefijo={locale} nombre="dojo.titleLines" etiqueta="Título (una línea por renglón)" valor={v('dojo.titleLines')} error={e('dojo.titleLines')} tipo="area" filas={2} requerido />
-    <ImagenCompartida etiqueta="Foto de la sección" valor={medios.dojoPhoto} />
+    <CampoImagen idPrefijo={locale} nombre="media.dojoPhoto" etiqueta="Foto de la sección" valor={medios.dojoPhoto} errores={errores} ayuda="Es la misma en los cuatro idiomas." />
     <CampoTexto idPrefijo={locale} nombre="dojo.photoCaption" etiqueta="Pie de foto" valor={v('dojo.photoCaption')} error={e('dojo.photoCaption')} requerido />
     <CampoTexto idPrefijo={locale} nombre="dojo.photoAlt" etiqueta="Texto alternativo de la foto" valor={v('dojo.photoAlt')} error={e('dojo.photoAlt')} requerido />
     <CampoTexto idPrefijo={locale} nombre="dojo.teacher.name" etiqueta="Profesor · nombre" valor={v('dojo.teacher.name')} error={e('dojo.teacher.name')} requerido />
     <CampoTexto idPrefijo={locale} nombre="dojo.teacher.credentialsLines" etiqueta="Profesor · credenciales (una por línea)" valor={v('dojo.teacher.credentialsLines')} error={e('dojo.teacher.credentialsLines')} tipo="area" filas={2} requerido />
     <CampoTexto idPrefijo={locale} nombre="dojo.teacher.bio" etiqueta="Profesor · reseña" valor={v('dojo.teacher.bio')} error={e('dojo.teacher.bio')} tipo="area" requerido />
-    <ImagenCompartida etiqueta="Profesor · retrato" valor={medios.teacherPhoto} />
+    <CampoImagen idPrefijo={locale} nombre="media.teacherPhoto" etiqueta="Profesor · retrato" valor={medios.teacherPhoto} errores={errores} ayuda="Es la misma en los cuatro idiomas." />
     <CampoTexto idPrefijo={locale} nombre="dojo.teacher.photoAlt" etiqueta="Profesor · texto alternativo" valor={v('dojo.teacher.photoAlt')} error={e('dojo.teacher.photoAlt')} requerido />
   </fieldset>
 

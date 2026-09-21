@@ -41,7 +41,8 @@ SEO actual, mejorar GEO.
    lista lo subido.
 2. ~~Comprobar que el BO publica de verdad~~ — **hecho** (fila 6k): el commit `f147c2e`
    de `origin/main` salio del backoffice en produccion.
-3. **Probar en el BO las parcerias y las imagenes compartidas** (filas 6l y 6m): agregar un parceiro con una imagen subida
+3. **Probar en el BO el editor entero** (filas 6l, 6m y 6n): tocar una miniatura para
+   cambiar una foto, agregar y quitar un logo: agregar un parceiro con una imagen subida
    a R2, vaciar una fila, y comprobar el aviso de conflicto con dos pestañas abiertas. El
    camino de datos tiene tests; lo que falta es una sesion.
 4. **Que el cliente mire el editor en pantalla** (fila 6h). De la primera pasada salieron
@@ -157,6 +158,7 @@ siguiente guardado del BO reordena el archivo: ruido de una vez, no perdida de d
 | 6k | Comprobar que el BO publica de verdad en produccion | 0021 | **hecho** | Verificado el 2026-09-21 sin proponerselo: el commit `f147c2e` "contenido: se archiva el dojo encarnacao desde el backoffice" aparecio en `origin/main` escrito por el BO en produccion, y rechazo un push local por no-fast-forward. Toca `content/dojos.json`. El camino completo —editar, commitear con `GITHUB_TOKEN`, disparar el deploy— funciona. |
 | 6l | Spec 0031 — parcerias editables desde el BO | 0031 | implementada, sin probar en el BO | Los ocho logos salieron de `HomeView.astro` y viven en `content/partners.json` (ADR-0027): compartidos por los cuatro idiomas, de largo libre, con su propio formulario y su propio sha en la seccion 06 del editor de Home. **La Home publica no cambia** (mismos 8 `<img>`, mismos `src` y `alt`) y con la lista vacia la seccion no se pinta. Falta apretar el boton con una sesion real: agregar un parceiro, vaciar una fila, y el aviso de conflicto con dos pestañas. |
 | 6m | Spec 0032 — imagenes de la Home compartidas y subida primero | 0032 | implementada, sin probar en el BO | Las cinco imagenes salieron de los cuatro `home.json` y viven en `content/media.json` (ADR-0028): se suben una vez y valen para los cuatro idiomas. El `alt` y el pie siguen por idioma, con la miniatura al lado para saber que se describe. El campo de imagen ahora ofrece **subir primero** y deja la direccion a mano plegada en un `details` que nace abierto (sin JS sigue siendo un input visible). Las 4 homes construidas quedaron identicas salvo el hash del CSS. |
+| 6n | Spec 0033 — un campo por cosa en el editor | 0033 | implementada, sin probar en el BO | Correccion de UX pedida por el cliente: el bloque "Imágenes de la portada" **se borro** y las cinco imagenes volvieron a su seccion, donde **la miniatura es el boton** que abre el selector de archivos; un parceiro volvio a ser solo un logo mas un "quitar" (nombre y escala viajan ocultos). Publicar un idioma escribe `media.json` tambien, solo si alguna imagen cambio. |
 | 7 | Alumnos + emision de factura + PDF a R2 + envio Resend | — | pendiente | Necesita una factura de ejemplo real. Spec sin escribir: el numero 0004 del INDEX es otra cosa. |
 | 8 | Redirects 301 de las 34 URLs viejas | — | plan definido | Matriz conceptual documentada. Falta crawl final, Search Console e implementación cuando existan todos los destinos. |
 | 9 | Sitemap + robots.txt | — | pendiente | Con el set completo de paginas. |

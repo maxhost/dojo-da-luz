@@ -38,6 +38,7 @@ desactualizado es peor que no tenerlo.
 | [0026](adr/0026-frontera-editor-home.md) | 2026-09-21 | El BO edita contenido y no estructura: el menú sale del editor; las tarjetas de audiencia y los medios de la Home entran | aceptada | `docs/adr/0026-frontera-editor-home.md` |
 | [0027](adr/0027-parceiros-entidad.md) | 2026-09-21 | Los parceiros son entidad compartida en `content/partners.json`, de largo libre y editable desde la seccion 06 del editor de Home | aceptada | `docs/adr/0027-parceiros-entidad.md` |
 | [0028](adr/0028-imagenes-compartidas.md) | 2026-09-21 | Las imagenes de la Home son compartidas en `content/media.json`; el alt y el pie siguen por idioma, y el campo ofrece subir antes que pegar una URL | aceptada | `docs/adr/0028-imagenes-compartidas.md` |
+| [0029](adr/0029-editar-donde-se-ve.md) | 2026-09-21 | Cada cosa se edita donde se ve: la imagen vuelve a su seccion con la miniatura como boton y el archivo compartido pasa a ser invisible; supersede la UI del 0028 | aceptada | `docs/adr/0029-editar-donde-se-ve.md` |
 
 ## Specs — que se construye
 
@@ -75,6 +76,7 @@ desactualizado es peor que no tenerlo.
 | [0030](specs/0030-medios-r2.md) | 2026-09-21 | Subida de imágenes a R2 desde el BO: WebP de 1600 px, clave por hash del contenido y URL pública en el JSON | implementada, sin verificar contra R2 | si | `src/lib/{r2,medios}.ts`, `src/pages/admin/medios/**`, `package.json` |
 | [0031](specs/0031-parcerias-editables.md) | 2026-09-21 | Los logos de parceiros pasan a `content/partners.json` y se editan en cantidad libre desde la seccion 06 del editor de Home | cerrada | si | `content/partners.json`, `src/lib/partners*.ts`, `src/components/**`, `src/pages/admin/paginas/home.astro` |
 | [0032](specs/0032-imagenes-compartidas.md) | 2026-09-21 | Las cinco imagenes de la Home pasan a `content/media.json`, compartidas por los 4 idiomas; el campo ofrece subir antes que pegar una URL | cerrada | si | `content/media.json`, `src/lib/media*.ts`, `src/components/admin/**`, `src/components/HomeView.astro` |
+| [0033](specs/0033-editor-simple.md) | 2026-09-21 | Un campo por cosa: la imagen se cambia tocando su miniatura donde se ve, se borra el bloque de imagenes y un parceiro vuelve a ser solo un logo | cerrada | si | `src/components/admin/**`, `src/lib/{forms,media-edicion,partners}.ts`, `src/pages/admin/paginas/home.astro` |
 
 **"Disjunta?"** = si el trabajo no comparte archivos con otra spec abierta. Es lo que
 habilita paralelizar. Lo decide la spec, no el orquestador en runtime.

@@ -1,6 +1,5 @@
 ---
 import CampoImagen from './CampoImagen.astro'
-import CampoTexto from './CampoTexto.astro'
 import { errorDe } from '../../lib/forms'
 import type { FilaParceiro } from '../../lib/forms'
 
@@ -33,51 +32,32 @@ const err = (i: number, campo: string) => errorDe(errores, `${i}.${campo}`)
   <input type="hidden" name="sha" value={sha} />
 
   <p class="text-sm text-[#625c55]">
-    Los logos son los mismos en los cuatro idiomas: se editan una sola vez, acá. El orden de
-    esta lista es el orden en que se ven en la portada.
+    Los mismos en los cuatro idiomas. Se ven en la portada en este orden.
   </p>
 
-  <ol class="mt-4 list-none space-y-4 p-0">
+  <ol class="mt-4 grid list-none grid-cols-2 gap-4 p-0 md:grid-cols-3">
     {filas.map((partner, i) => (
       <li class="border border-[#d7cec0] bg-[#fbf8f2] p-4">
-        <p class="text-xs font-semibold uppercase tracking-wide text-[#625c55]">
-          {partner ? `Parceiro ${i + 1}` : 'Agregar un parceiro'}
-        </p>
-
-        <CampoTexto
-          idPrefijo={`parceiro-${i}`}
-          nombre={`parceiros[${i}].nombre`}
-          etiqueta="Nombre"
-          valor={partner?.nombre ?? ''}
-          error={err(i, 'nombre')}
-          ayuda="Se lee en voz alta a quien navega sin ver la imagen. No aparece en pantalla."
-        />
-
         <CampoImagen
           idPrefijo={`parceiro-${i}`}
           nombre={`parceiros[${i}].src`}
-          etiqueta="Logo"
+          etiqueta={partner ? `Logo ${i + 1}` : 'Agregar un logo'}
           valor={partner?.src ?? ''}
           errores={err(i, 'src') ? { [`parceiros[${i}].src`]: err(i, 'src')! } : {}}
           requerido={false}
-          ayuda="Se ve dentro de una franja de 80 px de alto, sin recuadro."
         />
 
-        <CampoTexto
-          idPrefijo={`parceiro-${i}`}
-          nombre={`parceiros[${i}].escala`}
-          etiqueta="Ampliación"
-          tipo="number"
-          paso="0.05"
-          valor={partner?.escala ?? ''}
-          error={err(i, 'escala')}
-          ayuda="Opcional. Dejalo vacío salvo que el logo se vea chico porque el archivo trae mucho margen: 1.45 lo agranda un 45%."
-        />
+        {/* El nombre —lo que se lee sin ver la imagen— y la ampliacion de los logos que
+            vienen con mucho margen viajan con la fila, pero no son cosas que el cliente
+            tenga que decidir por cada logo (ADR-0029). */}
+        <input type="hidden" name={`parceiros[${i}].nombre`} value={partner?.nombre ?? ''} />
+        <input type="hidden" name={`parceiros[${i}].escala`} value={partner?.escala ?? ''} />
 
         {partner && (
-          <p class="mt-3 text-xs text-[#625c55]">
-            Para sacar este parceiro, borrá el nombre y la dirección del logo y publicá.
-          </p>
+          <label class="mt-3 flex items-center gap-2 text-xs text-[#625c55]">
+            <input type="checkbox" name={`parceiros[${i}].quitar`} value="si" />
+            Quitar este logo
+          </label>
         )}
       </li>
     ))}

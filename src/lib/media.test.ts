@@ -17,14 +17,15 @@ const URLS = {
   teacherPhoto: 'https://ejemplo.test/professor.webp',
 }
 
+/** Las imagenes viajan con el prefijo `media.` dentro del formulario del idioma. */
 function form(valores: Record<string, string>): FormData {
   const fd = new FormData()
-  for (const [clave, valor] of Object.entries(valores)) fd.append(clave, valor)
+  for (const [clave, valor] of Object.entries(valores)) fd.append(`media.${clave}`, valor)
   return fd
 }
 
 test('se leen las cinco claves y ninguna de mas', () => {
-  const leido = mediaDesdeForm(form({ ...URLS, 'dojo.photo': 'https://ejemplo.test/vieja.jpg' }))
+  const leido = mediaDesdeForm(form({ ...URLS, otroCampo: 'https://ejemplo.test/vieja.jpg' }))
   assert.deepEqual(Object.keys(leido).sort(), [...CLAVES_MEDIA].sort())
   assert.deepEqual(leido, URLS)
 })
@@ -44,4 +45,22 @@ test('algo que no es una direccion falla en su campo', () => {
 test('el archivo que el build lee hoy es valido', async () => {
   const datos = await import('../../content/media.json', { with: { type: 'json' } })
   assert.equal(mediaSchema.safeParse(datos.default).success, true)
+})
+
+/**
+ * Publicar un idioma sin tocar las imagenes no tiene que escribir `media.json`. Lo que lo
+ * garantiza es que el ciclo formulario → schema → JSON devuelva el archivo **byte a byte**:
+ * el editor compara el texto y no publica si es igual.
+ */
+test('el ciclo no cambia el archivo cuando no se toco nada', async () => {
+  const datos = await import('../../content/media.json', { with: { type: 'json' } })
+  const actual = (datos.default ?? datos) as Record<string, string>
+
+  const ida = mediaSchema.parse(mediaDesdeForm(form(actual)))
+  const texto = JSON.stringify(ida, null, 2) + '\n'
+  const enDisco = await import('node:fs/promises').then((fs) =>
+    fs.readFile(new URL('../../content/media.json', import.meta.url), 'utf8'),
+  )
+
+  assert.equal(texto, enDisco)
 })
