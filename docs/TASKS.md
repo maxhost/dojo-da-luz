@@ -9,11 +9,12 @@ Regla: **marcar `hecho` solo con verificacion real** — tests que pasan, comand
 cosa vista en pantalla. No "deberia andar".
 
 Ultima actualizacion: 2026-09-21 — el backoffice edita Home y dojos, y sube imagenes a R2.
-Todo desplegado. **Dos cosas quedan sin verificar**: la subida a R2 (fila 6j) —el bucket
-esta en **jurisdiccion EU** y el host se armaba sin ella; arreglado en `src/lib/r2.ts` con
-`R2_JURISDICTION`, falta cargarla en Vercel y probar la subida— y que el BO publique de
-verdad en produccion con el `GITHUB_TOKEN` ya cargado (fila 6k). Gate verde sobre el arreglo:
-`astro check` 0/0/0, `npm test` **11/11**, `npm run build` 44 rutas.
+**El BO publica de verdad**: el commit `f147c2e` de `origin/main` lo escribio el backoffice
+en produccion (fila 6k, cerrada). **Queda una sola cosa sin verificar**: la subida a R2
+(fila 6j). El bucket esta en **jurisdiccion EU** y el host se armaba sin ella; arreglado en
+`src/lib/r2.ts` con `R2_JURISDICTION`, desplegado en `adfefbe`, y falta subir una imagen de
+verdad desde el BO. Gate verde: `astro check` 0/0/0, `npm test` **11/11**, `npm run build`
+44 rutas, `/api/health` 200 desde `dojo-da-luz.vercel.app`.
 
 ## Contexto
 
@@ -28,16 +29,16 @@ SEO actual, mejorar GEO.
 
 ### Por donde seguir (corte del 2026-09-21)
 
-1. **Cargar `R2_JURISDICTION=eu` en Vercel, redeployar y verificar la subida** (fila 6j).
-   Es lo unico que separa la spec 0030 de estar terminada. El codigo que arma el host con
-   jurisdiccion ya esta commiteado y cubierto por tests, pero **el camino que habla con R2
-   no se puede ejercitar en local**: las credenciales viven solo en Vercel. Comprobar en
-   produccion: subir un JPEG deja 2 claves en el bucket, la URL publica responde
-   `image/webp`, subir el mismo archivo dos veces da la misma URL sin reescribir, y la
-   galeria `/admin/medios` lista lo subido.
-2. **Comprobar que el BO publica de verdad** (fila 6k): editar algo en
-   `/admin/paginas/home` en produccion y ver el commit en `main`. `GITHUB_TOKEN` ya esta
-   cargado en Vercel desde el 2026-09-21; nunca se ejercito el camino completo.
+1. **Subir una imagen desde el BO en produccion** (fila 6j). Es lo unico que separa la
+   spec 0030 de estar terminada. El arreglo del host con jurisdiccion esta desplegado
+   (`adfefbe`) y `R2_JURISDICTION` ya existe en Vercel —su valor no se puede leer, asi que
+   si el error sigue, lo primero es confirmar que dice `eu`—. **El camino que habla con R2
+   no se puede ejercitar en local**: las credenciales viven solo en Vercel. Comprobar:
+   subir un JPEG deja 2 claves en el bucket, la URL publica responde `image/webp`, subir el
+   mismo archivo dos veces da la misma URL sin reescribir, y la galeria `/admin/medios`
+   lista lo subido.
+2. ~~Comprobar que el BO publica de verdad~~ — **hecho** (fila 6k): el commit `f147c2e`
+   de `origin/main` salio del backoffice en produccion.
 3. **Que el cliente mire el editor en pantalla** (fila 6h). De la primera pasada salieron
    las specs 0029 y 0030; conviene una segunda antes de replicar el patron a las otras
    paginas.
@@ -148,7 +149,7 @@ siguiente guardado del BO reordena el archivo: ruido de una vez, no perdida de d
 | 6h | Que el cliente mire el editor en pantalla | 0021 | en curso | Primera pasada hecha: de ahi salieron las specs 0029 y 0030. |
 | 6i | Spec 0029 — menu fijo, tarjetas de audiencia y medios en el editor de Home | 0029 | hecho en local | Verificado con las 4 homes construidas byte a byte identicas. Sin desplegar al escribir esto. |
 | 6j | Spec 0030 — subir imagenes a R2 desde el BO | 0030 | desplegada, sin verificar | El codigo esta en produccion. Dos causas encadenadas, ninguna de la firma: primero un token de otra cuenta (`AccessDenied`), despues el host. El bucket esta creado con **jurisdiccion EU** y `endpoint()` armaba `<cuenta>.r2.cloudflarestorage.com` → `404 NoSuchBucket`. Arreglado con `R2_JURISDICTION` (2 tests nuevos fijan el host). **Falta cargar `R2_JURISDICTION=eu` en Vercel, redeployar y verificar la subida de verdad contra R2.** |
-| 6k | Comprobar que el BO publica de verdad en produccion | 0021 | proximo | `GITHUB_TOKEN` ya esta en Vercel. Falta editar algo desde `/admin/paginas/home` en produccion y ver el commit en `main`. |
+| 6k | Comprobar que el BO publica de verdad en produccion | 0021 | **hecho** | Verificado el 2026-09-21 sin proponerselo: el commit `f147c2e` "contenido: se archiva el dojo encarnacao desde el backoffice" aparecio en `origin/main` escrito por el BO en produccion, y rechazo un push local por no-fast-forward. Toca `content/dojos.json`. El camino completo —editar, commitear con `GITHUB_TOKEN`, disparar el deploy— funciona. |
 | 7 | Alumnos + emision de factura + PDF a R2 + envio Resend | — | pendiente | Necesita una factura de ejemplo real. Spec sin escribir: el numero 0004 del INDEX es otra cosa. |
 | 8 | Redirects 301 de las 34 URLs viejas | — | plan definido | Matriz conceptual documentada. Falta crawl final, Search Console e implementación cuando existan todos los destinos. |
 | 9 | Sitemap + robots.txt | — | pendiente | Con el set completo de paginas. |
