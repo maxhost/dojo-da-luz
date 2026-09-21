@@ -26,7 +26,7 @@ export const LOCALE_ICON: Record<Locale, string> = {
   en: '🇬🇧',
 }
 
-export type PageKey = 'home' | 'classes' | 'adults' | 'children' | 'aikido' | 'dojo' | 'teacher' | 'contact' | 'otherArts'
+export type PageKey = 'home' | 'classes' | 'adults' | 'children' | 'aikido' | 'dojo' | 'teacher' | 'contact' | 'events' | 'schools' | 'otherArts'
 
 /**
  * Slug por pagina y por idioma. Unica fuente de los paths del sitio: de aca salen
@@ -41,16 +41,18 @@ export const ROUTES: Record<PageKey, Record<Locale, string>> = {
   dojo: { pt: 'dojo', es: 'dojo', fr: 'dojo', en: 'dojo' },
   teacher: { pt: 'professor-pablo-duran', es: 'profesor-pablo-duran', fr: 'professeur-pablo-duran', en: 'teacher-pablo-duran' },
   contact: { pt: 'contactos', es: 'contacto', fr: 'contact', en: 'contact' },
+  events: { pt: 'eventos', es: 'eventos', fr: 'evenements', en: 'events' },
+  schools: { pt: 'escolas', es: 'escuelas', fr: 'ecoles', en: 'schools' },
   otherArts: { pt: 'outras-artes', es: 'otras-artes', fr: 'autres-arts', en: 'other-arts' },
 }
 
 export const PAGES = Object.keys(ROUTES) as PageKey[]
 
-const NAV_LABELS: Record<Locale, Record<'home' | 'classes' | 'aikido' | 'dojo' | 'otherArts' | 'contact', string>> = {
-  pt: { home: 'Início', classes: 'Aulas', aikido: 'A prática', dojo: 'O dojo', otherArts: 'Outras artes', contact: 'Contacto' },
-  es: { home: 'Inicio', classes: 'Clases', aikido: 'La práctica', dojo: 'El dojo', otherArts: 'Otras artes', contact: 'Contacto' },
-  fr: { home: 'Accueil', classes: 'Cours', aikido: 'La pratique', dojo: 'Le dojo', otherArts: 'Autres arts', contact: 'Contact' },
-  en: { home: 'Home', classes: 'Classes', aikido: 'The practice', dojo: 'The dojo', otherArts: 'Other arts', contact: 'Contact' },
+const NAV_LABELS: Record<Locale, Record<'home' | 'classes' | 'aikido' | 'dojo' | 'events' | 'schools' | 'otherArts' | 'contact', string>> = {
+  pt: { home: 'Início', classes: 'Aulas', aikido: 'A prática', dojo: 'O dojo', events: 'Eventos', schools: 'Escolas', otherArts: 'Outras artes', contact: 'Contacto' },
+  es: { home: 'Inicio', classes: 'Clases', aikido: 'La práctica', dojo: 'El dojo', events: 'Eventos', schools: 'Escuelas', otherArts: 'Otras artes', contact: 'Contacto' },
+  fr: { home: 'Accueil', classes: 'Cours', aikido: 'La pratique', dojo: 'Le dojo', events: 'Événements', schools: 'Écoles', otherArts: 'Autres arts', contact: 'Contact' },
+  en: { home: 'Home', classes: 'Classes', aikido: 'The practice', dojo: 'The dojo', events: 'Events', schools: 'Schools', otherArts: 'Other arts', contact: 'Contact' },
 }
 
 /**
@@ -121,6 +123,8 @@ export function siteNav(locale: Locale): { label: string; href: string }[] {
     { label: labels.classes, href: pathFor('classes', locale) },
     { label: labels.aikido, href: pathFor('aikido', locale) },
     { label: labels.dojo, href: pathFor('dojo', locale) },
+    { label: labels.events, href: pathFor('events', locale) },
+    { label: labels.schools, href: pathFor('schools', locale) },
     { label: labels.otherArts, href: pathFor('otherArts', locale) },
     { label: labels.contact, href: pathFor('contact', locale) },
   ]

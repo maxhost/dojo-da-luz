@@ -4,17 +4,30 @@
   html { scroll-behavior: smooth; }
   body { font-family: Arial, Helvetica, sans-serif; }
   h1, h2, h3, .font-serif { font-family: Georgia, 'Times New Roman', serif; }
+  .font-oxanium { font-family: 'Oxanium', Arial, sans-serif; }
   a { color: inherit; }
 }
 
 @layer components {
   .site-shell { width: min(100% - 2.5rem, 72rem); margin-inline: auto; }
   .section-pad { padding-block: 5rem; }
-  .section-kicker { font-size: .75rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: #9b3025; }
+  .section-kicker { font-size: .75rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: #0099ff; }
   .section-title { font-family: Georgia, 'Times New Roman', serif; font-size: clamp(2.35rem, 5vw, 4rem); font-weight: 400; line-height: 1.08; color: #211f1c; }
-  .button { display: inline-flex; min-height: 3rem; align-items: center; justify-content: center; padding: .75rem 1.25rem; font-size: .875rem; font-weight: 700; text-decoration: none; }
-  .button-primary { background: #9b3025; color: white; }
+  .button { display: inline-flex; min-height: 3rem; align-items: center; justify-content: center; padding: .75rem 1.25rem; font-family: 'Oxanium', Arial, sans-serif; font-size: .75rem; font-weight: 500; letter-spacing: .025em; text-decoration: none; }
+  .button-primary { background: #0099ff; color: white; }
   .button-light { border: 1px solid rgba(255,255,255,.7); color: white; }
+  .partner-carousel-track { display: flex; width: max-content; gap: 1.5rem; animation: partner-carousel 20s linear infinite; }
+  .partner-carousel-item { width: min(18rem, calc(100vw - 5rem)); flex: 0 0 auto; }
+  .partner-carousel:hover .partner-carousel-track { animation-play-state: paused; }
+}
+
+@keyframes partner-carousel {
+  to { transform: translateX(calc(-50% - .75rem)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .partner-carousel { overflow-x: auto; }
+  .partner-carousel-track { animation: none; }
 }
 
 @media (min-width: 48rem) {

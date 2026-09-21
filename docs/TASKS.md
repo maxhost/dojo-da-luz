@@ -8,7 +8,7 @@ Si una sesion se cae, se cierra o se compacta, se vuelve aca — no al chat. Hay
 Regla: **marcar `hecho` solo con verificacion real** — tests que pasan, comando corrido,
 cosa vista en pantalla. No "deberia andar".
 
-Ultima actualizacion: 2026-09-19 — accesos directos a Adultos y Crianças añadidos a la Home y verificados localmente. Queda desplegar este cambio y la 0021: el editor del backoffice.
+Ultima actualizacion: 2026-09-20 — spec 0026 cerrada e implementada: Eventos y Escolas en cuatro idiomas, parceiros en la Home, Instagram e identidad azul. 44 paginas en el build. Verificado que el portugues es el idioma que abre el sitio en la raiz. Queda desplegar esto y la 0021: el editor del backoffice.
 
 ## Contexto
 
@@ -179,6 +179,8 @@ contraseña, sesion opaca en Neon.)*
 | 2026-09-19 | Spec 0024 — galerías de Adultos y Crianças | `astro check` 0/0/0, tests 5/5 y build con 36 páginas; las 8 rutas de audiencia contienen 6 medios, 1 vídeo con controles y carga diferida de imágenes; `git diff --check` limpio |
 | 2026-09-19 | Deploy de las galerías a producción | `git push origin main` → `c1b2266`; deployment `dojo-da-43utj2x3l` ● Ready por webhook de GitHub; las 8 rutas de audiencia en `dojo-da-luz.vercel.app` devuelven 200 con 6 medios, 1 `<video>` y el rótulo de galería en pt/es/fr/en; el mp4 remoto responde 206 |
 | 2026-09-19 | Spec 0025 — accesos de Adultos y Crianças en la Home | `astro check` 0/0/0, tests 5/5 y build con 36 páginas; las 4 homes contienen los 2 enlaces localizados y las 2 imágenes, sin scripts ejecutables nuevos; `git diff --check` limpio |
+| 2026-09-20 | Spec 0026 + ADR 0021/0022 — Eventos, Escolas e identidad azul | `astro check` 0/0/0 (arreglado `teacher.href` en `DojoView`), `npm test` 5/5 y `npm run build` con 44 `index.html` (36 antes); `/eventos` y `/escolas` en `pt-PT`, `/es/eventos`, `/es/escuelas`, `/fr/evenements` y `/en/schools` con su `lang` correcto; `instagram.com/dojodaluz` responde 200 con `og:title` "Pablo Duran"; `git diff --check` limpio |
+| 2026-09-20 | Portugues como idioma de entrada: verificado, sin cambios | Ya lo era en todas las capas: `DEFAULT_LOCALE = 'pt'` y `prefixDefaultLocale: false`, `/` construida como `<html lang="pt-PT">` con titulo portugues, `hreflang="x-default"` a `/`, y `dojo-da-luz.vercel.app/` devuelve 200 en portugues incluso con `Accept-Language: es-ES`. El unico sitio que abre en español es el Wix vivo (`www.aikido-duran.com` sirve `<html lang="es">`): eso se cambia en el panel de Wix, no en este repo |
 
 ## Descartado (y por que)
 

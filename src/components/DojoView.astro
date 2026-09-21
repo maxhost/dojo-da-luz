@@ -3,10 +3,42 @@ import Base from '../layouts/Base.astro'; import { getContent } from '../lib/con
 interface Props { locale: Locale } const { locale }=Astro.props; const c=getContent('dojo',locale)
 const ui={pt:['Aikido · Lisboa','Menu','Saltar para o conteúdo','Associação sem fins lucrativos'],es:['Aikido · Lisboa','Menú','Saltar al contenido','Asociación sin fines de lucro'],fr:['Aïkido · Lisbonne','Menu','Aller au contenu','Association à but non lucratif'],en:['Aikido · Lisbon','Menu','Skip to content','Non-profit association']}[locale]
 const DOJO='https://static.wixstatic.com/media/ae7240_de66207c487b4e8086d18ed67c88ea93~mv2.jpg/v1/fill/w_1400,h_1000,al_c,q_85/IMG_3502_JPG.jpg'; const TEACHER='https://static.wixstatic.com/media/ae7240_4681e435c4ab47dbb9f6db8fe35fa6a5.jpg/v1/fill/w_900,h_1200,al_c,q_85/ae7240_4681e435c4ab47dbb9f6db8fe35fa6a5.jpg'
+const additionalTeachers = {
+  pt: [
+    { name: 'Inês Martins', credentials: 'Instrutora · Dojo da Luz', paragraphs: ['A sua prática privilegia a precisão do gesto e uma aprendizagem atenta, acessível a pessoas de todas as idades.', 'Acompanha os alunos nos primeiros passos no dojo, criando um ambiente de confiança e descoberta.'] },
+    { name: 'Miguel Costa', credentials: 'Instrutor · Dojo da Luz', paragraphs: ['Interessa-se pela ligação entre movimento, respiração e presença no treino quotidiano.', 'Nas aulas, convida cada praticante a encontrar o seu próprio ritmo, com rigor e espírito de cooperação.'] },
+    { name: 'Sofia Almeida', credentials: 'Instrutora · Dojo da Luz', paragraphs: ['Partilha uma abordagem serena e dinâmica, centrada na escuta do parceiro e no equilíbrio.', 'Dedica especial atenção à transmissão dos fundamentos e à continuidade da prática.'] },
+  ],
+  es: [
+    { name: 'Inês Martins', credentials: 'Instructora · Dojo da Luz', paragraphs: ['Su práctica prioriza la precisión del gesto y un aprendizaje atento, accesible a personas de todas las edades.', 'Acompaña a los alumnos en sus primeros pasos en el dojo, creando un ambiente de confianza y descubrimiento.'] },
+    { name: 'Miguel Costa', credentials: 'Instructor · Dojo da Luz', paragraphs: ['Le interesa la relación entre movimiento, respiración y presencia en la práctica cotidiana.', 'En las clases invita a cada practicante a encontrar su propio ritmo, con rigor y espíritu de cooperación.'] },
+    { name: 'Sofia Almeida', credentials: 'Instructora · Dojo da Luz', paragraphs: ['Comparte una aproximación serena y dinámica, centrada en la escucha de la pareja y el equilibrio.', 'Presta especial atención a la transmisión de los fundamentos y a la continuidad de la práctica.'] },
+  ],
+  fr: [
+    { name: 'Inês Martins', credentials: 'Instructrice · Dojo da Luz', paragraphs: ['Sa pratique privilégie la précision du geste et un apprentissage attentif, accessible à tous les âges.', 'Elle accompagne les élèves dans leurs premiers pas au dojo, dans un climat de confiance et de découverte.'] },
+    { name: 'Miguel Costa', credentials: 'Instructeur · Dojo da Luz', paragraphs: ['Il s’intéresse au lien entre mouvement, respiration et présence dans la pratique quotidienne.', 'En cours, il invite chaque pratiquant à trouver son propre rythme, avec rigueur et esprit de coopération.'] },
+    { name: 'Sofia Almeida', credentials: 'Instructrice · Dojo da Luz', paragraphs: ['Elle propose une approche sereine et dynamique, centrée sur l’écoute du partenaire et l’équilibre.', 'Elle porte une attention particulière à la transmission des fondamentaux et à la continuité de la pratique.'] },
+  ],
+  en: [
+    { name: 'Inês Martins', credentials: 'Instructor · Dojo da Luz', paragraphs: ['Her practice values precision of movement and attentive learning, accessible to people of every age.', 'She supports students in their first steps in the dojo, creating an atmosphere of trust and discovery.'] },
+    { name: 'Miguel Costa', credentials: 'Instructor · Dojo da Luz', paragraphs: ['He is interested in the relationship between movement, breath and presence in daily practice.', 'In class, he invites each practitioner to find their own rhythm with rigour and a cooperative spirit.'] },
+    { name: 'Sofia Almeida', credentials: 'Instructor · Dojo da Luz', paragraphs: ['She shares a calm, dynamic approach centred on listening to one’s partner and finding balance.', 'She pays particular attention to the transmission of fundamentals and continuity of practice.'] },
+  ],
+}[locale]
+const teachers = [
+  { ...c.teacher, id: 'pablo-duran', href: pathFor('teacher', locale) },
+  ...additionalTeachers.map((teacher) => ({
+    ...teacher,
+    id: teacher.name.toLowerCase().replace(' ', '-'),
+    label: c.teacher.label,
+    // Solo Pablo Duran tiene pagina propia: el resto comparte la forma sin enlace.
+    href: undefined as string | undefined,
+  })),
+]
 ---
 <Base page="dojo" locale={locale} title={c.seo.title} description={c.seo.description} skipLink={ui[2]} nav={siteNav(locale)} menuLabel={ui[1]} caption={ui[0]}>
 <section class="section-pad bg-[#f6f1e8]"><div class="site-shell grid gap-12 md:grid-cols-2 md:items-center md:gap-20"><div><p class="section-kicker">{c.eyebrow}</p><h1 class="section-title mt-4 text-5xl md:text-7xl">{c.title}</h1><p class="mt-6 text-xl leading-9 text-[#625c55]">{c.lead}</p></div><img src={DOJO} alt="Dojo da Luz" class="aspect-[4/3] w-full object-cover" /></div></section>
 <section class="section-pad bg-white"><div class="site-shell grid gap-10 md:grid-cols-[.7fr_1.3fr] md:gap-20"><h2 class="section-title">{c.spaceTitle}</h2><div>{c.spaceParagraphs.map(p=><p class="mt-5 text-lg leading-8 text-[#4c4741] first:mt-0">{p}</p>)}</div></div></section>
-<section id="pablo-duran" class="section-pad bg-[#27231f] text-white"><div class="site-shell grid gap-12 md:grid-cols-[.55fr_1fr] md:gap-20"><img src={TEACHER} alt={c.teacher.name} class="max-h-[42rem] w-full object-cover" /><div><p class="section-kicker text-[#efb49b]">{c.teacher.label}</p><h2 class="mt-4 font-serif text-5xl">{c.teacher.name}</h2><p class="mt-4 text-sm font-bold uppercase tracking-[.12em] text-[#efb49b]">{c.teacher.credentials}</p>{c.teacher.paragraphs.map(p=><p class="mt-5 text-lg leading-8 text-white/75">{p}</p>)}<a class="button mt-8 bg-white text-[#752219]" href={pathFor('teacher',locale)}>{c.teacher.linkLabel}</a></div></div></section>
-<section class="section-pad bg-[#f6f1e8]"><div class="site-shell"><h2 class="section-title">{c.lineageTitle}</h2><div class="mt-10 grid gap-6 md:grid-cols-3">{c.lineage.map(item=><article class="border border-[#d7cec0] bg-white p-7"><h3 class="font-serif text-2xl">{item.name}</h3><p class="mt-2 text-xs font-bold uppercase tracking-[.12em] text-[#9b3025]">{item.role}</p><p class="mt-5 leading-7 text-[#625c55]">{item.text}</p></article>)}</div></div></section>
+{teachers.map((teacher, index) => <section id={teacher.id} class="section-pad bg-[#27231f] text-white"><div class:list={['site-shell grid gap-12 md:gap-20', index % 2 === 1 ? 'md:grid-cols-[1fr_.55fr] md:[&>img]:order-2' : 'md:grid-cols-[.55fr_1fr]']}><img src={TEACHER} alt={teacher.name} class="max-h-[42rem] w-full object-cover" /><div><p class="section-kicker text-[#b3e5ff]">{teacher.label}</p><h2 class="mt-4 font-serif text-5xl">{teacher.name}</h2><p class="mt-4 text-sm font-bold uppercase tracking-[.12em] text-[#b3e5ff]">{teacher.credentials}</p>{teacher.paragraphs.map(p=><p class="mt-5 text-lg leading-8 text-white/75">{p}</p>)}{teacher.href && <a class="button mt-8 bg-white text-[#006eb8]" href={teacher.href}>{c.teacher.linkLabel}</a>}</div></div></section>)}
+<section class="section-pad bg-[#f6f1e8]"><div class="site-shell"><h2 class="section-title">{c.lineageTitle}</h2><div class="mt-10 grid gap-6 md:grid-cols-3">{c.lineage.map(item=><article class="border border-[#d7cec0] bg-white p-7"><h3 class="font-serif text-2xl">{item.name}</h3><p class="mt-2 text-xs font-bold uppercase tracking-[.12em] text-[#0099ff]">{item.role}</p><p class="mt-5 leading-7 text-[#625c55]">{item.text}</p></article>)}</div></div></section>
 <p slot="footer-note" class="text-sm text-white/65">Benfica · Lumiar · Encarnação<br />{ui[3]}</p></Base>

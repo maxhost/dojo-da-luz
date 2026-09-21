@@ -95,6 +95,10 @@ export const homeSchema = z.object({
     text: z.string().min(1),
     ctaLabel: z.string().min(1),
   }),
+  partnerships: z.object({
+    label: z.string().min(1),
+    title: z.string().min(1),
+  }),
 })
 
 export const classesSchema = z.object({
@@ -202,6 +206,22 @@ export const otherArtsSchema = z.object({
   })).min(1),
 })
 
+export const eventsSchema = z.object({
+  seo: seoSchema,
+  eyebrow: z.string().min(1), title: z.string().min(1), lead: z.string().min(1),
+  items: z.array(z.object({
+    title: z.string().min(1), date: z.string().min(1), location: z.string().min(1),
+    description: z.string().min(1), photo: z.url(), photoAlt: z.string().min(1),
+  })).min(3).max(4),
+})
+
+export const schoolsSchema = z.object({
+  seo: seoSchema,
+  eyebrow: z.string().min(1), title: z.string().min(1), lead: z.string().min(1), heroPhoto: z.url(),
+  introduction: z.object({ eyebrow: z.string().min(1), title: z.string().min(1), subtitle: z.string().min(1), paragraphs: z.array(z.string().min(1)).min(1), photo: z.url(), photoAlt: z.string().min(1) }),
+  gallery: z.array(z.object({ src: z.url(), alt: z.string().min(1) })).min(4).max(8),
+})
+
 const SCHEMAS = {
   home: homeSchema,
   classes: classesSchema,
@@ -211,6 +231,8 @@ const SCHEMAS = {
   dojo: dojoSchema,
   teacher: teacherSchema,
   contact: contactSchema,
+  events: eventsSchema,
+  schools: schoolsSchema,
   otherArts: otherArtsSchema,
 } as const satisfies Record<PageKey, z.ZodType>
 

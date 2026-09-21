@@ -24,6 +24,9 @@ const year = new Date().getFullYear()
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;500;700&display=swap" rel="stylesheet" />
     <Seo page={page} locale={locale} title={title} description={description} />
     <slot name="head" />
     <style is:inline>summary::-webkit-details-marker{display:none}</style>
@@ -31,37 +34,38 @@ const year = new Date().getFullYear()
   <body class="m-0 min-h-screen bg-[#f6f1e8] font-sans text-[#211f1c] antialiased">
     <a href="#conteudo" class="sr-only focus:not-sr-only">{skipLink}</a>
 
-    <header class="relative z-30 border-b-4 border-[#9b3025] bg-[#fffdf9]">
-      <div class="site-shell flex min-h-24 items-center justify-between gap-8 py-4">
-        <a href={pathFor('home', locale)} class="flex items-center gap-4 no-underline">
-          <span aria-hidden="true" class="grid size-14 place-items-center rounded-full border-2 border-[#9b3025] font-serif text-lg font-bold text-[#9b3025]">合気</span>
+    <header class="relative z-30 border-b-4 border-[#0099ff] bg-[#fffdf9]">
+      <div class="flex min-h-24 w-full items-center justify-between gap-5 px-5 py-4 md:px-10 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:gap-4">
+        <a href={pathFor('home', locale)} class="flex items-center gap-4 no-underline lg:justify-self-start">
+          <span aria-hidden="true" class="grid size-14 place-items-center rounded-full border-2 border-[#0099ff] font-serif text-lg font-bold text-[#0099ff]">合気</span>
           <span>
-            <strong class="block font-serif text-2xl font-normal leading-none md:text-3xl">Dojo da Luz</strong>
+            <strong class="font-oxanium block text-xl font-bold leading-none md:text-2xl">Dojo da Luz</strong>
             <span class="mt-1 block text-[.68rem] font-bold uppercase tracking-[.18em] text-[#746d64]">{caption}</span>
           </span>
         </a>
 
-        <div class="hidden items-center gap-5 lg:flex">
-          <nav aria-label="Principal">
-            <ul class="flex list-none items-center gap-6 p-0 text-sm font-semibold">
-              {nav.map((item) => <li><a class="hover:text-[#9b3025]" href={item.href}>{item.label}</a></li>)}
-            </ul>
-          </nav>
+        <nav aria-label="Principal" class="hidden lg:block lg:justify-self-center">
+          <ul class="font-oxanium flex list-none items-center gap-4 p-0 text-sm font-medium">
+            {nav.map((item) => <li><a class="hover:text-[#0099ff]" href={item.href}>{item.label}</a></li>)}
+          </ul>
+        </nav>
+
+        <div class="hidden items-center gap-4 lg:flex lg:justify-self-end">
           <nav aria-label="Idioma" class="flex items-center gap-1 border-l border-[#d7cec0] pl-5">
             {LOCALES.map((l) => l === locale
-              ? <span aria-current="page" aria-label={LOCALE_NAME[l]} title={LOCALE_NAME[l]} class="grid size-9 place-items-center rounded-full border border-[#9b3025] bg-[#f6f1e8] text-lg"><span aria-hidden="true">{LOCALE_ICON[l]}</span></span>
+              ? <span aria-current="page" aria-label={LOCALE_NAME[l]} title={LOCALE_NAME[l]} class="grid size-9 place-items-center rounded-full border border-[#0099ff] bg-[#f6f1e8] text-lg"><span aria-hidden="true">{LOCALE_ICON[l]}</span></span>
               : <a href={pathFor(page, l)} hreflang={HREFLANG[l]} lang={HREFLANG[l]} aria-label={LOCALE_NAME[l]} title={LOCALE_NAME[l]} class="grid size-9 place-items-center rounded-full border border-transparent text-lg hover:border-[#d7cec0]"><span aria-hidden="true">{LOCALE_ICON[l]}</span><span class="sr-only">{LOCALE_NAME[l]}</span></a>)}
           </nav>
           <SocialLinks class="border-l border-[#d7cec0] pl-5" />
         </div>
 
         <details class="relative lg:hidden">
-          <summary class="cursor-pointer list-none border border-[#9b3025] px-4 py-2 text-sm font-bold uppercase tracking-wider text-[#9b3025]">{menuLabel}</summary>
+          <summary class="cursor-pointer list-none border border-[#0099ff] px-4 py-2 text-sm font-bold uppercase tracking-wider text-[#0099ff]">{menuLabel}</summary>
           <div class="absolute right-0 top-12 w-64 border border-[#d7cec0] bg-[#fffdf9] p-6 shadow-xl">
-            <nav aria-label="Principal"><ul class="space-y-4 p-0 font-serif text-xl">{nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}</ul></nav>
+            <nav aria-label="Principal"><ul class="font-oxanium space-y-4 p-0 text-xl font-medium">{nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}</ul></nav>
             <nav aria-label="Idioma" class="mt-6 flex items-center gap-2 border-t border-[#d7cec0] pt-5">
               {LOCALES.map((l) => l === locale
-                ? <span aria-current="page" aria-label={LOCALE_NAME[l]} title={LOCALE_NAME[l]} class="grid size-10 place-items-center rounded-full border border-[#9b3025] bg-[#f6f1e8] text-xl"><span aria-hidden="true">{LOCALE_ICON[l]}</span></span>
+                ? <span aria-current="page" aria-label={LOCALE_NAME[l]} title={LOCALE_NAME[l]} class="grid size-10 place-items-center rounded-full border border-[#0099ff] bg-[#f6f1e8] text-xl"><span aria-hidden="true">{LOCALE_ICON[l]}</span></span>
                 : <a href={pathFor(page, l)} hreflang={HREFLANG[l]} lang={HREFLANG[l]} aria-label={LOCALE_NAME[l]} title={LOCALE_NAME[l]} class="grid size-10 place-items-center rounded-full border border-transparent text-xl hover:border-[#d7cec0]"><span aria-hidden="true">{LOCALE_ICON[l]}</span><span class="sr-only">{LOCALE_NAME[l]}</span></a>)}
             </nav>
             <SocialLinks class="mt-5 border-t border-[#d7cec0] pt-5" />
@@ -74,8 +78,15 @@ const year = new Date().getFullYear()
 
     <footer class="bg-[#1f1c19] py-12 text-white">
       <div class="site-shell flex flex-wrap items-start justify-between gap-8">
-        <div><p class="font-serif text-2xl">Dojo da Luz</p><p class="mt-2 text-sm text-white/55">&copy; {year}</p></div>
-        <div class="flex items-start gap-8"><slot name="footer-note" /><SocialLinks class="text-white/70" /></div>
+        <div><p class="font-oxanium text-xl font-bold">Dojo da Luz</p><p class="mt-2 text-sm text-white/55">&copy; {year}</p></div>
+        <div class="flex flex-wrap items-start gap-8">
+          <slot name="footer-note" />
+          <address class="not-italic text-sm leading-6 text-white/70">
+            <a class="block hover:text-[#0099ff]" href="tel:+351000000000">+351 000 000 000</a>
+            <a class="block hover:text-[#0099ff]" href="mailto:ola@dojodaluz.example">ola@dojodaluz.example</a>
+          </address>
+          <SocialLinks class="text-white/70" />
+        </div>
       </div>
     </footer>
   </body>

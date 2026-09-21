@@ -139,7 +139,7 @@ el cliente confirme los datos.
 | Origen Wix | Destino | Estado del origen |
 |---|---|---|
 | `/atualidadept` | Home, Aulas o Dojo según el contenido | confirmar en crawl final |
-| `/eventos-e-destaquespt` | Aulas o Dojo según el evento | reconfirmar en crawl |
+| `/eventos-e-destaquespt` | `/eventos/` | confirmado; la página existe desde ADR-0022 |
 | `/videospt` | `/aikido/` | confirmado; videos históricos de Aikido |
 | ruta española de Actualidad | destino localizado por tema | **por confirmar en crawl** |
 | `/actualit-fr` | destino localizado por tema | confirmado; clasificar contenidos |

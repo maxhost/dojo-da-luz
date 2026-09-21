@@ -30,6 +30,8 @@ desactualizado es peor que no tenerlo.
 | [0018](adr/0018-geo-motores-generativos.md) | 2026-09-18 | GEO = generative engine optimization: datos estructurados, capa factual citable y crawlers de IA permitidos; nada sin evidencia | aceptada | `docs/adr/0018-geo-motores-generativos.md` |
 | [0019](adr/0019-galerias-audiencias.md) | 2026-09-19 | Galerías de audiencias como contenido estructurado, responsive y sin JavaScript | aceptada | `docs/adr/0019-galerias-audiencias.md` |
 | [0020](adr/0020-accesos-audiencias-home.md) | 2026-09-19 | La Home expone Adultos y Crianças como accesos principales directos, sin obligar a pasar por Aulas | aceptada | `docs/adr/0020-accesos-audiencias-home.md` |
+| [0021](adr/0021-identidad-azul.md) | 2026-09-20 | El acento de marca pasa del rojo óxido al azul `#0099ff`; supersede la paleta de acento de 0006 y 0010 | aceptada | `docs/adr/0021-identidad-azul.md` |
+| [0022](adr/0022-eventos-y-escolas.md) | 2026-09-20 | Eventos y Escolas vuelven como páginas propias en los 4 idiomas; supersede la parte de 0012 que dejaba los eventos sin destino | aceptada | `docs/adr/0022-eventos-y-escolas.md` |
 
 ## Specs — que se construye
 
@@ -60,6 +62,7 @@ desactualizado es peor que no tenerlo.
 | [0023](specs/0023-capa-geo.md) | 2026-09-19 | Capa GEO: resumen citable en Home, Q&A con `FAQPage` en Aulas/Adultos/Niños, robots con crawlers de IA y `/llms.txt` | implementada | no | `src/lib/{content,site}.ts`, `src/components/{HomeView,ClassesView,AudienceView}.astro`, `src/pages/llms.txt.ts`, `public/robots.txt`, `content/**` |
 | [0024](specs/0024-galerias-audiencias.md) | 2026-09-19 | Adultos y Crianças incorporan una galería responsive de seis medios editable desde el contenido | implementada | no | `src/lib/content.ts`, `src/components/AudienceView.astro`, `content/*/{adults,children}.json`, `docs/**` |
 | [0025](specs/0025-accesos-audiencias-home.md) | 2026-09-19 | Accesos directos y destacados a Adultos y Crianças desde la Home | implementada | no | `src/components/HomeView.astro`, `src/lib/content.ts`, `content/*/home.json`, `docs/**` |
+| [0026](specs/0026-eventos-escolas-identidad.md) | 2026-09-20 | Eventos y Escolas en 4 idiomas, parceiros en la Home, Instagram verificado e identidad azul | implementada | no | `src/lib/{i18n,content}.ts`, `src/components/**`, `src/pages/{eventos,escolas}/**`, `content/*/{home,events,schools}.json` |
 
 **"Disjunta?"** = si el trabajo no comparte archivos con otra spec abierta. Es lo que
 habilita paralelizar. Lo decide la spec, no el orquestador en runtime.
