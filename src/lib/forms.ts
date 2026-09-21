@@ -247,3 +247,27 @@ export function aplanar(
   }
   return salida
 }
+
+/**
+ * Lista de parceiros desde el formulario de la seccion 06 (spec 0031). El largo es libre:
+ * el editor pinta siempre una fila vacia de mas, y `vacia()` la descarta. Vaciar una fila
+ * existente es como se borra un parceiro — no hay boton que apretar sin querer.
+ *
+ * Una `escala` escrita pero ilegible se deja pasar como `NaN` a proposito: que la rechace
+ * el schema y se vea el error en la fila, en vez de descartarla en silencio.
+ */
+export type FilaParceiro = { nombre: string; src: string; escala?: number }
+
+export function partnersDesdeForm(form: FormData): FilaParceiro[] {
+  return filas(form, 'parceiros')
+    .filter((fila) => !fila.vacia())
+    .map((fila) => {
+      const bruto = fila.uno('escala')
+      const escala = bruto ? Number(bruto.replace(',', '.')) : null
+      return {
+        nombre: fila.uno('nombre'),
+        src: fila.uno('src'),
+        ...(escala === null ? {} : { escala }),
+      }
+    })
+}

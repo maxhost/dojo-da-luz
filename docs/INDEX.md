@@ -36,6 +36,7 @@ desactualizado es peor que no tenerlo.
 | [0024](adr/0024-parcerias-en-rejilla.md) | 2026-09-21 | Parcerias como rejilla estática de 5 logos por fila, sin recuadro; supersede el carrusel CSS de la spec 0026 | aceptada | `docs/adr/0024-parcerias-en-rejilla.md` |
 | [0025](adr/0025-publicacion-backoffice.md) | 2026-09-21 | El BO publica commiteando a `main`: backend por modo de ejecución, orden canónico del schema y concurrencia por blob sha | aceptada | `docs/adr/0025-publicacion-backoffice.md` |
 | [0026](adr/0026-frontera-editor-home.md) | 2026-09-21 | El BO edita contenido y no estructura: el menú sale del editor; las tarjetas de audiencia y los medios de la Home entran | aceptada | `docs/adr/0026-frontera-editor-home.md` |
+| [0027](adr/0027-parceiros-entidad.md) | 2026-09-21 | Los parceiros son entidad compartida en `content/partners.json`, de largo libre y editable desde la seccion 06 del editor de Home | aceptada | `docs/adr/0027-parceiros-entidad.md` |
 
 ## Specs — que se construye
 
@@ -71,6 +72,7 @@ desactualizado es peor que no tenerlo.
 | [0028](specs/0028-parcerias-en-rejilla.md) | 2026-09-21 | Parcerias deja el carrusel y pasa a rejilla estática de cinco por fila, sin recuadro blanco | implementada | si | `src/components/HomeView.astro`, `src/styles/global.css`, `docs/**` |
 | [0029](specs/0029-editor-home-medios.md) | 2026-09-21 | El editor de Home deja el menú fijo y gana las tarjetas de audiencia y los tres medios de la portada | implementada | si | `src/lib/{content,forms}.ts`, `src/components/**`, `src/pages/admin/paginas/home.astro`, `content/*/home.json` |
 | [0030](specs/0030-medios-r2.md) | 2026-09-21 | Subida de imágenes a R2 desde el BO: WebP de 1600 px, clave por hash del contenido y URL pública en el JSON | implementada, sin verificar contra R2 | si | `src/lib/{r2,medios}.ts`, `src/pages/admin/medios/**`, `package.json` |
+| [0031](specs/0031-parcerias-editables.md) | 2026-09-21 | Los logos de parceiros pasan a `content/partners.json` y se editan en cantidad libre desde la seccion 06 del editor de Home | cerrada | si | `content/partners.json`, `src/lib/partners*.ts`, `src/components/**`, `src/pages/admin/paginas/home.astro` |
 
 **"Disjunta?"** = si el trabajo no comparte archivos con otra spec abierta. Es lo que
 habilita paralelizar. Lo decide la spec, no el orquestador en runtime.

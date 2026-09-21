@@ -20,9 +20,11 @@ interface Props {
   errores: Record<string, string>
   ayuda?: string
   idPrefijo?: string
+  /** Las filas de una lista de largo libre no son obligatorias: la ultima esta vacia. */
+  requerido?: boolean
 }
 
-const { nombre, etiqueta, valor, errores, ayuda, idPrefijo } = Astro.props
+const { nombre, etiqueta, valor, errores, ayuda, idPrefijo, requerido = true } = Astro.props
 
 const id = `${idPrefijo ? `${idPrefijo}-` : ''}${nombre.replace(/[^a-zA-Z0-9]+/g, '-')}`
 const error = errorDe(errores, nombre)
@@ -31,7 +33,7 @@ const error = errorDe(errores, nombre)
 <div class="mt-5" data-campo-imagen>
   <label class="block text-sm font-semibold" for={id}>
     {etiqueta}
-    <span class="text-[#b3261e]" aria-hidden="true">*</span>
+    {requerido && <span class="text-[#b3261e]" aria-hidden="true">*</span>}
   </label>
 
   {ayuda && <p class="mt-1 text-xs text-[#625c55]" id={`${id}-ayuda`}>{ayuda}</p>}
@@ -52,7 +54,7 @@ const error = errorDe(errores, nombre)
         name={nombre}
         type="url"
         value={valor}
-        required
+        required={requerido}
         aria-describedby={[ayuda && `${id}-ayuda`, error && `${id}-error`].filter(Boolean).join(' ') || undefined}
         data-url
       />

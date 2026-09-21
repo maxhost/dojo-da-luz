@@ -3,10 +3,12 @@ export const prerender = false
 
 import Admin from '../../../layouts/Admin.astro'
 import Aviso from '../../../components/admin/Aviso.astro'
+import EditorParcerias from '../../../components/admin/EditorParcerias.astro'
 import FormularioHome from '../../../components/admin/FormularioHome.astro'
 import { homeSchema } from '../../../lib/content'
-import { aplanar, erroresDe, homeDesdeForm, resumenDeErrores } from '../../../lib/forms'
+import { aplanar, erroresDe, homeDesdeForm, partnersDesdeForm, resumenDeErrores, type FilaParceiro } from '../../../lib/forms'
 import { LOCALES, LOCALE_NAME, isLocale, type Locale } from '../../../lib/i18n'
+import { guardarPartners, leerPartners } from '../../../lib/partners-edicion'
 import { leerContenido, publicar, serializar } from '../../../lib/publish'
 
 const admin = Astro.locals.admin!
@@ -17,6 +19,10 @@ type Enviado = { valores: Record<string, string> }
 type Publicado = { chrome: { nav: { label: string; href: string }[] } }
 
 let errores: Partial<Record<Locale, Record<string, string>>> = {}
+// Las parcerias son un archivo aparte, sin idioma (ADR-0027): su error y lo que se envio
+// viven fuera del mapa por idioma.
+let erroresParcerias: Record<string, string> = {}
+let parceriasEnviadas: FilaParceiro[] | null = null
 let enviado: Partial<Record<Locale, Enviado>> = {}
 let aviso: { tipo: 'ok' | 'error'; texto: string } | null = null
 let activo: Locale = isLocale(Astro.url.searchParams.get('idioma') ?? '')
@@ -24,7 +30,13 @@ let activo: Locale = isLocale(Astro.url.searchParams.get('idioma') ?? '')
   : 'pt'
 
 const publicado = Astro.url.searchParams.get('publicado')
-if (publicado && isLocale(publicado)) {
+if (publicado === 'parcerias') {
+  aviso = {
+    tipo: 'ok',
+    texto:
+      'Parcerías publicadas. El sitio tarda 1 o 2 minutos en regenerarse: hasta entonces la portada sigue mostrando lo anterior.',
+  }
+} else if (publicado && isLocale(publicado)) {
   activo = publicado
   aviso = {
     tipo: 'ok',
@@ -36,7 +48,18 @@ if (Astro.request.method === 'POST') {
   const form = await Astro.request.formData()
   const idioma = String(form.get('idioma') ?? '')
 
-  if (!isLocale(idioma)) {
+  if (form.get('formulario') === 'parcerias') {
+    const guardado = await guardarPartners(form, String(form.get('sha') ?? ''))
+
+    if (guardado.ok) return Astro.redirect('/admin/paginas/home?publicado=parcerias', 303)
+
+    Astro.response.status = guardado.estado
+    erroresParcerias = guardado.errores
+    // Se repinta lo enviado, no lo publicado: nadie quiere volver a escribir ocho filas
+    // porque una traia un error.
+    parceriasEnviadas = partnersDesdeForm(form)
+    aviso = { tipo: guardado.estado === 200 ? 'ok' : 'error', texto: guardado.aviso }
+  } else if (!isLocale(idioma)) {
     Astro.response.status = 400
     aviso = { tipo: 'error', texto: 'Idioma desconocido.' }
   } else {
@@ -105,9 +128,12 @@ type Archivo = {
 // Leer el contenido es hablar con un servicio remoto. Que falte el token o se caiga
 // GitHub no es un 500: es un aviso que dice que el editor no puede abrir.
 let archivos: Archivo[] = []
+let parcerias: { partners: FilaParceiro[]; sha: string } | null = null
 let sinRepositorio: string | null = null
 
 try {
+  const leidas = await leerPartners()
+  parcerias = { partners: parceriasEnviadas ?? leidas.partners, sha: leidas.sha }
   archivos = await Promise.all(
   LOCALES.map(async (locale) => {
     const archivo = await leerContenido(ruta(locale))
@@ -183,5 +209,16 @@ const TABS = [
       )
     })}
   </div>
+  )}
+
+  {sinRepositorio === null && parcerias && (
+  <section class="mt-12 border-t border-[#d7cec0] pt-8">
+    <h2 class="font-serif text-2xl">06 · Parcerías — logos</h2>
+    <EditorParcerias
+      partners={parcerias.partners}
+      errores={erroresParcerias}
+      sha={parcerias.sha}
+    />
+  </section>
   )}
 </Admin>
