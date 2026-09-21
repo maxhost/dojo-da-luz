@@ -158,11 +158,33 @@ async function pedir(
   })
 }
 
+/** Extrae el `<Code>` de la respuesta de error de S3, que es lo que dice qué pasó. */
+async function detalle(res: Response, cfg: ConfigR2, que: string): Promise<string> {
+  const cuerpo = await res.text().catch(() => '')
+  const codigo = /<Code>([^<]+)<\/Code>/.exec(cuerpo)?.[1] ?? ''
+  const pista =
+    codigo === 'AccessDenied'
+      ? ' — la firma se validó pero el token no tiene permiso: revisá que sea un token de R2 ' +
+        'con acceso de lectura y escritura a este bucket'
+      : codigo === 'SignatureDoesNotMatch'
+        ? ' — revisá R2_ACCESS_KEY_ID y R2_SECRET_ACCESS_KEY'
+        : codigo === 'NoSuchBucket'
+          ? ' — el bucket no existe en esta cuenta: revisá R2_BUCKET y R2_ACCOUNT_ID'
+          : ''
+
+  return `R2 ${res.status}${codigo ? ` (${codigo})` : ''} al ${que} en ${endpoint(cfg)}/${cfg.bucket}${pista}`
+}
+
+/**
+ * Solo es una optimizacion para no reprocesar lo ya subido. Un 403 no se trata como fallo:
+ * sin permiso de lectura no se puede saber si existe, y el PUT —que es idempotente, porque
+ * la clave sale del hash del contenido— dira la verdad con un error util.
+ */
 export async function existe(cfg: ConfigR2, clave: string): Promise<boolean> {
   const res = await pedir(cfg, { method: 'HEAD', ruta: `/${cfg.bucket}/${clave}` })
   if (res.status === 200) return true
-  if (res.status === 404) return false
-  throw new Error(`R2 ${res.status} al comprobar ${clave}`)
+  if (res.status === 404 || res.status === 403) return false
+  throw new Error(await detalle(res, cfg, `comprobar ${clave}`))
 }
 
 export async function subir(
@@ -180,7 +202,7 @@ export async function subir(
     },
   })
 
-  if (!res.ok) throw new Error(`R2 ${res.status} al subir ${args.clave}: ${await res.text()}`)
+  if (!res.ok) throw new Error(await detalle(res, cfg, `subir ${args.clave}`))
 }
 
 export type Objeto = { clave: string; tamano: number; fecha: string }
@@ -193,7 +215,7 @@ export async function listar(cfg: ConfigR2, prefijo: string): Promise<Objeto[]> 
     query: { 'list-type': '2', prefix: prefijo, 'max-keys': '200' },
   })
 
-  if (!res.ok) throw new Error(`R2 ${res.status} al listar: ${await res.text()}`)
+  if (!res.ok) throw new Error(await detalle(res, cfg, 'listar'))
 
   const xml = await res.text()
   return [...xml.matchAll(/<Contents>([\s\S]*?)<\/Contents>/g)].map((m) => {
