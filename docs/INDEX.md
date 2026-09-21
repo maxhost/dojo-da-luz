@@ -32,6 +32,7 @@ desactualizado es peor que no tenerlo.
 | [0020](adr/0020-accesos-audiencias-home.md) | 2026-09-19 | La Home expone Adultos y Crianças como accesos principales directos, sin obligar a pasar por Aulas | aceptada | `docs/adr/0020-accesos-audiencias-home.md` |
 | [0021](adr/0021-identidad-azul.md) | 2026-09-20 | El acento de marca pasa del rojo óxido al azul `#0099ff`; supersede la paleta de acento de 0006 y 0010 | aceptada | `docs/adr/0021-identidad-azul.md` |
 | [0022](adr/0022-eventos-y-escolas.md) | 2026-09-20 | Eventos y Escolas vuelven como páginas propias en los 4 idiomas; supersede la parte de 0012 que dejaba los eventos sin destino | aceptada | `docs/adr/0022-eventos-y-escolas.md` |
+| [0023](adr/0023-jerarquia-equipo-docente.md) | 2026-09-21 | En `/dojo` el equipo docente deja de ser cuatro secciones iguales: Pablo Durán protagonista y los otros tres en fichas compactas | aceptada | `docs/adr/0023-jerarquia-equipo-docente.md` |
 
 ## Specs — que se construye
 
@@ -63,6 +64,7 @@ desactualizado es peor que no tenerlo.
 | [0024](specs/0024-galerias-audiencias.md) | 2026-09-19 | Adultos y Crianças incorporan una galería responsive de seis medios editable desde el contenido | implementada | no | `src/lib/content.ts`, `src/components/AudienceView.astro`, `content/*/{adults,children}.json`, `docs/**` |
 | [0025](specs/0025-accesos-audiencias-home.md) | 2026-09-19 | Accesos directos y destacados a Adultos y Crianças desde la Home | implementada | no | `src/components/HomeView.astro`, `src/lib/content.ts`, `content/*/home.json`, `docs/**` |
 | [0026](specs/0026-eventos-escolas-identidad.md) | 2026-09-20 | Eventos y Escolas en 4 idiomas, parceiros en la Home, Instagram verificado e identidad azul | implementada | no | `src/lib/{i18n,content}.ts`, `src/components/**`, `src/pages/{eventos,escolas}/**`, `content/*/{home,events,schools}.json` |
+| [0027](specs/0027-jerarquia-equipo-docente.md) | 2026-09-21 | Jerarquía del equipo docente en `/dojo`: Pablo Durán protagonista y tres fichas compactas en una sola sección | implementada | si | `src/components/DojoView.astro`, `docs/**` |
 
 **"Disjunta?"** = si el trabajo no comparte archivos con otra spec abierta. Es lo que
 habilita paralelizar. Lo decide la spec, no el orquestador en runtime.
