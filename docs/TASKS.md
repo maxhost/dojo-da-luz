@@ -9,7 +9,7 @@ Regla: **marcar `hecho` solo con verificacion real** — tests que pasan, comand
 cosa vista en pantalla. No "deberia andar".
 
 Ultima actualizacion: 2026-09-21 — gate verde: `astro check` **0/0/0**, `npm test`
-**39/39**, `npm run build` 44 rutas. Esta sesion, tres entregas seguidas:
+**39/39**, `npm run build` 44 rutas. Esta sesion, cuatro entregas seguidas:
 
 1. **Spec 0036** — editores de Adultos y Crianças con galeria de largo libre y YouTube
    (ADR-0031, ADR-0032). Commiteado y desplegado: `main` en `e330802`, comprobado en las
@@ -41,6 +41,15 @@ byte a byte igual. Las dos quedaron desplegadas: la 0037 en `641c9e6` y la 0038 
 `cce4906` — deployment `dojo-da-aama28v6d` ● Ready en 15 s, y las cuatro `/dojo` publicas
 en 200 con los tres profesores, el linaje y el bloque de Pablo. Sin cookie,
 `/admin/paginas/dojo` redirige a `/admin/entrar`.
+4. **Spec 0039** — editor de `/eventos` (ADR-0035). Quinto uso del molde, y el primero de
+   una pagina que **se vacia**: la lista dejo de exigir entre 3 y 4 tarjetas, ahora es de
+   largo libre y con cero eventos la pagina dice `emptyText` en vez de pintar una franja
+   vacia. La alternancia izquierda/derecha y el numero salen de la posicion, no de un campo.
+   Verificado con el BO corriendo: un quinto evento creado en portugues aparecio en los
+   cuatro, un POST forjado desde español con dos fotos distintas y un sexto evento quedo en
+   **5 eventos y las fotos portuguesas**, con diez eventos numera `01…09, 10` y alterna 5 de
+   10, y con la lista vacia las cuatro paginas publicas no pintan ninguna tarjeta y muestran
+   su texto traducido. 44 paginas construidas, **0 distintas** contra `HEAD`.
 
 **Y una noticia que llego sola: `publicarVarios` ya corrio contra GitHub.** El push del
 editor de `/aikido` fue rechazado por no-fast-forward porque `origin/main` tenia el commit
@@ -89,14 +98,15 @@ SEO actual, mejorar GEO.
 ### Por donde seguir (corte del 2026-09-21, tercera sesion)
 
 **El pedido con el que se retoma, textual: "volvemos para seguir con el editor de otras
-paginas".** Ya tienen editor `/aulas`, `/aulas/adultos`, `/aulas/criancas`, `/aikido` y `/dojo`
-(spec 0038). **Primera pregunta de la sesion nueva: que pagina.** Las que faltan:
+paginas".** Ya tienen editor `/aulas`, `/aulas/adultos`, `/aulas/criancas`, `/aikido`, `/dojo` y
+`/eventos` (specs 0038 y 0039). **Primera pregunta de la sesion nueva: que pagina.** Las que
+faltan:
 
 | Pagina | Contenido | Nota |
 |---|---|---|
 | `/contactos` | `contact.json` | **La mas urgente**: duplica las tres sedes en `contact.venues`, con Encarnação incluido. Engancharla a la entidad de dojos necesita sumarle `transporte` a la ficha (fila 6f). Su formulario esta visible pero **no envia**: falta email/endpoint. |
 | `/outras-artes` | `other-arts.json` | Tres disciplinas, cada una con parrafos, horarios y su propio formulario. Es la que mas se parece a `/aikido` en forma anidada (ADR-0033). |
-| `/eventos`, `/escolas`, `/professor-pablo-duran` | sus JSON | Sin urgencia conocida. |
+| `/escolas`, `/professor-pablo-duran` | sus JSON | Sin urgencia conocida. `escolas` tiene una galeria de 4 a 8 fotos con el mismo problema de minimo fijo que tenia `/eventos`. |
 
 **La receta, ya probada tres veces.** Con el modulo generico, un editor nuevo es:
 
@@ -268,6 +278,7 @@ siguiente guardado del BO reordena el archivo: ruido de una vez, no perdida de d
 | 6r | Spec 0036 — editores de Adultos y Crianças con galeria libre y YouTube | 0036 | implementada, verificada en local | Dos pantallas separadas (`/admin/paginas/adultos` y `/criancas`) sobre un formulario comun, con el layout aprobado por el cliente antes de escribir codigo. La galeria dejo de tener seis medios fijos: se añaden y quitan sin limite, cada uno es una foto subida a R2 o un video de YouTube, y el grid publico se adapta (1, 2, 3-4, 5+). El video no le pide nada a YouTube hasta que alguien lo toca, y una galeria sin videos no se lleva **ni una linea** de JavaScript. Portugues siembra las imagenes (ADR-0032): en es/fr/en la foto y el enlace se ven pero no se cambian, y un POST forjado desde esas pestañas queda igual sin efecto (comprobado). Los cinco textos de cabecera y pie pasaron al contenido. Se borro el mp4 de stock de Pexels de los ocho archivos. **Desplegado el 2026-09-21** (`e330802`) y comprobado en las seis paginas publicas. El guardado del BO por la Git Data API quedo comprobado en la fila 6p; falta todavia ver un commit de **cuatro** archivos, que es lo que escribe publicar portugues cuando cambia la estructura. |
 | 6s | Spec 0037 — editor de /aikido | 0037 | implementada, verificada en local | Pantalla propia con el layout aprobado antes de escribir codigo. La lista numerada pasa a largo libre —el numero lo pone la pagina por posicion— y el bloque O-Sensei siempre esta, con sus textos y su foto editables. Las dos fotos que vivian dentro de `AikidoView.astro` pasaron al contenido, y el `alt` de la foto de Ueshiba dejo de estar en español en los cuatro idiomas. Se borro el `id` por seccion: era un ancla HTML que no usaba nadie y distinta por idioma. Los parrafos de cada seccion se editan como texto, uno por renglon (ADR-0033), por estar anidados. **Desplegado el 2026-09-21** (`57641b1`) y comprobado en las cuatro paginas publicas. |
 | 6t | Spec 0038 — editor de /dojo | 0038 | implementada, verificada en local, **desplegada** (`cce4906`, deployment `dojo-da-aama28v6d`, las 4 paginas publicas comprobadas) | Pantalla propia con el molde ya aprobado. Tres cosas que se veian en `/dojo` y no existian en ningun JSON pasaron al contenido: los cinco textos del borde, las dos fotos grandes y **el equipo docente**, que era un objeto con los cuatro idiomas escritos a mano dentro de `DojoView.astro` mas tres URLs de Wix. Ahora es una lista de largo libre: se crean y se quitan profesores desde portugues, con nombre, titulo, parrafos y foto, y el front la renderiza (con cero profesores la franja no se pinta). El bloque del profesor principal es su propia seccion del editor. "Uma transmissão viva" son tres cajas fijas (ADR-0034): sin "Añadir" ni "Quitar" en ninguna pestaña, texto editable en las cuatro, y el schema las exige en 3. `TablaFilas` gano columnas de tipo `imagen`, que es lo que evito una tercera copia del control de foto por fila. |
+| 6u | Spec 0039 — editor de /eventos | 0039 | implementada, verificada en local | La agenda es la primera pagina que **se vacia**: el `.min(3).max(4)` obligaba a inventar un evento para poder borrar otro (ADR-0035). Ahora la lista es de largo libre, se arma en portugues y se traduce, y con cero eventos la pagina no pinta una franja beige vacia sino `emptyText`, editable en los cuatro idiomas. La foto de portada y los cinco textos del borde pasaron al contenido. El `0{index + 1}` que escribia `010` a partir del decimo esta arreglado — dejaba de ser latente justo ahora que la lista puede crecer. Ningun control nuevo: reusa la columna `imagen` de `TablaFilas` que sumo la spec 0038. |
 | 6q | Sacar Encarnação de los textos en prosa | — | pendiente | El dojo cerro. La estructura ya no lo nombra, la prosa si: en `classes.json` (descripcion SEO, pie, `children.facts[2]`, dos respuestas del Q&A) lo puede arreglar el cliente desde `/admin/paginas/aulas`. `adults.json` y `children.json` ya tienen editor (spec 0036): sus `facts` y su Q&A los puede arreglar el cliente. Queda `contact.json`, sin editor. |
 | 7 | Alumnos + emision de factura + PDF a R2 + envio Resend | — | pendiente | Necesita una factura de ejemplo real. Spec sin escribir: el numero 0004 del INDEX es otra cosa. |
 | 8 | Redirects 301 de las 34 URLs viejas | — | plan definido | Matriz conceptual documentada. Falta crawl final, Search Console e implementación cuando existan todos los destinos. |

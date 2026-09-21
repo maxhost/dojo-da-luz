@@ -1,0 +1,42 @@
+---
+export const prerender = false
+
+import Admin from '../../../layouts/Admin.astro'
+import Aviso from '../../../components/admin/Aviso.astro'
+import EditorPestanas from '../../../components/admin/EditorPestanas.astro'
+import FormularioEventos from '../../../components/admin/FormularioEventos.astro'
+import { paginaEventos } from '../../../lib/eventos-edicion'
+import { pantallaEditor } from '../../../lib/editor-pantalla'
+
+/** Editor de `/eventos` (spec 0039). */
+
+const admin = Astro.locals.admin!
+const pantalla = await pantallaEditor(paginaEventos, Astro.request, Astro.url)
+
+if (pantalla.redirigir) return Astro.redirect(pantalla.redirigir, 303)
+if (pantalla.estado) Astro.response.status = pantalla.estado
+---
+
+<Admin titulo="Eventos" admin={admin}>
+  <h1 class="font-serif text-3xl">Eventos</h1>
+  <p class="mt-4 text-sm text-[#625c55]">
+    La agenda del dojo. Los eventos se crean y se quitan en la pestaña <strong>Português</strong>
+    y aparecen en los cuatro idiomas; en las otras tres se traducen. Si no queda ninguno, la
+    página lo dice con el texto del último bloque.
+  </p>
+
+  {pantalla.aviso && <Aviso tipo={pantalla.aviso.tipo}>{pantalla.aviso.texto}</Aviso>}
+  {pantalla.sinRepositorio && (
+    <Aviso tipo="error">No se puede abrir el editor: {pantalla.sinRepositorio}</Aviso>
+  )}
+
+  {pantalla.sinRepositorio === null && (
+    <EditorPestanas
+      formulario={FormularioEventos}
+      archivos={pantalla.archivos}
+      errores={pantalla.errores}
+      shas={pantalla.shas}
+      activo={pantalla.activo}
+    />
+  )}
+</Admin>

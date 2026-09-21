@@ -1,1 +1,54 @@
-{"seo":{"title":"Aikido events in Lisbon | Dojo da Luz","description":"Upcoming gatherings, seminars and activities at Dojo da Luz in Lisbon."},"eyebrow":"Dojo diary","title":"Gatherings to keep practising.","lead":"Seminars, open practices and activities to share Aikido in Lisbon.","items":[{"title":"Open Aikido practice","date":"Date to be confirmed","location":"Dojo da Luz · Lisbon","description":"An open session to experience the rhythm of practice, share the tatami and meet the dojo community.","photo":"https://static.wixstatic.com/media/ae7240_de66207c487b4e8086d18ed67c88ea93~mv2.jpg/v1/fill/w_1400,h_1000,al_c,q_85/IMG_3502_JPG.jpg","photoAlt":"Aikido practice at Dojo da Luz"},{"title":"Technique and relationship seminar","date":"Date to be confirmed","location":"Lisbon","description":"A study meeting devoted to the principles of centre, listening and continuity in Aikido practice.","photo":"https://static.wixstatic.com/media/ae7240_4681e435c4ab47dbb9f6db8fe35fa6a5.jpg/v1/fill/w_900,h_1200,al_c,q_85/ae7240_4681e435c4ab47dbb9f6db8fe35fa6a5.jpg","photoAlt":"Teacher during Aikido practice"},{"title":"Family practice day","date":"Date to be confirmed","location":"Dojo da Luz · Lisbon","description":"A morning of movement and discovery for children, teenagers and families to explore Aikido.","photo":"https://static.wixstatic.com/media/ae7240_4a2c592c85c447c4b425f87f4afe6df1.jpg/v1/fill/w_947,h_260,al_c,lg_1,q_80,enc_avif,quality_auto/ae7240_4a2c592c85c447c4b425f87f4afe6df1.jpg","photoAlt":"Historic Aikido archive"},{"title":"Weapons practice: Buki Waza","date":"Date to be confirmed","location":"Lisbon","description":"A bokken and jo study session to deepen distance, direction and coordination in practice.","photo":"https://static.wixstatic.com/media/ae7240_7567627baaf845e094b5df4b93018abc~mv2.jpg/v1/fill/w_900,h_1100,al_c,q_85/IaiDurix7.jpg","photoAlt":"Japanese weapons practice"}]}
+{
+  "seo": {
+    "title": "Aikido events in Lisbon | Dojo da Luz",
+    "description": "Upcoming gatherings, seminars and activities at Dojo da Luz in Lisbon."
+  },
+  "chrome": {
+    "caption": "Aikido · Lisbon",
+    "menuLabel": "Menu",
+    "skipLink": "Skip to content",
+    "footerNote": {
+      "areas": "Benfica · Lumiar · Encarnação",
+      "orgType": "Non-profit association"
+    }
+  },
+  "eyebrow": "Dojo diary",
+  "title": "Gatherings to keep practising.",
+  "lead": "Seminars, open practices and activities to share Aikido in Lisbon.",
+  "heroPhoto": "https://static.wixstatic.com/media/ae7240_de66207c487b4e8086d18ed67c88ea93~mv2.jpg/v1/crop/x_218,y_0,w_1165,h_900/fill/w_1600,h_1067,al_c,q_85/IMG_3502_JPG.jpg",
+  "items": [
+    {
+      "title": "Open Aikido practice",
+      "date": "Date to be confirmed",
+      "location": "Dojo da Luz · Lisbon",
+      "description": "An open session to experience the rhythm of practice, share the tatami and meet the dojo community.",
+      "photo": "https://static.wixstatic.com/media/ae7240_de66207c487b4e8086d18ed67c88ea93~mv2.jpg/v1/fill/w_1400,h_1000,al_c,q_85/IMG_3502_JPG.jpg",
+      "photoAlt": "Aikido practice at Dojo da Luz"
+    },
+    {
+      "title": "Technique and relationship seminar",
+      "date": "Date to be confirmed",
+      "location": "Lisbon",
+      "description": "A study meeting devoted to the principles of centre, listening and continuity in Aikido practice.",
+      "photo": "https://static.wixstatic.com/media/ae7240_4681e435c4ab47dbb9f6db8fe35fa6a5.jpg/v1/fill/w_900,h_1200,al_c,q_85/ae7240_4681e435c4ab47dbb9f6db8fe35fa6a5.jpg",
+      "photoAlt": "Teacher during Aikido practice"
+    },
+    {
+      "title": "Family practice day",
+      "date": "Date to be confirmed",
+      "location": "Dojo da Luz · Lisbon",
+      "description": "A morning of movement and discovery for children, teenagers and families to explore Aikido.",
+      "photo": "https://static.wixstatic.com/media/ae7240_4a2c592c85c447c4b425f87f4afe6df1.jpg/v1/fill/w_947,h_260,al_c,lg_1,q_80,enc_avif,quality_auto/ae7240_4a2c592c85c447c4b425f87f4afe6df1.jpg",
+      "photoAlt": "Historic Aikido archive"
+    },
+    {
+      "title": "Weapons practice: Buki Waza",
+      "date": "Date to be confirmed",
+      "location": "Lisbon",
+      "description": "A bokken and jo study session to deepen distance, direction and coordination in practice.",
+      "photo": "https://static.wixstatic.com/media/ae7240_7567627baaf845e094b5df4b93018abc~mv2.jpg/v1/fill/w_900,h_1100,al_c,q_85/IaiDurix7.jpg",
+      "photoAlt": "Japanese weapons practice"
+    }
+  ],
+  "emptyText": "There are no upcoming events."
+}

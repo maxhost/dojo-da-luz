@@ -72,6 +72,16 @@ export const SEMBRADOS_DOJO: readonly string[] = [
   'teachers[].photo',
 ]
 
+/**
+ * La lista de `/eventos` (spec 0039). Es una sola, y **puede quedar en cero**: la
+ * propagacion por posicion se encarga igual, porque una lista vacia en portugues vacia las
+ * otras tres.
+ */
+export const LISTAS_EVENTOS: readonly RutaLista[] = ['items']
+
+/** La portada y la foto de cada evento: una foto no se traduce (ADR-0032). */
+export const SEMBRADOS_EVENTOS: readonly string[] = ['heroPhoto', 'items[].photo']
+
 /** Las cinco listas de `/aulas` cuyo largo lo decide el portugues (spec 0035). */
 export const LISTAS_AULAS: readonly RutaLista[] = [
   'pricing.items',

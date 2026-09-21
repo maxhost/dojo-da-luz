@@ -284,13 +284,27 @@ export const otherArtsSchema = z.object({
   })).min(1),
 })
 
+/**
+ * `/eventos` (spec 0039). La lista es **de largo libre y puede estar vacia** (ADR-0035):
+ * una agenda se vacia sola con el tiempo, y el `.min(3).max(4)` que habia obligaba a
+ * inventar un evento para poder borrar otro.
+ *
+ * `emptyText` es obligatorio aunque casi nunca se vea: es lo que dice la pagina el dia que
+ * se borra el ultimo evento, y un campo que solo existe cuando hace falta es un campo que
+ * nadie escribio.
+ *
+ * `heroPhoto` no tiene `alt`: es un fondo detras del titular, con un velo negro encima.
+ */
 export const eventsSchema = z.object({
   seo: seoSchema,
+  chrome: chromeSchema,
   eyebrow: z.string().min(1), title: z.string().min(1), lead: z.string().min(1),
+  heroPhoto: z.url(),
   items: z.array(z.object({
     title: z.string().min(1), date: z.string().min(1), location: z.string().min(1),
     description: z.string().min(1), photo: z.url(), photoAlt: z.string().min(1),
-  })).min(3).max(4),
+  })),
+  emptyText: z.string().min(1),
 })
 
 export const schoolsSchema = z.object({

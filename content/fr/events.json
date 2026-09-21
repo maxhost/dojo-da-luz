@@ -1,1 +1,54 @@
-{"seo":{"title":"Événements d’Aïkido à Lisbonne | Dojo da Luz","description":"Prochains stages, rencontres et activités du Dojo da Luz à Lisbonne."},"eyebrow":"Agenda du dojo","title":"Des rencontres pour continuer à pratiquer.","lead":"Stages, pratiques ouvertes et activités pour partager l’Aïkido à Lisbonne.","items":[{"title":"Pratique ouverte d’Aïkido","date":"Date à confirmer","location":"Dojo da Luz · Lisbonne","description":"Une séance ouverte pour découvrir le rythme de la pratique, partager le tatami et rencontrer la communauté du dojo.","photo":"https://static.wixstatic.com/media/ae7240_de66207c487b4e8086d18ed67c88ea93~mv2.jpg/v1/fill/w_1400,h_1000,al_c,q_85/IMG_3502_JPG.jpg","photoAlt":"Pratique d’Aïkido au Dojo da Luz"},{"title":"Stage de technique et relation","date":"Date à confirmer","location":"Lisbonne","description":"Une rencontre d’étude consacrée aux principes de centre, d’écoute et de continuité dans la pratique de l’Aïkido.","photo":"https://static.wixstatic.com/media/ae7240_4681e435c4ab47dbb9f6db8fe35fa6a5.jpg/v1/fill/w_900,h_1200,al_c,q_85/ae7240_4681e435c4ab47dbb9f6db8fe35fa6a5.jpg","photoAlt":"Professeur pendant une pratique d’Aïkido"},{"title":"Journée pour les familles","date":"Date à confirmer","location":"Dojo da Luz · Lisbonne","description":"Une matinée de mouvement et de découverte pour permettre aux enfants, adolescents et familles d’approcher l’Aïkido.","photo":"https://static.wixstatic.com/media/ae7240_4a2c592c85c447c4b425f87f4afe6df1.jpg/v1/fill/w_947,h_260,al_c,lg_1,q_80,enc_avif,quality_auto/ae7240_4a2c592c85c447c4b425f87f4afe6df1.jpg","photoAlt":"Archives historiques de l’Aïkido"},{"title":"Pratique des armes : Buki Waza","date":"Date à confirmer","location":"Lisbonne","description":"Une séance d’étude du bokken et du jo pour approfondir distance, direction et coordination.","photo":"https://static.wixstatic.com/media/ae7240_7567627baaf845e094b5df4b93018abc~mv2.jpg/v1/fill/w_900,h_1100,al_c,q_85/IaiDurix7.jpg","photoAlt":"Pratique des armes japonaises"}]}
+{
+  "seo": {
+    "title": "Événements d’Aïkido à Lisbonne | Dojo da Luz",
+    "description": "Prochains stages, rencontres et activités du Dojo da Luz à Lisbonne."
+  },
+  "chrome": {
+    "caption": "Aïkido · Lisbonne",
+    "menuLabel": "Menu",
+    "skipLink": "Aller au contenu",
+    "footerNote": {
+      "areas": "Benfica · Lumiar · Encarnação",
+      "orgType": "Association à but non lucratif"
+    }
+  },
+  "eyebrow": "Agenda du dojo",
+  "title": "Des rencontres pour continuer à pratiquer.",
+  "lead": "Stages, pratiques ouvertes et activités pour partager l’Aïkido à Lisbonne.",
+  "heroPhoto": "https://static.wixstatic.com/media/ae7240_de66207c487b4e8086d18ed67c88ea93~mv2.jpg/v1/crop/x_218,y_0,w_1165,h_900/fill/w_1600,h_1067,al_c,q_85/IMG_3502_JPG.jpg",
+  "items": [
+    {
+      "title": "Pratique ouverte d’Aïkido",
+      "date": "Date à confirmer",
+      "location": "Dojo da Luz · Lisbonne",
+      "description": "Une séance ouverte pour découvrir le rythme de la pratique, partager le tatami et rencontrer la communauté du dojo.",
+      "photo": "https://static.wixstatic.com/media/ae7240_de66207c487b4e8086d18ed67c88ea93~mv2.jpg/v1/fill/w_1400,h_1000,al_c,q_85/IMG_3502_JPG.jpg",
+      "photoAlt": "Pratique d’Aïkido au Dojo da Luz"
+    },
+    {
+      "title": "Stage de technique et relation",
+      "date": "Date à confirmer",
+      "location": "Lisbonne",
+      "description": "Une rencontre d’étude consacrée aux principes de centre, d’écoute et de continuité dans la pratique de l’Aïkido.",
+      "photo": "https://static.wixstatic.com/media/ae7240_4681e435c4ab47dbb9f6db8fe35fa6a5.jpg/v1/fill/w_900,h_1200,al_c,q_85/ae7240_4681e435c4ab47dbb9f6db8fe35fa6a5.jpg",
+      "photoAlt": "Professeur pendant une pratique d’Aïkido"
+    },
+    {
+      "title": "Journée pour les familles",
+      "date": "Date à confirmer",
+      "location": "Dojo da Luz · Lisbonne",
+      "description": "Une matinée de mouvement et de découverte pour permettre aux enfants, adolescents et familles d’approcher l’Aïkido.",
+      "photo": "https://static.wixstatic.com/media/ae7240_4a2c592c85c447c4b425f87f4afe6df1.jpg/v1/fill/w_947,h_260,al_c,lg_1,q_80,enc_avif,quality_auto/ae7240_4a2c592c85c447c4b425f87f4afe6df1.jpg",
+      "photoAlt": "Archives historiques de l’Aïkido"
+    },
+    {
+      "title": "Pratique des armes : Buki Waza",
+      "date": "Date à confirmer",
+      "location": "Lisbonne",
+      "description": "Une séance d’étude du bokken et du jo pour approfondir distance, direction et coordination.",
+      "photo": "https://static.wixstatic.com/media/ae7240_7567627baaf845e094b5df4b93018abc~mv2.jpg/v1/fill/w_900,h_1100,al_c,q_85/IaiDurix7.jpg",
+      "photoAlt": "Pratique des armes japonaises"
+    }
+  ],
+  "emptyText": "Aucun événement à venir."
+}
