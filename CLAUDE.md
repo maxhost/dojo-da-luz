@@ -123,6 +123,13 @@ desde el backoffice"*, escrito por el cliente probando el editor. No es un confl
 producto funcionando. `git fetch origin main && git rebase origin/main` y listo; el rebase
 es limpio porque el BO solo toca `content/`.
 
+**Contar un atributo con `grep -o` en el HTML de produccion cuenta tambien el script.** El
+2026-09-21 la comprobacion del editor de `/eventos` en produccion dio *11 campos de imagen y
+2 botones de alta* donde en local daban 6 y 1: Astro **inlinea los scripts chicos** en el
+build, asi que `'[data-campo-imagen]'` y `'[data-anadir]'` aparecen tambien dentro del
+`<script>`, y el dev server no —los sirve como archivo aparte. No era un defecto. Conta el
+atributo con el `=` (`data-campo-imagen=`) o el texto visible del boton, no el selector.
+
 **Las reglas verificables van en hooks, no aca.** Los hooks corren fuera del contexto,
 cuestan cero tokens y son deterministas; este archivo es advisory. Si una regla se puede
 chequear con un comando, es un hook — no la escribas aca tambien.
