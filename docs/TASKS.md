@@ -9,7 +9,7 @@ Regla: **marcar `hecho` solo con verificacion real** — tests que pasan, comand
 cosa vista en pantalla. No "deberia andar".
 
 Ultima actualizacion: 2026-09-21 — gate verde: `astro check` **0/0/0**, `npm test`
-**39/39**, `npm run build` 44 rutas. Esta sesion, dos entregas seguidas:
+**39/39**, `npm run build` 44 rutas. Esta sesion, tres entregas seguidas:
 
 1. **Spec 0036** — editores de Adultos y Crianças con galeria de largo libre y YouTube
    (ADR-0031, ADR-0032). Commiteado y desplegado: `main` en `e330802`, comprobado en las
@@ -18,14 +18,27 @@ Ultima actualizacion: 2026-09-21 — gate verde: `astro check` **0/0/0**, `npm t
    se pago la deuda: el POST, la lectura de los cuatro archivos, la propagacion y el commit
    salieron a `editor-pagina.ts` + `editor-pantalla.ts`, y Adultos y Criancas se migraron
    ahi. `/aulas` **no** se migro: publica ademas `media.json` en un commit aparte.
+3. **Spec 0038** — editor de `/dojo` (ADR-0034), **sin desplegar todavia**. Cuarto uso del
+   molde: descriptor `pagina-dojo-edicion.ts` + `FormularioPaginaDojo.astro` + una pagina de
+   tres lineas. Lo nuevo de esta pagina es que **el equipo docente estaba escrito adentro de
+   `DojoView.astro`** —cuatro idiomas a mano y tres fotos de Wix— y ahora es una lista de
+   largo libre en el contenido que el front renderiza. Las tres cajas de "Uma transmissão
+   viva" siguen siendo tres, con su texto editable en los cuatro idiomas. `TablaFilas` gano
+   columnas de tipo `imagen`.
 
-Verificado contra el BO corriendo, no por lectura: una septima seccion creada en portugues
-aparecio en los cuatro idiomas marcada "sin traducir", traducirla en español no pudo cambiar
-ninguna de las dos fotos ni con un POST forjado, y quitarla la saco de los cuatro sin tocar
-las traducciones de las otras seis. Con once secciones la pagina numera `01…09, 10, 11`: el
-`0{index+1}` que escribia `010` esta arreglado. De las 44 paginas construidas **solo
-cambiaron las 4 de `/aikido`**, y solo en el ancla de cada seccion. Commiteado y desplegado:
-`main` en `57641b1`, las cuatro paginas comprobadas en produccion.
+Verificado contra el BO corriendo, no por lectura, en las specs 0037 y 0038. En la 0037: una
+septima seccion creada en portugues aparecio en los cuatro idiomas marcada "sin traducir",
+traducirla en español no pudo cambiar ninguna de las dos fotos ni con un POST forjado, y
+quitarla la saco de los cuatro sin tocar las traducciones de las otras seis; con once
+secciones la pagina numera `01…09, 10, 11`. En la 0038: un cuarto profesor creado en
+portugues aparecio en los cuatro marcado "sin traducir", un POST forjado desde español con
+tres fotos distintas, un quinto profesor y una cuarta caja de linaje quedo en **4
+profesores, 3 cajas y las tres fotos portuguesas** —y el cambio de texto legitimo del mismo
+envio si entro—, una cuarta caja forjada desde portugues dio **422**, y con la lista de
+profesores vacia la franja de fichas no se pinta. La comparacion del HTML construido contra
+`HEAD` dio **44 paginas, 0 distintas**: la migracion del contenido de `/dojo` dejo el sitio
+byte a byte igual. La 0037 quedo commiteada y desplegada en `641c9e6`; **la 0038 esta sin
+commitear**.
 
 **Y una noticia que llego sola: `publicarVarios` ya corrio contra GitHub.** El push del
 editor de `/aikido` fue rechazado por no-fast-forward porque `origin/main` tenia el commit
@@ -38,15 +51,17 @@ y **sigue publicado en `/aulas` en portugues**.
 
 **Lo que hay que saber antes de tocar nada:**
 
-1. **El editor de `/aulas` es el molde: copialo, no inventes de nuevo.** Despues de tres
-   pantallas rechazadas (specs 0031, 0032, 0033), la cuarta salio aprobada porque se hizo
-   al reves: **el entregable de la primera vuelta fue el layout campo por campo**, el
-   cliente lo corrigio, y recien entonces se escribio codigo. Para la proxima pagina:
-   `src/pages/admin/paginas/aulas.astro` + `FormularioAulas.astro` + `TablaFilas.astro` +
-   `aulas-edicion.ts` son el patron completo. Lo que el cliente pidio textualmente:
-   *"un form simple donde tenes inputs de texto que modifican textos, inputs de texto que
-   modifican texto de botones, input de imagen que modifica imagenes"*, y para las listas
-   *"es una tablita con un quitar, añadir fila. Es simple."*
+1. **Un editor nuevo ya no se copia: se describe.** Despues de tres pantallas rechazadas
+   (specs 0031, 0032, 0033), la cuarta salio aprobada porque se hizo al reves: **el
+   entregable de la primera vuelta fue el layout campo por campo**, el cliente lo corrigio,
+   y recien entonces se escribio codigo. Las tres veces siguientes funciono igual. Hoy el
+   codigo comun vive en `src/lib/editor-pagina.ts` + `editor-pantalla.ts` y lo propio de
+   cada pagina es un **descriptor** (`<pagina>-edicion.ts`) mas su formulario; los controles
+   son `CampoTexto`, `CampoImagen`, `TablaFilas` y `TablaMedios`. Ver la receta de seis
+   pasos en "Por donde seguir". Lo que el cliente pidio textualmente: *"un form simple donde
+   tenes inputs de texto que modifican textos, inputs de texto que modifican texto de
+   botones, input de imagen que modifica imagenes"*, y para las listas *"es una tablita con
+   un quitar, añadir fila. Es simple."*
 2. **Ya se puede ver el BO sin sacar al cliente.** `node --env-file=.env
    scripts/sesion-temporal.mjs` inserta una sesion de 40 minutos en `admin_session` y la
    imprime; `--borrar <token>` la saca. **No toca la contraseña** —`npm run admin:seed` si,
@@ -69,33 +84,40 @@ SEO actual, mejorar GEO.
 
 ## Ahora
 
-### Por donde seguir (corte del 2026-09-21, segunda sesion)
+### Por donde seguir (corte del 2026-09-21, tercera sesion)
 
-**Adultos y Crianças ya tienen editor** (spec 0036, fila 6r). El procedimiento —layout
-campo por campo aprobado **antes** de escribir codigo— se aplico por segunda vez y volvio a
-funcionar: el cliente corrigio cuatro cosas del layout propuesto y recien entonces se
-implemento.
-
-Las paginas que **siguen sin editor**:
+**El pedido con el que se retoma, textual: "volvemos para seguir con el editor de otras
+paginas".** Ya tienen editor `/aulas`, `/aulas/adultos`, `/aulas/criancas`, `/aikido` y `/dojo`
+(spec 0038). **Primera pregunta de la sesion nueva: que pagina.** Las que faltan:
 
 | Pagina | Contenido | Nota |
 |---|---|---|
-| `/contactos` | `contact.json` | **La mas urgente**: duplica las tres sedes en `contact.venues`, con Encarnação incluido. Engancharla a la entidad de dojos necesita sumarle `transporte` a la ficha (fila 6f). |
-| `/dojo` | `dojo.json` | Equipo docente con jerarquia (ADR-0023). |
-| `/aikido`, `/eventos`, `/escolas`, `/outras-artes`, `/professor-pablo-duran` | sus JSON | Sin urgencia conocida. |
+| `/contactos` | `contact.json` | **La mas urgente**: duplica las tres sedes en `contact.venues`, con Encarnação incluido. Engancharla a la entidad de dojos necesita sumarle `transporte` a la ficha (fila 6f). Su formulario esta visible pero **no envia**: falta email/endpoint. |
+| `/outras-artes` | `other-arts.json` | Tres disciplinas, cada una con parrafos, horarios y su propio formulario. Es la que mas se parece a `/aikido` en forma anidada (ADR-0033). |
+| `/eventos`, `/escolas`, `/professor-pablo-duran` | sus JSON | Sin urgencia conocida. |
 
-**El procedimiento, probado dos veces**: (1) leer el JSON y la vista para enumerar los
-campos, (2) entregar el layout campo por campo y esperar que el cliente lo apruebe o lo
-corrija, (3) escribir la spec y los ADR, (4) implementar copiando el molde —hoy el mejor es
-`audiencia-*` + `FormularioAudiencia`, que ademas sirve dos pantallas—, (5) verificar con
-`scripts/sesion-temporal.mjs` contra el BO corriendo — **no por lectura del codigo**.
+**La receta, ya probada tres veces.** Con el modulo generico, un editor nuevo es:
 
-0. **Falta apretar el editor de `/aulas` en produccion** (fila 6p). Se verifico entero en
-   local contra la base real: agregar una cuota en portugues la crea en los cuatro idiomas
-   con la marca "sin traducir", y quitarla la borra en los cuatro sin pisar las traducciones
-   de las demas. Lo que **nunca corrio contra GitHub** es `publicarVarios`: el commit con
-   cuatro archivos por la Git Data API (blobs → tree → commit → `PATCH` de la ref sin
-   `force`). Si falla, mirar el codigo de error antes que los permisos.
+1. Leer el JSON y la vista y **enumerar los campos**. Buscar constantes escritas dentro del
+   componente: en `/aikido` eran dos fotos y cinco textos, en `/aulas` eran dos botones.
+   `grep` de cada campo del JSON en `src/` para no poner en el formulario algo que no pinta
+   nadie.
+2. **Entregar el layout campo por campo y esperar.** El entregable de la primera vuelta no
+   es codigo. Las tres veces el cliente corrigio algo.
+3. Spec cerrada + ADR de lo que se decida + fila en el INDEX.
+4. Implementar: **un descriptor** (`src/lib/<pagina>-edicion.ts`, 60 lineas: como se llama,
+   que archivo escribe, su schema, su `desdeForm`, sus `listas` y sus `sembrados`), **un
+   formulario** (`src/components/admin/Formulario<Pagina>.astro`) y **una pagina de tres
+   lineas** que llama a `pantallaEditor(descriptor, Astro.request, Astro.url)` y pinta
+   `<EditorPestanas formulario={...} />`. Mas la fila en `src/pages/admin/index.astro`.
+5. Verificar **con el BO corriendo** (`scripts/sesion-temporal.mjs`), no por lectura: alta,
+   baja, traduccion, y un POST forjado desde una pestaña que no es portugues.
+6. Comparar el HTML construido contra `HEAD` con el hash del CSS neutralizado.
+
+**Lo que hay que mirar en produccion antes de seguir:** el cliente probo el editor de
+`/aulas` y dejo publicado `"label": "Idades 1"` en `content/pt/classes.json` (commit
+`a73982d`). Se ve en `/aulas` en portugues, en la seccion de crianças. Lo arregla el en dos
+clics desde el mismo editor, pero conviene avisarle.
 
 1. **Rediseñar la interfaz del editor de Home** (fila 6o). Sigue pendiente. Ahora hay un
    molde aprobado —el de `/aulas`— al que alinearla, incluido el cambio de los textarea de
@@ -243,6 +265,7 @@ siguiente guardado del BO reordena el archivo: ruido de una vez, no perdida de d
 | 6p | Spec 0035 — editor de /aulas en el BO | 0035 | implementada, verificada en local | Cuatro pestañas, cinco tablas (cuotas, notas, parrafos, datos de crianças, preguntas) y el layout aprobado por el cliente **antes** de escribir codigo. Portugues manda la estructura (ADR-0030): solo su pestaña tiene "Añadir fila"; publicar PT escribe los cuatro archivos en un commit por la Git Data API. Verificado por HTTP contra el BO corriendo: alta y baja de una cuota propagadas a los cuatro idiomas, marca "sin traducir" en es/fr/en, traducciones de las otras filas intactas. **Ejercitado en produccion el 2026-09-21**: el commit `a73982d` ("contenido: Aulas desde el backoffice (1 archivos)") lo escribio el BO por la Git Data API. |
 | 6r | Spec 0036 — editores de Adultos y Crianças con galeria libre y YouTube | 0036 | implementada, verificada en local | Dos pantallas separadas (`/admin/paginas/adultos` y `/criancas`) sobre un formulario comun, con el layout aprobado por el cliente antes de escribir codigo. La galeria dejo de tener seis medios fijos: se añaden y quitan sin limite, cada uno es una foto subida a R2 o un video de YouTube, y el grid publico se adapta (1, 2, 3-4, 5+). El video no le pide nada a YouTube hasta que alguien lo toca, y una galeria sin videos no se lleva **ni una linea** de JavaScript. Portugues siembra las imagenes (ADR-0032): en es/fr/en la foto y el enlace se ven pero no se cambian, y un POST forjado desde esas pestañas queda igual sin efecto (comprobado). Los cinco textos de cabecera y pie pasaron al contenido. Se borro el mp4 de stock de Pexels de los ocho archivos. **Desplegado el 2026-09-21** (`e330802`) y comprobado en las seis paginas publicas. El guardado del BO por la Git Data API quedo comprobado en la fila 6p; falta todavia ver un commit de **cuatro** archivos, que es lo que escribe publicar portugues cuando cambia la estructura. |
 | 6s | Spec 0037 — editor de /aikido | 0037 | implementada, verificada en local | Pantalla propia con el layout aprobado antes de escribir codigo. La lista numerada pasa a largo libre —el numero lo pone la pagina por posicion— y el bloque O-Sensei siempre esta, con sus textos y su foto editables. Las dos fotos que vivian dentro de `AikidoView.astro` pasaron al contenido, y el `alt` de la foto de Ueshiba dejo de estar en español en los cuatro idiomas. Se borro el `id` por seccion: era un ancla HTML que no usaba nadie y distinta por idioma. Los parrafos de cada seccion se editan como texto, uno por renglon (ADR-0033), por estar anidados. **Desplegado el 2026-09-21** (`57641b1`) y comprobado en las cuatro paginas publicas. |
+| 6t | Spec 0038 — editor de /dojo | 0038 | implementada, verificada en local, **sin desplegar** | Pantalla propia con el molde ya aprobado. Tres cosas que se veian en `/dojo` y no existian en ningun JSON pasaron al contenido: los cinco textos del borde, las dos fotos grandes y **el equipo docente**, que era un objeto con los cuatro idiomas escritos a mano dentro de `DojoView.astro` mas tres URLs de Wix. Ahora es una lista de largo libre: se crean y se quitan profesores desde portugues, con nombre, titulo, parrafos y foto, y el front la renderiza (con cero profesores la franja no se pinta). El bloque del profesor principal es su propia seccion del editor. "Uma transmissão viva" son tres cajas fijas (ADR-0034): sin "Añadir" ni "Quitar" en ninguna pestaña, texto editable en las cuatro, y el schema las exige en 3. `TablaFilas` gano columnas de tipo `imagen`, que es lo que evito una tercera copia del control de foto por fila. |
 | 6q | Sacar Encarnação de los textos en prosa | — | pendiente | El dojo cerro. La estructura ya no lo nombra, la prosa si: en `classes.json` (descripcion SEO, pie, `children.facts[2]`, dos respuestas del Q&A) lo puede arreglar el cliente desde `/admin/paginas/aulas`. `adults.json` y `children.json` ya tienen editor (spec 0036): sus `facts` y su Q&A los puede arreglar el cliente. Queda `contact.json`, sin editor. |
 | 7 | Alumnos + emision de factura + PDF a R2 + envio Resend | — | pendiente | Necesita una factura de ejemplo real. Spec sin escribir: el numero 0004 del INDEX es otra cosa. |
 | 8 | Redirects 301 de las 34 URLs viejas | — | plan definido | Matriz conceptual documentada. Falta crawl final, Search Console e implementación cuando existan todos los destinos. |

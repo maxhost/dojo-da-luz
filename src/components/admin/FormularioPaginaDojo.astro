@@ -1,0 +1,216 @@
+---
+import CampoImagen from './CampoImagen.astro'
+import CampoTexto from './CampoTexto.astro'
+import TablaFilas from './TablaFilas.astro'
+import { errorDe } from '../../lib/forms'
+import { LOCALES, LOCALE_NAME, type Locale } from '../../lib/i18n'
+
+/**
+ * El formulario de `/dojo` para un idioma (spec 0038). Los cuatro se pintan a la vez:
+ * cambiar de pestaña es CSS, no una navegacion.
+ *
+ * El orden de los bloques es el orden de la pagina publica. Dos cosas solo pasan en
+ * portugues: añadir o quitar profesores (ADR-0030) y cambiar una foto (ADR-0032).
+ *
+ * "Uma transmissão viva" son **tres cajas fijas** (ADR-0034): su tabla va en modo no
+ * editable en los cuatro idiomas, asi que no tiene "Añadir" ni "Quitar" en ninguno, pero
+ * sus tres textos se escriben en todos.
+ */
+
+interface Props {
+  locale: Locale
+  datos: Record<string, any>
+  errores: Record<string, string>
+  shas: Record<Locale, string>
+  /** Ruta de lista → indices cuyo texto sigue siendo el portugues. */
+  sinTraducir: Record<string, number[]>
+}
+
+const { locale, datos, errores, shas, sinTraducir } = Astro.props
+
+const esPortugues = locale === 'pt'
+
+const v = (ruta: string): string =>
+  ruta.split('.').reduce<any>((actual, clave) => actual?.[clave], datos) ?? ''
+const lista = (ruta: string): any[] =>
+  ruta.split('.').reduce<any>((actual, clave) => actual?.[clave], datos) ?? []
+const e = (ruta: string) => errorDe(errores, ruta)
+
+/** Las tablas de una columna guardan textos sueltos: la fila es `{ valor }`. */
+const textos = (ruta: string) => lista(ruta).map((valor: string) => ({ valor }))
+
+/** Los parrafos de un profesor se editan como texto, uno por renglon (ADR-0033). */
+const profesores = lista('teachers').map((profesor: any) => ({
+  photo: profesor.photo ?? '',
+  name: profesor.name ?? '',
+  credentials: profesor.credentials ?? '',
+  paragraphs: (profesor.paragraphs ?? []).join('\n'),
+  photoAlt: profesor.photoAlt ?? '',
+}))
+
+const seccion = 'mt-8 border border-[#d7cec0] bg-[#fbf8f2] p-4'
+
+const campo = (nombre: string, etiqueta: string, extra: Record<string, unknown> = {}) => ({
+  idPrefijo: locale,
+  nombre,
+  etiqueta,
+  valor: v(nombre),
+  error: e(nombre),
+  requerido: true,
+  ...extra,
+})
+---
+
+<form method="post">
+  <input type="hidden" name="idioma" value={locale} />
+  {/* Los cuatro `sha`: publicar portugues toca los cuatro archivos y los verifica todos. */}
+  {LOCALES.map((otro) => <input type="hidden" name={`sha.${otro}`} value={shas[otro]} />)}
+
+  {!esPortugues && (
+    <p class="mt-6 border-l-4 border-[#0099ff] bg-[#eaf6ff] p-3 text-sm text-[#211f1c]">
+      Acá se traduce. Para añadir o quitar un profesor o cambiar una foto, andá a la
+      pestaña <strong>Português</strong>: lo que hagas ahí aparece en los cuatro idiomas.
+    </p>
+  )}
+
+  <fieldset class={seccion}>
+    <legend class="px-2 text-sm font-semibold">Cabecera y pie</legend>
+    <CampoTexto {...campo('chrome.caption', 'Bajada del logo')} />
+    <CampoTexto {...campo('chrome.menuLabel', 'Botón de menú')} />
+    <CampoTexto {...campo('chrome.skipLink', 'Saltar al contenido')} />
+
+    <p class="mt-6 text-xs text-[#625c55]">
+      El menú de arriba no se edita desde acá: sus ocho enlaces son las páginas del sitio y
+      se llaman igual en todas. El pie sí.
+    </p>
+
+    <CampoTexto {...campo('chrome.footerNote.areas', 'Pie · zonas')} />
+    <CampoTexto {...campo('chrome.footerNote.orgType', 'Pie · tipo de organización')} />
+  </fieldset>
+
+  <fieldset class={seccion}>
+    <legend class="px-2 text-sm font-semibold">SEO</legend>
+    <CampoTexto {...campo('seo.title', 'Título de la página', { recomendado: 60, ayuda: 'Lo que se lee como titular en Google y en la pestaña del navegador.' })} />
+    <CampoTexto {...campo('seo.description', 'Descripción', { tipo: 'area', recomendado: 155, ayuda: 'El párrafo que Google muestra debajo del título.' })} />
+  </fieldset>
+
+  <fieldset class={seccion}>
+    <legend class="px-2 text-sm font-semibold">01 · Portada</legend>
+    <CampoTexto {...campo('eyebrow', 'Antetítulo')} />
+    <CampoTexto {...campo('title', 'Titular')} />
+    <CampoTexto {...campo('lead', 'Bajada', { tipo: 'area' })} />
+    <CampoImagen
+      idPrefijo={locale}
+      nombre="heroPhoto"
+      etiqueta="Foto"
+      valor={v('heroPhoto')}
+      errores={errores}
+      soloLectura={!esPortugues}
+      ayuda="Va al lado del titular. Es la misma en los cuatro idiomas."
+    />
+    <CampoTexto {...campo('heroPhotoAlt', 'Descripción de la foto', { ayuda: 'La leen los lectores de pantalla y Google.' })} />
+  </fieldset>
+
+  <fieldset class={seccion}>
+    <legend class="px-2 text-sm font-semibold">02 · El lugar de la práctica</legend>
+    <CampoTexto {...campo('spaceTitle', 'Título')} />
+
+    <TablaFilas
+      titulo="Párrafos"
+      prefijo="spaceParagraphs"
+      columnas={[{ campo: 'valor', etiqueta: 'Párrafo', tipo: 'area' }]}
+      filas={textos('spaceParagraphs')}
+      errores={errores}
+      idPrefijo={locale}
+      editable={esPortugues}
+      sinTraducir={sinTraducir['spaceParagraphs'] ?? []}
+    />
+  </fieldset>
+
+  <fieldset class={seccion}>
+    <legend class="px-2 text-sm font-semibold">03 · Profesor principal</legend>
+    <p class="text-xs text-[#625c55]">
+      El bloque grande, hoy el de Pablo Durán. Siempre está: se editan sus textos y su foto.
+    </p>
+
+    <CampoTexto {...campo('teacher.label', 'Rótulo')} />
+    <CampoTexto {...campo('teacher.name', 'Nombre')} />
+    <CampoTexto {...campo('teacher.credentials', 'Títulos')} />
+
+    <TablaFilas
+      titulo="Párrafos"
+      prefijo="teacher.paragraphs"
+      columnas={[{ campo: 'valor', etiqueta: 'Párrafo', tipo: 'area' }]}
+      filas={textos('teacher.paragraphs')}
+      errores={errores}
+      idPrefijo={locale}
+      editable={esPortugues}
+      sinTraducir={sinTraducir['teacher.paragraphs'] ?? []}
+    />
+
+    <CampoImagen
+      idPrefijo={locale}
+      nombre="teacher.photo"
+      etiqueta="Foto"
+      valor={v('teacher.photo')}
+      errores={errores}
+      soloLectura={!esPortugues}
+      ayuda="Es la misma en los cuatro idiomas."
+    />
+    <CampoTexto {...campo('teacher.photoAlt', 'Descripción de la foto', { ayuda: 'La leen los lectores de pantalla y Google.' })} />
+    <CampoTexto {...campo('teacher.linkLabel', 'Texto del botón', { ayuda: 'Lleva a su página. A dónde va no se edita: es una página del sitio.' })} />
+  </fieldset>
+
+  <fieldset class={seccion}>
+    <legend class="px-2 text-sm font-semibold">04 · Otros profesores</legend>
+
+    <TablaFilas
+      titulo="Profesores"
+      prefijo="teachers"
+      columnas={[
+        { campo: 'photo', etiqueta: 'Foto', tipo: 'imagen' },
+        { campo: 'name', etiqueta: 'Nombre' },
+        { campo: 'credentials', etiqueta: 'Título' },
+        { campo: 'paragraphs', etiqueta: 'Párrafos (uno por línea)', tipo: 'area' },
+        { campo: 'photoAlt', etiqueta: 'Descripción de la foto' },
+      ]}
+      filas={profesores}
+      errores={errores}
+      idPrefijo={locale}
+      editable={esPortugues}
+      sinTraducir={sinTraducir['teachers'] ?? []}
+      ayuda="Sin límite: los que haya se acomodan solos en la página, de a tres por fila. Si no hay ninguno, esa franja no se pinta."
+    />
+  </fieldset>
+
+  <fieldset class={seccion}>
+    <legend class="px-2 text-sm font-semibold">05 · Uma transmissão viva</legend>
+    <CampoTexto {...campo('lineageTitle', 'Título')} />
+
+    <TablaFilas
+      titulo="Las tres cajas"
+      prefijo="lineage"
+      columnas={[
+        { campo: 'name', etiqueta: 'Nombre' },
+        { campo: 'role', etiqueta: 'Rol' },
+        { campo: 'text', etiqueta: 'Texto', tipo: 'area' },
+      ]}
+      filas={lista('lineage')}
+      errores={errores}
+      idPrefijo={locale}
+      editable={false}
+      sinTraducir={sinTraducir['lineage'] ?? []}
+      ayuda="Son tres y siguen siendo tres: acá se edita el texto de cada una, en los cuatro idiomas."
+    />
+  </fieldset>
+
+  <button class="mt-8 bg-[#0099ff] px-6 py-3 font-semibold text-white" type="submit">
+    Publicar O dojo en {LOCALE_NAME[locale]}
+  </button>
+  {esPortugues && (
+    <p class="mt-2 text-xs text-[#625c55]">
+      Publicar portugués también actualiza la estructura y las fotos de los otros tres
+      idiomas.
+    </p>
+  )}
+</form>

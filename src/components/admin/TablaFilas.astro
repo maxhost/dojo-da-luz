@@ -1,4 +1,5 @@
 ---
+import CampoImagen from './CampoImagen.astro'
 import { errorDe } from '../../lib/forms'
 
 /**
@@ -9,12 +10,16 @@ import { errorDe } from '../../lib/forms'
  * **Solo la pestaña portuguesa la trae completa** (ADR-0030). En es/fr/en `editable` es
  * `false` y quedan los campos de texto sin "añadir" ni "quitar": el largo de la lista lo
  * decide el portugues, asi que algo que no existe en portugues no puede existir en ingles.
+ *
+ * Una columna puede ser una **imagen** (spec 0038): pinta el mismo `CampoImagen` que el
+ * resto del backoffice, con la miniatura como boton. En es/fr/en va en modo solo lectura,
+ * porque la foto la siembra el portugues (ADR-0032).
  */
 
 interface Columna {
   campo: string
   etiqueta: string
-  tipo?: 'texto' | 'area'
+  tipo?: 'texto' | 'area' | 'imagen'
 }
 
 interface Props {
@@ -54,7 +59,18 @@ const campoClase =
         )}
 
         <div class="grid gap-3 md:grid-cols-2">
-          {columnas.map((columna) => (
+          {columnas.map((columna) => columna.tipo === 'imagen' ? (
+            /* No va dentro de un `label`: el control es un boton, y un boton dentro de una
+               etiqueta se dispara al tocar el texto de al lado. */
+            <CampoImagen
+              idPrefijo={idPrefijo}
+              nombre={`${prefijo}[${i}].${columna.campo}`}
+              etiqueta={columna.etiqueta}
+              valor={fila[columna.campo] ?? ''}
+              errores={errores}
+              soloLectura={!editable}
+            />
+          ) : (
             <label class="block text-xs font-semibold text-[#625c55]" for={id(i, columna.campo)}>
               {columna.etiqueta}
               {columna.tipo === 'area' ? (
@@ -94,7 +110,14 @@ const campoClase =
     <template data-plantilla>
       <li class="border border-[#d7cec0] bg-white p-3" data-fila>
         <div class="grid gap-3 md:grid-cols-2">
-          {columnas.map((columna) => (
+          {columnas.map((columna) => columna.tipo === 'imagen' ? (
+            <CampoImagen
+              nombre={`${prefijo}[__i__].${columna.campo}`}
+              etiqueta={columna.etiqueta}
+              valor=""
+              errores={{}}
+            />
+          ) : (
             <label class="block text-xs font-semibold text-[#625c55]">
               {columna.etiqueta}
               {columna.tipo === 'area' ? (
@@ -146,7 +169,14 @@ const campoClase =
       })
       siguiente += 1
       lista.append(fragmento)
-      lista.querySelector<HTMLElement>('[data-fila]:last-child input, [data-fila]:last-child textarea')?.focus()
+
+      // El script de `CampoImagen` ya corrio cuando cargo la pagina: una fila recien creada
+      // tiene que engancharse sola.
+      const nueva = lista.querySelector<HTMLElement>('[data-fila]:last-child')
+      nueva?.querySelectorAll<HTMLElement>('[data-campo-imagen]').forEach((campo) => {
+        campo.dispatchEvent(new Event('campo-imagen:inicializar', { bubbles: true }))
+      })
+      nueva?.querySelector<HTMLElement>('input[type="text"], textarea')?.focus()
     })
   })
 </script>

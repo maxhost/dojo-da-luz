@@ -115,6 +115,14 @@ que funciono:
 `gh auth status` es lo primero que hay que mirar: dice cual credencial esta viva y cual esta
 ganando.
 
+**Antes de `git push`, traete lo que el backoffice haya commiteado.** El BO publica
+commiteando a `main` desde produccion (ADR-0025): el remoto se mueve **sin que nadie del
+lado del agente haga nada**. El 2026-09-21 pasó dos veces — la segunda, un push valido
+rebotó con "non-fast-forward" y el commit que estorbaba era `a73982d`, *"contenido: Aulas
+desde el backoffice"*, escrito por el cliente probando el editor. No es un conflicto: es el
+producto funcionando. `git fetch origin main && git rebase origin/main` y listo; el rebase
+es limpio porque el BO solo toca `content/`.
+
 **Las reglas verificables van en hooks, no aca.** Los hooks corren fuera del contexto,
 cuestan cero tokens y son deterministas; este archivo es advisory. Si una regla se puede
 chequear con un comando, es un hook — no la escribas aca tambien.

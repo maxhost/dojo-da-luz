@@ -3,9 +3,20 @@
     "title": "Dojo da Luz et Pablo Durán | Aïkido Lisbonne",
     "description": "Découvrez le Dojo da Luz, Pablo Durán et la transmission liée à Franck Noël et à l'Aikikai de Tokyo."
   },
+  "chrome": {
+    "caption": "Aïkido · Lisbonne",
+    "menuLabel": "Menu",
+    "skipLink": "Aller au contenu",
+    "footerNote": {
+      "areas": "Benfica · Lumiar · Encarnação",
+      "orgType": "Association à but non lucratif"
+    }
+  },
   "eyebrow": "Dojo da Luz",
   "title": "Un lieu pour pratiquer la Voie.",
   "lead": "Plus qu'une salle d'entraînement, le dojo est un espace d'apprentissage, d'attention et de convivialité.",
+  "heroPhoto": "https://static.wixstatic.com/media/ae7240_de66207c487b4e8086d18ed67c88ea93~mv2.jpg/v1/fill/w_1400,h_1000,al_c,q_85/IMG_3502_JPG.jpg",
+  "heroPhotoAlt": "Dojo da Luz",
   "spaceTitle": "Le lieu de la pratique.",
   "spaceParagraphs": [
     "Dojo signifie littéralement lieu où l'on pratique la Voie. C'est un espace consacré au perfectionnement physique, mental et relationnel.",
@@ -20,8 +31,42 @@
       "Il vit six ans et demi à Toulouse, pratiquant quotidiennement au Dojo de la Roseraie et passant une période comme uchideshi. Il s'installe à Lisbonne en 2015 et inaugure le Dojo da Luz en 2016.",
       "Il continue à participer à des stages européens et a visité l'Aikikai Hombu Dojo et le Saku Dojo au Japon."
     ],
+    "photo": "https://static.wixstatic.com/media/ae7240_4681e435c4ab47dbb9f6db8fe35fa6a5.jpg/v1/fill/w_900,h_1200,al_c,q_85/ae7240_4681e435c4ab47dbb9f6db8fe35fa6a5.jpg",
+    "photoAlt": "Pablo Durán",
     "linkLabel": "Découvrir le parcours de Pablo Durán"
   },
+  "teachers": [
+    {
+      "name": "Inês Martins",
+      "credentials": "Instructrice · Dojo da Luz",
+      "paragraphs": [
+        "Sa pratique privilégie la précision du geste et un apprentissage attentif, accessible à tous les âges.",
+        "Elle accompagne les élèves dans leurs premiers pas au dojo, dans un climat de confiance et de découverte."
+      ],
+      "photo": "https://static.wixstatic.com/media/ae7240_de66207c487b4e8086d18ed67c88ea93~mv2.jpg/v1/fill/w_700,h_520,fp_0.3_0.5,q_85/IMG_3502_JPG.jpg",
+      "photoAlt": "Inês Martins"
+    },
+    {
+      "name": "Miguel Costa",
+      "credentials": "Instructeur · Dojo da Luz",
+      "paragraphs": [
+        "Il s’intéresse au lien entre mouvement, respiration et présence dans la pratique quotidienne.",
+        "En cours, il invite chaque pratiquant à trouver son propre rythme, avec rigueur et esprit de coopération."
+      ],
+      "photo": "https://static.wixstatic.com/media/ae7240_b0eea689c4ec4721939495f9088211ae~mv2.jpg/v1/fill/w_700,h_520,fp_0.5_0.45,q_85/crian%C3%A7as.jpg",
+      "photoAlt": "Miguel Costa"
+    },
+    {
+      "name": "Sofia Almeida",
+      "credentials": "Instructrice · Dojo da Luz",
+      "paragraphs": [
+        "Elle propose une approche sereine et dynamique, centrée sur l’écoute du partenaire et l’équilibre.",
+        "Elle porte une attention particulière à la transmission des fondamentaux et à la continuité de la pratique."
+      ],
+      "photo": "https://static.wixstatic.com/media/ae7240_de66207c487b4e8086d18ed67c88ea93~mv2.jpg/v1/fill/w_700,h_520,fp_0.72_0.5,q_85/IMG_3502_JPG.jpg",
+      "photoAlt": "Sofia Almeida"
+    }
+  ],
   "lineageTitle": "Une transmission vivante.",
   "lineage": [
     {

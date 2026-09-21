@@ -224,11 +224,36 @@ export const aikidoSchema = z.object({
   audienceTitle: z.string().min(1), adultsLabel: z.string().min(1), childrenLabel: z.string().min(1),
 })
 
+/**
+ * `/dojo` (spec 0038). Tres cosas que antes vivian dentro de `DojoView.astro`: los cinco
+ * textos del borde, las dos fotos grandes y **el equipo docente**, que era un objeto con
+ * los cuatro idiomas escritos a mano y tres fotos de Wix.
+ *
+ * `teachers` es de largo libre y **sin minimo** (ADR-0034): con la lista vacia la rejilla
+ * de fichas no se pinta, que es mejor que una franja oscura vacia.
+ *
+ * `lineage` es lo contrario: exactamente tres cajas, sin alta ni baja en la pantalla. Son
+ * tres nombres historicos —Franck Noel, Seigo Yamaguchi, la familia Ueshiba— y el `.length(3)`
+ * es lo que frena una cuarta metida por un POST forjado.
+ */
 export const dojoSchema = z.object({
-  seo: seoSchema, eyebrow: z.string().min(1), title: z.string().min(1), lead: z.string().min(1),
+  seo: seoSchema, chrome: chromeSchema,
+  eyebrow: z.string().min(1), title: z.string().min(1), lead: z.string().min(1),
+  heroPhoto: z.url(), heroPhotoAlt: z.string().min(1),
   spaceTitle: z.string().min(1), spaceParagraphs: z.array(z.string().min(1)).min(1),
-  teacher: z.object({ label:z.string().min(1), name:z.string().min(1), credentials:z.string().min(1), paragraphs:z.array(z.string().min(1)).min(1), linkLabel:z.string().min(1) }),
-  lineageTitle:z.string().min(1), lineage:z.array(z.object({ name:z.string().min(1), role:z.string().min(1), text:z.string().min(1) })).min(1),
+  teacher: z.object({
+    label: z.string().min(1), name: z.string().min(1), credentials: z.string().min(1),
+    paragraphs: z.array(z.string().min(1)).min(1),
+    photo: z.url(), photoAlt: z.string().min(1),
+    linkLabel: z.string().min(1),
+  }),
+  teachers: z.array(z.object({
+    name: z.string().min(1), credentials: z.string().min(1),
+    paragraphs: linesSchema,
+    photo: z.url(), photoAlt: z.string().min(1),
+  })),
+  lineageTitle: z.string().min(1),
+  lineage: z.array(z.object({ name: z.string().min(1), role: z.string().min(1), text: z.string().min(1) })).length(3),
 })
 
 export const teacherSchema = z.object({

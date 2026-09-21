@@ -50,6 +50,28 @@ export const LISTAS_AIKIDO: readonly RutaLista[] = ['sections', 'founder.paragra
 /** Las dos fotos de `/aikido`: una foto no se traduce (ADR-0032). */
 export const SEMBRADOS_AIKIDO: readonly string[] = ['heroPhoto', 'founder.photo']
 
+/**
+ * Las listas de `/dojo` (spec 0038). `teachers` es el equipo docente, que antes era un
+ * objeto escrito dentro de `DojoView.astro`; sus parrafos viajan **adentro de la fila**,
+ * como los de una seccion de `/aikido`.
+ *
+ * `lineage` esta aca aunque la pantalla no deje añadir ni quitar cajas: es lo que impide
+ * que un POST forjado en frances le meta una cuarta caja a un solo idioma.
+ */
+export const LISTAS_DOJO: readonly RutaLista[] = [
+  'spaceParagraphs',
+  'teacher.paragraphs',
+  'teachers',
+  'lineage',
+]
+
+/** Las fotos de `/dojo`: la de la portada, la de Pablo y la de cada ficha (ADR-0032). */
+export const SEMBRADOS_DOJO: readonly string[] = [
+  'heroPhoto',
+  'teacher.photo',
+  'teachers[].photo',
+]
+
 /** Las cinco listas de `/aulas` cuyo largo lo decide el portugues (spec 0035). */
 export const LISTAS_AULAS: readonly RutaLista[] = [
   'pricing.items',

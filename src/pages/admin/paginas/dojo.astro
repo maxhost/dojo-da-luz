@@ -1,0 +1,43 @@
+---
+export const prerender = false
+
+import Admin from '../../../layouts/Admin.astro'
+import Aviso from '../../../components/admin/Aviso.astro'
+import EditorPestanas from '../../../components/admin/EditorPestanas.astro'
+import FormularioPaginaDojo from '../../../components/admin/FormularioPaginaDojo.astro'
+import { paginaDojo } from '../../../lib/pagina-dojo-edicion'
+import { pantallaEditor } from '../../../lib/editor-pantalla'
+
+/** Editor de `/dojo` (spec 0038). */
+
+const admin = Astro.locals.admin!
+const pantalla = await pantallaEditor(paginaDojo, Astro.request, Astro.url)
+
+if (pantalla.redirigir) return Astro.redirect(pantalla.redirigir, 303)
+if (pantalla.estado) Astro.response.status = pantalla.estado
+---
+
+<Admin titulo="O dojo" admin={admin}>
+  <h1 class="font-serif text-3xl">O dojo</h1>
+  <p class="mt-4 text-sm text-[#625c55]">
+    La página <code>/dojo</code>, de arriba hacia abajo: la portada, el lugar, el profesor
+    principal, el listado de profesores y las tres cajas de la transmisión. El portugués
+    manda: añadir o quitar un profesor y cambiar una foto se hace en su pestaña y aparece en
+    los cuatro idiomas. En las otras tres se traduce.
+  </p>
+
+  {pantalla.aviso && <Aviso tipo={pantalla.aviso.tipo}>{pantalla.aviso.texto}</Aviso>}
+  {pantalla.sinRepositorio && (
+    <Aviso tipo="error">No se puede abrir el editor: {pantalla.sinRepositorio}</Aviso>
+  )}
+
+  {pantalla.sinRepositorio === null && (
+    <EditorPestanas
+      formulario={FormularioPaginaDojo}
+      archivos={pantalla.archivos}
+      errores={pantalla.errores}
+      shas={pantalla.shas}
+      activo={pantalla.activo}
+    />
+  )}
+</Admin>
