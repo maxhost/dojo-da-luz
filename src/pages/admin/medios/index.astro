@@ -1,0 +1,101 @@
+---
+export const prerender = false
+
+import Admin from '../../../layouts/Admin.astro'
+import Aviso from '../../../components/admin/Aviso.astro'
+import { ANCHO_MAXIMO, listarMedios, subirImagen, type Medio } from '../../../lib/medios'
+
+const admin = Astro.locals.admin!
+
+let aviso: { tipo: 'ok' | 'error'; texto: string } | null = null
+
+// Subida sin JavaScript: el mismo formulario que usa la isla, posteado a pelo.
+if (Astro.request.method === 'POST') {
+  const archivo = (await Astro.request.formData()).get('archivo')
+
+  if (!(archivo instanceof File) || archivo.size === 0) {
+    Astro.response.status = 400
+    aviso = { tipo: 'error', texto: 'Elegí un archivo.' }
+  } else {
+    const resultado = await subirImagen(archivo)
+    if (resultado.ok) {
+      aviso = {
+        tipo: 'ok',
+        texto: resultado.reusado
+          ? 'Esa imagen ya estaba subida: se reutiliza la que había.'
+          : `Subida. Pesa ${Math.round(resultado.bytes / 1024)} kB servida.`,
+      }
+    } else {
+      Astro.response.status = 422
+      aviso = { tipo: 'error', texto: resultado.motivo }
+    }
+  }
+}
+
+let medios: Medio[] = []
+let sinR2: string | null = null
+
+try {
+  medios = await listarMedios()
+} catch (error) {
+  Astro.response.status = 503
+  sinR2 = error instanceof Error ? error.message : String(error)
+}
+---
+
+<Admin titulo="Imágenes" admin={admin}>
+  <h1 class="font-serif text-3xl">Imágenes</h1>
+  <p class="mt-4 text-sm text-[#625c55]">
+    Lo que subas acá queda en el almacenamiento del sitio, no en Wix. De cada imagen se
+    guarda el original y una versión de hasta {ANCHO_MAXIMO} px, que es la que se publica.
+    Copiá la dirección y pegala en el campo que corresponda del editor.
+  </p>
+
+  {aviso && <Aviso tipo={aviso.tipo}>{aviso.texto}</Aviso>}
+  {sinR2 && <Aviso tipo="error">No se puede leer el almacenamiento: {sinR2}</Aviso>}
+
+  <form class="mt-8 border border-[#d7cec0] bg-[#fbf8f2] p-4" method="post" enctype="multipart/form-data">
+    <label class="block text-sm font-semibold" for="archivo">Subir una imagen</label>
+    <p class="mt-1 text-xs text-[#625c55]">
+      JPG, PNG, WebP o AVIF. Hasta 10 MB. Subila ya recortada: acá no se edita.
+    </p>
+    <input
+      class="mt-2 block w-full border border-[#d7cec0] bg-white px-3 py-2 text-sm"
+      id="archivo"
+      name="archivo"
+      type="file"
+      accept="image/jpeg,image/png,image/webp,image/avif"
+      required
+    />
+    <button class="mt-4 bg-[#0099ff] px-6 py-2 font-semibold text-white" type="submit">
+      Subir
+    </button>
+  </form>
+
+  {!sinR2 && (
+    <>
+      <h2 class="mt-12 font-serif text-2xl">Ya subidas ({medios.length})</h2>
+
+      {medios.length === 0 ? (
+        <p class="mt-4 text-sm text-[#625c55]">Todavía no hay ninguna.</p>
+      ) : (
+        <ul class="mt-6 grid gap-6 sm:grid-cols-2">
+          {medios.map((medio) => (
+            <li class="border border-[#d7cec0] bg-white p-3">
+              <img class="h-40 w-full bg-[#f4f0e8] object-contain" src={medio.url} alt="" loading="lazy" />
+              <p class="mt-2 text-xs text-[#625c55]">
+                {Math.round(medio.tamano / 1024)} kB · {medio.fecha.slice(0, 10)}
+              </p>
+              <input
+                class="mt-2 w-full border border-[#d7cec0] bg-[#fbf8f2] px-2 py-1 text-xs"
+                value={medio.url}
+                readonly
+                onfocus="this.select()"
+              />
+            </li>
+          ))}
+        </ul>
+      )}
+    </>
+  )}
+</Admin>

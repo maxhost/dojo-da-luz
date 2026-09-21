@@ -32,8 +32,8 @@ justo para esto y sigue sin usarse.
 - `GET /admin/medios`: galería de lo ya subido, para reusar sin volver a subir.
 - `CampoImagen.astro` gana el botón de subir y el selector de la galería, además de la URL
   a mano que ya tiene de la 0029.
-- Las variantes: **AVIF y WebP en 3 anchos** (480, 960, 1600) más el original como
-  respaldo. `<img srcset>` plano, sin optimización en runtime (ADR-0002).
+- Por cada imagen se guardan **dos objetos**: el original tal cual y una **WebP de hasta
+  1600 px** de ancho, que es la que se sirve. Ver "Una variante, no seis", abajo.
 - Límites duros, validados en el servidor: `image/jpeg|png|webp|avif`, 10 MB, 8000 px de
   lado. Un archivo que no cumple no se sube y se dice por qué.
 
@@ -49,7 +49,20 @@ justo para esto y sigue sin usarse.
 
 ## Diseño
 
-**La clave sale del contenido, no del nombre.** `medios/<sha256[0..12]>/<ancho>.<ext>`.
+**Una variante, no seis.** La spec nació pidiendo AVIF y WebP en tres anchos. No se
+sostiene: el contenido guarda `photo` como **una** URL (`z.url()`), el render usa
+`<img src>` y no hay `<picture>` ni `srcset` en ninguna parte del sitio. Seis variantes
+que nadie lee son andamiaje, y CLAUDE.md dice que el andamiaje va con la tarea que lo
+consume o no va.
+
+Lo que sí hace falta es que la foto de 4 MB que sale de un móvil no llegue entera a la
+página: el cliente pidió carga hiper rápida. Así que se genera **una** WebP de hasta
+1600 px —soporte universal desde hace años, sin necesidad de fallback— y esa es la URL que
+se guarda. El original se conserva junto a ella, sin servirse: es el negativo del que se
+reprocesa el día que el render sepa leer `srcset`, y esa spec futura no tendrá que pedirle
+al cliente que vuelva a subir nada.
+
+**La clave sale del contenido, no del nombre.** `medios/<sha256[0..12]>/<nombre>.<ext>`, con `<nombre>` = `original` o `w1600`.
 Subir dos veces el mismo archivo da la misma clave y no duplica nada; dos archivos
 distintos nunca chocan aunque se llamen igual; y como la clave cambia con el contenido, el
 objeto se puede cachear para siempre (`Cache-Control: public, max-age=31536000, immutable`).
@@ -63,9 +76,8 @@ ADR-0002 protege.
 **`sharp` corre en la función del backoffice, no en el build.** Procesar al subir es una
 vez por imagen; procesar en el build es cada vez que se publica. El coste es el tamaño de
 la función: `sharp` trae binarios nativos y hay que confirmar que entra en el límite de
-Vercel. Si no entra, el plan B es subir el original sin variantes y dejar el `srcset` para
-una spec aparte — **el valor de esta spec es tener las imágenes en nuestro bucket**, no
-las variantes.
+Vercel. Si no entra, el plan B es subir el original sin redimensionar — **el valor de esta
+spec es tener las imágenes en nuestro bucket**, no el reencodeado.
 
 **SigV4 a mano y no el SDK de AWS.** `@aws-sdk/client-s3` son varios MB para hacer un
 `PUT` firmado. R2 habla S3 y la firma son ~80 líneas con `node:crypto`. Coherente con no
@@ -95,8 +107,9 @@ subir la primera imagen, no después.
 ## Verificacion
 
 - [ ] `npm run typecheck`, `npm test` y `npm run build` limpios; el sitio sigue en 44 rutas.
-- [ ] Subir un JPEG de 3000 px deja en R2 las 7 claves esperadas (3 AVIF, 3 WebP, 1
-      original) y devuelve una URL que responde 200 con `content-type: image/avif`.
+- [ ] Subir un JPEG de 3000 px deja en R2 **dos** claves —el original y la WebP de 1600 px—
+      y devuelve una URL que responde 200 con `content-type: image/webp` y pesa bastante
+      menos que el original.
 - [ ] Subir **el mismo archivo** dos veces no crea claves nuevas y responde la misma URL.
 - [ ] Subir un PDF renombrado a `.jpg` → rechazado nombrando el motivo, sin escribir en R2.
 - [ ] Un archivo de 11 MB → rechazado, sin escribir en R2.
@@ -108,12 +121,14 @@ subir la primera imagen, no después.
 
 ## Abierto
 
-- **Credenciales.** Hacen falta `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`,
-  `R2_BUCKET` y `R2_PUBLIC_URL`. Las genera el dueño de la cuenta de Cloudflare. **Bloquea
-  la verificación entera**: sin bucket no hay nada que probar.
-- **El dominio público del bucket se decide antes de subir la primera imagen.** Si se
-  empieza con `r2.dev` y después se pasa a `media.aikido-duran.com`, hay que reescribir
-  todas las URLs de los JSON.
+- **Las credenciales están en Vercel, no en local.** `vercel env pull` devuelve los valores
+  vacíos: son variables cifradas y la plataforma no las entrega. Consecuencia práctica: el
+  camino que habla con R2 **no se puede verificar en `astro dev`**, solo contra producción.
+  La firma SigV4 sí se verifica en local, contra los vectores de prueba públicos de AWS.
+- **El dominio público del bucket queda fijado**: `https://pub-1583795645db473491961fb0558ff2d3.r2.dev`,
+  bucket `dojo-da-luz-dev`. Es un dominio de desarrollo de R2. Pasar a
+  `media.aikido-duran.com` más adelante obliga a reescribir las URLs de todos los JSON que
+  apunten ahí — cuanto antes se decida, menos hay que reescribir.
 - **`sharp` en Vercel.** Si no entra en el límite de la función, se cae a subir el original
   sin variantes. Hay que medirlo antes de dar la spec por implementada.
 - Quién limpia lo que se sube por error. Esta spec no borra: si el cliente sube diez
