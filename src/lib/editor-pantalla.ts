@@ -1,22 +1,15 @@
 import { LOCALES, LOCALE_NAME, isLocale, type Locale } from './i18n'
 import { leerContenido } from './publish'
-import { LISTAS_AUDIENCIA, indicesSinTraducir } from './traduccion'
-import {
-  RUTA_BO,
-  TITULO_AUDIENCIA,
-  audienciaDesdeForm,
-  guardarAudiencia,
-  ruta,
-  type PaginaAudiencia,
-} from './audiencia-edicion'
+import { indicesSinTraducir } from './traduccion'
+import { guardarPagina, type Pagina } from './editor-pagina'
 
 /**
- * Lo que la pagina de administracion necesita para pintarse: el POST ya resuelto y los
- * cuatro archivos leidos (spec 0036).
+ * Lo que una pagina de administracion necesita para pintarse: el POST ya resuelto y los
+ * cuatro archivos leidos.
  *
- * Vive fuera del `.astro` porque son **dos pantallas** —Adultos y Criancas— y la
- * alternativa era la misma pagina copiada dos veces. Lo que cambia entre las dos es el
- * archivo que escriben, y eso es un argumento.
+ * Vive fuera del `.astro` porque son varias pantallas con la misma forma —Adultos,
+ * Criancas, Aikido— y la alternativa era la misma pagina copiada una vez por cada una. Lo
+ * que cambia entre ellas es el descriptor, y eso es un argumento.
  */
 
 export type Datos = Record<string, any>
@@ -39,8 +32,8 @@ export type Pantalla = {
   sinRepositorio: string | null
 }
 
-export async function pantallaAudiencia(
-  pagina: PaginaAudiencia,
+export async function pantallaEditor(
+  pagina: Pagina,
   request: Request,
   url: URL,
 ): Promise<Pantalla> {
@@ -59,8 +52,8 @@ export async function pantallaAudiencia(
       tipo: 'ok',
       texto:
         publicado === 'pt'
-          ? `${TITULO_AUDIENCIA[pagina]} en portugués publicada, y la estructura y las fotos de los otros tres idiomas al día. El sitio tarda 1 o 2 minutos en regenerarse.`
-          : `${TITULO_AUDIENCIA[pagina]} en ${LOCALE_NAME[publicado]} publicada. El sitio tarda 1 o 2 minutos en regenerarse.`,
+          ? `${pagina.titulo} en portugués publicada, y la estructura y las fotos de los otros tres idiomas al día. El sitio tarda 1 o 2 minutos en regenerarse.`
+          : `${pagina.titulo} en ${LOCALE_NAME[publicado]} publicada. El sitio tarda 1 o 2 minutos en regenerarse.`,
     }
   }
 
@@ -73,18 +66,15 @@ export async function pantallaAudiencia(
       aviso = { tipo: 'error', texto: 'Idioma desconocido.' }
     } else {
       activo = idioma
-      const guardado = await guardarAudiencia(form, idioma, pagina)
+      const guardado = await guardarPagina(pagina, form, idioma)
 
       if (guardado.ok) {
-        return vacia({
-          redirigir: `${RUTA_BO[pagina]}?publicado=${idioma}`,
-          activo: idioma,
-        })
+        return vacia(`${pagina.rutaBO}?publicado=${idioma}`, idioma)
       }
 
       estado = guardado.estado
       errores = { [idioma]: guardado.errores }
-      enviado[idioma] = audienciaDesdeForm(form) as Datos
+      enviado[idioma] = pagina.desdeForm(form) as Datos
       aviso = { tipo: guardado.estado === 200 ? 'ok' : 'error', texto: guardado.aviso }
     }
   }
@@ -96,7 +86,7 @@ export async function pantallaAudiencia(
   try {
     const crudos = await Promise.all(
       LOCALES.map(async (locale) => {
-        const archivo = await leerContenido(ruta(pagina, locale))
+        const archivo = await leerContenido(pagina.archivo(locale))
         shas[locale] = archivo.sha
         return { locale, publicado: JSON.parse(archivo.contenido) as Datos }
       }),
@@ -112,7 +102,7 @@ export async function pantallaAudiencia(
         locale === 'pt'
           ? {}
           : Object.fromEntries(
-              LISTAS_AUDIENCIA.map((lista) => [lista, indicesSinTraducir(pt, datos, lista)]),
+              pagina.listas.map((lista) => [lista, indicesSinTraducir(pt, datos, lista)]),
             )
       return { locale, datos, sinTraducir }
     })
@@ -124,13 +114,13 @@ export async function pantallaAudiencia(
   return { estado, redirigir: null, aviso, errores, activo, archivos, shas, sinRepositorio }
 }
 
-function vacia(parcial: { redirigir: string; activo: Locale }): Pantalla {
+function vacia(redirigir: string, activo: Locale): Pantalla {
   return {
     estado: null,
-    redirigir: parcial.redirigir,
+    redirigir,
     aviso: null,
     errores: {},
-    activo: parcial.activo,
+    activo,
     archivos: [],
     shas: {} as Record<Locale, string>,
     sinRepositorio: null,

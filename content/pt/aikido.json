@@ -1,14 +1,77 @@
 {
-  "seo":{"title":"O que é o Aikido | Dojo da Luz Lisboa","description":"Conhece a origem, os princípios e a prática do Aikido, arte marcial fundada por Morihei Ueshiba."},
-  "eyebrow":"A arte da relação","title":"Aikido, uma arte marcial para a vida.","lead":"Uma disciplina de desenvolvimento físico, mental e relacional, inscrita na tradição dos budo japoneses.",
-  "sections":[
-    {"id":"introducao","title":"Equilíbrio antes da força.","paragraphs":["O Aikido é uma disciplina marcial baseada na defesa pessoal cujo propósito real é o desenvolvimento integral do indivíduo.","A sua técnica privilegia equilíbrio e coordenação em vez de força e velocidade. A relação constante com o parceiro permite descobrir e dominar gestos e tensões."]},
-    {"id":"origem","title":"Origem e tradição.","paragraphs":["O Aikido foi fundado nos anos 1920 por Morihei Ueshiba após uma prática intensa de diferentes artes marciais.","Pertence à tradição do budo: disciplinas educativas de procura que transformaram antigas técnicas de guerra em caminhos de aperfeiçoamento humano."]},
-    {"id":"originalidade","title":"Uma resposta original ao conflito.","paragraphs":["O Aikido não procura destruir nem dissuadir o outro. Considera o conflito uma situação de comunicação e procura controlar a agressividade para que ambos saiam da espiral de violência.","Esta abordagem humanista coloca a prática para além da autodefesa imediata."]},
-    {"id":"metodo","title":"Princípios e métodos.","paragraphs":["As técnicas de projeção e controlo não se realizam em oposição direta: recebem, guiam e transformam o impulso do atacante.","Centragem, disponibilidade, vigilância, ritmo e fluidez unem o rigor marcial a uma forma harmoniosa de movimento."]},
-    {"id":"dojo","title":"O dojo, lugar da Via.","paragraphs":["O dojo é um espaço-tempo de prática regido por regras que orientam a atitude e a atenção.","O ambiente procura ser simultaneamente estimulante e protetor, atento e descontraído, rigoroso e libertador."]},
-    {"id":"quem","title":"Quem pode praticar?","paragraphs":["Como a realização técnica não depende do potencial físico, pessoas de idades, corpos e experiências muito diferentes podem encontrar o seu lugar.","A prática adapta-se às disposições e limites de cada pessoa, desde a infância até idades avançadas."]}
+  "seo": {
+    "title": "O que é o Aikido | Dojo da Luz Lisboa",
+    "description": "Conhece a origem, os princípios e a prática do Aikido, arte marcial fundada por Morihei Ueshiba."
+  },
+  "chrome": {
+    "caption": "Aikido · Lisboa",
+    "menuLabel": "Menu",
+    "skipLink": "Saltar para o conteúdo",
+    "footerNote": {
+      "areas": "Benfica · Lumiar · Encarnação",
+      "orgType": "Associação sem fins lucrativos"
+    }
+  },
+  "eyebrow": "A arte da relação",
+  "title": "Aikido, uma arte marcial para a vida.",
+  "lead": "Uma disciplina de desenvolvimento físico, mental e relacional, inscrita na tradição dos budo japoneses.",
+  "heroPhoto": "https://static.wixstatic.com/media/ae7240_de66207c487b4e8086d18ed67c88ea93~mv2.jpg/v1/crop/x_218,y_0,w_1165,h_900/fill/w_1600,h_1067,al_c,q_85/IMG_3502_JPG.jpg",
+  "sections": [
+    {
+      "title": "Equilíbrio antes da força.",
+      "paragraphs": [
+        "O Aikido é uma disciplina marcial baseada na defesa pessoal cujo propósito real é o desenvolvimento integral do indivíduo.",
+        "A sua técnica privilegia equilíbrio e coordenação em vez de força e velocidade. A relação constante com o parceiro permite descobrir e dominar gestos e tensões."
+      ]
+    },
+    {
+      "title": "Origem e tradição.",
+      "paragraphs": [
+        "O Aikido foi fundado nos anos 1920 por Morihei Ueshiba após uma prática intensa de diferentes artes marciais.",
+        "Pertence à tradição do budo: disciplinas educativas de procura que transformaram antigas técnicas de guerra em caminhos de aperfeiçoamento humano."
+      ]
+    },
+    {
+      "title": "Uma resposta original ao conflito.",
+      "paragraphs": [
+        "O Aikido não procura destruir nem dissuadir o outro. Considera o conflito uma situação de comunicação e procura controlar a agressividade para que ambos saiam da espiral de violência.",
+        "Esta abordagem humanista coloca a prática para além da autodefesa imediata."
+      ]
+    },
+    {
+      "title": "Princípios e métodos.",
+      "paragraphs": [
+        "As técnicas de projeção e controlo não se realizam em oposição direta: recebem, guiam e transformam o impulso do atacante.",
+        "Centragem, disponibilidade, vigilância, ritmo e fluidez unem o rigor marcial a uma forma harmoniosa de movimento."
+      ]
+    },
+    {
+      "title": "O dojo, lugar da Via.",
+      "paragraphs": [
+        "O dojo é um espaço-tempo de prática regido por regras que orientam a atitude e a atenção.",
+        "O ambiente procura ser simultaneamente estimulante e protetor, atento e descontraído, rigoroso e libertador."
+      ]
+    },
+    {
+      "title": "Quem pode praticar?",
+      "paragraphs": [
+        "Como a realização técnica não depende do potencial físico, pessoas de idades, corpos e experiências muito diferentes podem encontrar o seu lugar.",
+        "A prática adapta-se às disposições e limites de cada pessoa, desde a infância até idades avançadas."
+      ]
+    }
   ],
-  "founder":{"label":"O-Sensei","title":"Morihei Ueshiba","years":"1883–1969","paragraphs":["Depois de estudar diversas tradições marciais, Morihei Ueshiba desenvolveu o Aikido como uma via de transformação pessoal e reconciliação.","Em 1948 o Aikikai foi oficialmente restabelecido. O Hombu Dojo de Tóquio tornou-se a sede mundial da disciplina, hoje dirigida pela família Ueshiba."]},
-  "audienceTitle":"Escolhe a tua forma de começar.","adultsLabel":"Aikido para adultos","childrenLabel":"Aikido para crianças"
+  "founder": {
+    "label": "O-Sensei",
+    "title": "Morihei Ueshiba",
+    "years": "1883–1969",
+    "paragraphs": [
+      "Depois de estudar diversas tradições marciais, Morihei Ueshiba desenvolveu o Aikido como uma via de transformação pessoal e reconciliação.",
+      "Em 1948 o Aikikai foi oficialmente restabelecido. O Hombu Dojo de Tóquio tornou-se a sede mundial da disciplina, hoje dirigida pela família Ueshiba."
+    ],
+    "photo": "https://static.wixstatic.com/media/ae7240_4a2c592c85c447c4b425f87f4afe6df1.jpg/v1/fill/w_947,h_260,al_c,lg_1,q_80,enc_avif,quality_auto/ae7240_4a2c592c85c447c4b425f87f4afe6df1.jpg",
+    "photoAlt": "A família Ueshiba"
+  },
+  "audienceTitle": "Escolhe a tua forma de começar.",
+  "adultsLabel": "Aikido para adultos",
+  "childrenLabel": "Aikido para crianças"
 }

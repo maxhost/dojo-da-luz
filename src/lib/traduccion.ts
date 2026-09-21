@@ -40,6 +40,16 @@ export const SEMBRADOS_AUDIENCIA: readonly string[] = [
   'gallery.items[].url',
 ]
 
+/**
+ * Las listas de `/aikido` (spec 0037). `sections` es la lista numerada que se ve en la
+ * pagina; los parrafos de cada seccion viajan **adentro de su fila**, asi que no son una
+ * lista aparte para la propagacion.
+ */
+export const LISTAS_AIKIDO: readonly RutaLista[] = ['sections', 'founder.paragraphs']
+
+/** Las dos fotos de `/aikido`: una foto no se traduce (ADR-0032). */
+export const SEMBRADOS_AIKIDO: readonly string[] = ['heroPhoto', 'founder.photo']
+
 /** Las cinco listas de `/aulas` cuyo largo lo decide el portugues (spec 0035). */
 export const LISTAS_AULAS: readonly RutaLista[] = [
   'pricing.items',

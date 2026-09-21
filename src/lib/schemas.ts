@@ -13,6 +13,17 @@ export const seoSchema = z.object({
 
 export const linesSchema = z.array(z.string().min(1)).min(1)
 
+/** Los cinco textos del borde de la pagina: bajada del logo, menu, salto y las dos del pie. */
+export const chromeSchema = z.object({
+  caption: z.string().min(1),
+  menuLabel: z.string().min(1),
+  skipLink: z.string().min(1),
+  footerNote: z.object({
+    areas: z.string().min(1),
+    orgType: z.string().min(1),
+  }),
+})
+
 /**
  * Capa GEO (ADR-0018). Los minimos no son decorativos: una respuesta de cinco palabras no
  * se puede citar sin el parrafo que la rodea, y ese es el modo de falla previsible cuando
@@ -69,15 +80,7 @@ export const homeSchema = z.object({
   seo: seoSchema,
   /** Frases autocontenidas, con sujeto explicito: lo que un motor generativo puede citar. */
   resumen: z.array(z.string().min(40)).min(2).max(4),
-  chrome: z.object({
-    caption: z.string().min(1),
-    menuLabel: z.string().min(1),
-    skipLink: z.string().min(1),
-    footerNote: z.object({
-      areas: z.string().min(1),
-      orgType: z.string().min(1),
-    }),
-  }),
+  chrome: chromeSchema,
   hero: z.object({
     eyebrowLines: linesSchema,
     titleLines: linesSchema,
@@ -136,12 +139,7 @@ export const homeSchema = z.object({
 
 export const classesSchema = z.object({
   seo: seoSchema,
-  chrome: z.object({
-    caption: z.string().min(1),
-    menuLabel: z.string().min(1),
-    skipLink: z.string().min(1),
-    footerNote: z.object({ areas: z.string().min(1), orgType: z.string().min(1) }),
-  }),
+  chrome: chromeSchema,
   hero: z.object({
     eyebrow: z.string().min(1),
     title: z.string().min(1),
@@ -191,12 +189,7 @@ export const classesSchema = z.object({
 
 export const audienceEntrySchema = z.object({
   seo: seoSchema,
-  chrome: z.object({
-    caption: z.string().min(1),
-    menuLabel: z.string().min(1),
-    skipLink: z.string().min(1),
-    footerNote: z.object({ areas: z.string().min(1), orgType: z.string().min(1) }),
-  }),
+  chrome: chromeSchema,
   eyebrow: z.string().min(1), title: z.string().min(1), lead: z.string().min(1),
   paragraphs: z.array(z.string().min(1)).min(1),
   goalsTitle: z.string().min(1), goals: z.array(z.string().min(1)).min(1),
@@ -208,11 +201,26 @@ export const audienceEntrySchema = z.object({
   qa: qaSchema,
 })
 
+/**
+ * `/aikido` (spec 0037). La lista numerada es de largo libre y **no lleva un id por
+ * seccion**: el que habia era un ancla HTML que no usaba nadie, distinta por idioma, y un
+ * identificador tecnico no es contenido que el cliente deba escribir (ADR-0026). El ancla
+ * la pone la vista por posicion.
+ *
+ * `heroPhoto` no tiene `alt`: es un fondo detras del titular, con un velo negro encima, y
+ * se publica como decorativa.
+ */
 export const aikidoSchema = z.object({
   seo: seoSchema,
+  chrome: chromeSchema,
   eyebrow: z.string().min(1), title: z.string().min(1), lead: z.string().min(1),
-  sections: z.array(z.object({ id: z.string().min(1), title: z.string().min(1), paragraphs: z.array(z.string().min(1)).min(1) })).min(1),
-  founder: z.object({ label: z.string().min(1), title: z.string().min(1), years: z.string().min(1), paragraphs: z.array(z.string().min(1)).min(1) }),
+  heroPhoto: z.url(),
+  sections: z.array(z.object({ title: z.string().min(1), paragraphs: linesSchema })).min(1),
+  founder: z.object({
+    label: z.string().min(1), title: z.string().min(1), years: z.string().min(1),
+    paragraphs: linesSchema,
+    photo: z.url(), photoAlt: z.string().min(1),
+  }),
   audienceTitle: z.string().min(1), adultsLabel: z.string().min(1), childrenLabel: z.string().min(1),
 })
 

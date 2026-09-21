@@ -3,8 +3,10 @@ export const prerender = false
 
 import Admin from '../../../layouts/Admin.astro'
 import Aviso from '../../../components/admin/Aviso.astro'
-import EditorAudiencia from '../../../components/admin/EditorAudiencia.astro'
-import { pantallaAudiencia } from '../../../lib/audiencia-pantalla'
+import EditorPestanas from '../../../components/admin/EditorPestanas.astro'
+import FormularioAudiencia from '../../../components/admin/FormularioAudiencia.astro'
+import { paginaAudiencia } from '../../../lib/audiencia-edicion'
+import { pantallaEditor } from '../../../lib/editor-pantalla'
 
 /**
  * Editor de `/aulas/criancas` (spec 0036). Es una pantalla propia y no una opcion de otra: edita
@@ -12,7 +14,7 @@ import { pantallaAudiencia } from '../../../lib/audiencia-pantalla'
  */
 
 const admin = Astro.locals.admin!
-const pantalla = await pantallaAudiencia('children', Astro.request, Astro.url)
+const pantalla = await pantallaEditor(paginaAudiencia('children'), Astro.request, Astro.url)
 
 if (pantalla.redirigir) return Astro.redirect(pantalla.redirigir, 303)
 if (pantalla.estado) Astro.response.status = pantalla.estado
@@ -32,8 +34,9 @@ if (pantalla.estado) Astro.response.status = pantalla.estado
   )}
 
   {pantalla.sinRepositorio === null && (
-    <EditorAudiencia
-      pagina="children"
+    <EditorPestanas
+      formulario={FormularioAudiencia}
+      extra={{ pagina: 'children' }}
       archivos={pantalla.archivos}
       errores={pantalla.errores}
       shas={pantalla.shas}

@@ -9,16 +9,22 @@ Regla: **marcar `hecho` solo con verificacion real** — tests que pasan, comand
 cosa vista en pantalla. No "deberia andar".
 
 Ultima actualizacion: 2026-09-21 — gate verde: `astro check` **0/0/0**, `npm test`
-**39/39**, `npm run build` 44 rutas. Esta sesion: spec 0036 (editores separados de
-`/aulas/adultos` y `/aulas/criancas`), ADR-0031 (galeria de largo libre con YouTube) y
-ADR-0032 (portugues siembra las imagenes). Verificado contra el BO corriendo, no por
-lectura: publicar PT sembro un video de YouTube en los cuatro idiomas, traducir en ES no
-pudo cambiar ni la foto ni el enlace, y un enlace que no es de YouTube dio 422 con el error
-en su fila. De las 44 paginas construidas **solo cambiaron las 8 de audiencia**, con el
-hash del CSS neutralizado. **Commiteado y desplegado**: `main` en `e330802`; en produccion
-`/aulas/adultos`, `/aulas/criancas` y sus tres traducciones ya traen la rejilla adaptativa,
-el pie desde el contenido y **cero** rastro del mp4 de Pexels; `/admin/paginas/{adultos,criancas}`
-contestan 302 al login.
+**39/39**, `npm run build` 44 rutas. Esta sesion, dos entregas seguidas:
+
+1. **Spec 0036** — editores de Adultos y Crianças con galeria de largo libre y YouTube
+   (ADR-0031, ADR-0032). Commiteado y desplegado: `main` en `e330802`, comprobado en las
+   seis paginas publicas.
+2. **Spec 0037** — editor de `/aikido` (ADR-0033). Con el tercer editor de la misma forma
+   se pago la deuda: el POST, la lectura de los cuatro archivos, la propagacion y el commit
+   salieron a `editor-pagina.ts` + `editor-pantalla.ts`, y Adultos y Criancas se migraron
+   ahi. `/aulas` **no** se migro: publica ademas `media.json` en un commit aparte.
+
+Verificado contra el BO corriendo, no por lectura: una septima seccion creada en portugues
+aparecio en los cuatro idiomas marcada "sin traducir", traducirla en español no pudo cambiar
+ninguna de las dos fotos ni con un POST forjado, y quitarla la saco de los cuatro sin tocar
+las traducciones de las otras seis. Con once secciones la pagina numera `01…09, 10, 11`: el
+`0{index+1}` que escribia `010` esta arreglado. De las 44 paginas construidas **solo
+cambiaron las 4 de `/aikido`**, y solo en el ancla de cada seccion.
 
 **Lo que hay que saber antes de tocar nada:**
 
@@ -226,6 +232,7 @@ siguiente guardado del BO reordena el archivo: ruido de una vez, no perdida de d
 | 6o | Rediseñar la interfaz del editor con el cliente | — | **bloqueante, sin empezar** | Tres iteraciones rechazadas (0031, 0032, 0033). El pedido textual: *"un form simple donde tenes inputs de texto que modifican textos, inputs de texto que modifican texto de botones, input de imagen que modifica imagenes"*. **No implementar sin que el cliente apruebe el layout antes** — ver Descartado. Requisito practico: conseguir forma de ver el BO (contraseña, o sesion temporal en `admin_session`), porque hasta ahora se diseño sin ver ni una pantalla. |
 | 6p | Spec 0035 — editor de /aulas en el BO | 0035 | implementada, verificada en local | Cuatro pestañas, cinco tablas (cuotas, notas, parrafos, datos de crianças, preguntas) y el layout aprobado por el cliente **antes** de escribir codigo. Portugues manda la estructura (ADR-0030): solo su pestaña tiene "Añadir fila"; publicar PT escribe los cuatro archivos en un commit por la Git Data API. Verificado por HTTP contra el BO corriendo: alta y baja de una cuota propagadas a los cuatro idiomas, marca "sin traducir" en es/fr/en, traducciones de las otras filas intactas. **Falta en produccion**: `publicarVarios` nunca corrio contra GitHub. |
 | 6r | Spec 0036 — editores de Adultos y Crianças con galeria libre y YouTube | 0036 | implementada, verificada en local | Dos pantallas separadas (`/admin/paginas/adultos` y `/criancas`) sobre un formulario comun, con el layout aprobado por el cliente antes de escribir codigo. La galeria dejo de tener seis medios fijos: se añaden y quitan sin limite, cada uno es una foto subida a R2 o un video de YouTube, y el grid publico se adapta (1, 2, 3-4, 5+). El video no le pide nada a YouTube hasta que alguien lo toca, y una galeria sin videos no se lleva **ni una linea** de JavaScript. Portugues siembra las imagenes (ADR-0032): en es/fr/en la foto y el enlace se ven pero no se cambian, y un POST forjado desde esas pestañas queda igual sin efecto (comprobado). Los cinco textos de cabecera y pie pasaron al contenido. Se borro el mp4 de stock de Pexels de los ocho archivos. **Desplegado el 2026-09-21** (`e330802`) y comprobado en las seis paginas publicas. Lo que sigue **sin correr contra GitHub** es el guardado del propio BO —`publicarVarios` con cuatro archivos—, igual que en la fila 6p. |
+| 6s | Spec 0037 — editor de /aikido | 0037 | implementada, verificada en local | Pantalla propia con el layout aprobado antes de escribir codigo. La lista numerada pasa a largo libre —el numero lo pone la pagina por posicion— y el bloque O-Sensei siempre esta, con sus textos y su foto editables. Las dos fotos que vivian dentro de `AikidoView.astro` pasaron al contenido, y el `alt` de la foto de Ueshiba dejo de estar en español en los cuatro idiomas. Se borro el `id` por seccion: era un ancla HTML que no usaba nadie y distinta por idioma. Los parrafos de cada seccion se editan como texto, uno por renglon (ADR-0033), por estar anidados. **Falta en produccion**: igual que 6p y 6r, el guardado del BO nunca corrio contra GitHub. |
 | 6q | Sacar Encarnação de los textos en prosa | — | pendiente | El dojo cerro. La estructura ya no lo nombra, la prosa si: en `classes.json` (descripcion SEO, pie, `children.facts[2]`, dos respuestas del Q&A) lo puede arreglar el cliente desde `/admin/paginas/aulas`. `adults.json` y `children.json` ya tienen editor (spec 0036): sus `facts` y su Q&A los puede arreglar el cliente. Queda `contact.json`, sin editor. |
 | 7 | Alumnos + emision de factura + PDF a R2 + envio Resend | — | pendiente | Necesita una factura de ejemplo real. Spec sin escribir: el numero 0004 del INDEX es otra cosa. |
 | 8 | Redirects 301 de las 34 URLs viejas | — | plan definido | Matriz conceptual documentada. Falta crawl final, Search Console e implementación cuando existan todos los destinos. |

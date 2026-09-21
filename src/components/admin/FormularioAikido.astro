@@ -1,0 +1,179 @@
+---
+import CampoImagen from './CampoImagen.astro'
+import CampoTexto from './CampoTexto.astro'
+import TablaFilas from './TablaFilas.astro'
+import { errorDe } from '../../lib/forms'
+import { LOCALES, LOCALE_NAME, type Locale } from '../../lib/i18n'
+
+/**
+ * El formulario de `/aikido` para un idioma (spec 0037). Los cuatro se pintan a la vez:
+ * cambiar de pestaña es CSS, no una navegacion.
+ *
+ * El orden de los bloques es el orden de la pagina publica. Dos cosas solo pasan en
+ * portugues: agregar o quitar secciones (ADR-0030) y cambiar una foto (ADR-0032).
+ */
+
+interface Props {
+  locale: Locale
+  datos: Record<string, any>
+  errores: Record<string, string>
+  shas: Record<Locale, string>
+  /** Ruta de lista → indices cuyo texto sigue siendo el portugues. */
+  sinTraducir: Record<string, number[]>
+}
+
+const { locale, datos, errores, shas, sinTraducir } = Astro.props
+
+const esPortugues = locale === 'pt'
+
+const v = (ruta: string): string =>
+  ruta.split('.').reduce<any>((actual, clave) => actual?.[clave], datos) ?? ''
+const lista = (ruta: string): any[] =>
+  ruta.split('.').reduce<any>((actual, clave) => actual?.[clave], datos) ?? []
+const e = (ruta: string) => errorDe(errores, ruta)
+
+/** Las tablas de una columna guardan textos sueltos: la fila es `{ valor }`. */
+const textos = (ruta: string) => lista(ruta).map((valor: string) => ({ valor }))
+
+/**
+ * Los parrafos de una seccion se editan como texto, un parrafo por renglon (ADR-0033):
+ * son una lista dentro de una fila de otra lista.
+ */
+const secciones = lista('sections').map((seccion: any) => ({
+  title: seccion.title ?? '',
+  paragraphs: (seccion.paragraphs ?? []).join('\n'),
+}))
+
+const seccion = 'mt-8 border border-[#d7cec0] bg-[#fbf8f2] p-4'
+
+const campo = (nombre: string, etiqueta: string, extra: Record<string, unknown> = {}) => ({
+  idPrefijo: locale,
+  nombre,
+  etiqueta,
+  valor: v(nombre),
+  error: e(nombre),
+  requerido: true,
+  ...extra,
+})
+---
+
+<form method="post">
+  <input type="hidden" name="idioma" value={locale} />
+  {/* Los cuatro `sha`: publicar portugues toca los cuatro archivos y los verifica todos. */}
+  {LOCALES.map((otro) => <input type="hidden" name={`sha.${otro}`} value={shas[otro]} />)}
+
+  {!esPortugues && (
+    <p class="mt-6 border-l-4 border-[#0099ff] bg-[#eaf6ff] p-3 text-sm text-[#211f1c]">
+      Acá se traduce. Para agregar o quitar una sección o cambiar una foto, andá a la
+      pestaña <strong>Português</strong>: lo que hagas ahí aparece en los cuatro idiomas.
+    </p>
+  )}
+
+  <fieldset class={seccion}>
+    <legend class="px-2 text-sm font-semibold">Cabecera y pie</legend>
+    <CampoTexto {...campo('chrome.caption', 'Bajada del logo')} />
+    <CampoTexto {...campo('chrome.menuLabel', 'Botón de menú')} />
+    <CampoTexto {...campo('chrome.skipLink', 'Saltar al contenido')} />
+
+    <p class="mt-6 text-xs text-[#625c55]">
+      El menú de arriba no se edita desde acá: sus ocho enlaces son las páginas del sitio y
+      se llaman igual en todas. El pie sí.
+    </p>
+
+    <CampoTexto {...campo('chrome.footerNote.areas', 'Pie · zonas')} />
+    <CampoTexto {...campo('chrome.footerNote.orgType', 'Pie · tipo de organización')} />
+  </fieldset>
+
+  <fieldset class={seccion}>
+    <legend class="px-2 text-sm font-semibold">SEO</legend>
+    <CampoTexto {...campo('seo.title', 'Título de la página', { recomendado: 60, ayuda: 'Lo que se lee como titular en Google y en la pestaña del navegador.' })} />
+    <CampoTexto {...campo('seo.description', 'Descripción', { tipo: 'area', recomendado: 155, ayuda: 'El párrafo que Google muestra debajo del título.' })} />
+  </fieldset>
+
+  <fieldset class={seccion}>
+    <legend class="px-2 text-sm font-semibold">01 · Portada</legend>
+    <CampoTexto {...campo('eyebrow', 'Antetítulo')} />
+    <CampoTexto {...campo('title', 'Titular')} />
+    <CampoTexto {...campo('lead', 'Bajada', { tipo: 'area' })} />
+    <CampoImagen
+      idPrefijo={locale}
+      nombre="heroPhoto"
+      etiqueta="Foto de fondo"
+      valor={v('heroPhoto')}
+      errores={errores}
+      soloLectura={!esPortugues}
+      ayuda="Va detrás del titular, con un velo oscuro encima. Es la misma en los cuatro idiomas y no lleva descripción: para un lector de pantalla es decoración."
+    />
+  </fieldset>
+
+  <fieldset class={seccion}>
+    <legend class="px-2 text-sm font-semibold">02 · Las secciones numeradas</legend>
+
+    <TablaFilas
+      titulo="Secciones"
+      prefijo="sections"
+      columnas={[
+        { campo: 'title', etiqueta: 'Título' },
+        { campo: 'paragraphs', etiqueta: 'Párrafos (uno por línea)', tipo: 'area' },
+      ]}
+      filas={secciones}
+      errores={errores}
+      idPrefijo={locale}
+      editable={esPortugues}
+      sinTraducir={sinTraducir['sections'] ?? []}
+      ayuda="El número lo pone la página sola, por orden: la primera es 01. Si agregás una séptima, dice 07."
+    />
+  </fieldset>
+
+  <fieldset class={seccion}>
+    <legend class="px-2 text-sm font-semibold">03 · O-Sensei</legend>
+    <p class="text-xs text-[#625c55]">Este bloque siempre está: se editan sus textos y su foto.</p>
+
+    <CampoTexto {...campo('founder.label', 'Rótulo')} />
+    <CampoTexto {...campo('founder.title', 'Nombre')} />
+    <CampoTexto {...campo('founder.years', 'Años')} />
+
+    <TablaFilas
+      titulo="Párrafos"
+      prefijo="founder.paragraphs"
+      columnas={[{ campo: 'valor', etiqueta: 'Párrafo', tipo: 'area' }]}
+      filas={textos('founder.paragraphs')}
+      errores={errores}
+      idPrefijo={locale}
+      editable={esPortugues}
+      sinTraducir={sinTraducir['founder.paragraphs'] ?? []}
+    />
+
+    <CampoImagen
+      idPrefijo={locale}
+      nombre="founder.photo"
+      etiqueta="Foto"
+      valor={v('founder.photo')}
+      errores={errores}
+      soloLectura={!esPortugues}
+      ayuda="Es la misma en los cuatro idiomas."
+    />
+    <CampoTexto {...campo('founder.photoAlt', 'Descripción de la foto', { ayuda: 'La leen los lectores de pantalla y Google.' })} />
+  </fieldset>
+
+  <fieldset class={seccion}>
+    <legend class="px-2 text-sm font-semibold">04 · Cierre</legend>
+    <CampoTexto {...campo('audienceTitle', 'Título')} />
+    <CampoTexto {...campo('adultsLabel', 'Texto del botón de adultos')} />
+    <CampoTexto {...campo('childrenLabel', 'Texto del botón de crianças')} />
+    <p class="mt-4 text-xs text-[#625c55]">
+      Los dos botones llevan a Adultos y a Crianças. A dónde van no se edita: son páginas
+      del sitio.
+    </p>
+  </fieldset>
+
+  <button class="mt-8 bg-[#0099ff] px-6 py-3 font-semibold text-white" type="submit">
+    Publicar Aikido en {LOCALE_NAME[locale]}
+  </button>
+  {esPortugues && (
+    <p class="mt-2 text-xs text-[#625c55]">
+      Publicar portugués también actualiza la estructura y las fotos de los otros tres
+      idiomas.
+    </p>
+  )}
+</form>

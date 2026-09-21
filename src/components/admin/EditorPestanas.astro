@@ -1,24 +1,28 @@
 ---
-import FormularioAudiencia from './FormularioAudiencia.astro'
 import { LOCALE_NAME, type Locale } from '../../lib/i18n'
-import type { PaginaAudiencia } from '../../lib/audiencia-edicion'
-import type { Archivo } from '../../lib/audiencia-pantalla'
+import type { Archivo } from '../../lib/editor-pantalla'
 
 /**
- * Las cuatro pestañas de idioma (spec 0036). Son CSS, como en el editor de Home: los
- * cuatro formularios estan en la pagina desde el principio, asi que cambiar de idioma no
- * navega y no pierde lo escrito sin guardar.
+ * Las cuatro pestañas de idioma (spec 0036, generalizado en la 0037). Son CSS, como en el
+ * editor de Home: los cuatro formularios estan en la pagina desde el principio, asi que
+ * cambiar de idioma no navega y no pierde lo escrito sin guardar.
+ *
+ * El formulario llega como prop porque cada pagina tiene el suyo y las pestañas son
+ * siempre las mismas.
  */
 
 interface Props {
-  pagina: PaginaAudiencia
+  /** El componente de formulario de esta pagina. */
+  formulario: any
+  /** Props extra que ese formulario necesita y estas pestañas no conocen. */
+  extra?: Record<string, unknown>
   archivos: Archivo[]
   errores: Partial<Record<Locale, Record<string, string>>>
   shas: Record<Locale, string>
   activo: Locale
 }
 
-const { pagina, archivos, errores, shas, activo } = Astro.props
+const { formulario: Formulario, extra = {}, archivos, errores, shas, activo } = Astro.props
 
 const TABS = [
   { locale: 'pt', peer: 'peer/pt', boton: 'peer-checked/pt:bg-[#0099ff] peer-checked/pt:text-white', panel: 'hidden peer-checked/pt:block' },
@@ -34,7 +38,7 @@ const TABS = [
       class={`${tab.peer} sr-only`}
       type="radio"
       name="idioma-activo"
-      id={`tab-audiencia-${tab.locale}`}
+      id={`tab-${tab.locale}`}
       checked={activo === tab.locale}
     />
   ))}
@@ -42,7 +46,7 @@ const TABS = [
   {TABS.map((tab) => (
     <label
       class={`mr-2 inline-block cursor-pointer border border-[#d7cec0] bg-white px-4 py-2 text-sm ${tab.boton}`}
-      for={`tab-audiencia-${tab.locale}`}
+      for={`tab-${tab.locale}`}
     >
       {LOCALE_NAME[tab.locale]}
     </label>
@@ -52,13 +56,13 @@ const TABS = [
     const archivo = archivos.find((a) => a.locale === tab.locale)!
     return (
       <section class={tab.panel}>
-        <FormularioAudiencia
-          pagina={pagina}
+        <Formulario
           locale={archivo.locale}
           datos={archivo.datos}
           errores={errores[archivo.locale] ?? {}}
           shas={shas}
           sinTraducir={archivo.sinTraducir}
+          {...extra}
         />
       </section>
     )

@@ -4,28 +4,25 @@ export const prerender = false
 import Admin from '../../../layouts/Admin.astro'
 import Aviso from '../../../components/admin/Aviso.astro'
 import EditorPestanas from '../../../components/admin/EditorPestanas.astro'
-import FormularioAudiencia from '../../../components/admin/FormularioAudiencia.astro'
-import { paginaAudiencia } from '../../../lib/audiencia-edicion'
+import FormularioAikido from '../../../components/admin/FormularioAikido.astro'
+import { paginaAikido } from '../../../lib/aikido-edicion'
 import { pantallaEditor } from '../../../lib/editor-pantalla'
 
-/**
- * Editor de `/aulas/adultos` (spec 0036). Es una pantalla propia y no una opcion de otra: edita
- * una pagina distinta, aunque el formulario sea el mismo que el de la otra audiencia.
- */
+/** Editor de `/aikido` (spec 0037). */
 
 const admin = Astro.locals.admin!
-const pantalla = await pantallaEditor(paginaAudiencia('adults'), Astro.request, Astro.url)
+const pantalla = await pantallaEditor(paginaAikido, Astro.request, Astro.url)
 
 if (pantalla.redirigir) return Astro.redirect(pantalla.redirigir, 303)
 if (pantalla.estado) Astro.response.status = pantalla.estado
 ---
 
-<Admin titulo="Adultos" admin={admin}>
-  <h1 class="font-serif text-3xl">Adultos</h1>
+<Admin titulo="Aikido" admin={admin}>
+  <h1 class="font-serif text-3xl">Aikido</h1>
   <p class="mt-4 text-sm text-[#625c55]">
-    La página <code>/aulas/adultos</code>, de arriba hacia abajo. El portugués manda: agregar o
-    quitar una fila, cambiar una foto o cambiar un vídeo se hace en su pestaña y aparece en
-    los cuatro idiomas. En las otras tres se traduce.
+    La página <code>/aikido</code>, de arriba hacia abajo. El portugués manda: agregar o
+    quitar una sección y cambiar una foto se hace en su pestaña y aparece en los cuatro
+    idiomas. En las otras tres se traduce.
   </p>
 
   {pantalla.aviso && <Aviso tipo={pantalla.aviso.tipo}>{pantalla.aviso.texto}</Aviso>}
@@ -35,8 +32,7 @@ if (pantalla.estado) Astro.response.status = pantalla.estado
 
   {pantalla.sinRepositorio === null && (
     <EditorPestanas
-      formulario={FormularioAudiencia}
-      extra={{ pagina: 'adults' }}
+      formulario={FormularioAikido}
       archivos={pantalla.archivos}
       errores={pantalla.errores}
       shas={pantalla.shas}

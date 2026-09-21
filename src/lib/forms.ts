@@ -28,12 +28,22 @@ export function entero(form: FormData, campo: string, porDefecto: number): numbe
   return n !== null && Number.isInteger(n) ? n : porDefecto
 }
 
-/** Textarea de una entrada por linea: parrafos, lineas de titulo, frases del resumen. */
-export function lineas(form: FormData, campo: string): string[] {
-  return texto(form, campo)
+/**
+ * Un texto cortado en renglones, sin vacios. Es como se edita una lista **anidada**
+ * —los parrafos de una seccion de `/aikido`, que viven dentro de una fila de otra lista—
+ * porque una tabla adentro de una tabla es mas pantalla de la que el contenido merece
+ * (ADR-0033).
+ */
+export function renglones(valor: string): string[] {
+  return valor
     .split('\n')
     .map((l) => l.trim())
     .filter(Boolean)
+}
+
+/** Textarea de una entrada por linea: parrafos, lineas de titulo, frases del resumen. */
+export function lineas(form: FormData, campo: string): string[] {
+  return renglones(texto(form, campo))
 }
 
 export type Fila = {
