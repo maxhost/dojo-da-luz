@@ -6,37 +6,61 @@ que se verifico.
 
 ## Que se cerro
 
-**Spec 0027 — jerarquia del equipo docente en `/dojo`** (ADR-0023).
+Dos specs, ambas desplegadas y verificadas en produccion.
+
+### Spec 0027 — jerarquia del equipo docente en `/dojo` (ADR-0023)
 
 `/dojo` renderizaba cuatro profesores con la misma seccion a pantalla completa,
 alternando el lado de la imagen y repitiendo el mismo retrato cuatro veces. Ahora es una
-sola seccion con dos niveles:
+sola seccion con dos niveles: **Pablo Duran** protagonista (retrato `4/5` con marco azul,
+nombre hasta `text-7xl`, biografia con filete lateral y boton a su pagina) y **Ines,
+Miguel y Sofia** en tres fichas compactas sobre `#211e1b`. Sin rotulo «Equipo docente» ni
+numeracion. Los cuatro idiomas heredan la jerarquia sin tocar contenido.
 
-- **Pablo Duran** como bloque protagonista: retrato vertical `4/5` con marco azul
-  desplazado, nombre hasta `text-7xl`, biografia completa con filete lateral y el boton
-  a su pagina propia.
-- **Ines Martins, Miguel Costa y Sofia Almeida** en tres fichas compactas sobre fondo
-  `#211e1b`, separadas por filetes: imagen `4/3`, nombre, credenciales y dos parrafos.
-- En movil las fichas se apilan; desde `md` forman tres columnas.
-- Sin rotulo «Equipo docente» ni numeracion: el cliente las pidio fuera.
-- Los cuatro idiomas heredan la jerarquia sin tocar contenido.
+Vivio solo en `src/components/DojoView.astro`. Commit `335976d`, deployment
+`dojo-da-hn4p4oqhm`.
 
-El cambio funcional vivio solo en `src/components/DojoView.astro`.
+### Spec 0028 — Parcerias en rejilla (ADR-0024)
 
-## Procedencia y deuda de proceso
+El carrusel CSS mostraba 3 o 4 de los 8 parceiros a la vez, cada uno dentro de un recuadro
+blanco con borde. Ahora es una rejilla estatica: los ocho juntos, **5 por fila** en
+escritorio, 3 en tablet, 2 en movil, sin recuadro, en celdas `h-20` con `object-contain`.
+Se fueron `PARTNER_CAROUSEL`, las reglas `.partner-carousel*`, el `@keyframes` y su bloque
+`prefers-reduced-motion`.
 
-El codigo llego implementado desde otra herramienta, **sin spec previa**, contra el flujo
-de `CLAUDE.md`. La spec 0027 y el ADR-0023 se escribieron despues, a partir del diff, y lo
-dejan anotado en su encabezado. Se documenta el incumplimiento en vez de disimularlo: lo
-que no esta en `docs/` no sobrevive a la proxima sesion.
+`src/components/HomeView.astro` y `src/styles/global.css`. Commits `3dc5ba9` y `046adcc`,
+deployment `dojo-da-uohuq04cs`.
+
+## Los dos hallazgos que importan
+
+**El blanco de los logos no esta en el CSS, esta en los archivos.** Se descargaron los
+ocho: los tres PNG vienen con `hasAlpha: no` porque Wix los aplano al generarlos, y los
+otros cinco son JPEG, que por formato no admiten transparencia. Pixeles de borde: seis en
+`#ffffff` exacto, dos en `(247,247,247)` y `(245,244,242)`. Quitar `bg-white` del markup
+no alcanzaba. Se neutraliza con `mix-blend-multiply` sobre el `#f6f1e8` de la seccion: el
+blanco puro se vuelve el propio fondo. **No limpia las dos que no son blanco puro** — les
+queda un rectangulo apenas visible que solo se arregla con los originales. Esto genero una
+linea nueva en `CLAUDE.md`.
+
+**El ancla de Ines lleva acento.** Es `#inês-martins`, porque el `id` sale de
+`name.toLowerCase()`. Valido en HTML5 pero necesita percent-encoding en una URL. Es
+heredado, identico antes y despues de la 0027: se dejo anotado, no se cambio.
 
 ## Deuda de producto abierta
 
-Las tres imagenes de las fichas secundarias son **fotografias de practica ya alojadas en
-Wix, recortadas con `fp_` distintos** — no retratan a la persona que nombran. No existen
-retratos individuales de esos docentes. Cuando el cliente los entregue, se sustituye el
-array `teacherPhotos` de `DojoView.astro` sin tocar la composicion. Es la fila 11 de
-`docs/TASKS.md`.
+Las dos son del cliente y estan en `docs/TASKS.md`:
+
+- **Fila 11** — retratos reales de Ines, Miguel y Sofia. Hoy las tres fichas de `/dojo`
+  muestran escenas de practica de wixstatic, no a la persona que nombran. Se sustituye el
+  array `teacherPhotos` sin tocar la composicion.
+- **Fila 12** — logos reales de los parceiros, con transparencia. Los ocho traen fondo
+  blanco incrustado y tres son fotografias, no marcas.
+
+## Procedencia de la 0027
+
+Su codigo llego implementado desde otra herramienta, **sin spec previa**, contra el flujo
+de `CLAUDE.md`. La spec y el ADR se escribieron despues, a partir del diff, y lo dejan
+anotado en su encabezado. Se documenta el incumplimiento en vez de disimularlo.
 
 ## Verificacion ejecutada
 
@@ -47,8 +71,11 @@ npm run build       # 44 index.html en .vercel/output/static
 git diff --check    # limpio
 ```
 
-Commit `335976d`, empujado a `origin/main`; el webhook de Vercel creo el deployment de
-produccion solo.
+No hay script `lint` en `package.json`: el gate es typecheck + test + build.
+
+En produccion: `/dojo` y sus tres traducciones sirven un solo bloque de equipo docente;
+las cuatro homes sirven 8 `<img>` de parceiro (antes 16) con `mix-blend-multiply`, 0
+`bg-white`, 0 `aria-hidden`, y el CSS publicado ya no contiene `partner-carousel`.
 
 ## Como seguir
 
@@ -59,3 +86,5 @@ produccion solo.
 3. Verificar siempre contra `dojo-da-luz.vercel.app`, nunca contra la URL del deployment
    (`*-maxhost27-6230s-projects.vercel.app` esta detras de Vercel Authentication y
    devuelve 302).
+4. `vercel ls` cambia de linea segun el ancho de la salida: filtrar por el id del
+   deployment (`grep dojo-da-xxxxx`), no por numero de linea.

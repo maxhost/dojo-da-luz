@@ -49,6 +49,13 @@ la misma correccion dos veces a mano.
 "no existe proyecto Vercel". `vercel project ls` los lista todos. Un listado vacio o corto
 de un MCP no prueba ausencia: confirmalo con el CLI antes de afirmar que algo no existe.
 
+**Un problema visual con una imagen se diagnostica en el archivo, no en el CSS.** El
+2026-09-21 quitar `bg-white` de Parcerias no quito el blanco: lo traen los ocho logos
+incrustado — los PNG salen de Wix con `hasAlpha: no` y el resto son JPEG. Todo el media del
+sitio es salida de `static.wixstatic.com`, aplanada y sin alfa. Antes de tocar CSS por un
+fondo, un borde o un recorte, bajate el archivo y mirale los pixeles (`sips -g hasAlpha`,
+pixeles de borde). Que el CSS este limpio no prueba que la pagina se vea limpia.
+
 **Las reglas verificables van en hooks, no aca.** Los hooks corren fuera del contexto,
 cuestan cero tokens y son deterministas; este archivo es advisory. Si una regla se puede
 chequear con un comando, es un hook — no la escribas aca tambien.

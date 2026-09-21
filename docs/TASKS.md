@@ -37,14 +37,13 @@ Las páginas públicas previstas ya están construidas en cuatro idiomas. El for
 Contacto queda visible pero sin envío hasta confirmar email/endpoint; el formulario de
 Adultos todavía usa el destino Wix heredado. Agenda no se construirá.
 
-El lote descrito en `docs/HANDOFF-CLAUDE-CODE.md` ya fue revisado, commiteado y empujado: 36 rutas
-prerenderizadas, `astro check` en 0/0/0 y `git diff --check` limpio. Ese archivo queda como
-registro del corte, no como trabajo pendiente.
+`docs/HANDOFF-CLAUDE-CODE.md` es el registro del ultimo corte cerrado, no trabajo
+pendiente. Hoy el sitio construye **44 rutas** prerenderizadas con `astro check` en 0/0/0.
 
 **Produccion viva.** Proyecto Vercel `dojo-da-luz` (`prj_q6TX7OfOiiKJob6RxZBde0Umo2nA`,
 equipo `maxhost27-6230s-projects`), conectado al repo `maxhost/dojo-da-luz` y con
 `DATABASE_URL` ya cargada: `GET /api/health` responde `{"ok":true,"db":"up"}` desde la URL
-publica. Las 16 rutas comprobadas devuelven 200 en pt/es/fr/en.
+publica. Las rutas comprobadas devuelven 200 en pt/es/fr/en.
 
 **El push a GitHub ya despliega.** La GitHub App de Vercel quedo autorizada sobre el repo
 el 2026-09-18 y el webhook dispara: hay un deployment con `source: git` y
@@ -94,7 +93,7 @@ sesiones abiertas — hoy es el unico camino de recuperacion hasta la spec 0022.
 | 2 | Export de Google Search Console 16 meses | — | bloqueada | Necesita acceso del cliente. |
 | 3 | Migración de contenido y páginas: Aulas, Aikido, Dojo, Pablo Durán, Contacto y Otras Artes | 0010–0017 | hecho | Sitemap de páginas completo en pt/es/fr/en. Agenda retirada. Quedan endpoints operativos separados. |
 | 4 | Diseño visual | 0003–0009 / ADR-0010 | hecho | Estructura tradicional productiva, video hero e información práctica en HTML; paridad pt/es/fr/en. |
-| 5 | Deploy real: Vercel conectado al repo + `DATABASE_URL` en env | — | hecho | https://dojo-da-luz.vercel.app sirve las 36 rutas y `/api/health` responde contra Neon. Falta el dominio propio (tarea 10). |
+| 5 | Deploy real: Vercel conectado al repo + `DATABASE_URL` en env | — | hecho | https://dojo-da-luz.vercel.app sirve las 44 rutas y `/api/health` responde contra Neon. Falta el dominio propio (tarea 10). |
 | 5c | Autorizar la GitHub App de Vercel sobre `maxhost/dojo-da-luz` | — | hecho | Autorizada por el cliente. Vercel ya crea deployments con `source: git`. |
 | 5b | Borrar el proyecto Neon huerfano `bitter-tree-51605379` | — | pendiente | Lo cree yo antes de que existiera `silent-wave`. El MCP quedo scopeado y no puede borrarlo: va por consola. |
 | 6 | Spec 0019 — backoffice: login y sesion | 0019 | hecho | `/admin` con guard por Host, noindex, rate limit y sesion en Neon. Sin reset por email: eso es la 0022. |
@@ -196,3 +195,6 @@ Los caminos descartados importan: sin registro, se reintentan.
 
 | Que | Por que no |
 |---|---|
+| Carrusel animado en Parcerias (spec 0026) | Mostraba 3 o 4 de 8 parceiros a la vez y obligaba a esperar el bucle para verlos todos; duplicaba los `<li>` en el HTML con `aria-hidden` y pedia su propio bloque `prefers-reduced-motion`. Sustituido por rejilla estatica en la spec 0028 (ADR-0024). |
+| Recuadro blanco con borde detras de cada logo de parceiro | Ocho cajas compitiendo con los logos sobre el fondo `#f6f1e8`. Y no era lo que producia el blanco visible: eso lo traen los archivos. No reponerlo para disimular assets malos — la respuesta son los logos originales (fila 12). |
+| Cuatro secciones de profesor a pantalla completa en `/dojo` (spec 0026) | Cuatro scrolls para cuatro biografias de dos parrafos, con el mismo retrato repetido cuatro veces y Pablo Duran indistinguible del resto. Sustituido por la jerarquia de la spec 0027 (ADR-0023). |
