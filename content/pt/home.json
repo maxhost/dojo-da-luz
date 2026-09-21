@@ -45,8 +45,7 @@
       "e a terra,"
     ],
     "titleHighlight": "presença.",
-    "tagline": "Aikido para adultos e crianças. Uma prática sem competição, fundada na atenção, no equilíbrio e na relação.",
-    "poster": "https://static.wixstatic.com/media/ae7240_de66207c487b4e8086d18ed67c88ea93~mv2.jpg/v1/crop/x_218,y_0,w_1165,h_900/fill/w_1600,h_1067,al_c,q_85/IMG_3502_JPG.jpg"
+    "tagline": "Aikido para adultos e crianças. Uma prática sem competição, fundada na atenção, no equilíbrio e na relação."
   },
   "practice": {
     "label": "01 · A montanha",
@@ -67,13 +66,11 @@
     "childrenLabel": "Crianças e adolescentes",
     "ctaLabel": "Conhecer as aulas",
     "adults": {
-      "photo": "https://static.wixstatic.com/media/ae7240_de66207c487b4e8086d18ed67c88ea93~mv2.jpg/v1/fill/w_1200,h_900,al_c,q_85/IMG_3502_JPG.jpg",
       "photoAlt": "Adultos a praticar Aikido no Dojo da Luz",
       "title": "Uma prática para a vida.",
       "lead": "Sem competição e aberta a principiantes e praticantes experientes."
     },
     "children": {
-      "photo": "https://static.wixstatic.com/media/ae7240_b0eea689c4ec4721939495f9088211ae~mv2.jpg/v1/fill/w_900,h_1200,al_c,q_85/crian%C3%A7as.jpg",
       "photoAlt": "Crianças numa aula de Aikido do Dojo da Luz",
       "title": "Crescer sem competir.",
       "lead": "Uma prática para desenvolver o corpo, a atenção e a relação com os outros."
@@ -94,7 +91,6 @@
       "Um espaço",
       "de transmissão."
     ],
-    "photo": "https://static.wixstatic.com/media/ae7240_de66207c487b4e8086d18ed67c88ea93~mv2.jpg/v1/crop/x_218,y_0,w_1165,h_900/fill/w_1600,h_1067,al_c,q_85/IMG_3502_JPG.jpg",
     "photoCaption": "Keiko — treino regular em Lisboa",
     "photoAlt": "Prática partilhada no Dojo da Luz",
     "teacher": {
@@ -104,7 +100,6 @@
         "Hombu Dojo, Tóquio"
       ],
       "bio": "Ensina em Lisboa desde 2015.",
-      "photo": "https://static.wixstatic.com/media/ae7240_4681e435c4ab47dbb9f6db8fe35fa6a5.jpg/v1/fill/w_900,h_1200,al_c,q_85/ae7240_4681e435c4ab47dbb9f6db8fe35fa6a5.jpg",
       "photoAlt": "Pablo Durán"
     }
   },

@@ -1,0 +1,45 @@
+---
+import CampoImagen from './CampoImagen.astro'
+import { CLAVES_MEDIA, ETIQUETA_MEDIA, type Media } from '../../lib/media'
+
+/**
+ * Las cinco imagenes de la portada, una sola vez para los cuatro idiomas (ADR-0028).
+ * Formulario propio y `sha` propio: se publican con un commit, no con cuatro.
+ */
+
+interface Props {
+  media: Media
+  errores: Record<string, string>
+  sha: string
+}
+
+const { media, errores, sha } = Astro.props
+---
+
+<form method="post">
+  <input type="hidden" name="formulario" value="medios" />
+  <input type="hidden" name="sha" value={sha} />
+
+  <p class="text-sm text-[#625c55]">
+    Una foto no se traduce: la que subas acá se ve en portugués, español, francés e inglés.
+    El texto alternativo y el pie de foto sí son de cada idioma y se escriben arriba, en la
+    sección donde va la imagen.
+  </p>
+
+  {CLAVES_MEDIA.map((clave) => (
+    <CampoImagen
+      idPrefijo="medios"
+      nombre={clave}
+      etiqueta={ETIQUETA_MEDIA[clave]}
+      valor={media[clave] ?? ''}
+      errores={errores}
+    />
+  ))}
+
+  <button
+    class="mt-6 border border-[#1f1b16] bg-[#1f1b16] px-5 py-2 text-sm font-semibold text-[#f6f1e8]"
+    type="submit"
+  >
+    Publicar imágenes
+  </button>
+</form>

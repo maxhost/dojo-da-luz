@@ -47,34 +47,38 @@ const error = errorDe(errores, nombre)
       hidden={!valor}
       data-previa
     />
-    <div class="w-full">
-      <input
-        class={`w-full border bg-white px-3 py-2 text-sm ${error ? 'border-[#b3261e]' : 'border-[#d7cec0]'}`}
-        id={id}
-        name={nombre}
-        type="url"
-        value={valor}
-        required={requerido}
-        aria-describedby={[ayuda && `${id}-ayuda`, error && `${id}-error`].filter(Boolean).join(' ') || undefined}
-        data-url
-      />
 
-      <div class="mt-2 flex flex-wrap items-center gap-3" hidden data-subida>
+    <div class="w-full">
+      {/* Lo primero es subir: el cliente tiene una foto en el telefono, no una direccion. */}
+      <div class="flex flex-wrap items-center gap-3" hidden data-subida>
         <input
-          class="text-xs"
+          class="text-sm"
           type="file"
           accept="image/jpeg,image/png,image/webp,image/avif"
           aria-label={`Subir una imagen para: ${etiqueta}`}
           data-archivo
         />
-        <span class="text-xs text-[#625c55]" role="status" data-estado></span>
+        <a class="text-sm" href="/admin/medios" target="_blank" rel="noopener">
+          o elegir una ya subida
+        </a>
       </div>
 
-      <p class="mt-1 text-xs text-[#625c55]">
-        Pegá una dirección, subí un archivo, o copiá una de
-        <a href="/admin/medios" target="_blank" rel="noopener">Imágenes</a>. Subir no guarda
-        la página: hay que publicar igual.
-      </p>
+      <p class="mt-1 text-xs text-[#625c55]" role="status" data-estado></p>
+
+      {/* Nace abierto: sin JavaScript este es el unico camino y tiene que estar a la vista. */}
+      <details class="mt-2" open data-avanzado>
+        <summary class="cursor-pointer text-xs text-[#625c55]">Pegar una dirección</summary>
+        <input
+          class={`mt-2 w-full border bg-white px-3 py-2 text-sm ${error ? 'border-[#b3261e]' : 'border-[#d7cec0]'}`}
+          id={id}
+          name={nombre}
+          type="url"
+          value={valor}
+          required={requerido}
+          aria-describedby={[ayuda && `${id}-ayuda`, error && `${id}-error`].filter(Boolean).join(' ') || undefined}
+          data-url
+        />
+      </details>
     </div>
   </div>
 
@@ -92,9 +96,14 @@ const error = errorDe(errores, nombre)
     const caja = campo.querySelector<HTMLElement>('[data-subida]')
     const estado = campo.querySelector<HTMLElement>('[data-estado]')
     const previa = campo.querySelector<HTMLImageElement>('[data-previa]')
+    const avanzado = campo.querySelector<HTMLDetailsElement>('[data-avanzado]')
     if (!url || !archivo || !caja || !estado || !previa) return
 
+    // Con JavaScript, subir es lo que se ofrece y la direccion a mano se pliega. Sin el,
+    // el `details` se queda abierto y el campo es exactamente el de antes.
     caja.hidden = false
+    // Si el campo trae un error, la direccion queda a la vista: es donde esta el problema.
+    if (avanzado && !campo.querySelector('[role="alert"]')) avanzado.open = false
 
     const mostrar = (valor: string) => {
       previa.src = valor

@@ -1,0 +1,29 @@
+---
+/**
+ * La imagen no se edita aca (ADR-0028): es la misma en los cuatro idiomas y se cambia una
+ * sola vez, abajo. Pero se muestra, porque el texto alternativo y el pie que se escriben al
+ * lado describen *esta* foto, y describir a ciegas es como sale mal.
+ */
+
+interface Props {
+  etiqueta: string
+  valor: string
+}
+
+const { etiqueta, valor } = Astro.props
+---
+
+<div class="mt-5 flex items-start gap-4 border border-dashed border-[#d7cec0] bg-white/60 p-3">
+  <img
+    class="h-20 w-28 shrink-0 border border-[#d7cec0] bg-white object-cover"
+    src={valor}
+    alt=""
+    loading="lazy"
+    hidden={!valor}
+  />
+  <p class="text-xs text-[#625c55]">
+    <span class="block text-sm font-semibold text-[#1f1b16]">{etiqueta}</span>
+    Es la misma en los cuatro idiomas: se cambia una sola vez en
+    <a href="#imagenes-portada">Imágenes de la portada</a>, al final de esta página.
+  </p>
+</div>

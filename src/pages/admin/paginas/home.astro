@@ -3,11 +3,14 @@ export const prerender = false
 
 import Admin from '../../../layouts/Admin.astro'
 import Aviso from '../../../components/admin/Aviso.astro'
+import EditorMedios from '../../../components/admin/EditorMedios.astro'
 import EditorParcerias from '../../../components/admin/EditorParcerias.astro'
 import FormularioHome from '../../../components/admin/FormularioHome.astro'
 import { homeSchema } from '../../../lib/content'
-import { aplanar, erroresDe, homeDesdeForm, partnersDesdeForm, resumenDeErrores, type FilaParceiro } from '../../../lib/forms'
+import { aplanar, erroresDe, homeDesdeForm, mediaDesdeForm, partnersDesdeForm, resumenDeErrores, type FilaParceiro } from '../../../lib/forms'
 import { LOCALES, LOCALE_NAME, isLocale, type Locale } from '../../../lib/i18n'
+import type { Media } from '../../../lib/media'
+import { guardarMedia, leerMedia } from '../../../lib/media-edicion'
 import { guardarPartners, leerPartners } from '../../../lib/partners-edicion'
 import { leerContenido, publicar, serializar } from '../../../lib/publish'
 
@@ -23,6 +26,8 @@ let errores: Partial<Record<Locale, Record<string, string>>> = {}
 // viven fuera del mapa por idioma.
 let erroresParcerias: Record<string, string> = {}
 let parceriasEnviadas: FilaParceiro[] | null = null
+let erroresMedios: Record<string, string> = {}
+let mediosEnviados: Media | null = null
 let enviado: Partial<Record<Locale, Enviado>> = {}
 let aviso: { tipo: 'ok' | 'error'; texto: string } | null = null
 let activo: Locale = isLocale(Astro.url.searchParams.get('idioma') ?? '')
@@ -30,7 +35,13 @@ let activo: Locale = isLocale(Astro.url.searchParams.get('idioma') ?? '')
   : 'pt'
 
 const publicado = Astro.url.searchParams.get('publicado')
-if (publicado === 'parcerias') {
+if (publicado === 'medios') {
+  aviso = {
+    tipo: 'ok',
+    texto:
+      'Imágenes publicadas. Valen para los cuatro idiomas. El sitio tarda 1 o 2 minutos en regenerarse.',
+  }
+} else if (publicado === 'parcerias') {
   aviso = {
     tipo: 'ok',
     texto:
@@ -48,7 +59,16 @@ if (Astro.request.method === 'POST') {
   const form = await Astro.request.formData()
   const idioma = String(form.get('idioma') ?? '')
 
-  if (form.get('formulario') === 'parcerias') {
+  if (form.get('formulario') === 'medios') {
+    const guardado = await guardarMedia(form, String(form.get('sha') ?? ''))
+
+    if (guardado.ok) return Astro.redirect('/admin/paginas/home?publicado=medios', 303)
+
+    Astro.response.status = guardado.estado
+    erroresMedios = guardado.errores
+    mediosEnviados = mediaDesdeForm(form) as Media
+    aviso = { tipo: guardado.estado === 200 ? 'ok' : 'error', texto: guardado.aviso }
+  } else if (form.get('formulario') === 'parcerias') {
     const guardado = await guardarPartners(form, String(form.get('sha') ?? ''))
 
     if (guardado.ok) return Astro.redirect('/admin/paginas/home?publicado=parcerias', 303)
@@ -129,11 +149,14 @@ type Archivo = {
 // GitHub no es un 500: es un aviso que dice que el editor no puede abrir.
 let archivos: Archivo[] = []
 let parcerias: { partners: FilaParceiro[]; sha: string } | null = null
+let medios: { media: Media; sha: string } | null = null
 let sinRepositorio: string | null = null
 
 try {
   const leidas = await leerPartners()
   parcerias = { partners: parceriasEnviadas ?? leidas.partners, sha: leidas.sha }
+  const leidos = await leerMedia()
+  medios = { media: mediosEnviados ?? leidos.media, sha: leidos.sha }
   archivos = await Promise.all(
   LOCALES.map(async (locale) => {
     const archivo = await leerContenido(ruta(locale))
@@ -200,6 +223,7 @@ const TABS = [
       return (
         <section class={tab.panel}>
           <FormularioHome
+            medios={medios!.media}
             locale={archivo.locale}
             valores={archivo.valores}
             errores={archivo.errores}
@@ -209,6 +233,13 @@ const TABS = [
       )
     })}
   </div>
+  )}
+
+  {sinRepositorio === null && medios && (
+  <section class="mt-12 border-t border-[#d7cec0] pt-8" id="imagenes-portada">
+    <h2 class="font-serif text-2xl">Imágenes de la portada</h2>
+    <EditorMedios media={medios.media} errores={erroresMedios} sha={medios.sha} />
+  </section>
   )}
 
   {sinRepositorio === null && parcerias && (

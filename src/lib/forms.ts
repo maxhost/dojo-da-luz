@@ -1,4 +1,5 @@
 import type { ZodError } from 'zod'
+import { CLAVES_MEDIA } from './media.ts'
 
 /**
  * `FormData` → objeto plano para pasarle a zod (spec 0021). No valida nada: normaliza.
@@ -112,7 +113,6 @@ type BaseHome = {
  */
 export function homeDesdeForm(form: FormData, base: BaseHome): unknown {
   const tarjeta = (clave: 'adults' | 'children') => ({
-    photo: texto(form, `audiences.${clave}.photo`),
     photoAlt: texto(form, `audiences.${clave}.photoAlt`),
     title: texto(form, `audiences.${clave}.title`),
     lead: texto(form, `audiences.${clave}.lead`),
@@ -136,7 +136,6 @@ export function homeDesdeForm(form: FormData, base: BaseHome): unknown {
       titleLines: lineas(form, 'hero.titleLines'),
       titleHighlight: texto(form, 'hero.titleHighlight'),
       tagline: texto(form, 'hero.tagline'),
-      poster: texto(form, 'hero.poster'),
     },
     practice: {
       label: texto(form, 'practice.label'),
@@ -162,14 +161,12 @@ export function homeDesdeForm(form: FormData, base: BaseHome): unknown {
     dojo: {
       label: texto(form, 'dojo.label'),
       titleLines: lineas(form, 'dojo.titleLines'),
-      photo: texto(form, 'dojo.photo'),
       photoCaption: texto(form, 'dojo.photoCaption'),
       photoAlt: texto(form, 'dojo.photoAlt'),
       teacher: {
         name: texto(form, 'dojo.teacher.name'),
         credentialsLines: lineas(form, 'dojo.teacher.credentialsLines'),
         bio: texto(form, 'dojo.teacher.bio'),
-        photo: texto(form, 'dojo.teacher.photo'),
         photoAlt: texto(form, 'dojo.teacher.photoAlt'),
       },
     },
@@ -270,4 +267,12 @@ export function partnersDesdeForm(form: FormData): FilaParceiro[] {
         ...(escala === null ? {} : { escala }),
       }
     })
+}
+
+/**
+ * Las cinco imagenes de la portada, que son un archivo aparte y no viajan con el idioma
+ * (ADR-0028). Se leen todas juntas: publicar media portada no tiene sentido.
+ */
+export function mediaDesdeForm(form: FormData): Record<string, string> {
+  return Object.fromEntries(CLAVES_MEDIA.map((clave) => [clave, texto(form, clave)]))
 }
