@@ -8,15 +8,27 @@ Si una sesion se cae, se cierra o se compacta, se vuelve aca — no al chat. Hay
 Regla: **marcar `hecho` solo con verificacion real** — tests que pasan, comando corrido,
 cosa vista en pantalla. No "deberia andar".
 
-Ultima actualizacion: 2026-09-21 — el backoffice edita Home y dojos, y sube imagenes a R2.
-**El BO publica de verdad**: el commit `f147c2e` de `origin/main` lo escribio el backoffice
-en produccion (fila 6k, cerrada). **Queda una sola cosa sin verificar**: la subida a R2
-(fila 6j). El bucket esta en **jurisdiccion EU** y el host se armaba sin ella; arreglado en
-`src/lib/r2.ts` con `R2_JURISDICTION`, desplegado en `adfefbe`, y falta subir una imagen de
-verdad desde el BO. Los logos de parcerias pasaron a ser contenido editable (spec 0031,
-fila 6l) y las cinco imagenes de la Home dejaron de estar repetidas en los cuatro idiomas
-(spec 0032, fila 6m). Gate verde: `astro check` 0/0/0, `npm test` **17/17**, `npm run build` 44 rutas,
-`/api/health` 200 desde `dojo-da-luz.vercel.app`.
+Ultima actualizacion: 2026-09-21 (verificacion en produccion del editor de parcerias y de
+la subida a R2: filas 6j y 6l). Antes: 2026-09-21 (handoff) — `main` en `12b27fe`, desplegado, gate verde:
+`astro check` 0/0/0, `npm test` **24/24**, `npm run build` 44 rutas, `/api/health` 200 desde
+`dojo-da-luz.vercel.app`.
+
+**Lo que hay que saber antes de tocar nada:**
+
+1. **La interfaz del editor no conforma al cliente y es lo que sigue.** Tres iteraciones
+   (specs 0031, 0032, 0033) y la ultima tampoco. El cliente lo dijo asi: *"tenes que hacer
+   un form simple donde tenes inputs de texto que modifican textos, inputs de texto que
+   modifican texto de botones, input de imagen que modifica imagenes"*. **Antes de escribir
+   una linea mas de UI, leer "Descartado" abajo: hay tres intentos con su motivo de rechazo,
+   y repetirlos cuesta otra sesion.**
+2. **Nadie entro nunca al backoffice a probarlo.** Todo lo verificado es `astro check`,
+   tests, HTML construido y respuestas HTTP. **Ninguna de las pantallas del editor fue vista
+   por nadie** — ni el agente, que no tiene contraseña, ni el cliente, que probo y rechazo.
+   Cualquier afirmacion sobre como se ve o se siente el editor es una hipotesis.
+3. **La subida a R2 ya se ejercito y funciona** (fila 6j, verificada el 2026-09-21). Un
+   logo subido desde el BO llego a R2, quedo en `content/partners.json` por un commit del
+   propio BO, Vercel construyo en 20 s y se ve en las cuatro homes publicas. El camino
+   entero —subir, guardar, publicar, desplegar— esta comprobado de punta a punta.
 
 ## Contexto
 
@@ -31,23 +43,25 @@ SEO actual, mejorar GEO.
 
 ### Por donde seguir (corte del 2026-09-21)
 
-1. **Subir una imagen desde el BO en produccion** (fila 6j). Es lo unico que separa la
-   spec 0030 de estar terminada. El arreglo del host con jurisdiccion esta desplegado
-   (`adfefbe`) y `R2_JURISDICTION` ya existe en Vercel —su valor no se puede leer, asi que
-   si el error sigue, lo primero es confirmar que dice `eu`—. **El camino que habla con R2
-   no se puede ejercitar en local**: las credenciales viven solo en Vercel. Comprobar:
-   subir un JPEG deja 2 claves en el bucket, la URL publica responde `image/webp`, subir el
-   mismo archivo dos veces da la misma URL sin reescribir, y la galeria `/admin/medios`
-   lista lo subido.
-2. ~~Comprobar que el BO publica de verdad~~ — **hecho** (fila 6k): el commit `f147c2e`
-   de `origin/main` salio del backoffice en produccion.
-3. **Probar en el BO el editor entero** (filas 6l, 6m y 6n): tocar una miniatura para
-   cambiar una foto, agregar y quitar un logo: agregar un parceiro con una imagen subida
-   a R2, vaciar una fila, y comprobar el aviso de conflicto con dos pestañas abiertas. El
-   camino de datos tiene tests; lo que falta es una sesion.
-4. **Que el cliente mire el editor en pantalla** (fila 6h). De la primera pasada salieron
-   las specs 0029 y 0030; conviene una segunda antes de replicar el patron a las otras
-   paginas.
+1. **Rediseñar la interfaz del editor de Home con el cliente, no para el cliente** (fila
+   6o). Es lo unico que importa ahora. Lo que fallo tres veces fue diseñar a ciegas:
+   proponer una pantalla, implementarla entera, desplegarla y recien ahi enterarse de que no
+   era. **Lo que corresponde antes de implementar**: que el cliente apruebe el layout —una
+   descripcion campo por campo, un boceto, o la pantalla misma en una rama de preview— y
+   recien entonces escribir codigo. Ver "Descartado" para los tres intentos y su motivo.
+
+2. **Un fallo de subida se publica como "no habia cambios"** — es el unico defecto que
+   dejo esta verificacion. `partnersDesdeForm` descarta en silencio toda fila con `src`
+   vacio (`src/lib/forms.ts:262`), asi que si R2 falla al elegir el archivo, el logo nuevo
+   nunca llega al POST y `guardarPartners` contesta *"No habia cambios: no se publico
+   nada"* (`src/lib/partners-edicion.ts:48`) — un mensaje verde que dice justo lo
+   contrario de lo que paso. El error de la subida solo se ve en el textito bajo la
+   miniatura. Sin spec: hay que decidir si la fila vacia se rechaza con un error propio o
+   si el boton de publicar se bloquea mientras haya una subida sin resolver.
+
+3. **Probar lo que queda del editor en el BO** (filas 6l, 6m, 6n): quitar un logo, el aviso
+   de conflicto con dos pestañas, y cambiar una foto viendo que cambia en los cuatro
+   idiomas con los dos commits.
 
 Para verificar el BO en local hace falta una sesion: no existe forma de entrar sin
 contraseña. Lo que se hizo en esta sesion fue insertar una fila temporal en `admin_session`
@@ -154,11 +168,12 @@ siguiente guardado del BO reordena el archivo: ruido de una vez, no perdida de d
 | 6g | Ejercitar el camino de publicacion por GitHub | 0021 | bloqueada | Necesita un PAT de alcance fino sobre `maxhost/dojo-da-luz` con contenido en escritura, cargado en Vercel como `GITHUB_TOKEN`. Sin el, las 4 rutas del editor responden 503 diciendo que falta — el resto del BO (login, panel) funciona igual. |
 | 6h | Que el cliente mire el editor en pantalla | 0021 | en curso | Primera pasada hecha: de ahi salieron las specs 0029 y 0030. |
 | 6i | Spec 0029 — menu fijo, tarjetas de audiencia y medios en el editor de Home | 0029 | hecho en local | Verificado con las 4 homes construidas byte a byte identicas. Sin desplegar al escribir esto. |
-| 6j | Spec 0030 — subir imagenes a R2 desde el BO | 0030 | desplegada, sin verificar | El codigo esta en produccion. Dos causas encadenadas, ninguna de la firma: primero un token de otra cuenta (`AccessDenied`), despues el host. El bucket esta creado con **jurisdiccion EU** y `endpoint()` armaba `<cuenta>.r2.cloudflarestorage.com` → `404 NoSuchBucket`. Arreglado con `R2_JURISDICTION` (2 tests nuevos fijan el host). **Falta cargar `R2_JURISDICTION=eu` en Vercel, redeployar y verificar la subida de verdad contra R2.** |
+| 6j | Spec 0030 — subir imagenes a R2 desde el BO | 0030 | **hecho** | Verificado el 2026-09-21 contra produccion: el logo subido desde el BO vive en `https://pub-a3e739acf38449bf92d850dfa752a522.r2.dev/medios/e902d14be10a/w1600.webp` y responde `200 image/webp`, 1600x1600, 18 KB, `Cache-Control: immutable`. El arreglo de `R2_JURISDICTION` funciona: el camino completo —elegir archivo, subir a R2, guardar la URL en el JSON, publicar— corre en produccion. Falta comprobar la reutilizacion por hash (subir dos veces el mismo archivo) y la galeria `/admin/medios`. |
 | 6k | Comprobar que el BO publica de verdad en produccion | 0021 | **hecho** | Verificado el 2026-09-21 sin proponerselo: el commit `f147c2e` "contenido: se archiva el dojo encarnacao desde el backoffice" aparecio en `origin/main` escrito por el BO en produccion, y rechazo un push local por no-fast-forward. Toca `content/dojos.json`. El camino completo —editar, commitear con `GITHUB_TOKEN`, disparar el deploy— funciona. |
-| 6l | Spec 0031 — parcerias editables desde el BO | 0031 | implementada, sin probar en el BO | Los ocho logos salieron de `HomeView.astro` y viven en `content/partners.json` (ADR-0027): compartidos por los cuatro idiomas, de largo libre, con su propio formulario y su propio sha en la seccion 06 del editor de Home. **La Home publica no cambia** (mismos 8 `<img>`, mismos `src` y `alt`) y con la lista vacia la seccion no se pinta. Falta apretar el boton con una sesion real: agregar un parceiro, vaciar una fila, y el aviso de conflicto con dos pestañas. |
+| 6l | Spec 0031 — parcerias editables desde el BO | 0031 | **hecho en lo principal** | Verificado el 2026-09-21 en produccion: "Añadir nuevo" + subir un logo + "Publicar parcerías" escribio el commit `e467102` ("contenido: parcerias desde el backoffice"), Vercel construyo en 20 s y el noveno logo aparece en las cuatro homes publicas (`/`, `/es`, `/fr`, `/en`). Falta todavia: quitar un logo, y el aviso de conflicto con dos pestañas. |
 | 6m | Spec 0032 — imagenes de la Home compartidas y subida primero | 0032 | implementada, sin probar en el BO | Las cinco imagenes salieron de los cuatro `home.json` y viven en `content/media.json` (ADR-0028): se suben una vez y valen para los cuatro idiomas. El `alt` y el pie siguen por idioma, con la miniatura al lado para saber que se describe. El campo de imagen ahora ofrece **subir primero** y deja la direccion a mano plegada en un `details` que nace abierto (sin JS sigue siendo un input visible). Las 4 homes construidas quedaron identicas salvo el hash del CSS. |
 | 6n | Spec 0033 — un campo por cosa en el editor | 0033 | implementada, sin probar en el BO | Correccion de UX pedida por el cliente: el bloque "Imágenes de la portada" **se borro** y las cinco imagenes volvieron a su seccion, donde **la miniatura es el boton** que abre el selector de archivos; un parceiro volvio a ser solo un logo mas un "quitar" (nombre y escala viajan ocultos). Publicar un idioma escribe `media.json` tambien, solo si alguna imagen cambio. |
+| 6o | Rediseñar la interfaz del editor con el cliente | — | **bloqueante, sin empezar** | Tres iteraciones rechazadas (0031, 0032, 0033). El pedido textual: *"un form simple donde tenes inputs de texto que modifican textos, inputs de texto que modifican texto de botones, input de imagen que modifica imagenes"*. **No implementar sin que el cliente apruebe el layout antes** — ver Descartado. Requisito practico: conseguir forma de ver el BO (contraseña, o sesion temporal en `admin_session`), porque hasta ahora se diseño sin ver ni una pantalla. |
 | 7 | Alumnos + emision de factura + PDF a R2 + envio Resend | — | pendiente | Necesita una factura de ejemplo real. Spec sin escribir: el numero 0004 del INDEX es otra cosa. |
 | 8 | Redirects 301 de las 34 URLs viejas | — | plan definido | Matriz conceptual documentada. Falta crawl final, Search Console e implementación cuando existan todos los destinos. |
 | 9 | Sitemap + robots.txt | — | pendiente | Con el set completo de paginas. |
@@ -264,6 +279,10 @@ Los caminos descartados importan: sin registro, se reintentan.
 
 | Que | Por que no |
 |---|---|
+| **Bloque "Imágenes de la portada" al final del editor (spec 0032)** | Resolvia un problema real —una foto no se traduce y el editor publica un idioma por POST, asi que estaba cuatro veces— pero lo resolvia en la pantalla equivocada: para cambiar la foto de "04 · O dojo" habia que salir de la seccion, bajar al final, adivinar cual de cinco era y volver. El cliente pregunto "¿que es eso? ¿para que?". **Una caja que necesita un parrafo explicando por que existe ya perdio.** El modelo de datos compartido (`content/media.json`) **si sirve y se queda**; lo que se borro es la seccion (ADR-0029). |
+| **Nombre y ampliacion por cada logo de parceiro (spec 0031)** | El nombre era el texto alternativo y la ampliacion existia por un logo con mucho margen en el archivo. Las dos razones son ciertas y ninguna justifica dos campos de texto por logo en la pantalla del cliente: *"un logo solo deberia ser una imagen"*. Los datos siguen en el JSON y viajan ocultos con la fila. |
+| **Campo de imagen que pide una URL (specs 0029–0030)** | Un `input type="url"` a ancho completo con el selector de archivo abajo y mas chico. El cliente no tiene de donde sacar una direccion — es el problema que abrio la spec 0030. Y hasta el arreglo de la jurisdiccion EU, el boton de subir existia pero fallaba, lo cual enseña a ignorarlo. |
+| **Diseñar UI sin que el cliente vea el layout antes** | El error de fondo de las tres filas anteriores, y la razon de que la sesion del 2026-09-21 terminara con el cliente diciendo "olvidate". El ciclo fue siempre el mismo: proponer una pantalla, implementarla entera, desplegarla, y enterarse ahi de que no era. **Ningun agente de esta sesion pudo ver una sola pantalla del backoffice** —hace falta contraseña— asi que cada iteracion fue un diseño a ciegas presentado como terminado. Lo que corresponde: aprobar el layout primero, implementar despues. |
 | Carrusel animado en Parcerias (spec 0026) | Mostraba 3 o 4 de 8 parceiros a la vez y obligaba a esperar el bucle para verlos todos; duplicaba los `<li>` en el HTML con `aria-hidden` y pedia su propio bloque `prefers-reduced-motion`. Sustituido por rejilla estatica en la spec 0028 (ADR-0024). |
 | Recuadro blanco con borde detras de cada logo de parceiro | Ocho cajas compitiendo con los logos sobre el fondo `#f6f1e8`. Y no era lo que producia el blanco visible: eso lo traen los archivos. No reponerlo para disimular assets malos — la respuesta son los logos originales (fila 12). |
 | Seis variantes por imagen (AVIF + WebP × 3 anchos), spec 0030 original | El contenido guarda `photo` como **una** URL y el render usa `<img src>`: no hay `<picture>` ni `srcset` en ningun lado del sitio. Cinco de las seis no las leeria nadie — andamiaje. Se genera una sola WebP de 1600 px y se conserva el original como negativo. Vuelve a tener sentido el dia que el render sepa leer `srcset`, y ese dia no habra que pedirle al cliente que resuba nada. |

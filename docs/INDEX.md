@@ -39,6 +39,7 @@ desactualizado es peor que no tenerlo.
 | [0027](adr/0027-parceiros-entidad.md) | 2026-09-21 | Los parceiros son entidad compartida en `content/partners.json`, de largo libre y editable desde la seccion 06 del editor de Home | aceptada | `docs/adr/0027-parceiros-entidad.md` |
 | [0028](adr/0028-imagenes-compartidas.md) | 2026-09-21 | Las imagenes de la Home son compartidas en `content/media.json`; el alt y el pie siguen por idioma, y el campo ofrece subir antes que pegar una URL | aceptada | `docs/adr/0028-imagenes-compartidas.md` |
 | [0029](adr/0029-editar-donde-se-ve.md) | 2026-09-21 | Cada cosa se edita donde se ve: la imagen vuelve a su seccion con la miniatura como boton y el archivo compartido pasa a ser invisible; supersede la UI del 0028 | aceptada | `docs/adr/0029-editar-donde-se-ve.md` |
+| [0030](adr/0030-portugues-dueno-de-la-estructura.md) | 2026-09-21 | Portugues es el dueño de la estructura de las listas editables: el alta y la baja de filas solo ocurren en PT y se propagan a los cuatro idiomas; es/fr/en solo traducen | aceptada | `docs/adr/0030-portugues-dueno-de-la-estructura.md` |
 
 ## Specs — que se construye
 
@@ -77,6 +78,8 @@ desactualizado es peor que no tenerlo.
 | [0031](specs/0031-parcerias-editables.md) | 2026-09-21 | Los logos de parceiros pasan a `content/partners.json` y se editan en cantidad libre desde la seccion 06 del editor de Home | cerrada | si | `content/partners.json`, `src/lib/partners*.ts`, `src/components/**`, `src/pages/admin/paginas/home.astro` |
 | [0032](specs/0032-imagenes-compartidas.md) | 2026-09-21 | Las cinco imagenes de la Home pasan a `content/media.json`, compartidas por los 4 idiomas; el campo ofrece subir antes que pegar una URL | cerrada | si | `content/media.json`, `src/lib/media*.ts`, `src/components/admin/**`, `src/components/HomeView.astro` |
 | [0033](specs/0033-editor-simple.md) | 2026-09-21 | Un campo por cosa: la imagen se cambia tocando su miniatura donde se ve, se borra el bloque de imagenes y un parceiro vuelve a ser solo un logo | cerrada | si | `src/components/admin/**`, `src/lib/{forms,media-edicion,partners}.ts`, `src/pages/admin/paginas/home.astro` |
+| [0034](specs/0034-horarios-desde-la-entidad.md) | 2026-09-21 | La seccion Horarios de /aulas sale de la entidad de dojos: archivar un dojo lo saca de la pagina | cerrada | no | `src/components/ClassesView.astro`, `src/lib/content.ts`, `content/*/classes.json` |
+| [0035](specs/0035-editor-aulas.md) | 2026-09-21 | Editor de /aulas con listas de largo libre donde portugues manda la estructura y los otros tres idiomas traducen | cerrada | no | `src/pages/admin/paginas/aulas.astro`, `src/components/admin/**`, `src/lib/{aulas-edicion,traduccion,publish}.ts`, `content/**` |
 
 **"Disjunta?"** = si el trabajo no comparte archivos con otra spec abierta. Es lo que
 habilita paralelizar. Lo decide la spec, no el orquestador en runtime.

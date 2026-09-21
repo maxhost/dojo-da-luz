@@ -71,6 +71,16 @@ Como el host va firmado en SigV4, ninguna variable de entorno podia arreglarlo. 
 mandar a revisar permisos o claves, **lee el codigo de error**: dice que capa fallo
 —firma, clave, permiso o host— y dos de esas cuatro no se arreglan configurando.
 
+**Una pantalla no se diseña a ciegas: se aprueba el layout antes de implementarlo.** El
+2026-09-21 hubo tres iteraciones seguidas de la interfaz del backoffice —specs 0031, 0032 y
+0033— rechazadas por el cliente, y la sesion termino con "olvidate". El ciclo fue siempre el
+mismo: proponer una pantalla, implementarla entera, desplegarla, y recien ahi enterarse de
+que no era. Agravante: **nadie del lado del agente pudo ver una sola pantalla del BO** (hace
+falta contraseña), asi que cada entrega fue una hipotesis presentada como terminada. Si la
+tarea es de UI y no se puede ver el resultado, **el entregable de la primera vuelta no es
+codigo**: es el layout campo por campo para que el usuario lo apruebe o lo corrija. El
+codigo va despues. Un `astro check` en verde no dice nada sobre si la pantalla se entiende.
+
 **Las reglas verificables van en hooks, no aca.** Los hooks corren fuera del contexto,
 cuestan cero tokens y son deterministas; este archivo es advisory. Si una regla se puede
 chequear con un comando, es un hook — no la escribas aca tambien.

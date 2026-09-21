@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro'
 import QaSection from './QaSection.astro'
 import { getContent } from '../lib/content'
+import { formatAudiencia, formatHorario, getDojos } from '../lib/dojos'
 import { faqJsonLd } from '../lib/site'
 import { pathFor, siteNav, type Locale } from '../lib/i18n'
 
@@ -17,6 +18,12 @@ const audienceLabels = {
   en: { adults: 'Adult classes', children: "Children's classes" },
 }[locale]
 const pricingId: Record<Locale, string> = { pt: 'quotas', es: 'cuotas', fr: 'tarifs', en: 'fees' }
+
+/**
+ * Las sedes son la entidad de dojos, no texto repetido en cuatro idiomas (spec 0034).
+ * Archivar un dojo en el backoffice lo saca de esta seccion, igual que de la Home.
+ */
+const dojos = getDojos()
 
 const HERO_PHOTO =
   'https://static.wixstatic.com/media/ae7240_de66207c487b4e8086d18ed67c88ea93~mv2.jpg/v1/crop/x_218,y_0,w_1165,h_900/fill/w_1600,h_1067,al_c,q_85/IMG_3502_JPG.jpg'
@@ -56,15 +63,15 @@ const HERO_PHOTO =
         </div>
       </div>
       <div class="mt-12 grid gap-6 lg:grid-cols-3">
-        {c.schedule.venues.map((venue, index) => (
+        {dojos.map((dojo, index) => (
           <article class="border border-[#d7cec0] bg-white p-7 md:p-8">
-            <p class="text-xs font-bold uppercase tracking-[.18em] text-[#0099ff]">0{index + 1} · {venue.area}</p>
-            <h3 class="mt-4 font-serif text-2xl font-normal leading-tight">{venue.name}</h3>
+            <p class="text-xs font-bold uppercase tracking-[.18em] text-[#0099ff]">0{index + 1} · {dojo.nombre}</p>
+            <h3 class="mt-4 font-serif text-2xl font-normal leading-tight">{dojo.instalacion ?? dojo.dojo}</h3>
             <dl class="mt-7 divide-y divide-[#e4ddd2] border-t border-[#d7cec0]">
-              {venue.classes.map((item) => (
+              {dojo.horarios.map((horario) => (
                 <div class="py-5">
-                  <dt class="text-xs font-bold uppercase tracking-[.12em] text-[#756e66]">{item.audience}</dt>
-                  <dd class="m-0 mt-2 text-base leading-7 text-[#211f1c]">{item.time}</dd>
+                  <dt class="text-xs font-bold uppercase tracking-[.12em] text-[#756e66]">{formatAudiencia(horario, locale)}</dt>
+                  <dd class="m-0 mt-2 text-base leading-7 text-[#211f1c]">{formatHorario(horario, locale)}</dd>
                 </div>
               ))}
             </dl>

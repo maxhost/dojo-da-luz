@@ -44,55 +44,7 @@
   "schedule": {
     "label": "Horarios",
     "title": "Encuentra tu lugar para practicar.",
-    "intro": "La inscripción puede realizarse en cualquier momento del año.",
-    "venues": [
-      {
-        "name": "Dojo da Luz",
-        "area": "Benfica",
-        "classes": [
-          {
-            "audience": "Adultos · mediodía",
-            "time": "Martes y jueves · 12:00–13:30"
-          },
-          {
-            "audience": "Adultos · tarde",
-            "time": "Martes y jueves · 20:00–21:15"
-          },
-          {
-            "audience": "Niños",
-            "time": "Lunes a viernes · 18:30–19:30"
-          }
-        ]
-      },
-      {
-        "name": "Dojo da Luz",
-        "area": "Encarnação",
-        "classes": [
-          {
-            "audience": "Adultos",
-            "time": "Martes y jueves · 20:30–21:30"
-          },
-          {
-            "audience": "Niños",
-            "time": "Martes y jueves · 17:30–18:30"
-          }
-        ]
-      },
-      {
-        "name": "Pista de Atletismo Municipal Prof. Moniz Pereira",
-        "area": "Lumiar",
-        "classes": [
-          {
-            "audience": "Adultos",
-            "time": "Lunes y miércoles · 20:30–21:45"
-          },
-          {
-            "audience": "Aikido y Buki Waza",
-            "time": "Sábados · 11:00–12:30"
-          }
-        ]
-      }
-    ]
+    "intro": "La inscripción puede realizarse en cualquier momento del año."
   },
   "pricing": {
     "label": "Cuotas",

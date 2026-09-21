@@ -44,55 +44,7 @@
   "schedule": {
     "label": "Timetable",
     "title": "Find your place to practise.",
-    "intro": "You can enrol at any point during the year.",
-    "venues": [
-      {
-        "name": "Dojo da Luz",
-        "area": "Benfica",
-        "classes": [
-          {
-            "audience": "Adults · lunchtime",
-            "time": "Tuesdays and Thursdays · 12:00–13:30"
-          },
-          {
-            "audience": "Adults · evening",
-            "time": "Tuesdays and Thursdays · 20:00–21:15"
-          },
-          {
-            "audience": "Children",
-            "time": "Monday to Friday · 18:30–19:30"
-          }
-        ]
-      },
-      {
-        "name": "Dojo da Luz",
-        "area": "Encarnação",
-        "classes": [
-          {
-            "audience": "Adults",
-            "time": "Tuesdays and Thursdays · 20:30–21:30"
-          },
-          {
-            "audience": "Children",
-            "time": "Tuesdays and Thursdays · 17:30–18:30"
-          }
-        ]
-      },
-      {
-        "name": "Prof. Moniz Pereira Municipal Athletics Track",
-        "area": "Lumiar",
-        "classes": [
-          {
-            "audience": "Adults",
-            "time": "Mondays and Wednesdays · 20:30–21:45"
-          },
-          {
-            "audience": "Aikido and Buki Waza",
-            "time": "Saturdays · 11:00–12:30"
-          }
-        ]
-      }
-    ]
+    "intro": "You can enrol at any point during the year."
   },
   "pricing": {
     "label": "Fees",
