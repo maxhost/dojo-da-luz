@@ -82,6 +82,28 @@ export const LISTAS_EVENTOS: readonly RutaLista[] = ['items']
 /** La portada y la foto de cada evento: una foto no se traduce (ADR-0032). */
 export const SEMBRADOS_EVENTOS: readonly string[] = ['heroPhoto', 'items[].photo']
 
+/**
+ * Las listas de `/outras-artes` (spec 0040). `activities` son las tres artes —no se pueden
+ * añadir ni quitar desde la pantalla, pero esta aca para que un POST forjado tampoco pueda—
+ * y `gallery.items` es la galeria de la pagina.
+ */
+export const LISTAS_OUTRAS_ARTES: readonly RutaLista[] = ['activities', 'gallery.items']
+
+/**
+ * Lo que siempre viene del portugues en `/outras-artes`. Ademas de las fotos va
+ * **`formUrl`**: es el destino del formulario de cada arte, no se edita desde el BO
+ * (spec 0035) y viaja oculto — sembrarlo es lo que impide que entre otro por la puerta de
+ * una traduccion.
+ */
+export const SEMBRADOS_OUTRAS_ARTES: readonly string[] = [
+  'heroPhoto',
+  'activities[].photo',
+  'activities[].formUrl',
+  'gallery.items[].type',
+  'gallery.items[].src',
+  'gallery.items[].url',
+]
+
 /** Las cinco listas de `/aulas` cuyo largo lo decide el portugues (spec 0035). */
 export const LISTAS_AULAS: readonly RutaLista[] = [
   'pricing.items',

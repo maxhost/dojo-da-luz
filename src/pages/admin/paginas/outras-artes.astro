@@ -1,0 +1,42 @@
+---
+export const prerender = false
+
+import Admin from '../../../layouts/Admin.astro'
+import Aviso from '../../../components/admin/Aviso.astro'
+import EditorPestanas from '../../../components/admin/EditorPestanas.astro'
+import FormularioOutrasArtes from '../../../components/admin/FormularioOutrasArtes.astro'
+import { paginaOutrasArtes } from '../../../lib/outras-artes-edicion'
+import { pantallaEditor } from '../../../lib/editor-pantalla'
+
+/** Editor de `/outras-artes` (spec 0040). */
+
+const admin = Astro.locals.admin!
+const pantalla = await pantallaEditor(paginaOutrasArtes, Astro.request, Astro.url)
+
+if (pantalla.redirigir) return Astro.redirect(pantalla.redirigir, 303)
+if (pantalla.estado) Astro.response.status = pantalla.estado
+---
+
+<Admin titulo="Outras artes" admin={admin}>
+  <h1 class="font-serif text-3xl">Outras artes</h1>
+  <p class="mt-4 text-sm text-[#625c55]">
+    Shiatsu, Iaido y Tai Chi Chuan, de arriba hacia abajo, más la galería del final. Las
+    fotos y la galería se cambian en la pestaña <strong>Português</strong> y valen para los
+    cuatro idiomas; en las otras tres se traduce el texto.
+  </p>
+
+  {pantalla.aviso && <Aviso tipo={pantalla.aviso.tipo}>{pantalla.aviso.texto}</Aviso>}
+  {pantalla.sinRepositorio && (
+    <Aviso tipo="error">No se puede abrir el editor: {pantalla.sinRepositorio}</Aviso>
+  )}
+
+  {pantalla.sinRepositorio === null && (
+    <EditorPestanas
+      formulario={FormularioOutrasArtes}
+      archivos={pantalla.archivos}
+      errores={pantalla.errores}
+      shas={pantalla.shas}
+      activo={pantalla.activo}
+    />
+  )}
+</Admin>

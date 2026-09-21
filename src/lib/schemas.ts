@@ -275,26 +275,33 @@ export const contactSchema = z.object({
   fields:z.object({ name:z.string().min(1), email:z.string().min(1), subject:z.string().min(1), message:z.string().min(1), submit:z.string().min(1), pending:z.string().min(1) }),
 })
 
+/**
+ * `/outras-artes` (spec 0040). Tres cambios sobre lo que habia:
+ *
+ * - **Portada con foto** (ADR-0036), decorativa: va detras de un velo negro y del titular.
+ * - **Una galeria de la pagina**, no una por arte, con la misma forma que las de audiencia
+ *   (ADR-0031). Nace vacia y mientras lo este la seccion no se pinta.
+ * - **Sin `id` por arte**: era un ancla HTML que no enlazaba nadie, igual que en `/aikido`.
+ *   El ancla la pone la vista por posicion.
+ *
+ * `formUrl` sigue sin editarse desde el BO (spec 0035): viaja oculto en el formulario y
+ * sembrado desde portugues.
+ */
 export const otherArtsSchema = z.object({
-  seo:seoSchema, eyebrow:z.string().min(1), title:z.string().min(1), lead:z.string().min(1),
-  activities:z.array(z.object({
-    id:z.string().min(1), name:z.string().min(1), subtitle:z.string().min(1), photo:z.url(), photoAlt:z.string().min(1),
-    paragraphs:z.array(z.string().min(1)).min(1), benefits:z.array(z.string().min(1)), schedule:z.array(z.string().min(1)),
-    teacher:z.string().min(1).optional(), trialLabel:z.string().min(1), formUrl:z.url().nullable(), directLabel:z.string().min(1), closeLabel:z.string().min(1),
+  seo: seoSchema, chrome: chromeSchema,
+  eyebrow: z.string().min(1), title: z.string().min(1), lead: z.string().min(1),
+  heroPhoto: z.url(),
+  activities: z.array(z.object({
+    name: z.string().min(1), subtitle: z.string().min(1),
+    photo: z.url(), photoAlt: z.string().min(1),
+    paragraphs: linesSchema, benefits: z.array(z.string().min(1)), schedule: z.array(z.string().min(1)),
+    teacher: z.string().min(1).optional(),
+    trialLabel: z.string().min(1), formUrl: z.url().nullable(),
+    directLabel: z.string().min(1), closeLabel: z.string().min(1),
   })).min(1),
+  gallery: gallerySchema,
 })
 
-/**
- * `/eventos` (spec 0039). La lista es **de largo libre y puede estar vacia** (ADR-0035):
- * una agenda se vacia sola con el tiempo, y el `.min(3).max(4)` que habia obligaba a
- * inventar un evento para poder borrar otro.
- *
- * `emptyText` es obligatorio aunque casi nunca se vea: es lo que dice la pagina el dia que
- * se borra el ultimo evento, y un campo que solo existe cuando hace falta es un campo que
- * nadie escribio.
- *
- * `heroPhoto` no tiene `alt`: es un fondo detras del titular, con un velo negro encima.
- */
 export const eventsSchema = z.object({
   seo: seoSchema,
   chrome: chromeSchema,

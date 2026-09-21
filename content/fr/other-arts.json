@@ -1,5 +1,89 @@
-{"seo":{"title":"Shiatsu, Iaido et Tai Chi à Lisbonne | Dojo da Luz","description":"Shiatsu, Iaido et Tai Chi Chuan au Dojo da Luz : informations, horaires et cours d'essai."},"eyebrow":"Autres arts","title":"Trois pratiques, une recherche commune.","lead":"Des disciplines orientales qui cultivent attention, santé, coordination et présence.","activities":[
-{"id":"shiatsu","name":"Shiatsu","subtitle":"Pression des doigts · soin du corps","photo":"https://static.wixstatic.com/media/ae7240_fade29443f5d48ccbae8206dee91f14e~mv2.jpg/v1/fill/w_900,h_600,al_c,q_85/ae7240_fade29443f5d48ccbae8206dee91f14e~mv2.jpg","photoAlt":"Séance de Shiatsu au Dojo da Luz","paragraphs":["Le Shiatsu est une thérapie traditionnelle japonaise dont le nom signifie pression des doigts. Il agit sur le système énergétique par pression sur les méridiens.","Il utilise doigts, paumes, coudes, bras, genoux et pieds pour libérer les tensions et favoriser l'équilibre du corps et de l'esprit. Il convient aux adultes, personnes âgées et enfants."],"benefits":["Douleurs musculaires et posturales","Stress, anxiété et insomnie","Raideur et tension physique","Manque d'énergie","Troubles digestifs et respiratoires"],"schedule":[],"trialLabel":"Demander des informations","formUrl":null,"directLabel":"Aller au Contact","closeLabel":"Fermer"},
-{"id":"iaido","name":"Iaido","subtitle":"L'art du sabre japonais","photo":"https://static.wixstatic.com/media/ae7240_7567627baaf845e094b5df4b93018abc~mv2.jpg/v1/fill/w_900,h_1100,al_c,q_85/IaiDurix7.jpg","photoAlt":"Pratique du Iaido au Dojo da Luz","paragraphs":["La section Iaido du Círculo do Silêncio est issue de l'enseignement de Georges Stobbaerts. La pratique utilise un iaito, sabre japonais non tranchant.","Discipline physique et mentale non combative et à faible impact, elle développe respiration, coordination, persévérance et concentration. Plus qu'un sport, c'est un acte culturel."],"benefits":[],"schedule":["Mardi et jeudi · 19h45–21h00"],"teacher":"Sensei Pedro Girão","trialLabel":"Cours d'essai de Iaido","formUrl":"https://forms.gle/jbVZnR31896h7p826","directLabel":"Ouvrir le formulaire dans une nouvelle fenêtre","closeLabel":"Fermer"},
-{"id":"tai-chi","name":"Tai Chi Chuan","subtitle":"Mouvement, respiration et équilibre","photo":"https://static.wixstatic.com/media/ae7240_ce9440a929584849bf04d4db55105f7a~mv2.jpg/v1/fill/w_1000,h_1000,al_c,q_85/Thai%20Chi.jpg","photoAlt":"Pratique du Tai Chi Chuan","paragraphs":["Le Tai Chi Chuan travaille des enchaînements continus, la respiration, la coordination et l'attention.","La pratique s'adapte à différents rythmes et se déroule le matin, à midi, le soir ou sur rendez-vous le week-end."],"benefits":[],"schedule":["Mardi · 8h00–9h00","Mercredi · 12h15–13h15","Vendredi · 20h00–21h15","Week-end · horaire flexible sur rendez-vous"],"trialLabel":"Cours d'essai de Tai Chi","formUrl":"https://docs.google.com/forms/d/e/1FAIpQLSclYRerVbnP0yIJ70o7NUgfporjBYQLuuxb2zhBhGb-BwDTbg/viewform","directLabel":"Ouvrir le formulaire dans une nouvelle fenêtre","closeLabel":"Fermer"}
-]}
+{
+  "seo": {
+    "title": "Shiatsu, Iaido et Tai Chi à Lisbonne | Dojo da Luz",
+    "description": "Shiatsu, Iaido et Tai Chi Chuan au Dojo da Luz : informations, horaires et cours d'essai."
+  },
+  "chrome": {
+    "caption": "Aïkido · Lisbonne",
+    "menuLabel": "Menu",
+    "skipLink": "Aller au contenu",
+    "footerNote": {
+      "areas": "Benfica · Lumiar · Encarnação",
+      "orgType": "Association à but non lucratif"
+    }
+  },
+  "eyebrow": "Autres arts",
+  "title": "Trois pratiques, une recherche commune.",
+  "lead": "Des disciplines orientales qui cultivent attention, santé, coordination et présence.",
+  "heroPhoto": "https://static.wixstatic.com/media/ae7240_de66207c487b4e8086d18ed67c88ea93~mv2.jpg/v1/crop/x_218,y_0,w_1165,h_900/fill/w_1600,h_1067,al_c,q_85/IMG_3502_JPG.jpg",
+  "activities": [
+    {
+      "name": "Shiatsu",
+      "subtitle": "Pression des doigts · soin du corps",
+      "photo": "https://static.wixstatic.com/media/ae7240_fade29443f5d48ccbae8206dee91f14e~mv2.jpg/v1/fill/w_900,h_600,al_c,q_85/ae7240_fade29443f5d48ccbae8206dee91f14e~mv2.jpg",
+      "photoAlt": "Séance de Shiatsu au Dojo da Luz",
+      "paragraphs": [
+        "Le Shiatsu est une thérapie traditionnelle japonaise dont le nom signifie pression des doigts. Il agit sur le système énergétique par pression sur les méridiens.",
+        "Il utilise doigts, paumes, coudes, bras, genoux et pieds pour libérer les tensions et favoriser l'équilibre du corps et de l'esprit. Il convient aux adultes, personnes âgées et enfants."
+      ],
+      "benefits": [
+        "Douleurs musculaires et posturales",
+        "Stress, anxiété et insomnie",
+        "Raideur et tension physique",
+        "Manque d'énergie",
+        "Troubles digestifs et respiratoires"
+      ],
+      "schedule": [],
+      "trialLabel": "Demander des informations",
+      "formUrl": null,
+      "directLabel": "Aller au Contact",
+      "closeLabel": "Fermer"
+    },
+    {
+      "name": "Iaido",
+      "subtitle": "L'art du sabre japonais",
+      "photo": "https://static.wixstatic.com/media/ae7240_7567627baaf845e094b5df4b93018abc~mv2.jpg/v1/fill/w_900,h_1100,al_c,q_85/IaiDurix7.jpg",
+      "photoAlt": "Pratique du Iaido au Dojo da Luz",
+      "paragraphs": [
+        "La section Iaido du Círculo do Silêncio est issue de l'enseignement de Georges Stobbaerts. La pratique utilise un iaito, sabre japonais non tranchant.",
+        "Discipline physique et mentale non combative et à faible impact, elle développe respiration, coordination, persévérance et concentration. Plus qu'un sport, c'est un acte culturel."
+      ],
+      "benefits": [],
+      "schedule": [
+        "Mardi et jeudi · 19h45–21h00"
+      ],
+      "teacher": "Sensei Pedro Girão",
+      "trialLabel": "Cours d'essai de Iaido",
+      "formUrl": "https://forms.gle/jbVZnR31896h7p826",
+      "directLabel": "Ouvrir le formulaire dans une nouvelle fenêtre",
+      "closeLabel": "Fermer"
+    },
+    {
+      "name": "Tai Chi Chuan",
+      "subtitle": "Mouvement, respiration et équilibre",
+      "photo": "https://static.wixstatic.com/media/ae7240_ce9440a929584849bf04d4db55105f7a~mv2.jpg/v1/fill/w_1000,h_1000,al_c,q_85/Thai%20Chi.jpg",
+      "photoAlt": "Pratique du Tai Chi Chuan",
+      "paragraphs": [
+        "Le Tai Chi Chuan travaille des enchaînements continus, la respiration, la coordination et l'attention.",
+        "La pratique s'adapte à différents rythmes et se déroule le matin, à midi, le soir ou sur rendez-vous le week-end."
+      ],
+      "benefits": [],
+      "schedule": [
+        "Mardi · 8h00–9h00",
+        "Mercredi · 12h15–13h15",
+        "Vendredi · 20h00–21h15",
+        "Week-end · horaire flexible sur rendez-vous"
+      ],
+      "trialLabel": "Cours d'essai de Tai Chi",
+      "formUrl": "https://docs.google.com/forms/d/e/1FAIpQLSclYRerVbnP0yIJ70o7NUgfporjBYQLuuxb2zhBhGb-BwDTbg/viewform",
+      "directLabel": "Ouvrir le formulaire dans une nouvelle fenêtre",
+      "closeLabel": "Fermer"
+    }
+  ],
+  "gallery": {
+    "label": "Galerie",
+    "title": "Les autres arts en images.",
+    "intro": "Photographies et vidéos des pratiques de Shiatsu, Iaido et Tai Chi Chuan au Dojo da Luz.",
+    "items": []
+  }
+}

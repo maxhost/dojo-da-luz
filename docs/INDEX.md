@@ -45,6 +45,7 @@ desactualizado es peor que no tenerlo.
 | [0033](adr/0033-lista-anidada-como-texto.md) | 2026-09-21 | Una lista dentro de una fila de otra lista se edita como un recuadro de texto con un renglon por elemento; las de primer nivel siguen siendo tablas | aceptada | `docs/adr/0033-lista-anidada-como-texto.md` |
 | [0034](adr/0034-equipo-docente-editable.md) | 2026-09-21 | El equipo docente de /dojo es una lista de largo libre en el contenido y el linaje son tres cajas fijas; supersede las "tres fichas" del 0023 | aceptada | `docs/adr/0034-equipo-docente-editable.md` |
 | [0035](adr/0035-eventos-lista-viva.md) | 2026-09-21 | La lista de /eventos es de largo libre y el vacio es un estado con texto propio; supersede el minimo de 3 de la spec 0026 | aceptada | `docs/adr/0035-eventos-lista-viva.md` |
+| [0036](adr/0036-outras-artes-portada-y-galeria.md) | 2026-09-21 | /outras-artes gana portada con foto y una galeria de la pagina que no se pinta vacia, y pierde el id escrito de cada arte, que era un ancla muerta | aceptada | `docs/adr/0036-outras-artes-portada-y-galeria.md` |
 
 ## Specs — que se construye
 
@@ -89,6 +90,7 @@ desactualizado es peor que no tenerlo.
 | [0037](specs/0037-editor-aikido.md) | 2026-09-21 | Editor de /aikido: lista numerada de largo libre, bloque O-Sensei siempre presente y las dos fotos que hoy viven dentro del componente | cerrada | no | `src/pages/admin/paginas/aikido.astro`, `src/components/admin/FormularioAikido.astro`, `src/lib/{editor-pagina,editor-pantalla,aikido-edicion,audiencia-edicion,schemas,traduccion}.ts`, `src/components/AikidoView.astro`, `content/*/aikido.json` |
 | [0038](specs/0038-editor-dojo.md) | 2026-09-21 | Editor de /dojo: bloque del profesor principal, listado de profesores de largo libre que el front renderiza, y las tres cajas de "Uma transmissão viva" | cerrada | no | `src/pages/admin/paginas/dojo.astro`, `src/components/admin/{FormularioPaginaDojo,TablaFilas}.astro`, `src/lib/{pagina-dojo-edicion,schemas,traduccion}.ts`, `src/components/DojoView.astro`, `content/*/dojo.json` |
 | [0039](specs/0039-editor-eventos.md) | 2026-09-21 | Editor de /eventos: listado de largo libre que se arma en portugues, alternancia izquierda/derecha por posicion y el estado "no hay eventos proximos" | cerrada | no | `src/pages/admin/paginas/eventos.astro`, `src/components/admin/FormularioEventos.astro`, `src/lib/{eventos-edicion,schemas,traduccion}.ts`, `src/components/EventsView.astro`, `content/*/events.json` |
+| [0040](specs/0040-editor-outras-artes.md) | 2026-09-21 | Editor de /outras-artes: las tres artes una por una, portada con foto de fondo nueva y galeria de fotos y videos de YouTube para la pagina | cerrada | no | `src/pages/admin/paginas/outras-artes.astro`, `src/components/admin/FormularioOutrasArtes.astro`, `src/lib/{outras-artes-edicion,schemas,traduccion}.ts`, `src/components/OtherArtsView.astro`, `content/*/other-arts.json` |
 
 **"Disjunta?"** = si el trabajo no comparte archivos con otra spec abierta. Es lo que
 habilita paralelizar. Lo decide la spec, no el orquestador en runtime.

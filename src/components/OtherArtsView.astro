@@ -1,9 +1,37 @@
 ---
-import Base from '../layouts/Base.astro'; import FormModal from './FormModal.astro'; import { getContent } from '../lib/content'; import { pathFor, siteNav, type Locale } from '../lib/i18n'
+import Base from '../layouts/Base.astro'; import FormModal from './FormModal.astro'; import GaleriaMedios from './GaleriaMedios.astro'; import { getContent } from '../lib/content'; import { pathFor, siteNav, type Locale } from '../lib/i18n'
 interface Props { locale:Locale } const {locale}=Astro.props; const c=getContent('otherArts',locale)
-const ui={pt:['Aikido · Lisboa','Menu','Saltar para o conteúdo','Associação sem fins lucrativos'],es:['Aikido · Lisboa','Menú','Saltar al contenido','Asociación sin fines de lucro'],fr:['Aïkido · Lisbonne','Menu','Aller au contenu','Association à but non lucratif'],en:['Aikido · Lisbon','Menu','Skip to content','Non-profit association']}[locale]
+/**
+ * La foto de portada, los cinco textos del borde y la galeria son de la spec 0040. Antes el
+ * borde estaba escrito aca adentro (el array `ui`) y la portada era una franja sin imagen.
+ */
+const chrome = c.chrome
+
+/** `01`, `02`… y `10` con dos digitos, no `010`. */
+const numero = (index:number) => String(index+1).padStart(2,'0')
+/** El ancla sale de la posicion: el `id` escrito en el contenido no lo enlazaba nadie (ADR-0036). */
+const ancla = (index:number) => `arte-${index+1}`
 ---
-<Base page="otherArts" locale={locale} title={c.seo.title} description={c.seo.description} skipLink={ui[2]} nav={siteNav(locale)} menuLabel={ui[1]} caption={ui[0]}>
-<section class="section-pad bg-[#27231f] text-center text-white"><div class="site-shell"><p class="section-kicker text-[#b3e5ff]">{c.eyebrow}</p><h1 class="mx-auto mt-4 max-w-4xl font-serif text-5xl md:text-7xl">{c.title}</h1><p class="mx-auto mt-6 max-w-2xl text-xl leading-9 text-white/75">{c.lead}</p></div></section>
-<div class="bg-[#f6f1e8]">{c.activities.map((activity,index)=><section id={activity.id} class="section-pad border-b border-[#d7cec0]"><div class={`site-shell grid gap-12 md:grid-cols-2 md:items-start md:gap-20 ${index%2===1?'md:[&>figure]:order-2':''}`}><figure class="m-0"><img src={activity.photo} alt={activity.photoAlt} class="max-h-[38rem] w-full object-cover" loading="lazy" /></figure><div><p class="section-kicker">0{index+1} · {activity.subtitle}</p><h2 class="mt-4 font-serif text-5xl">{activity.name}</h2>{activity.paragraphs.map(p=><p class="mt-5 text-lg leading-8 text-[#4c4741]">{p}</p>)}{activity.benefits.length>0&&<ul class="mt-7 grid gap-2 border-y border-[#d7cec0] py-5 text-[#625c55] sm:grid-cols-2">{activity.benefits.map(item=><li>{item}</li>)}</ul>}{activity.schedule.length>0&&<div class="mt-7 border-l-2 border-[#0099ff] pl-5">{activity.schedule.map(item=><p class="mt-2 first:mt-0">{item}</p>)}{activity.teacher&&<p class="mt-4 font-bold text-[#0099ff]">{activity.teacher}</p>}</div>}<div class="mt-8">{activity.formUrl?<FormModal id={`form-${activity.id}`} title={`${activity.name} · ${activity.trialLabel}`} trigger={activity.trialLabel} url={activity.formUrl} directLabel={activity.directLabel} closeLabel={activity.closeLabel}/>:<a class="button button-primary" href={pathFor('contact',locale)}>{activity.trialLabel}</a>}</div></div></div></section>)}</div>
-<p slot="footer-note" class="text-sm text-white/65">Benfica · Lumiar · Encarnação<br />{ui[3]}</p></Base>
+<Base page="otherArts" locale={locale} title={c.seo.title} description={c.seo.description} skipLink={chrome.skipLink} nav={siteNav(locale)} menuLabel={chrome.menuLabel} caption={chrome.caption}>
+<section class="relative isolate flex min-h-[31rem] items-end overflow-hidden bg-[#292522] text-center text-white md:min-h-[36rem]">
+  <img src={c.heroPhoto} alt="" class="absolute inset-0 -z-20 h-full w-full object-cover" fetchpriority="high" />
+  <div aria-hidden="true" class="absolute inset-0 -z-10 bg-black/65"></div>
+  <div class="site-shell py-16 md:py-20"><p class="section-kicker text-[#b3e5ff]">{c.eyebrow}</p><h1 class="mx-auto mt-4 max-w-4xl font-serif text-5xl leading-[1.04] md:text-7xl">{c.title}</h1><p class="mx-auto mt-6 max-w-2xl text-xl leading-9 text-white/75">{c.lead}</p></div>
+</section>
+<div class="bg-[#f6f1e8]">{c.activities.map((activity,index)=><section id={ancla(index)} class="section-pad border-b border-[#d7cec0]"><div class={`site-shell grid gap-12 md:grid-cols-2 md:items-start md:gap-20 ${index%2===1?'md:[&>figure]:order-2':''}`}><figure class="m-0"><img src={activity.photo} alt={activity.photoAlt} class="max-h-[38rem] w-full object-cover" loading="lazy" /></figure><div><p class="section-kicker">{numero(index)} · {activity.subtitle}</p><h2 class="mt-4 font-serif text-5xl">{activity.name}</h2>{activity.paragraphs.map(p=><p class="mt-5 text-lg leading-8 text-[#4c4741]">{p}</p>)}{activity.benefits.length>0&&<ul class="mt-7 grid gap-2 border-y border-[#d7cec0] py-5 text-[#625c55] sm:grid-cols-2">{activity.benefits.map(item=><li>{item}</li>)}</ul>}{activity.schedule.length>0&&<div class="mt-7 border-l-2 border-[#0099ff] pl-5">{activity.schedule.map(item=><p class="mt-2 first:mt-0">{item}</p>)}{activity.teacher&&<p class="mt-4 font-bold text-[#0099ff]">{activity.teacher}</p>}</div>}<div class="mt-8">{activity.formUrl?<FormModal id={`form-${ancla(index)}`} title={`${activity.name} · ${activity.trialLabel}`} trigger={activity.trialLabel} url={activity.formUrl} directLabel={activity.directLabel} closeLabel={activity.closeLabel}/>:<a class="button button-primary" href={pathFor('contact',locale)}>{activity.trialLabel}</a>}</div></div></div></section>)}</div>
+
+{/* Sin medios la seccion entera no se pinta: un rotulo sobre una rejilla vacia es peor
+    que no tenerla (ADR-0036). */}
+{c.gallery.items.length > 0 && (
+<section class="section-pad overflow-hidden bg-white">
+  <div class="site-shell">
+    <div class="max-w-2xl">
+      <p class="section-kicker">{c.gallery.label}</p>
+      <h2 class="section-title mt-4 text-4xl md:text-6xl">{c.gallery.title}</h2>
+      <p class="mt-5 text-lg leading-8 text-[#625c55]">{c.gallery.intro}</p>
+    </div>
+    <GaleriaMedios gallery={c.gallery} />
+  </div>
+</section>
+)}
+<p slot="footer-note" class="text-sm text-white/65">{chrome.footerNote.areas}<br />{chrome.footerNote.orgType}</p></Base>
