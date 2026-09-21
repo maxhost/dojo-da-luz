@@ -85,9 +85,15 @@ spec es tener las imágenes en nuestro bucket**, no el reencodeado.
 atarse a APIs del host (ADR-0001) y con el peso de la función.
 
 **Dominio público del bucket.** Hoy es el de desarrollo de R2:
-`https://pub-1583795645db473491961fb0558ff2d3.r2.dev`, sobre el bucket `dojo-da-luz-dev`.
+el de desarrollo de R2, en `R2_PUBLIC_URL`.
 La URL guardada en el JSON depende de esa elección, así que cambiarla después obliga a
 reescribir los JSON — cuanto antes se decida el dominio propio, menos hay que reescribir.
+
+**La jurisdiccion del bucket va en el host, no en una opcion.** Un bucket creado con
+jurisdiccion —EU, FedRAMP— no se alcanza por `<cuenta>.r2.cloudflarestorage.com`: ahi no
+existe y R2 responde `NoSuchBucket`. Hay que pedir por `<cuenta>.eu.r2.cloudflarestorage.com`,
+y como el host entra en el string que firma SigV4, **esto no se puede corregir desde la
+configuracion**: es codigo. Lo controla `R2_JURISDICTION`, opcional y vacia por defecto.
 
 **CORS no hace falta y no se configura.** Es la pregunta que aparece sola al ver un 403, y
 la respuesta es que no interviene en ningún punto de este diseño:
@@ -112,7 +118,7 @@ día se configura con los métodos `PUT` y `POST`; hoy sería configurar algo qu
 | `src/pages/admin/medios/subir.ts` | crear — `POST` multipart |
 | `src/components/admin/CampoImagen.astro` | editar — botón de subir y selector |
 | `package.json` | editar — `sharp` |
-| `.env.example` | editar — descomentar las cuatro `R2_*` y sumar `R2_PUBLIC_URL` |
+| `.env.example` | editar — descomentar las cuatro `R2_*`, sumar `R2_PUBLIC_URL` y `R2_JURISDICTION` |
 
 ### Disjunta?
 
@@ -135,6 +141,9 @@ Hecho:
 - [x] **El tamaño de la función es 23 MB**, muy por debajo del límite de 250 MB de Vercel:
       `sharp` entra sin problema y no hace falta el plan B.
 - [x] El dominio público del bucket está activo: responde 404 de R2 a una clave inexistente.
+- [x] El host respeta la jurisdicción: `npm test` **11/11**, con dos casos nuevos que fijan
+      `cuenta.r2.cloudflarestorage.com` sin jurisdicción y `cuenta.eu.r2.cloudflarestorage.com`
+      con ella.
 
 Bloqueado por los permisos del token de R2 (ver Abierto):
 
@@ -146,25 +155,27 @@ Bloqueado por los permisos del token de R2 (ver Abierto):
 
 ## Abierto
 
-- **El token de R2 no tiene permiso sobre el bucket.** Las tres operaciones —`HEAD`, `PUT` y
-  `ListObjectsV2`— responden `403 AccessDenied` contra
-  `f42a4ec1d9145b1d6f9e043d2c3e262e.r2.cloudflarestorage.com/dojo-da-luz-dev`. El código
-  importa: R2 devuelve `SignatureDoesNotMatch` cuando la firma está mal y `InvalidAccessKeyId`
-  cuando la clave no existe. `AccessDenied` significa que **la firma se validó y la clave es
-  real**, pero ese token no puede tocar ese bucket. Se arregla en Cloudflare → R2 → *Manage
-  R2 API Tokens*: el token tiene que ser de tipo R2, con permiso **Object Read & Write**, y
-  su ámbito tiene que incluir `dojo-da-luz-dev`. **Hasta entonces la subida no está
-  verificada.**
+- **Historial del 403/404.** Hubo dos causas encadenadas, ninguna de la firma. Primero un
+  `403 AccessDenied` contra la cuenta `f42a4ec1…`, que no era la del bucket. Con la cuenta
+  correcta (`1a064b54…`) apareció `404 NoSuchBucket`: el bucket está creado con
+  **jurisdicción EU** y el código armaba el host genérico. Los códigos distinguen:
+  `SignatureDoesNotMatch` es la firma, `InvalidAccessKeyId` es la clave, `AccessDenied` es
+  el permiso o la cuenta, y `NoSuchBucket` con clave válida apunta al host — jurisdicción.
+  Se arregló en `endpoint()` con `R2_JURISDICTION`; **queda cargarla en Vercel y verificar
+  la subida**.
+
 - **Las credenciales están en Vercel, no en local.** `vercel env pull` devuelve los valores
   vacíos: son variables cifradas y la plataforma no las entrega. Consecuencia práctica: el
   camino que habla con R2 **no se puede verificar en `astro dev`**, solo contra producción.
   La firma SigV4 sí se verifica en local, contra los vectores de prueba públicos de AWS.
-- **El dominio público del bucket queda fijado**: `https://pub-1583795645db473491961fb0558ff2d3.r2.dev`,
-  bucket `dojo-da-luz-dev`. Es un dominio de desarrollo de R2. Pasar a
-  `media.aikido-duran.com` más adelante obliga a reescribir las URLs de todos los JSON que
-  apunten ahí — cuanto antes se decida, menos hay que reescribir.
-- **`sharp` en Vercel.** Si no entra en el límite de la función, se cae a subir el original
-  sin variantes. Hay que medirlo antes de dar la spec por implementada.
+- **El dominio público del bucket no está fijado en el repo y no se puede leer.** El
+  2026-09-21 la cuenta de Cloudflare, el bucket y el token se rehicieron de cero: el bucket
+  pasó a llamarse `dojo-da-luz` en la cuenta `1a064b54…`, jurisdicción EU, y el
+  `pub-1583795645db473491961fb0558ff2d3.r2.dev` que esta spec anotaba era del bucket viejo.
+  El valor vigente es el que esté cargado en `R2_PUBLIC_URL` en Vercel, y `vercel env pull`
+  lo devuelve vacío. Sigue en pie lo de fondo: **esa URL queda escrita dentro de los JSON de
+  contenido**, así que pasar a `media.aikido-duran.com` obliga a reescribir todo lo que
+  apunte ahí — cuanto antes se decida, menos hay que reescribir.
 - Quién limpia lo que se sube por error. Esta spec no borra: si el cliente sube diez
   pruebas, quedan diez objetos. Con este volumen es irrelevante; si deja de serlo, es una
   spec de mantenimiento.

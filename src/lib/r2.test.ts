@@ -1,7 +1,7 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
-import { firmar } from './r2.ts'
+import { endpoint, firmar } from './r2.ts'
 
 /**
  * La firma SigV4 es la pieza que no se puede verificar contra R2 sin credenciales, y las
@@ -105,4 +105,27 @@ test('la cabecera Authorization nombra las cabeceras firmadas y el scope', () =>
     /SignedHeaders=content-type;host;x-amz-content-sha256;x-amz-date/,
   )
   assert.equal(headers['x-amz-date'], '20150830T123600Z')
+})
+
+/**
+ * El 2026-09-21 el BO daba `NoSuchBucket` contra un bucket que existia: estaba creado con
+ * jurisdiccion EU y el host se armaba sin ella. El host va firmado, asi que no habia
+ * configuracion posible que lo arreglara.
+ */
+const cfg = (jurisdiccion: string) => ({
+  accountId: 'cuenta',
+  accessKeyId: 'x',
+  secretAccessKey: 'y',
+  bucket: 'b',
+  publicUrl: 'https://p',
+  jurisdiccion,
+})
+
+test('sin jurisdiccion el host es el generico', () => {
+  assert.equal(endpoint(cfg('')), 'cuenta.r2.cloudflarestorage.com')
+})
+
+test('con jurisdiccion el host la lleva entre la cuenta y el dominio', () => {
+  assert.equal(endpoint(cfg('eu')), 'cuenta.eu.r2.cloudflarestorage.com')
+  assert.equal(endpoint(cfg('fedramp')), 'cuenta.fedramp.r2.cloudflarestorage.com')
 })

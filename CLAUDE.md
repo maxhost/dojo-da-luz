@@ -56,6 +56,21 @@ sitio es salida de `static.wixstatic.com`, aplanada y sin alfa. Antes de tocar C
 fondo, un borde o un recorte, bajate el archivo y mirale los pixeles (`sips -g hasAlpha`,
 pixeles de borde). Que el CSS este limpio no prueba que la pagina se vea limpia.
 
+**Un valor esperado en un test sale de una fuente, no de la memoria.** El 2026-09-21 la
+prueba de la firma SigV4 traia tres vectores de AWS y uno fallaba: el hash esperado estaba
+mal transcripto, no el codigo. Media hora en diagnosticar codigo sano. Si el valor no se
+puede copiar de una fuente consultable, no es un vector: es una invencion. Escribi en su
+lugar la propiedad que se puede comprobar sola (dos entradas equivalentes dan la misma
+salida) y deci que no es un vector.
+
+**El endpoint de un proveedor se copia de su consola, no se deriva de un id.** El
+2026-09-21 la subida a R2 dio `403` y despues `404 NoSuchBucket` contra un bucket que
+existia: el codigo armaba `<cuenta>.r2.cloudflarestorage.com` a partir del account id, pero
+el bucket estaba creado con jurisdiccion EU y vive en `<cuenta>.eu.r2.cloudflarestorage.com`.
+Como el host va firmado en SigV4, ninguna variable de entorno podia arreglarlo. Antes de
+mandar a revisar permisos o claves, **lee el codigo de error**: dice que capa fallo
+—firma, clave, permiso o host— y dos de esas cuatro no se arreglan configurando.
+
 **Las reglas verificables van en hooks, no aca.** Los hooks corren fuera del contexto,
 cuestan cero tokens y son deterministas; este archivo es advisory. Si una regla se puede
 chequear con un comando, es un hook — no la escribas aca tambien.

@@ -8,7 +8,12 @@ Si una sesion se cae, se cierra o se compacta, se vuelve aca — no al chat. Hay
 Regla: **marcar `hecho` solo con verificacion real** — tests que pasan, comando corrido,
 cosa vista en pantalla. No "deberia andar".
 
-Ultima actualizacion: 2026-09-21 — spec 0030 implementada y desplegada: `/admin/medios` sube imagenes a R2 y el campo de imagen del editor sube sin recargar. **La subida no esta verificada**: el token de R2 responde `AccessDenied` en las tres operaciones (fila 6j). `GITHUB_TOKEN` ya cargado en Vercel; falta comprobar que el BO publique de verdad (fila 6g).
+Ultima actualizacion: 2026-09-21 — el backoffice edita Home y dojos, y sube imagenes a R2.
+Todo desplegado. **Dos cosas quedan sin verificar**: la subida a R2 (fila 6j) —el bucket
+esta en **jurisdiccion EU** y el host se armaba sin ella; arreglado en `src/lib/r2.ts` con
+`R2_JURISDICTION`, falta cargarla en Vercel y probar la subida— y que el BO publique de
+verdad en produccion con el `GITHUB_TOKEN` ya cargado (fila 6k). Gate verde sobre el arreglo:
+`astro check` 0/0/0, `npm test` **11/11**, `npm run build` 44 rutas.
 
 ## Contexto
 
@@ -20,6 +25,28 @@ datos fiscales + emision de facturas por email. Prioridad: carga hiper rapida, m
 SEO actual, mejorar GEO.
 
 ## Ahora
+
+### Por donde seguir (corte del 2026-09-21)
+
+1. **Cargar `R2_JURISDICTION=eu` en Vercel, redeployar y verificar la subida** (fila 6j).
+   Es lo unico que separa la spec 0030 de estar terminada. El codigo que arma el host con
+   jurisdiccion ya esta commiteado y cubierto por tests, pero **el camino que habla con R2
+   no se puede ejercitar en local**: las credenciales viven solo en Vercel. Comprobar en
+   produccion: subir un JPEG deja 2 claves en el bucket, la URL publica responde
+   `image/webp`, subir el mismo archivo dos veces da la misma URL sin reescribir, y la
+   galeria `/admin/medios` lista lo subido.
+2. **Comprobar que el BO publica de verdad** (fila 6k): editar algo en
+   `/admin/paginas/home` en produccion y ver el commit en `main`. `GITHUB_TOKEN` ya esta
+   cargado en Vercel desde el 2026-09-21; nunca se ejercito el camino completo.
+3. **Que el cliente mire el editor en pantalla** (fila 6h). De la primera pasada salieron
+   las specs 0029 y 0030; conviene una segunda antes de replicar el patron a las otras
+   paginas.
+
+Para verificar el BO en local hace falta una sesion: no existe forma de entrar sin
+contraseña. Lo que se hizo en esta sesion fue insertar una fila temporal en `admin_session`
+con un token propio y borrarla al terminar — **sin tocar la contraseña**, porque
+`npm run admin:seed` la repone y expulsa al cliente. La base es la misma que usa
+produccion.
 
 **Scaffold hecho y verificado** (spec 0001): Astro estatico, 4 idiomas, contenido JSON
 validado con zod, head de SEO completo. `dist/` entero pesa 28K y no lleva un solo script
@@ -120,7 +147,7 @@ siguiente guardado del BO reordena el archivo: ruido de una vez, no perdida de d
 | 6g | Ejercitar el camino de publicacion por GitHub | 0021 | bloqueada | Necesita un PAT de alcance fino sobre `maxhost/dojo-da-luz` con contenido en escritura, cargado en Vercel como `GITHUB_TOKEN`. Sin el, las 4 rutas del editor responden 503 diciendo que falta — el resto del BO (login, panel) funciona igual. |
 | 6h | Que el cliente mire el editor en pantalla | 0021 | en curso | Primera pasada hecha: de ahi salieron las specs 0029 y 0030. |
 | 6i | Spec 0029 — menu fijo, tarjetas de audiencia y medios en el editor de Home | 0029 | hecho en local | Verificado con las 4 homes construidas byte a byte identicas. Sin desplegar al escribir esto. |
-| 6j | Spec 0030 — subir imagenes a R2 desde el BO | 0030 | desplegada, sin verificar | El codigo esta en produccion y el resto funciona, pero **el token de R2 da `AccessDenied` en HEAD, PUT y List**. No es la firma —eso daria `SignatureDoesNotMatch`— ni la clave —daria `InvalidAccessKeyId`—: es el permiso. Arreglar en Cloudflare → R2 → Manage R2 API Tokens: token de tipo R2, **Object Read & Write**, con ambito sobre `dojo-da-luz-dev`. |
+| 6j | Spec 0030 — subir imagenes a R2 desde el BO | 0030 | desplegada, sin verificar | El codigo esta en produccion. Dos causas encadenadas, ninguna de la firma: primero un token de otra cuenta (`AccessDenied`), despues el host. El bucket esta creado con **jurisdiccion EU** y `endpoint()` armaba `<cuenta>.r2.cloudflarestorage.com` → `404 NoSuchBucket`. Arreglado con `R2_JURISDICTION` (2 tests nuevos fijan el host). **Falta cargar `R2_JURISDICTION=eu` en Vercel, redeployar y verificar la subida de verdad contra R2.** |
 | 6k | Comprobar que el BO publica de verdad en produccion | 0021 | proximo | `GITHUB_TOKEN` ya esta en Vercel. Falta editar algo desde `/admin/paginas/home` en produccion y ver el commit en `main`. |
 | 7 | Alumnos + emision de factura + PDF a R2 + envio Resend | — | pendiente | Necesita una factura de ejemplo real. Spec sin escribir: el numero 0004 del INDEX es otra cosa. |
 | 8 | Redirects 301 de las 34 URLs viejas | — | plan definido | Matriz conceptual documentada. Falta crawl final, Search Console e implementación cuando existan todos los destinos. |
@@ -218,6 +245,8 @@ contraseña, sesion opaca en Neon.)*
 | 2026-09-21 | Spec 0030 — subida a R2, lo que si quedo verificado | `astro check` 0/0/0, `npm test` 9/9 y build con 44 rutas. La firma SigV4 da la firma esperada al byte contra los vectores publicos de AWS (`get-vanilla` y `get-vanilla-query-order-key-case`). Por HTTP contra el endpoint: PDF renombrado a `.jpg` → 422 leyendo los bytes con `sharp`, vacio → 422, 11 MB → 422, 9000 px → 422, sin cookie → 302. La funcion con `sharp` pesa **23 MB** (limite de Vercel: 250 MB). El dominio publico del bucket responde 404 de R2, o sea que esta activo |
 | 2026-09-21 | El token de R2 no tiene permiso sobre el bucket | Las 3 operaciones dan `403 AccessDenied` contra `f42a4ec1d9145b1d6f9e043d2c3e262e.r2.cloudflarestorage.com/dojo-da-luz-dev`. El codigo de error es el dato: R2 devuelve `SignatureDoesNotMatch` si la firma esta mal y `InvalidAccessKeyId` si la clave no existe, asi que firma y clave son correctas y lo que falta es el permiso del token |
 | 2026-09-21 | CORS no interviene en la subida a R2, y no se configura | Es lo primero que se sospecha ante un 403 y es un callejon sin salida. El `PUT` sale de la funcion de Vercel, servidor contra servidor: CORS lo aplica el navegador y ahi no hay ninguno. Y las imagenes se cargan con `<img src>`, que no necesita CORS en ningun navegador. Solo haria falta si algun dia se sube directo desde el navegador con URL prefirmada |
+| 2026-09-21 | `git checkout -- <directorio>` pisa trabajo ajeno: ahora esta vetado | El agente corrio `git checkout -- content/` para deshacer una prueba en `content/pt/home.json` y de paso reverso la normalizacion de `content/dojos.json`, de la misma sesion y sin commitear. Fix estructural: hook PreToolUse `.claude/hooks/git-restore-amplio.sh`, que bloquea `git checkout --` y `git restore` cuando el destino es un directorio y deja pasar el archivo concreto. Probado con 4 casos que bloquean y 5 que pasan |
+| 2026-09-21 | Un vector de prueba con el hash transcripto de memoria | La prueba de SigV4 traia tres vectores de AWS y uno fallaba: el valor esperado estaba mal, el codigo estaba bien. Se diagnostico codigo sano. Sustituido por la propiedad comprobable (dos valores que solo difieren en espacios dan la misma firma) y anotado en CLAUDE.md |
 
 ## Descartado (y por que)
 
@@ -227,4 +256,6 @@ Los caminos descartados importan: sin registro, se reintentan.
 |---|---|
 | Carrusel animado en Parcerias (spec 0026) | Mostraba 3 o 4 de 8 parceiros a la vez y obligaba a esperar el bucle para verlos todos; duplicaba los `<li>` en el HTML con `aria-hidden` y pedia su propio bloque `prefers-reduced-motion`. Sustituido por rejilla estatica en la spec 0028 (ADR-0024). |
 | Recuadro blanco con borde detras de cada logo de parceiro | Ocho cajas compitiendo con los logos sobre el fondo `#f6f1e8`. Y no era lo que producia el blanco visible: eso lo traen los archivos. No reponerlo para disimular assets malos — la respuesta son los logos originales (fila 12). |
+| Seis variantes por imagen (AVIF + WebP × 3 anchos), spec 0030 original | El contenido guarda `photo` como **una** URL y el render usa `<img src>`: no hay `<picture>` ni `srcset` en ningun lado del sitio. Cinco de las seis no las leeria nadie — andamiaje. Se genera una sola WebP de 1600 px y se conserva el original como negativo. Vuelve a tener sentido el dia que el render sepa leer `srcset`, y ese dia no habra que pedirle al cliente que resuba nada. |
+| Configurar CORS en el bucket de R2 | No interviene: el `PUT` sale de la funcion de Vercel (servidor contra servidor, sin navegador que aplique CORS) y las imagenes se cargan con `<img src>`, que no lo necesita. Configurarlo no arregla el `AccessDenied` —eso es permiso del token— y seria configurar algo que nada usa. Haria falta solo si algun dia se sube directo desde el navegador con URL prefirmada. |
 | Cuatro secciones de profesor a pantalla completa en `/dojo` (spec 0026) | Cuatro scrolls para cuatro biografias de dos parrafos, con el mismo retrato repetido cuatro veces y Pablo Duran indistinguible del resto. Sustituido por la jerarquia de la spec 0027 (ADR-0023). |

@@ -22,6 +22,8 @@ export type ConfigR2 = {
   secretAccessKey: string
   bucket: string
   publicUrl: string
+  /** Jurisdiccion del bucket: '' (ninguna), 'eu' o 'fedramp'. Cambia el host, que va firmado. */
+  jurisdiccion: string
 }
 
 /** Devuelve la config o el nombre de lo que falta: nunca a medias. */
@@ -43,6 +45,9 @@ export function configR2(): ConfigR2 | { falta: string[] } {
     secretAccessKey: env('R2_SECRET_ACCESS_KEY'),
     bucket: env('R2_BUCKET'),
     publicUrl: env('R2_PUBLIC_URL').replace(/\/+$/, ''),
+    // Opcional: un bucket sin jurisdiccion no la lleva en el host. No se valida contra una
+    // lista porque Cloudflare puede sumar jurisdicciones sin que este codigo se entere.
+    jurisdiccion: env('R2_JURISDICTION').trim().toLowerCase().replace(/^\.|\.$/g, ''),
   }
 }
 
@@ -126,8 +131,14 @@ export function firmar(args: {
   }
 }
 
-function endpoint(cfg: ConfigR2): string {
-  return `${cfg.accountId}.r2.cloudflarestorage.com`
+/**
+ * Un bucket creado con jurisdiccion (EU, FedRAMP) NO se alcanza por el host generico: ahi
+ * no existe y R2 responde `NoSuchBucket`. Y como el host entra en el string firmado de
+ * SigV4, esto no se puede arreglar desde fuera del codigo.
+ */
+export function endpoint(cfg: ConfigR2): string {
+  const j = cfg.jurisdiccion ? `${cfg.jurisdiccion}.` : ''
+  return `${cfg.accountId}.${j}r2.cloudflarestorage.com`
 }
 
 async function pedir(
@@ -169,7 +180,8 @@ async function detalle(res: Response, cfg: ConfigR2, que: string): Promise<strin
       : codigo === 'SignatureDoesNotMatch'
         ? ' — revisá R2_ACCESS_KEY_ID y R2_SECRET_ACCESS_KEY'
         : codigo === 'NoSuchBucket'
-          ? ' — el bucket no existe en esta cuenta: revisá R2_BUCKET y R2_ACCOUNT_ID'
+          ? ' — el bucket no existe en esta cuenta por este endpoint: revisá R2_BUCKET, ' +
+            'R2_ACCOUNT_ID y, si el bucket se creó con jurisdicción, R2_JURISDICTION'
           : ''
 
   return `R2 ${res.status}${codigo ? ` (${codigo})` : ''} al ${que} en ${endpoint(cfg)}/${cfg.bucket}${pista}`
