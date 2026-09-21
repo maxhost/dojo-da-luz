@@ -8,9 +8,8 @@ import type { FilaParceiro } from '../../lib/forms'
  * los logos son los mismos en los cuatro idiomas (ADR-0027), asi que no viven en las
  * pestañas de idioma ni se publican con ellas.
  *
- * Largo libre sin JavaScript: se pinta siempre una fila vacia de mas. Llenarla agrega un
- * parceiro; vaciar una existente lo borra. No hay boton de borrar que se pueda apretar sin
- * querer, y por lo tanto no hace falta pedir confirmacion.
+ * Se muestran solamente los logos publicados. "Añadir nuevo" crea un cargador y cada logo
+ * se puede sacar de la lista con su propio boton. El cambio llega a la Home al publicar.
  */
 
 interface Props {
@@ -20,9 +19,6 @@ interface Props {
 }
 
 const { partners, errores, sha } = Astro.props
-
-// La fila de mas es la que permite agregar. `null` = fila nueva, sin valores.
-const filas: (FilaParceiro | null)[] = [...partners, null]
 
 const err = (i: number, campo: string) => errorDe(errores, `${i}.${campo}`)
 ---
@@ -35,14 +31,14 @@ const err = (i: number, campo: string) => errorDe(errores, `${i}.${campo}`)
     Los mismos en los cuatro idiomas. Se ven en la portada en este orden.
   </p>
 
-  <ol class="mt-4 grid list-none grid-cols-2 gap-4 p-0 md:grid-cols-3">
-    {filas.map((partner, i) => (
-      <li class="border border-[#d7cec0] bg-[#fbf8f2] p-4">
+  <ol class="mt-4 grid list-none grid-cols-2 gap-4 p-0 md:grid-cols-3" data-lista-logos>
+    {partners.map((partner, i) => (
+      <li class="border border-[#d7cec0] bg-[#fbf8f2] p-4" data-logo>
         <CampoImagen
           idPrefijo={`parceiro-${i}`}
           nombre={`parceiros[${i}].src`}
-          etiqueta={partner ? `Logo ${i + 1}` : 'Agregar un logo'}
-          valor={partner?.src ?? ''}
+          etiqueta={`Logo ${i + 1}`}
+          valor={partner.src}
           errores={err(i, 'src') ? { [`parceiros[${i}].src`]: err(i, 'src')! } : {}}
           requerido={false}
         />
@@ -50,18 +46,37 @@ const err = (i: number, campo: string) => errorDe(errores, `${i}.${campo}`)
         {/* El nombre —lo que se lee sin ver la imagen— y la ampliacion de los logos que
             vienen con mucho margen viajan con la fila, pero no son cosas que el cliente
             tenga que decidir por cada logo (ADR-0029). */}
-        <input type="hidden" name={`parceiros[${i}].nombre`} value={partner?.nombre ?? ''} />
-        <input type="hidden" name={`parceiros[${i}].escala`} value={partner?.escala ?? ''} />
+        <input type="hidden" name={`parceiros[${i}].nombre`} value={partner.nombre} />
+        <input type="hidden" name={`parceiros[${i}].escala`} value={partner.escala ?? ''} />
 
-        {partner && (
-          <label class="mt-3 flex items-center gap-2 text-xs text-[#625c55]">
-            <input type="checkbox" name={`parceiros[${i}].quitar`} value="si" />
-            Quitar este logo
-          </label>
-        )}
+        <button class="mt-3 text-xs font-semibold text-[#b3261e] underline" type="button" data-eliminar-logo>
+          Eliminar
+        </button>
       </li>
     ))}
   </ol>
+
+  <template data-plantilla-logo>
+    <li class="border border-[#d7cec0] bg-[#fbf8f2] p-4" data-logo>
+      <CampoImagen
+        idPrefijo="parceiro-nuevo"
+        nombre="parceiros[__indice__].src"
+        etiqueta="Logo nuevo"
+        valor=""
+        errores={{}}
+        requerido={false}
+      />
+      <input type="hidden" name="parceiros[__indice__].nombre" value="" />
+      <input type="hidden" name="parceiros[__indice__].escala" value="" />
+      <button class="mt-3 text-xs font-semibold text-[#b3261e] underline" type="button" data-eliminar-logo>
+        Eliminar
+      </button>
+    </li>
+  </template>
+
+  <button class="mt-5 border border-[#1f1b16] bg-white px-5 py-2 text-sm font-semibold" type="button" data-anadir-logo>
+    Añadir nuevo
+  </button>
 
   <button
     class="mt-6 border border-[#1f1b16] bg-[#1f1b16] px-5 py-2 text-sm font-semibold text-[#f6f1e8]"
@@ -70,3 +85,33 @@ const err = (i: number, campo: string) => errorDe(errores, `${i}.${campo}`)
     Publicar parcerías
   </button>
 </form>
+
+<script>
+  document.querySelectorAll<HTMLFormElement>('form').forEach((formulario) => {
+    const lista = formulario.querySelector<HTMLOListElement>('[data-lista-logos]')
+    const plantilla = formulario.querySelector<HTMLTemplateElement>('[data-plantilla-logo]')
+    const anadir = formulario.querySelector<HTMLButtonElement>('[data-anadir-logo]')
+    if (!lista || !plantilla || !anadir) return
+
+    let siguiente = lista.querySelectorAll('[data-logo]').length
+
+    formulario.addEventListener('click', (evento) => {
+      const objetivo = evento.target
+      if (!(objetivo instanceof Element)) return
+      const eliminar = objetivo.closest<HTMLButtonElement>('[data-eliminar-logo]')
+      if (eliminar) eliminar.closest('[data-logo]')?.remove()
+    })
+
+    anadir.addEventListener('click', () => {
+      const fragmento = plantilla.content.cloneNode(true) as DocumentFragment
+      fragmento.querySelectorAll<HTMLInputElement>('[name]').forEach((input) => {
+        input.name = input.name.replace('__indice__', String(siguiente))
+      })
+      siguiente += 1
+      const campo = fragmento.querySelector<HTMLElement>('[data-campo-imagen]')
+      lista.append(fragmento)
+      campo?.dispatchEvent(new CustomEvent('campo-imagen:inicializar', { bubbles: true }))
+      campo?.querySelector<HTMLButtonElement>('[data-abrir]')?.click()
+    })
+  })
+</script>
