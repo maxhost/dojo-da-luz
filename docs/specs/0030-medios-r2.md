@@ -2,7 +2,7 @@
 spec: 0030
 fecha: 2026-09-21
 estado: implementada, sin verificar contra R2
-resumen: El backoffice sube imágenes a Cloudflare R2: sharp genera AVIF y WebP en tres anchos, la clave sale del hash del contenido y el JSON guarda la URL pública, de modo que el sitio servido nunca depende de R2 en runtime.
+resumen: El backoffice sube imágenes a Cloudflare R2: se guarda el original y una WebP de hasta 1600 px, la clave sale del hash del contenido y el JSON guarda la URL pública, de modo que el sitio servido nunca depende de R2 en runtime.
 disjunta: si
 archivos: src/lib/medios.ts, src/lib/r2.ts, src/pages/admin/medios/**, src/components/admin/CampoImagen.astro, package.json
 ---
@@ -25,9 +25,10 @@ justo para esto y sigue sin usarse.
 
 **Entra:**
 
-- `src/lib/r2.ts`: subida a R2 por su API S3, firmada con SigV4. Solo `PUT` y `HEAD`.
-- `src/lib/medios.ts`: recibe un archivo, lo valida, genera las variantes con `sharp` y
-  devuelve la URL pública y el `srcset`.
+- `src/lib/r2.ts`: acceso a R2 por su API S3, firmado con SigV4. Solo `HEAD`, `PUT` y
+  `ListObjectsV2`: nada de borrar.
+- `src/lib/medios.ts`: recibe un archivo, lo valida, lo reencodea con `sharp` y devuelve la
+  URL pública.
 - `POST /admin/medios`: sube un archivo y responde con la URL. Bajo el guard del BO.
 - `GET /admin/medios`: galería de lo ya subido, para reusar sin volver a subir.
 - `CampoImagen.astro` gana el botón de subir y el selector de la galería, además de la URL
@@ -83,10 +84,23 @@ spec es tener las imágenes en nuestro bucket**, no el reencodeado.
 `PUT` firmado. R2 habla S3 y la firma son ~80 líneas con `node:crypto`. Coherente con no
 atarse a APIs del host (ADR-0001) y con el peso de la función.
 
-**Dominio público del bucket.** Hace falta uno: `r2.dev` para empezar y
-`media.aikido-duran.com` cuando exista el dominio. La URL guardada en el JSON depende de
-esa elección, así que cambiarla después obliga a reescribir los JSON — se decide antes de
-subir la primera imagen, no después.
+**Dominio público del bucket.** Hoy es el de desarrollo de R2:
+`https://pub-1583795645db473491961fb0558ff2d3.r2.dev`, sobre el bucket `dojo-da-luz-dev`.
+La URL guardada en el JSON depende de esa elección, así que cambiarla después obliga a
+reescribir los JSON — cuanto antes se decida el dominio propio, menos hay que reescribir.
+
+**CORS no hace falta y no se configura.** Es la pregunta que aparece sola al ver un 403, y
+la respuesta es que no interviene en ningún punto de este diseño:
+
+- El `PUT` a R2 lo hace la función del backoffice, servidor contra servidor. CORS es una
+  política que aplica el navegador; una petición que no sale de un navegador no la ve.
+- Las imágenes se cargan con `<img src>`. Una imagen de otro origen no necesita CORS: el
+  navegador la descarga y la pinta. Solo haría falta con `crossorigin`, leyendo los píxeles
+  en un `<canvas>`, o pidiéndola con `fetch()`.
+- El único `fetch()` del backoffice va a `/admin/medios/subir`, que es el mismo origen.
+
+Haría falta el día que se suba **directo del navegador a R2** con una URL prefirmada. Ese
+día se configura con los métodos `PUT` y `POST`; hoy sería configurar algo que nada usa.
 
 ## Archivos
 
