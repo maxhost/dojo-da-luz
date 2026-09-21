@@ -44,7 +44,9 @@
   "schedule": {
     "label": "Timetable",
     "title": "Find your place to practise.",
-    "intro": "You can enrol at any point during the year."
+    "intro": "You can enrol at any point during the year.",
+    "adultsLabel": "Adult classes",
+    "childrenLabel": "Children's classes"
   },
   "pricing": {
     "label": "Fees",
@@ -130,7 +132,10 @@
     "title": "Try Aikido.",
     "text": "Come along for a trial class. No previous experience is required.",
     "note": "The trial class costs €5, deducted from the first monthly payment.",
-    "ctaLabel": "Book a trial class"
+    "ctaLabel": "Book a trial class",
+    "formUrl": "https://www.aikido-duran.com/aula-experimental",
+    "directLabel": "Open form in a new window",
+    "closeLabel": "Close"
   },
   "qa": {
     "label": "Frequently asked questions",

@@ -1,7 +1,9 @@
 ---
 import Base from '../layouts/Base.astro'
+import FormModal from './FormModal.astro'
 import QaSection from './QaSection.astro'
 import { getContent } from '../lib/content'
+import { getMedia } from '../lib/media'
 import { formatAudiencia, formatHorario, getDojos } from '../lib/dojos'
 import { faqJsonLd } from '../lib/site'
 import { pathFor, siteNav, type Locale } from '../lib/i18n'
@@ -11,12 +13,6 @@ interface Props { locale: Locale }
 const { locale } = Astro.props
 const c = getContent('classes', locale)
 const nav = siteNav(locale)
-const audienceLabels = {
-  pt: { adults: 'Aulas para adultos', children: 'Aulas para crianças' },
-  es: { adults: 'Clases para adultos', children: 'Clases para niños' },
-  fr: { adults: 'Cours pour adultes', children: 'Cours pour enfants' },
-  en: { adults: 'Adult classes', children: "Children's classes" },
-}[locale]
 const pricingId: Record<Locale, string> = { pt: 'quotas', es: 'cuotas', fr: 'tarifs', en: 'fees' }
 
 /**
@@ -25,8 +21,7 @@ const pricingId: Record<Locale, string> = { pt: 'quotas', es: 'cuotas', fr: 'tar
  */
 const dojos = getDojos()
 
-const HERO_PHOTO =
-  'https://static.wixstatic.com/media/ae7240_de66207c487b4e8086d18ed67c88ea93~mv2.jpg/v1/crop/x_218,y_0,w_1165,h_900/fill/w_1600,h_1067,al_c,q_85/IMG_3502_JPG.jpg'
+const media = getMedia()
 ---
 
 <Base
@@ -40,7 +35,7 @@ const HERO_PHOTO =
   caption={c.chrome.caption}
 >
   <section class="relative isolate flex min-h-[31rem] items-end overflow-hidden bg-[#292522] text-white md:min-h-[36rem]">
-    <img src={HERO_PHOTO} alt="" class="absolute inset-0 -z-20 h-full w-full object-cover" fetchpriority="high" />
+    <img src={media.classesHero} alt="" class="absolute inset-0 -z-20 h-full w-full object-cover" fetchpriority="high" />
     <div aria-hidden="true" class="absolute inset-0 -z-10 bg-black/65"></div>
     <div class="site-shell py-16 text-center md:py-20">
       <p class="text-xs font-bold uppercase tracking-[.2em] text-[#b3e5ff]">{c.hero.eyebrow}</p>
@@ -58,8 +53,8 @@ const HERO_PHOTO =
         <h2 class="section-title mt-4">{c.schedule.title}</h2>
         <p class="mt-5 text-lg leading-8 text-[#625c55]">{c.schedule.intro}</p>
         <div class="mt-7 flex flex-wrap gap-3">
-          <a class="button button-primary" href={pathFor('adults', locale)}>{audienceLabels.adults}</a>
-          <a class="button border border-[#0099ff] text-[#0099ff]" href={pathFor('children', locale)}>{audienceLabels.children}</a>
+          <a class="button button-primary" href={pathFor('adults', locale)}>{c.schedule.adultsLabel}</a>
+          <a class="button border border-[#0099ff] text-[#0099ff]" href={pathFor('children', locale)}>{c.schedule.childrenLabel}</a>
         </div>
       </div>
       <div class="mt-12 grid gap-6 lg:grid-cols-3">
@@ -133,7 +128,16 @@ const HERO_PHOTO =
       <h2 class="mx-auto mt-4 max-w-3xl font-serif text-4xl font-normal leading-tight md:text-6xl">{c.trial.title}</h2>
       <p class="mx-auto mt-6 max-w-2xl text-lg leading-8 text-white/85">{c.trial.text}</p>
       <p class="mx-auto mt-3 max-w-2xl text-sm font-bold leading-6 text-white">{c.trial.note}</p>
-      <a href="mailto:EMAIL-PENDENTE" class="button mt-9 bg-white text-[#006eb8]">{c.trial.ctaLabel}</a>
+      <div class="mt-9">
+        <FormModal
+          id="aula-experimental-form"
+          title={c.trial.title}
+          trigger={c.trial.ctaLabel}
+          url={c.trial.formUrl}
+          directLabel={c.trial.directLabel}
+          closeLabel={c.trial.closeLabel}
+        />
+      </div>
     </div>
   </section>
 

@@ -140,6 +140,10 @@ export const classesSchema = z.object({
     label: z.string().min(1),
     title: z.string().min(1),
     intro: z.string().min(1),
+    // Los dos botones estaban escritos dentro de `ClassesView.astro` (spec 0035): texto
+    // visible que no se podia editar porque no existia en ningun JSON.
+    adultsLabel: z.string().min(1),
+    childrenLabel: z.string().min(1),
   }),
   pricing: z.object({
     label: z.string().min(1),
@@ -160,6 +164,12 @@ export const classesSchema = z.object({
     text: z.string().min(1),
     note: z.string().min(1),
     ctaLabel: z.string().min(1),
+    // El boton abria `mailto:EMAIL-PENDENTE`. Ahora abre el mismo modal que Adultos y
+    // Crianças. `formUrl` no se edita desde el BO: un destino mal escrito deja el modal
+    // en blanco sin avisar, y el diseño de los formularios es otra spec.
+    formUrl: z.url(),
+    directLabel: z.string().min(1),
+    closeLabel: z.string().min(1),
   }),
   qa: qaSchema,
 })

@@ -47,7 +47,9 @@ export type Fila = {
  * fila vacia de mas para poder agregar sin JavaScript: `vacia()` es lo que la descarta.
  */
 export function filas(form: FormData, prefijo: string): Fila[] {
-  const re = new RegExp(`^${prefijo}\\[(\\d+)\\]\\.(.+)$`)
+  // El prefijo puede traer puntos (`pricing.items`): se escapa para que no sea comodin.
+  const escapado = prefijo.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  const re = new RegExp(`^${escapado}\\[(\\d+)\\]\\.(.+)$`)
   const porIndice = new Map<number, Map<string, string[]>>()
 
   for (const [clave, valor] of form.entries()) {

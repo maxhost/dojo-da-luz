@@ -61,8 +61,8 @@ function validarRuta(ruta: string): void {
   if (!RUTA_VALIDA.test(ruta)) throw new Error(`ruta de contenido invalida: ${ruta}`)
 }
 
-async function github(ruta: string, init?: RequestInit): Promise<Response> {
-  return fetch(`${API}/repos/${env('GITHUB_REPO') || 'maxhost/dojo-da-luz'}/contents/${ruta}`, {
+async function api(ruta: string, init?: RequestInit): Promise<Response> {
+  return fetch(`${API}/repos/${env('GITHUB_REPO') || 'maxhost/dojo-da-luz'}/${ruta}`, {
     ...init,
     headers: {
       accept: 'application/vnd.github+json',
@@ -73,6 +73,17 @@ async function github(ruta: string, init?: RequestInit): Promise<Response> {
       ...(init?.headers ?? {}),
     },
   })
+}
+
+async function github(ruta: string, init?: RequestInit): Promise<Response> {
+  return api(`contents/${ruta}`, init)
+}
+
+/** Una llamada a la Git Data API que devuelve JSON, o explota con el cuerpo del error. */
+async function git<T>(ruta: string, init?: RequestInit): Promise<T> {
+  const res = await api(`git/${ruta}`, init)
+  if (!res.ok) throw new Error(`GitHub ${res.status} en git/${ruta}: ${await res.text()}`)
+  return (await res.json()) as T
 }
 
 export async function leerContenido(ruta: string): Promise<Archivo> {
@@ -125,4 +136,74 @@ export async function publicar(args: {
   // 409 y 422 son el mismo caso: el `sha` que mandamos ya no es el de `main`.
   const motivo = res.status === 409 || res.status === 422 ? 'conflicto' : 'error'
   return { ok: false, motivo, detalle: `GitHub ${res.status}: ${detalle}` }
+}
+
+/**
+ * Varios archivos en **un solo commit** (spec 0035).
+ *
+ * `PUT /contents/{path}` es un archivo por commit. Publicar el portugues en cuatro
+ * llamadas sueltas dejaria, si la segunda falla, justo el estado que el ADR-0030 existe
+ * para impedir: el portugues con una cuota nueva y el frances sin ella. Por eso se arma el
+ * commit a mano con la Git Data API — blobs, arbol, commit, y recien ahi mover la rama.
+ *
+ * El control de concurrencia es el `PATCH` sin `force`: si `main` se movio desde que se
+ * leyo la cabeza, GitHub rechaza el avance y no se pisa nada.
+ */
+export async function publicarVarios(args: {
+  archivos: { ruta: string; contenido: string }[]
+  mensaje: string
+}): Promise<Resultado> {
+  const { archivos, mensaje } = args
+  archivos.forEach(({ ruta }) => validarRuta(ruta))
+  if (archivos.length === 0) return { ok: true }
+
+  if (backend() === 'disco') {
+    for (const { ruta, contenido } of archivos) {
+      await writeFile(resolve(process.cwd(), ruta), contenido, 'utf8')
+    }
+    return { ok: true }
+  }
+
+  try {
+    const ref = await git<{ object: { sha: string } }>(`ref/heads/${RAMA}`, { cache: 'no-store' })
+    const cabeza = ref.object.sha
+    const commitBase = await git<{ tree: { sha: string } }>(`commits/${cabeza}`)
+
+    const blobs = await Promise.all(
+      archivos.map(async ({ ruta, contenido }) => {
+        const blob = await git<{ sha: string }>('blobs', {
+          method: 'POST',
+          body: JSON.stringify({
+            content: Buffer.from(contenido, 'utf8').toString('base64'),
+            encoding: 'base64',
+          }),
+        })
+        return { path: ruta, mode: '100644' as const, type: 'blob' as const, sha: blob.sha }
+      }),
+    )
+
+    const arbol = await git<{ sha: string }>('trees', {
+      method: 'POST',
+      body: JSON.stringify({ base_tree: commitBase.tree.sha, tree: blobs }),
+    })
+
+    const commit = await git<{ sha: string }>('commits', {
+      method: 'POST',
+      body: JSON.stringify({ message: mensaje, tree: arbol.sha, parents: [cabeza] }),
+    })
+
+    const res = await api(`git/refs/heads/${RAMA}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ sha: commit.sha, force: false }),
+    })
+
+    if (res.ok) return { ok: true }
+
+    const detalle = await res.text()
+    // 422 con `force: false` es "la rama se movio": el commit quedo huerfano y se descarta.
+    const motivo = res.status === 422 ? 'conflicto' : 'error'
+    return { ok: false, motivo, detalle: `GitHub ${res.status}: ${detalle}` }
+  } catch (error) {
+    return { ok: false, motivo: 'error', detalle: error instanceof Error ? error.message : String(error) }
+  }
 }

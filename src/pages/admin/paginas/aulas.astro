@@ -1,0 +1,168 @@
+---
+export const prerender = false
+
+import Admin from '../../../layouts/Admin.astro'
+import Aviso from '../../../components/admin/Aviso.astro'
+import FormularioAulas from '../../../components/admin/FormularioAulas.astro'
+import { aulasDesdeForm, guardarAulas, ruta } from '../../../lib/aulas-edicion'
+import { LOCALES, LOCALE_NAME, isLocale, type Locale } from '../../../lib/i18n'
+import type { Media } from '../../../lib/media'
+import { leerMedia, publicarMedia } from '../../../lib/media-edicion'
+import { leerContenido } from '../../../lib/publish'
+import { LISTAS_AULAS, indicesSinTraducir } from '../../../lib/traduccion'
+
+const admin = Astro.locals.admin!
+
+type Datos = Record<string, any>
+
+let errores: Partial<Record<Locale, Record<string, string>>> = {}
+let enviado: Partial<Record<Locale, Datos>> = {}
+let mediosEnviados: Media | null = null
+let aviso: { tipo: 'ok' | 'error'; texto: string } | null = null
+let activo: Locale = isLocale(Astro.url.searchParams.get('idioma') ?? '')
+  ? (Astro.url.searchParams.get('idioma') as Locale)
+  : 'pt'
+
+const publicado = Astro.url.searchParams.get('publicado')
+if (publicado && isLocale(publicado)) {
+  activo = publicado
+  aviso = {
+    tipo: 'ok',
+    texto:
+      publicado === 'pt'
+        ? 'Aulas en portugués publicada, y la estructura de los otros tres idiomas al día. El sitio tarda 1 o 2 minutos en regenerarse.'
+        : `Aulas en ${LOCALE_NAME[publicado]} publicada. El sitio tarda 1 o 2 minutos en regenerarse.`,
+  }
+}
+
+if (Astro.request.method === 'POST') {
+  const form = await Astro.request.formData()
+  const idioma = String(form.get('idioma') ?? '')
+
+  if (!isLocale(idioma)) {
+    Astro.response.status = 400
+    aviso = { tipo: 'error', texto: 'Idioma desconocido.' }
+  } else {
+    activo = idioma
+
+    // La foto se resuelve primero, como en Home (ADR-0029): no se publica el texto y la
+    // imagen no.
+    const imagenes = await publicarMedia(form, String(form.get('shaMedia') ?? ''))
+    const guardado = imagenes.ok ? await guardarAulas(form, idioma) : null
+
+    if (!imagenes.ok) {
+      Astro.response.status = imagenes.estado
+      errores = { [idioma]: imagenes.errores }
+      enviado = { [idioma]: aulasDesdeForm(form) as Datos }
+      aviso = { tipo: 'error', texto: imagenes.aviso }
+    } else if (guardado!.ok) {
+      return Astro.redirect(`/admin/paginas/aulas?publicado=${idioma}`, 303)
+    } else if (guardado!.estado === 200 && imagenes.cambio) {
+      // El texto no cambio pero la foto si: ya se publico, asi que esto es un exito.
+      return Astro.redirect(`/admin/paginas/aulas?publicado=${idioma}`, 303)
+    } else {
+      Astro.response.status = guardado!.estado
+      errores = { [idioma]: guardado!.errores }
+      enviado = { [idioma]: aulasDesdeForm(form) as Datos }
+      aviso = { tipo: guardado!.estado === 200 ? 'ok' : 'error', texto: guardado!.aviso }
+    }
+  }
+}
+
+type Archivo = { locale: Locale; datos: Datos; sinTraducir: Record<string, number[]> }
+
+let archivos: Archivo[] = []
+let shas = {} as Record<Locale, string>
+let medios: { media: Media; sha: string } | null = null
+let sinRepositorio: string | null = null
+
+try {
+  const leidos = await leerMedia()
+  medios = { media: mediosEnviados ?? leidos.media, sha: leidos.sha }
+
+  const crudos = await Promise.all(
+    LOCALES.map(async (locale) => {
+      const archivo = await leerContenido(ruta(locale))
+      shas[locale] = archivo.sha
+      return { locale, publicado: JSON.parse(archivo.contenido) as Datos }
+    }),
+  )
+
+  const pt = crudos.find((c) => c.locale === 'pt')!.publicado
+
+  archivos = crudos.map(({ locale, publicado: datosPublicados }) => {
+    const datos = enviado[locale] ?? datosPublicados
+    // En portugues la marca no tiene sentido: comparar el portugues consigo mismo diria
+    // que todo esta sin traducir.
+    const marcas =
+      locale === 'pt'
+        ? {}
+        : Object.fromEntries(
+            LISTAS_AULAS.map((lista) => [lista, indicesSinTraducir(pt, datos, lista)]),
+          )
+    return { locale, datos, sinTraducir: marcas }
+  })
+} catch (error) {
+  Astro.response.status = 503
+  sinRepositorio = error instanceof Error ? error.message : String(error)
+}
+
+/** Pestañas en CSS, como en el editor de Home: cambiar de idioma no pierde lo escrito. */
+const TABS = [
+  { locale: 'pt', peer: 'peer/pt', boton: 'peer-checked/pt:bg-[#0099ff] peer-checked/pt:text-white', panel: 'hidden peer-checked/pt:block' },
+  { locale: 'es', peer: 'peer/es', boton: 'peer-checked/es:bg-[#0099ff] peer-checked/es:text-white', panel: 'hidden peer-checked/es:block' },
+  { locale: 'fr', peer: 'peer/fr', boton: 'peer-checked/fr:bg-[#0099ff] peer-checked/fr:text-white', panel: 'hidden peer-checked/fr:block' },
+  { locale: 'en', peer: 'peer/en', boton: 'peer-checked/en:bg-[#0099ff] peer-checked/en:text-white', panel: 'hidden peer-checked/en:block' },
+] as const
+---
+
+<Admin titulo="Aulas" admin={admin}>
+  <h1 class="font-serif text-3xl">Aulas</h1>
+  <p class="mt-4 text-sm text-[#625c55]">
+    El portugués manda: agregar o quitar una fila de cualquier lista se hace en su pestaña
+    y aparece en los cuatro idiomas. En las otras tres se traduce.
+  </p>
+
+  {aviso && <Aviso tipo={aviso.tipo}>{aviso.texto}</Aviso>}
+  {sinRepositorio && <Aviso tipo="error">No se puede abrir el editor: {sinRepositorio}</Aviso>}
+
+  {sinRepositorio === null && (
+  <div class="mt-8">
+    {TABS.map((tab) => (
+      <input
+        class={`${tab.peer} sr-only`}
+        type="radio"
+        name="idioma-activo"
+        id={`tab-aulas-${tab.locale}`}
+        checked={activo === tab.locale}
+      />
+    ))}
+
+    {TABS.map((tab) => (
+      <label
+        class={`mr-2 inline-block cursor-pointer border border-[#d7cec0] bg-white px-4 py-2 text-sm ${tab.boton}`}
+        for={`tab-aulas-${tab.locale}`}
+      >
+        {LOCALE_NAME[tab.locale]}
+      </label>
+    ))}
+
+    {TABS.map((tab) => {
+      const archivo = archivos.find((a) => a.locale === tab.locale)!
+      return (
+        <section class={tab.panel}>
+          <FormularioAulas
+            locale={archivo.locale}
+            datos={archivo.datos}
+            errores={errores[archivo.locale] ?? {}}
+            shas={shas}
+            medios={medios!.media}
+            shaMedia={medios!.sha}
+            sinTraducir={archivo.sinTraducir}
+          />
+        </section>
+      )
+    })}
+  </div>
+  )}
+</Admin>

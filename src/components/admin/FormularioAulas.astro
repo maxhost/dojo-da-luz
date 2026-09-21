@@ -1,0 +1,248 @@
+---
+import CampoImagen from './CampoImagen.astro'
+import CampoTexto from './CampoTexto.astro'
+import TablaFilas from './TablaFilas.astro'
+import { errorDe } from '../../lib/forms'
+import { LOCALES, LOCALE_NAME, type Locale } from '../../lib/i18n'
+import { CLAVES_MEDIA, type Media } from '../../lib/media'
+
+/**
+ * Formulario de `/aulas` para un idioma (spec 0035). Los cuatro se pintan a la vez, como
+ * en el editor de Home: cambiar de pestaña es CSS, no una navegacion, asi que lo escrito
+ * y sin guardar sigue ahi al volver.
+ *
+ * La diferencia con Home es el ADR-0030: **solo la pestaña portuguesa puede agregar y
+ * quitar filas**. Las otras tres reciben `editable={false}` y solo traducen.
+ */
+
+interface Props {
+  locale: Locale
+  datos: Record<string, any>
+  errores: Record<string, string>
+  shas: Record<Locale, string>
+  medios: Media
+  shaMedia: string
+  /** Ruta de lista → indices cuyo texto sigue siendo el portugues. */
+  sinTraducir: Record<string, number[]>
+}
+
+const { locale, datos, errores, shas, medios, shaMedia, sinTraducir } = Astro.props
+
+const esPortugues = locale === 'pt'
+
+const v = (ruta: string): string =>
+  ruta.split('.').reduce<any>((actual, clave) => actual?.[clave], datos) ?? ''
+const lista = (ruta: string): any[] =>
+  ruta.split('.').reduce<any>((actual, clave) => actual?.[clave], datos) ?? []
+const e = (ruta: string) => errorDe(errores, ruta)
+
+/** Las tablas de una columna guardan textos sueltos: la fila es `{ valor }`. */
+const textos = (ruta: string) => lista(ruta).map((valor: string) => ({ valor }))
+
+const seccion = 'mt-8 border border-[#d7cec0] bg-[#fbf8f2] p-4'
+
+const campo = (nombre: string, etiqueta: string, extra: Record<string, unknown> = {}) => ({
+  idPrefijo: locale,
+  nombre,
+  etiqueta,
+  valor: v(nombre),
+  error: e(nombre),
+  requerido: true,
+  ...extra,
+})
+---
+
+<form method="post">
+  <input type="hidden" name="idioma" value={locale} />
+  <input type="hidden" name="shaMedia" value={shaMedia} />
+  {/* Los cuatro `sha`: publicar portugues toca los cuatro archivos y los verifica todos. */}
+  {LOCALES.map((otro) => <input type="hidden" name={`sha.${otro}`} value={shas[otro]} />)}
+  {/* Las imagenes que esta pagina no edita viajan igual: `media.json` se guarda entero. */}
+  {CLAVES_MEDIA.filter((clave) => clave !== 'classesHero').map((clave) => (
+    <input type="hidden" name={`media.${clave}`} value={medios[clave]} />
+  ))}
+  <input type="hidden" name="trial.formUrl" value={v('trial.formUrl')} />
+
+  {!esPortugues && (
+    <p class="mt-6 border-l-4 border-[#0099ff] bg-[#eaf6ff] p-3 text-sm text-[#211f1c]">
+      Acá se traduce, no se cambia la estructura. Para agregar o quitar una fila de
+      cualquier lista, andá a la pestaña <strong>Português</strong>: lo que agregues ahí
+      aparece en los cuatro idiomas.
+    </p>
+  )}
+
+  <fieldset class={seccion}>
+    <legend class="px-2 text-sm font-semibold">SEO</legend>
+    <CampoTexto {...campo('seo.title', 'Título de la página', { recomendado: 60, ayuda: 'Lo que se lee como titular en Google y en la pestaña del navegador.' })} />
+    <CampoTexto {...campo('seo.description', 'Descripción', { tipo: 'area', recomendado: 155, ayuda: 'El párrafo que Google muestra debajo del título.' })} />
+  </fieldset>
+
+  <fieldset class={seccion}>
+    <legend class="px-2 text-sm font-semibold">Cabecera y pie</legend>
+    <CampoTexto {...campo('chrome.caption', 'Bajada del logo')} />
+    <CampoTexto {...campo('chrome.menuLabel', 'Botón de menú')} />
+    <CampoTexto {...campo('chrome.skipLink', 'Saltar al contenido')} />
+
+    <p class="mt-6 text-sm font-semibold">Etiquetas del menú</p>
+    <p class="mt-1 text-xs text-[#625c55]">
+      Se edita cómo se leen. A dónde llevan no: apuntan a secciones de esta misma página y
+      un destino mal escrito rompe la navegación sin que nada lo avise.
+    </p>
+    {lista('chrome.nav').map((entrada: { label: string; href: string }, i: number) => (
+      <>
+        <CampoTexto
+          idPrefijo={locale}
+          nombre={`chrome.nav[${i}].label`}
+          etiqueta={`Menú ${i + 1} · ${entrada.href}`}
+          valor={entrada.label}
+          error={e(`chrome.nav.${i}.label`)}
+          requerido
+        />
+        <input type="hidden" name={`chrome.nav[${i}].href`} value={entrada.href} />
+      </>
+    ))}
+
+    <CampoTexto {...campo('chrome.footerNote.areas', 'Pie · zonas')} />
+    <CampoTexto {...campo('chrome.footerNote.orgType', 'Pie · tipo de organización')} />
+  </fieldset>
+
+  <fieldset class={seccion}>
+    <legend class="px-2 text-sm font-semibold">Portada</legend>
+    <CampoTexto {...campo('hero.eyebrow', 'Antetítulo')} />
+    <CampoTexto {...campo('hero.title', 'Titular')} />
+    <CampoTexto {...campo('hero.lead', 'Bajada', { tipo: 'area' })} />
+    <CampoTexto {...campo('hero.season', 'Temporada')} />
+    <CampoTexto {...campo('hero.ctaLabel', 'Texto del botón')} />
+    <CampoImagen
+      idPrefijo={locale}
+      nombre="media.classesHero"
+      etiqueta="Foto de portada"
+      valor={medios.classesHero}
+      errores={errores}
+      ayuda="Es la misma en los cuatro idiomas."
+    />
+  </fieldset>
+
+  <fieldset class={seccion}>
+    <legend class="px-2 text-sm font-semibold">01 · Horários</legend>
+    <p class="text-xs text-[#625c55]">
+      Las sedes y sus horarios no se editan acá: son fichas de dojo. Se cambian en
+      <a class="underline" href="/admin/dojos">Dojos</a>, y archivar uno lo saca de esta página.
+    </p>
+    <CampoTexto {...campo('schedule.label', 'Rótulo')} />
+    <CampoTexto {...campo('schedule.title', 'Título')} />
+    <CampoTexto {...campo('schedule.intro', 'Introducción', { tipo: 'area' })} />
+    <CampoTexto {...campo('schedule.adultsLabel', 'Texto del botón de adultos')} />
+    <CampoTexto {...campo('schedule.childrenLabel', 'Texto del botón de crianças')} />
+  </fieldset>
+
+  <fieldset class={seccion}>
+    <legend class="px-2 text-sm font-semibold">02 · Quotas</legend>
+    <CampoTexto {...campo('pricing.label', 'Rótulo')} />
+    <CampoTexto {...campo('pricing.title', 'Título')} />
+    <CampoTexto {...campo('pricing.intro', 'Introducción', { tipo: 'area' })} />
+
+    <TablaFilas
+      titulo="Cuotas"
+      prefijo="pricing.items"
+      columnas={[
+        { campo: 'name', etiqueta: 'Nombre' },
+        { campo: 'price', etiqueta: 'Precio' },
+        { campo: 'detail', etiqueta: 'Detalle' },
+      ]}
+      filas={lista('pricing.items')}
+      errores={errores}
+      idPrefijo={locale}
+      editable={esPortugues}
+      sinTraducir={sinTraducir['pricing.items'] ?? []}
+    />
+
+    <TablaFilas
+      titulo="Notas"
+      prefijo="pricing.notes"
+      columnas={[{ campo: 'valor', etiqueta: 'Nota', tipo: 'area' }]}
+      filas={textos('pricing.notes')}
+      errores={errores}
+      idPrefijo={locale}
+      editable={esPortugues}
+      sinTraducir={sinTraducir['pricing.notes'] ?? []}
+      ayuda="Las aclaraciones que van debajo de la tabla de cuotas."
+    />
+  </fieldset>
+
+  <fieldset class={seccion}>
+    <legend class="px-2 text-sm font-semibold">03 · Crianças e adolescentes</legend>
+    <CampoTexto {...campo('children.label', 'Rótulo')} />
+    <CampoTexto {...campo('children.title', 'Título')} />
+
+    <TablaFilas
+      titulo="Párrafos"
+      prefijo="children.paragraphs"
+      columnas={[{ campo: 'valor', etiqueta: 'Párrafo', tipo: 'area' }]}
+      filas={textos('children.paragraphs')}
+      errores={errores}
+      idPrefijo={locale}
+      editable={esPortugues}
+      sinTraducir={sinTraducir['children.paragraphs'] ?? []}
+    />
+
+    <TablaFilas
+      titulo="Datos"
+      prefijo="children.facts"
+      columnas={[
+        { campo: 'label', etiqueta: 'Etiqueta' },
+        { campo: 'value', etiqueta: 'Valor' },
+      ]}
+      filas={lista('children.facts')}
+      errores={errores}
+      idPrefijo={locale}
+      editable={esPortugues}
+      sinTraducir={sinTraducir['children.facts'] ?? []}
+    />
+  </fieldset>
+
+  <fieldset class={seccion}>
+    <legend class="px-2 text-sm font-semibold">04 · Perguntas frequentes</legend>
+    <CampoTexto {...campo('qa.label', 'Rótulo')} />
+    <CampoTexto {...campo('qa.title', 'Título')} />
+
+    <TablaFilas
+      titulo="Preguntas"
+      prefijo="qa.items"
+      columnas={[
+        { campo: 'pregunta', etiqueta: 'Pregunta' },
+        { campo: 'respuesta', etiqueta: 'Respuesta', tipo: 'area' },
+      ]}
+      filas={lista('qa.items')}
+      errores={errores}
+      idPrefijo={locale}
+      editable={esPortugues}
+      sinTraducir={sinTraducir['qa.items'] ?? []}
+      ayuda="Estas preguntas también se publican como dato estructurado que Google lee. Respuestas de una o dos frases completas."
+    />
+  </fieldset>
+
+  <fieldset class={seccion}>
+    <legend class="px-2 text-sm font-semibold">05 · Aula experimental</legend>
+    <CampoTexto {...campo('trial.label', 'Rótulo')} />
+    <CampoTexto {...campo('trial.title', 'Título')} />
+    <CampoTexto {...campo('trial.text', 'Texto', { tipo: 'area' })} />
+    <CampoTexto {...campo('trial.note', 'Nota')} />
+    <CampoTexto {...campo('trial.ctaLabel', 'Texto del botón')} />
+    <CampoTexto {...campo('trial.directLabel', 'Enlace para abrir el formulario aparte')} />
+    <CampoTexto {...campo('trial.closeLabel', 'Texto para cerrar')} />
+    <p class="mt-4 text-xs text-[#625c55]">
+      El botón abre el mismo formulario que Adultos. Cambiar a dónde apunta no se hace
+      desde acá todavía.
+    </p>
+  </fieldset>
+
+  <button class="mt-8 bg-[#0099ff] px-6 py-3 font-semibold text-white" type="submit">
+    Publicar {LOCALE_NAME[locale]}
+  </button>
+  {esPortugues && (
+    <p class="mt-2 text-xs text-[#625c55]">
+      Publicar portugués también actualiza la estructura de los otros tres idiomas.
+    </p>
+  )}
+</form>

@@ -8,8 +8,8 @@ Si una sesion se cae, se cierra o se compacta, se vuelve aca — no al chat. Hay
 Regla: **marcar `hecho` solo con verificacion real** — tests que pasan, comando corrido,
 cosa vista en pantalla. No "deberia andar".
 
-Ultima actualizacion: 2026-09-21 (verificacion en produccion del editor de parcerias y de
-la subida a R2: filas 6j y 6l). Antes: 2026-09-21 (handoff) — `main` en `12b27fe`, desplegado, gate verde:
+Ultima actualizacion: 2026-09-21 (specs 0034 y 0035: /aulas lee la entidad de dojos y gana
+editor propio en el BO; ademas la verificacion en produccion de las filas 6j y 6l). Antes: 2026-09-21 (handoff) — `main` en `12b27fe`, desplegado, gate verde:
 `astro check` 0/0/0, `npm test` **24/24**, `npm run build` 44 rutas, `/api/health` 200 desde
 `dojo-da-luz.vercel.app`.
 
@@ -21,10 +21,12 @@ la subida a R2: filas 6j y 6l). Antes: 2026-09-21 (handoff) — `main` en `12b27
    modifican texto de botones, input de imagen que modifica imagenes"*. **Antes de escribir
    una linea mas de UI, leer "Descartado" abajo: hay tres intentos con su motivo de rechazo,
    y repetirlos cuesta otra sesion.**
-2. **Nadie entro nunca al backoffice a probarlo.** Todo lo verificado es `astro check`,
-   tests, HTML construido y respuestas HTTP. **Ninguna de las pantallas del editor fue vista
-   por nadie** — ni el agente, que no tiene contraseña, ni el cliente, que probo y rechazo.
-   Cualquier afirmacion sobre como se ve o se siente el editor es una hipotesis.
+2. **Ya se puede ver el BO sin sacar al cliente.** `node --env-file=.env
+   scripts/sesion-temporal.mjs` inserta una sesion de 40 minutos en `admin_session` y la
+   imprime; `--borrar <token>` la saca. **No toca la contraseña** —`npm run admin:seed` si,
+   y expulsa al cliente—. Con eso se cierra el agujero que costo tres iteraciones del
+   editor: la pantalla de `/admin/paginas/aulas` se leyo de verdad antes de darla por
+   hecha. Un POST necesita ademas `-H "Origin: http://localhost:4321"`.
 3. **La subida a R2 ya se ejercito y funciona** (fila 6j, verificada el 2026-09-21). Un
    logo subido desde el BO llego a R2, quedo en `content/partners.json` por un commit del
    propio BO, Vercel construyo en 20 s y se ve en las cuatro homes publicas. El camino
@@ -43,8 +45,15 @@ SEO actual, mejorar GEO.
 
 ### Por donde seguir (corte del 2026-09-21)
 
+0. **El editor de `/aulas` esta hecho y falta apretarlo en produccion** (fila 6p). Se
+   verifico entero en local contra la base real: agregar una cuota en portugues la crea en
+   los cuatro idiomas con la marca "sin traducir", y quitarla la borra en los cuatro sin
+   pisar las traducciones de las demas. Lo que falta es el camino de GitHub: un commit con
+   cuatro archivos por la Git Data API, que nunca se ejercito contra el repo.
+
 1. **Rediseñar la interfaz del editor de Home con el cliente, no para el cliente** (fila
-   6o). Es lo unico que importa ahora. Lo que fallo tres veces fue diseñar a ciegas:
+   6o). Sigue pendiente para la Home; el editor de `/aulas` ya nacio con el layout aprobado
+   campo por campo antes de escribir codigo, que es el procedimiento que faltaba. Lo que fallo tres veces fue diseñar a ciegas:
    proponer una pantalla, implementarla entera, desplegarla y recien ahi enterarse de que no
    era. **Lo que corresponde antes de implementar**: que el cliente apruebe el layout —una
    descripcion campo por campo, un boceto, o la pantalla misma en una rama de preview— y
@@ -162,7 +171,7 @@ siguiente guardado del BO reordena el archivo: ruido de una vez, no perdida de d
 | 6 | Spec 0019 — backoffice: login y sesion | 0019 | hecho | `/admin` con guard por Host, noindex, rate limit y sesion en Neon. Sin reset por email: eso es la 0022. |
 | 6d | Spec 0022 — recuperacion de contraseña por Resend | 0022 | bloqueada | Decision del cliente: arrancar sin Resend. Necesita `RESEND_API_KEY`. Mientras tanto la contraseña se repone con `npm run admin:seed`. |
 | 6b | Spec 0020 — dojos como entidad y render en la home | 0020 | hecho | 3 dojos en `content/dojos.json` con horarios estructurados. Falta migrar Aulas y Contacto a la entidad (fila 6f). |
-| 6f | Migrar Aulas y Contacto a la entidad de dojos | — | pendiente | Hoy `classes.schedule.venues` y `contact.venues` siguen duplicando sedes y horarios en 4 idiomas. Ahi entra `transporte` en la entidad. |
+| 6f | Migrar Aulas y Contacto a la entidad de dojos | 0034 | **a medias** | `/aulas` ya lee la entidad (spec 0034): archivar un dojo lo saca de la pagina, comprobado en las dos direcciones. Falta `/contactos`, que sigue con `contact.venues` — necesita sumarle `transporte` a la ficha de dojo. |
 | 6c | Spec 0023 — capa GEO (resumen en Home, Q&A en Aulas/Adultos/Niños, robots, llms.txt) | 0023 | hecho | 13 pares Q&A por idioma con `FAQPage`. Falta que el cliente confirme precios y edades: hoy salen del contenido que ya estaba publicado. |
 | 6e | Spec 0021 — editor de Home y CRUD de dojos en el BO | 0021 | hecho en local | Verificado contra `astro dev` con backend de disco: 16 comprobaciones en la spec. **No desplegado y sin un solo commit salido por la API de GitHub.** |
 | 6g | Ejercitar el camino de publicacion por GitHub | 0021 | bloqueada | Necesita un PAT de alcance fino sobre `maxhost/dojo-da-luz` con contenido en escritura, cargado en Vercel como `GITHUB_TOKEN`. Sin el, las 4 rutas del editor responden 503 diciendo que falta — el resto del BO (login, panel) funciona igual. |
@@ -174,6 +183,8 @@ siguiente guardado del BO reordena el archivo: ruido de una vez, no perdida de d
 | 6m | Spec 0032 — imagenes de la Home compartidas y subida primero | 0032 | implementada, sin probar en el BO | Las cinco imagenes salieron de los cuatro `home.json` y viven en `content/media.json` (ADR-0028): se suben una vez y valen para los cuatro idiomas. El `alt` y el pie siguen por idioma, con la miniatura al lado para saber que se describe. El campo de imagen ahora ofrece **subir primero** y deja la direccion a mano plegada en un `details` que nace abierto (sin JS sigue siendo un input visible). Las 4 homes construidas quedaron identicas salvo el hash del CSS. |
 | 6n | Spec 0033 — un campo por cosa en el editor | 0033 | implementada, sin probar en el BO | Correccion de UX pedida por el cliente: el bloque "Imágenes de la portada" **se borro** y las cinco imagenes volvieron a su seccion, donde **la miniatura es el boton** que abre el selector de archivos; un parceiro volvio a ser solo un logo mas un "quitar" (nombre y escala viajan ocultos). Publicar un idioma escribe `media.json` tambien, solo si alguna imagen cambio. |
 | 6o | Rediseñar la interfaz del editor con el cliente | — | **bloqueante, sin empezar** | Tres iteraciones rechazadas (0031, 0032, 0033). El pedido textual: *"un form simple donde tenes inputs de texto que modifican textos, inputs de texto que modifican texto de botones, input de imagen que modifica imagenes"*. **No implementar sin que el cliente apruebe el layout antes** — ver Descartado. Requisito practico: conseguir forma de ver el BO (contraseña, o sesion temporal en `admin_session`), porque hasta ahora se diseño sin ver ni una pantalla. |
+| 6p | Spec 0035 — editor de /aulas en el BO | 0035 | implementada, verificada en local | Cuatro pestañas, cinco tablas (cuotas, notas, parrafos, datos de crianças, preguntas) y el layout aprobado por el cliente **antes** de escribir codigo. Portugues manda la estructura (ADR-0030): solo su pestaña tiene "Añadir fila"; publicar PT escribe los cuatro archivos en un commit por la Git Data API. Verificado por HTTP contra el BO corriendo: alta y baja de una cuota propagadas a los cuatro idiomas, marca "sin traducir" en es/fr/en, traducciones de las otras filas intactas. **Falta en produccion**: `publicarVarios` nunca corrio contra GitHub. |
+| 6q | Sacar Encarnação de los textos en prosa | — | pendiente | El dojo cerro. La estructura ya no lo nombra, la prosa si: en `classes.json` (descripcion SEO, pie, `children.facts[2]`, dos respuestas del Q&A) lo puede arreglar el cliente desde `/admin/paginas/aulas`. En `adults.json`, `children.json` y `contact.json` **no hay editor todavia** y hay que tocarlo a mano o darles su spec. |
 | 7 | Alumnos + emision de factura + PDF a R2 + envio Resend | — | pendiente | Necesita una factura de ejemplo real. Spec sin escribir: el numero 0004 del INDEX es otra cosa. |
 | 8 | Redirects 301 de las 34 URLs viejas | — | plan definido | Matriz conceptual documentada. Falta crawl final, Search Console e implementación cuando existan todos los destinos. |
 | 9 | Sitemap + robots.txt | — | pendiente | Con el set completo de paginas. |

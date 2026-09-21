@@ -44,7 +44,9 @@
   "schedule": {
     "label": "Horários",
     "title": "Encontra o teu lugar para praticar.",
-    "intro": "A inscrição pode ser feita em qualquer momento do ano."
+    "intro": "A inscrição pode ser feita em qualquer momento do ano.",
+    "adultsLabel": "Aulas para adultos",
+    "childrenLabel": "Aulas para crianças"
   },
   "pricing": {
     "label": "Quotas",
@@ -130,7 +132,10 @@
     "title": "Experimenta o Aikido.",
     "text": "Podes aparecer para fazer uma aula experimental. Não é necessária experiência prévia.",
     "note": "A aula experimental custa 5 €, descontados no valor da primeira mensalidade.",
-    "ctaLabel": "Marcar aula experimental"
+    "ctaLabel": "Marcar aula experimental",
+    "formUrl": "https://www.aikido-duran.com/aula-experimental",
+    "directLabel": "Abrir formulário numa nova janela",
+    "closeLabel": "Fechar"
   },
   "qa": {
     "label": "Perguntas frequentes",

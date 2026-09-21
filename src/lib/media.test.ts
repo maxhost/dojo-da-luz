@@ -4,9 +4,10 @@ import { mediaDesdeForm } from './forms.ts'
 import { CLAVES_MEDIA, mediaSchema } from './media.ts'
 
 /**
- * Las cinco imagenes de la portada son un archivo aparte, compartido por los cuatro idiomas
- * (spec 0032). Lo que se prueba es que se lean las cinco y que una vacia no publique una
- * Home sin foto: el schema del build las exige todas.
+ * Las imagenes compartidas son un archivo aparte, el mismo para los cuatro idiomas
+ * (spec 0032). Eran cinco de la portada; la spec 0035 sumo la de `/aulas`. Lo que se
+ * prueba es que se lean todas las declaradas y ninguna de mas, y que una vacia no
+ * publique una pagina sin foto: el schema del build las exige todas.
  */
 
 const URLS = {
@@ -15,6 +16,7 @@ const URLS = {
   childrenPhoto: 'https://ejemplo.test/criancas.webp',
   dojoPhoto: 'https://ejemplo.test/dojo.webp',
   teacherPhoto: 'https://ejemplo.test/professor.webp',
+  classesHero: 'https://ejemplo.test/aulas.webp',
 }
 
 /** Las imagenes viajan con el prefijo `media.` dentro del formulario del idioma. */
@@ -24,7 +26,7 @@ function form(valores: Record<string, string>): FormData {
   return fd
 }
 
-test('se leen las cinco claves y ninguna de mas', () => {
+test('se leen todas las claves declaradas y ninguna de mas', () => {
   const leido = mediaDesdeForm(form({ ...URLS, otroCampo: 'https://ejemplo.test/vieja.jpg' }))
   assert.deepEqual(Object.keys(leido).sort(), [...CLAVES_MEDIA].sort())
   assert.deepEqual(leido, URLS)

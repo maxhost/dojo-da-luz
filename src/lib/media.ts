@@ -20,6 +20,7 @@ export const mediaSchema = z.object({
   childrenPhoto: z.url(),
   dojoPhoto: z.url(),
   teacherPhoto: z.url(),
+  classesHero: z.url(),
 })
 
 export type Media = z.infer<typeof mediaSchema>
@@ -31,6 +32,7 @@ export const CLAVES_MEDIA = [
   'childrenPhoto',
   'dojoPhoto',
   'teacherPhoto',
+  'classesHero',
 ] as const
 
 export const ETIQUETA_MEDIA: Record<keyof Media, string> = {
@@ -39,6 +41,7 @@ export const ETIQUETA_MEDIA: Record<keyof Media, string> = {
   childrenPhoto: 'Foto de la tarjeta de Crianças',
   dojoPhoto: 'Foto de la sección del dojo',
   teacherPhoto: 'Retrato del profesor',
+  classesHero: 'Portada de Aulas',
 }
 
 let cache: Media | null = null

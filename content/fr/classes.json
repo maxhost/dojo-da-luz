@@ -44,7 +44,9 @@
   "schedule": {
     "label": "Horaires",
     "title": "Trouvez votre lieu de pratique.",
-    "intro": "L'inscription est possible à tout moment de l'année."
+    "intro": "L'inscription est possible à tout moment de l'année.",
+    "adultsLabel": "Cours pour adultes",
+    "childrenLabel": "Cours pour enfants"
   },
   "pricing": {
     "label": "Tarifs",
@@ -130,7 +132,10 @@
     "title": "Essayez l'Aïkido.",
     "text": "Venez participer à un cours d'essai. Aucune expérience préalable n'est nécessaire.",
     "note": "Le cours d'essai coûte 5 €, déduits de la première mensualité.",
-    "ctaLabel": "Réserver un cours d'essai"
+    "ctaLabel": "Réserver un cours d'essai",
+    "formUrl": "https://www.aikido-duran.com/aula-experimental",
+    "directLabel": "Ouvrir le formulaire dans une nouvelle fenêtre",
+    "closeLabel": "Fermer"
   },
   "qa": {
     "label": "Questions fréquentes",
