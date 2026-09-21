@@ -14,14 +14,24 @@ import type { ContentOf } from '../lib/content'
  * destino.
  */
 
-type Galeria = ContentOf<'adults'>['gallery']
+/**
+ * Recibe **la lista de medios**, no el objeto galeria (spec 0041). El rotulo y el titulo
+ * siempre los pinto la vista; `/escolas` no tiene ninguno de los dos y sin este cambio
+ * habria que inventarle dos campos vacios para poder reusar el componente.
+ */
+type Medios = ContentOf<'adults'>['gallery']['items']
 
 interface Props {
-  gallery: Galeria
+  items: Medios
+  /**
+   * El aire de arriba es el que separa la rejilla **de su titulo**. `/escolas` no tiene
+   * titulo (ADR-0037), asi que ahi sobra: la rejilla es lo primero de su seccion y ya tiene
+   * el padding de la franja.
+   */
+  margenSuperior?: boolean
 }
 
-const { gallery } = Astro.props
-const medios = gallery.items
+const { items: medios, margenSuperior = true } = Astro.props
 const cuantos = medios.length
 
 /**
@@ -40,7 +50,7 @@ const destacaElPrimero = cuantos >= 5
 ---
 
 {cuantos > 0 && (
-  <ul class:list={['mt-10 grid gap-2 sm:gap-4', rejilla]} role="list">
+  <ul class:list={[margenSuperior && 'mt-10', 'grid gap-2 sm:gap-4', rejilla]} role="list">
     {medios.map((item, index) => (
       <li
         class:list={[

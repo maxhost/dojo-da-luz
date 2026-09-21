@@ -1,21 +1,31 @@
 ---
 import Base from '../layouts/Base.astro'
+import GaleriaMedios from './GaleriaMedios.astro'
 import { getContent } from '../lib/content'
 import { siteNav, type Locale } from '../lib/i18n'
 
 interface Props { locale: Locale }
 const { locale } = Astro.props
 const c = getContent('schools', locale)
-const ui = { pt: ['Aikido · Lisboa', 'Menu', 'Saltar para o conteúdo', 'Associação sem fins lucrativos'], es: ['Aikido · Lisboa', 'Menú', 'Saltar al contenido', 'Asociación sin fines de lucro'], fr: ['Aïkido · Lisbonne', 'Menu', 'Aller au contenu', 'Association à but non lucratif'], en: ['Aikido · Lisbon', 'Menu', 'Skip to content', 'Non-profit association'] }[locale]
+/**
+ * Los cinco textos del borde estaban escritos aca adentro (spec 0041). La rejilla propia de
+ * la galeria tambien: ahora es la compartida, que ademas admite video (ADR-0037).
+ */
+const chrome = c.chrome
 ---
 
-<Base page="schools" locale={locale} title={c.seo.title} description={c.seo.description} skipLink={ui[2]} nav={siteNav(locale)} menuLabel={ui[1]} caption={ui[0]}>
+<Base page="schools" locale={locale} title={c.seo.title} description={c.seo.description} skipLink={chrome.skipLink} nav={siteNav(locale)} menuLabel={chrome.menuLabel} caption={chrome.caption}>
   <section class="relative isolate flex min-h-[31rem] items-end overflow-hidden bg-[#292522] text-center text-white md:min-h-[36rem]">
     <img src={c.heroPhoto} alt="" class="absolute inset-0 -z-20 h-full w-full object-cover" fetchpriority="high" />
     <div aria-hidden="true" class="absolute inset-0 -z-10 bg-black/65"></div>
     <div class="site-shell py-16 md:py-20"><p class="section-kicker text-[#b3e5ff]">{c.eyebrow}</p><h1 class="mx-auto mt-4 max-w-4xl font-serif text-5xl leading-[1.04] md:text-7xl">{c.title}</h1><p class="mx-auto mt-6 max-w-2xl text-xl leading-9 text-white/75">{c.lead}</p></div>
   </section>
   <section class="section-pad bg-white"><div class="site-shell grid gap-10 md:grid-cols-[.9fr_1.1fr] md:items-center md:gap-20"><img src={c.introduction.photo} alt={c.introduction.photoAlt} class="aspect-[4/3] w-full object-cover" loading="lazy" /><div><p class="section-kicker">{c.introduction.eyebrow}</p><h2 class="mt-4 font-serif text-4xl leading-tight md:text-5xl">{c.introduction.title}</h2><p class="mt-4 font-oxanium text-sm font-medium tracking-[.04em] text-[#0099ff]">{c.introduction.subtitle}</p>{c.introduction.paragraphs.map((paragraph) => <p class="mt-5 text-lg leading-8 text-[#4c4741]">{paragraph}</p>)}</div></div></section>
-  <section class="section-pad bg-[#f6f1e8]"><div class="site-shell"><div class="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6">{c.gallery.map((photo) => <img src={photo.src} alt={photo.alt} class="aspect-square w-full object-cover" loading="lazy" />)}</div></div></section>
-  <p slot="footer-note" class="text-sm text-white/65">Benfica · Lumiar · Encarnação<br />{ui[3]}</p>
+
+  {/* Sin medios la franja no se pinta. La galeria no lleva rotulo: viene pegada al bloque
+      de arriba, que ya trae tres niveles de encabezado (ADR-0037). */}
+  {c.gallery.length > 0 && (
+    <section class="section-pad overflow-hidden bg-[#f6f1e8]"><div class="site-shell"><GaleriaMedios items={c.gallery} margenSuperior={false} /></div></section>
+  )}
+  <p slot="footer-note" class="text-sm text-white/65">{chrome.footerNote.areas}<br />{chrome.footerNote.orgType}</p>
 </Base>

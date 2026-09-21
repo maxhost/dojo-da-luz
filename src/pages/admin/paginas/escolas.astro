@@ -1,0 +1,42 @@
+---
+export const prerender = false
+
+import Admin from '../../../layouts/Admin.astro'
+import Aviso from '../../../components/admin/Aviso.astro'
+import EditorPestanas from '../../../components/admin/EditorPestanas.astro'
+import FormularioEscolas from '../../../components/admin/FormularioEscolas.astro'
+import { paginaEscolas } from '../../../lib/escolas-edicion'
+import { pantallaEditor } from '../../../lib/editor-pantalla'
+
+/** Editor de `/escolas` (spec 0041). */
+
+const admin = Astro.locals.admin!
+const pantalla = await pantallaEditor(paginaEscolas, Astro.request, Astro.url)
+
+if (pantalla.redirigir) return Astro.redirect(pantalla.redirigir, 303)
+if (pantalla.estado) Astro.response.status = pantalla.estado
+---
+
+<Admin titulo="Escolas" admin={admin}>
+  <h1 class="font-serif text-3xl">Escolas</h1>
+  <p class="mt-4 text-sm text-[#625c55]">
+    La portada, el bloque de comunidad y la galería del final, que acepta fotos y vídeos de
+    YouTube. Las fotos y la galería se cambian en la pestaña <strong>Português</strong> y
+    valen para los cuatro idiomas; en las otras tres se traduce el texto.
+  </p>
+
+  {pantalla.aviso && <Aviso tipo={pantalla.aviso.tipo}>{pantalla.aviso.texto}</Aviso>}
+  {pantalla.sinRepositorio && (
+    <Aviso tipo="error">No se puede abrir el editor: {pantalla.sinRepositorio}</Aviso>
+  )}
+
+  {pantalla.sinRepositorio === null && (
+    <EditorPestanas
+      formulario={FormularioEscolas}
+      archivos={pantalla.archivos}
+      errores={pantalla.errores}
+      shas={pantalla.shas}
+      activo={pantalla.activo}
+    />
+  )}
+</Admin>

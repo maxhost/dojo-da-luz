@@ -104,6 +104,22 @@ export const SEMBRADOS_OUTRAS_ARTES: readonly string[] = [
   'gallery.items[].url',
 ]
 
+/**
+ * Las listas de `/escolas` (spec 0041). `gallery` es la galeria **sin objeto que la
+ * envuelva**: en esta pagina no lleva rotulo ni titulo (ADR-0037), asi que la ruta es la
+ * lista misma y no `gallery.items`.
+ */
+export const LISTAS_ESCOLAS: readonly RutaLista[] = ['introduction.paragraphs', 'gallery']
+
+/** Las dos fotos de `/escolas` y lo que identifica a cada medio (ADR-0032). */
+export const SEMBRADOS_ESCOLAS: readonly string[] = [
+  'heroPhoto',
+  'introduction.photo',
+  'gallery[].type',
+  'gallery[].src',
+  'gallery[].url',
+]
+
 /** Las cinco listas de `/aulas` cuyo largo lo decide el portugues (spec 0035). */
 export const LISTAS_AULAS: readonly RutaLista[] = [
   'pricing.items',

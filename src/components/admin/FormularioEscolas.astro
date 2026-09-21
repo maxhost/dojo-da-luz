@@ -1,0 +1,156 @@
+---
+import CampoImagen from './CampoImagen.astro'
+import CampoTexto from './CampoTexto.astro'
+import TablaFilas from './TablaFilas.astro'
+import TablaMedios from './TablaMedios.astro'
+import { errorDe } from '../../lib/forms'
+import { LOCALES, LOCALE_NAME, type Locale } from '../../lib/i18n'
+
+/**
+ * El formulario de `/escolas` para un idioma (spec 0041). Los cuatro se pintan a la vez:
+ * cambiar de pestaña es CSS, no una navegacion.
+ *
+ * Es el mas corto de los siete: la pagina son tres bloques. Dos cosas solo pasan en
+ * portugues: la galeria (ADR-0030) y cambiar una foto (ADR-0032).
+ */
+
+interface Props {
+  locale: Locale
+  datos: Record<string, any>
+  errores: Record<string, string>
+  shas: Record<Locale, string>
+  /** Ruta de lista → indices cuyo texto sigue siendo el portugues. */
+  sinTraducir: Record<string, number[]>
+}
+
+const { locale, datos, errores, shas, sinTraducir } = Astro.props
+
+const esPortugues = locale === 'pt'
+
+const v = (ruta: string): string =>
+  ruta.split('.').reduce<any>((actual, clave) => actual?.[clave], datos) ?? ''
+const lista = (ruta: string): any[] =>
+  ruta.split('.').reduce<any>((actual, clave) => actual?.[clave], datos) ?? []
+const e = (ruta: string) => errorDe(errores, ruta)
+
+/** Las tablas de una columna guardan textos sueltos: la fila es `{ valor }`. */
+const textos = (ruta: string) => lista(ruta).map((valor: string) => ({ valor }))
+
+const seccion = 'mt-8 border border-[#d7cec0] bg-[#fbf8f2] p-4'
+
+const campo = (nombre: string, etiqueta: string, extra: Record<string, unknown> = {}) => ({
+  idPrefijo: locale,
+  nombre,
+  etiqueta,
+  valor: v(nombre),
+  error: e(nombre),
+  requerido: true,
+  ...extra,
+})
+---
+
+<form method="post">
+  <input type="hidden" name="idioma" value={locale} />
+  {/* Los cuatro `sha`: publicar portugues toca los cuatro archivos y los verifica todos. */}
+  {LOCALES.map((otro) => <input type="hidden" name={`sha.${otro}`} value={shas[otro]} />)}
+
+  {!esPortugues && (
+    <p class="mt-6 border-l-4 border-[#0099ff] bg-[#eaf6ff] p-3 text-sm text-[#211f1c]">
+      Acá se traduce. Para cambiar una foto o tocar la galería, andá a la pestaña
+      <strong>Português</strong>: lo que hagas ahí aparece en los cuatro idiomas.
+    </p>
+  )}
+
+  <fieldset class={seccion}>
+    <legend class="px-2 text-sm font-semibold">Cabecera y pie</legend>
+    <CampoTexto {...campo('chrome.caption', 'Bajada del logo')} />
+    <CampoTexto {...campo('chrome.menuLabel', 'Botón de menú')} />
+    <CampoTexto {...campo('chrome.skipLink', 'Saltar al contenido')} />
+
+    <p class="mt-6 text-xs text-[#625c55]">
+      El menú de arriba no se edita desde acá: sus ocho enlaces son las páginas del sitio y
+      se llaman igual en todas. El pie sí.
+    </p>
+
+    <CampoTexto {...campo('chrome.footerNote.areas', 'Pie · zonas')} />
+    <CampoTexto {...campo('chrome.footerNote.orgType', 'Pie · tipo de organización')} />
+  </fieldset>
+
+  <fieldset class={seccion}>
+    <legend class="px-2 text-sm font-semibold">SEO</legend>
+    <CampoTexto {...campo('seo.title', 'Título de la página', { recomendado: 60, ayuda: 'Lo que se lee como titular en Google y en la pestaña del navegador.' })} />
+    <CampoTexto {...campo('seo.description', 'Descripción', { tipo: 'area', recomendado: 155, ayuda: 'El párrafo que Google muestra debajo del título.' })} />
+  </fieldset>
+
+  <fieldset class={seccion}>
+    <legend class="px-2 text-sm font-semibold">01 · Portada</legend>
+    <CampoTexto {...campo('eyebrow', 'Antetítulo')} />
+    <CampoTexto {...campo('title', 'Titular')} />
+    <CampoTexto {...campo('lead', 'Bajada', { tipo: 'area' })} />
+    <CampoImagen
+      idPrefijo={locale}
+      nombre="heroPhoto"
+      etiqueta="Foto de fondo"
+      valor={v('heroPhoto')}
+      errores={errores}
+      soloLectura={!esPortugues}
+      ayuda="Va detrás del titular, con un velo oscuro encima. Es la misma en los cuatro idiomas y no lleva descripción: para un lector de pantalla es decoración."
+    />
+  </fieldset>
+
+  <fieldset class={seccion}>
+    <legend class="px-2 text-sm font-semibold">02 · La comunidad</legend>
+    <CampoTexto {...campo('introduction.eyebrow', 'Antetítulo')} />
+    <CampoTexto {...campo('introduction.title', 'Título')} />
+    <CampoTexto {...campo('introduction.subtitle', 'Subtítulo', { ayuda: 'La línea corta en azul, debajo del título.' })} />
+
+    <TablaFilas
+      titulo="Párrafos"
+      prefijo="introduction.paragraphs"
+      columnas={[{ campo: 'valor', etiqueta: 'Párrafo', tipo: 'area' }]}
+      filas={textos('introduction.paragraphs')}
+      errores={errores}
+      idPrefijo={locale}
+      editable={esPortugues}
+      sinTraducir={sinTraducir['introduction.paragraphs'] ?? []}
+    />
+
+    <CampoImagen
+      idPrefijo={locale}
+      nombre="introduction.photo"
+      etiqueta="Foto"
+      valor={v('introduction.photo')}
+      errores={errores}
+      soloLectura={!esPortugues}
+      ayuda="Va al lado del texto. Es la misma en los cuatro idiomas."
+    />
+    <CampoTexto {...campo('introduction.photoAlt', 'Descripción de la foto', { ayuda: 'La leen los lectores de pantalla y Google.' })} />
+  </fieldset>
+
+  <fieldset class={seccion}>
+    <legend class="px-2 text-sm font-semibold">03 · Galería</legend>
+    <p class="text-xs text-[#625c55]">
+      La rejilla del final de la página. No lleva título: viene justo debajo del bloque de
+      arriba. Mientras esté vacía, la sección entera no aparece.
+    </p>
+
+    <TablaMedios
+      prefijo="gallery"
+      filas={lista('gallery')}
+      errores={errores}
+      idPrefijo={locale}
+      editable={esPortugues}
+      sinTraducir={sinTraducir['gallery'] ?? []}
+    />
+  </fieldset>
+
+  <button class="mt-8 bg-[#0099ff] px-6 py-3 font-semibold text-white" type="submit">
+    Publicar Escolas en {LOCALE_NAME[locale]}
+  </button>
+  {esPortugues && (
+    <p class="mt-2 text-xs text-[#625c55]">
+      Publicar portugués también actualiza la estructura y las fotos de los otros tres
+      idiomas.
+    </p>
+  )}
+</form>

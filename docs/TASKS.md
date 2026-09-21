@@ -9,7 +9,8 @@ Regla: **marcar `hecho` solo con verificacion real** — tests que pasan, comand
 cosa vista en pantalla. No "deberia andar".
 
 Ultima actualizacion: 2026-09-21 — gate verde: `astro check` **0/0/0**, `npm test`
-**39/39**, `npm run build` 44 rutas. Esta sesion, cinco entregas seguidas:
+**39/39**, `npm run build` 44 rutas. Esta sesion, seis entregas seguidas — y con la
+ultima **las siete paginas de contenido tienen editor**:
 
 1. **Spec 0036** — editores de Adultos y Crianças con galeria de largo libre y YouTube
    (ADR-0031, ADR-0032). Commiteado y desplegado: `main` en `e330802`, comprobado en las
@@ -64,6 +65,14 @@ en 200 con los tres profesores, el linaje y el bloque de Pablo. Sin cookie,
    paginas con la portada nueva, las anclas `arte-1..3` y la numeracion `01 02 03`, la
    galeria sin pintarse por estar vacia, y la pantalla del BO en 200 con sus siete bloques,
    5 campos de imagen y los 12 `formUrl` ocultos.
+6. **Spec 0041** — editor de `/escolas` (ADR-0037). Septimo y ultimo editor de pagina. Su
+   galeria era la unica distinta del sitio: un array de `{src, alt}` con `.min(4).max(8)` y
+   rejilla propia escrita dentro de la vista. Ahora es la lista de medios compartida —foto
+   subida o video de YouTube, largo libre, vacia no se pinta— **sin ganar titulo**: viene
+   pegada al bloque de introduccion, que ya trae tres encabezados. Para poder reusar el
+   componente sin inventarle un rotulo vacio, `GaleriaMedios` pasa a recibir la lista de
+   medios en vez del objeto galeria; Adultos, Criancas y `/outras-artes` se migraron a la
+   prop nueva y **su HTML no cambio**.
 
 **Y una noticia que llego sola: `publicarVarios` ya corrio contra GitHub.** El push del
 editor de `/aikido` fue rechazado por no-fast-forward porque `origin/main` tenia el commit
@@ -111,15 +120,14 @@ SEO actual, mejorar GEO.
 
 ### Por donde seguir (corte del 2026-09-21, tercera sesion)
 
-**El pedido con el que se retoma, textual: "volvemos para seguir con el editor de otras
-paginas".** Ya tienen editor `/aulas`, `/aulas/adultos`, `/aulas/criancas`, `/aikido`, `/dojo`,
-`/eventos` y `/outras-artes` (specs 0038 a 0040). **Primera pregunta de la sesion nueva: que
-pagina.** Las que faltan:
+**Las siete paginas de contenido ya tienen editor**: `/` (Home), `/aulas`,
+`/aulas/adultos`, `/aulas/criancas`, `/aikido`, `/dojo`, `/eventos`, `/outras-artes` y
+`/escolas` (specs 0021 y 0035 a 0041). **Lo que queda sin editor:**
 
 | Pagina | Contenido | Nota |
 |---|---|---|
 | `/contactos` | `contact.json` | **La mas urgente**: duplica las tres sedes en `contact.venues`, con Encarnação incluido. Engancharla a la entidad de dojos necesita sumarle `transporte` a la ficha (fila 6f). Su formulario esta visible pero **no envia**: falta email/endpoint. |
-| `/escolas`, `/professor-pablo-duran` | sus JSON | Sin urgencia conocida. `escolas` tiene una galeria de 4 a 8 fotos con el mismo problema de minimo fijo que tenia `/eventos`. |
+| `/professor-pablo-duran` | `teacher.json` | Repite el linaje de `/dojo` en su propio campo; unificarlos es parte de la decision. Sin urgencia conocida. |
 
 **La receta, ya probada tres veces.** Con el modulo generico, un editor nuevo es:
 
@@ -293,6 +301,7 @@ siguiente guardado del BO reordena el archivo: ruido de una vez, no perdida de d
 | 6t | Spec 0038 — editor de /dojo | 0038 | implementada, verificada en local, **desplegada** (`cce4906`, deployment `dojo-da-aama28v6d`, las 4 paginas publicas comprobadas) | Pantalla propia con el molde ya aprobado. Tres cosas que se veian en `/dojo` y no existian en ningun JSON pasaron al contenido: los cinco textos del borde, las dos fotos grandes y **el equipo docente**, que era un objeto con los cuatro idiomas escritos a mano dentro de `DojoView.astro` mas tres URLs de Wix. Ahora es una lista de largo libre: se crean y se quitan profesores desde portugues, con nombre, titulo, parrafos y foto, y el front la renderiza (con cero profesores la franja no se pinta). El bloque del profesor principal es su propia seccion del editor. "Uma transmissão viva" son tres cajas fijas (ADR-0034): sin "Añadir" ni "Quitar" en ninguna pestaña, texto editable en las cuatro, y el schema las exige en 3. `TablaFilas` gano columnas de tipo `imagen`, que es lo que evito una tercera copia del control de foto por fila. |
 | 6u | Spec 0039 — editor de /eventos | 0039 | implementada, verificada en local y **en produccion** (`8953ddb`, deployment `dojo-da-7uhgcm95e`; con sesion temporal, `/admin/paginas/eventos` da 200 con sus cinco bloques, 6 campos de imagen y 1 boton de alta) | La agenda es la primera pagina que **se vacia**: el `.min(3).max(4)` obligaba a inventar un evento para poder borrar otro (ADR-0035). Ahora la lista es de largo libre, se arma en portugues y se traduce, y con cero eventos la pagina no pinta una franja beige vacia sino `emptyText`, editable en los cuatro idiomas. La foto de portada y los cinco textos del borde pasaron al contenido. El `0{index + 1}` que escribia `010` a partir del decimo esta arreglado — dejaba de ser latente justo ahora que la lista puede crecer. Ningun control nuevo: reusa la columna `imagen` de `TablaFilas` que sumo la spec 0038. |
 | 6v | Spec 0040 — editor de /outras-artes | 0040 | implementada, verificada en local y **en produccion** (`cbb9ac4`, deployment `dojo-da-fburjdlp9`; las 4 paginas publicas con la portada nueva y las anclas `arte-1..3`, y con sesion temporal `/admin/paginas/outras-artes` da 200 con sus siete bloques) | Cada arte es un bloque del formulario, no una fila de tabla: tiene once campos y tres listas adentro —parrafos, beneficios, horarios— que van como recuadro de texto, una entrada por renglon (ADR-0033). La portada gana foto de fondo y la pagina gana la galeria de Adultos, con los dos botones de alta. Verificado contra el BO corriendo: foto y video subidos desde portugues aparecieron en los cuatro, un POST forjado desde español con otra portada, otra foto de arte, otro `formUrl`, otra foto de galeria y un cuarto arte quedo en 3 artes, 2 medios y las cuatro cosas portuguesas, vaciar beneficios y borrar el profesor dejo de pintarlos, y con la galeria vacia la seccion entera desaparece. De las 44 paginas construidas cambiaron **exactamente las 4 de `/outras-artes`**, y comparadas etiqueta por etiqueta la unica diferencia es la portada nueva y el ancla por posicion: ni un texto cambio. |
+| 6w | Spec 0041 — editor de /escolas | 0041 | implementada, verificada en local | El mas corto de los siete: portada, bloque de comunidad y galeria. Lo que tenia trabajo era la galeria, que era la unica del sitio que no admitia video y exigia entre 4 y 8 fotos (ADR-0037). Verificado contra el BO corriendo: un video de YouTube añadido en portugues aparecio en los cuatro, un POST forjado desde español con tres fotos distintas, un medio de mas y un parrafo de mas quedo en 5 medios, 2 parrafos y las tres fotos portuguesas, con cinco medios la rejilla destaca el primero y el video sale como enlace con miniatura (**cero `<iframe>`**), con uno pasa a columna unica centrada y con cero la franja desaparece. De las 44 paginas cambiaron **exactamente las 4 de `/escolas`** y solo en la rejilla; las de Adultos, Criancas y `/outras-artes` quedaron intactas pese al cambio de prop en `GaleriaMedios`. |
 | 6q | Sacar Encarnação de los textos en prosa | — | pendiente | El dojo cerro. La estructura ya no lo nombra, la prosa si: en `classes.json` (descripcion SEO, pie, `children.facts[2]`, dos respuestas del Q&A) lo puede arreglar el cliente desde `/admin/paginas/aulas`. `adults.json` y `children.json` ya tienen editor (spec 0036): sus `facts` y su Q&A los puede arreglar el cliente. Queda `contact.json`, sin editor. |
 | 7 | Alumnos + emision de factura + PDF a R2 + envio Resend | — | pendiente | Necesita una factura de ejemplo real. Spec sin escribir: el numero 0004 del INDEX es otra cosa. |
 | 8 | Redirects 301 de las 34 URLs viejas | — | plan definido | Matriz conceptual documentada. Falta crawl final, Search Console e implementación cuando existan todos los destinos. |

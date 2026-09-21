@@ -314,9 +314,22 @@ export const eventsSchema = z.object({
   emptyText: z.string().min(1),
 })
 
+/**
+ * `/escolas` (spec 0041). La galeria pasa a ser **la lista de medios del resto del sitio**
+ * (ADR-0037): foto subida o video de YouTube, sin minimo ni maximo, y vacia no se pinta. El
+ * `.min(4).max(8)` que habia obligaba a tener cuatro fotos para poder sacar una.
+ *
+ * **No lleva rotulo ni titulo** a proposito: viene pegada al bloque de introduccion, que ya
+ * trae antetitulo, titulo y subtitulo.
+ */
 export const schoolsSchema = z.object({
-  seo: seoSchema,
-  eyebrow: z.string().min(1), title: z.string().min(1), lead: z.string().min(1), heroPhoto: z.url(),
-  introduction: z.object({ eyebrow: z.string().min(1), title: z.string().min(1), subtitle: z.string().min(1), paragraphs: z.array(z.string().min(1)).min(1), photo: z.url(), photoAlt: z.string().min(1) }),
-  gallery: z.array(z.object({ src: z.url(), alt: z.string().min(1) })).min(4).max(8),
+  seo: seoSchema, chrome: chromeSchema,
+  eyebrow: z.string().min(1), title: z.string().min(1), lead: z.string().min(1),
+  heroPhoto: z.url(),
+  introduction: z.object({
+    eyebrow: z.string().min(1), title: z.string().min(1), subtitle: z.string().min(1),
+    paragraphs: z.array(z.string().min(1)).min(1),
+    photo: z.url(), photoAlt: z.string().min(1),
+  }),
+  gallery: z.array(galleryItemSchema),
 })
