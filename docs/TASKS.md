@@ -8,7 +8,7 @@ Si una sesion se cae, se cierra o se compacta, se vuelve aca — no al chat. Hay
 Regla: **marcar `hecho` solo con verificacion real** — tests que pasan, comando corrido,
 cosa vista en pantalla. No "deberia andar".
 
-Ultima actualizacion: 2026-09-21 — spec 0021: el backoffice edita la Home en los 4 idiomas y hace CRUD de dojos. Verificado de punta a punta en local contra `astro dev`; **sin desplegar y sin ejercitar el camino de GitHub**, que necesita `GITHUB_TOKEN` (fila 6e). Antes, specs 0027 y 0028, ambas en produccion.
+Ultima actualizacion: 2026-09-21 — spec 0021 desplegada: el backoffice edita la Home en los 4 idiomas y hace CRUD de dojos. **Falta cargar `GITHUB_TOKEN` en Vercel**: hasta entonces el editor responde 503 diciendo que falta (fila 6g). Login y panel funcionan en produccion.
 
 ## Contexto
 
@@ -208,6 +208,8 @@ contraseña, sesion opaca en Neon.)*
 | 2026-09-21 | Spec 0021 + ADR-0025 — editor de Home y CRUD de dojos en el BO | `astro check` 61 archivos 0/0/0, `npm test` 5/5 y `npm run build` con 44 `index.html` (sin cambios en el sitio publico). Contra `astro dev` con sesion real: `/admin/paginas/home` pinta 4 formularios de 51 campos sin un `id` repetido; guardar sin tocar nada no escribe; editar `hero.tagline` en pt da un diff de 2 lineas y no toca los otros 3 idiomas; `seo.title` vacio → 422 nombrando el campo; un `resumen` de 6 caracteres → 422 nombrando `resumen.N`; `sha` viejo → 409 sin pisar el cambio ajeno; alta con `hasta` < `desde` → 422; slug repetido → 422; alta de `alvalade` → aparece en las 4 homes construidas; archivarlo → sale de las 4 y sigue en el listado del BO; editar el telefono de Benfica no toca sus horarios ni los otros dojos; sin cookie las 5 rutas → 302 con `X-Robots-Tag` |
 | 2026-09-21 | Un `GITHUB_TOKEN` vencido en el shell dejaba todo el BO en 401 | El backend de publicacion se elegia por la presencia del token, y en `astro dev` esa variable la aporta el shell — el mismo token vencido que ya rompia `git push`. Arreglado en el codigo, no en una nota: lo decide `import.meta.env.DEV` (ADR-0025). Con token valido habria publicado contra el repo real desde una sesion de desarrollo |
 | 2026-09-21 | El orden de claves del JSON lo fija zod, no el archivo | `safeParse` devuelve un objeto nuevo en el orden en que el schema declara los campos: `homeSchema` pone `resumen` segundo y los 4 `home.json` lo tenian ultimo. El primer guardado movia 6 lineas. Los 5 archivos de contenido normalizados al orden canonico, datos identicos verificados clave por clave ignorando orden |
+| 2026-09-21 | Deploy de la spec 0021 a produccion | `git push origin main` → `702f5c3`; deployment `dojo-da-eb5h1e44m` ● Ready en 20s por webhook, sin incidentes en vercel-status. En `dojo-da-luz.vercel.app`: `/`, `/es`, `/fr`, `/en` y `/api/health` en 200 (`{"ok":true,"db":"up"}`); sin cookie, `/admin`, `/admin/paginas/home`, `/admin/dojos` y `/admin/dojos/nuevo` → 302 a `/admin/entrar` con `X-Robots-Tag`; con sesion, `/admin` → 200 y las 4 rutas del editor → **503 "Falta GITHUB_TOKEN"**, que es lo correcto hasta que se cargue el PAT |
+| 2026-09-21 | Migraciones: nada pendiente para la 0021 | Las 6 tablas de `0001_init.sql` y `0002_admin.sql` ya estaban aplicadas en Neon (`admin`, `admin_login_attempt`, `admin_session`, `alumno`, `factura`, `serie`). El contenido vive en el repo, no en la DB (ADR-0002): el editor no necesita tablas |
 
 ## Descartado (y por que)
 
