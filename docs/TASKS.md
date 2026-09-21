@@ -8,7 +8,7 @@ Si una sesion se cae, se cierra o se compacta, se vuelve aca — no al chat. Hay
 Regla: **marcar `hecho` solo con verificacion real** — tests que pasan, comando corrido,
 cosa vista en pantalla. No "deberia andar".
 
-Ultima actualizacion: 2026-09-21 — spec 0021 desplegada: el backoffice edita la Home en los 4 idiomas y hace CRUD de dojos. **Falta cargar `GITHUB_TOKEN` en Vercel**: hasta entonces el editor responde 503 diciendo que falta (fila 6g). Login y panel funcionan en produccion.
+Ultima actualizacion: 2026-09-21 — spec 0029: el editor de Home deja el menu fijo y gana las 2 tarjetas de audiencia y los 3 medios de la portada. Escrita la spec 0030 (subida a R2), sin implementar: necesita credenciales de Cloudflare. Sigue pendiente cargar `GITHUB_TOKEN` en Vercel (fila 6g).
 
 ## Contexto
 
@@ -118,7 +118,9 @@ siguiente guardado del BO reordena el archivo: ruido de una vez, no perdida de d
 | 6c | Spec 0023 — capa GEO (resumen en Home, Q&A en Aulas/Adultos/Niños, robots, llms.txt) | 0023 | hecho | 13 pares Q&A por idioma con `FAQPage`. Falta que el cliente confirme precios y edades: hoy salen del contenido que ya estaba publicado. |
 | 6e | Spec 0021 — editor de Home y CRUD de dojos en el BO | 0021 | hecho en local | Verificado contra `astro dev` con backend de disco: 16 comprobaciones en la spec. **No desplegado y sin un solo commit salido por la API de GitHub.** |
 | 6g | Ejercitar el camino de publicacion por GitHub | 0021 | bloqueada | Necesita un PAT de alcance fino sobre `maxhost/dojo-da-luz` con contenido en escritura, cargado en Vercel como `GITHUB_TOKEN`. Sin el, las 4 rutas del editor responden 503 diciendo que falta — el resto del BO (login, panel) funciona igual. |
-| 6h | Que el cliente mire el editor en pantalla | 0021 | pendiente | Verificado por HTTP, no aprobado a ojo. El formulario de Home tiene 51 campos por idioma: es lo primero que conviene que objete. |
+| 6h | Que el cliente mire el editor en pantalla | 0021 | en curso | Primera pasada hecha: de ahi salieron las specs 0029 y 0030. |
+| 6i | Spec 0029 — menu fijo, tarjetas de audiencia y medios en el editor de Home | 0029 | hecho en local | Verificado con las 4 homes construidas byte a byte identicas. Sin desplegar al escribir esto. |
+| 6j | Spec 0030 — subir imagenes a R2 desde el BO | 0030 | bloqueada | Spec cerrada. Necesita `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET` y `R2_PUBLIC_URL` de Cloudflare. **El dominio publico del bucket se decide antes de subir la primera imagen**: cambiarlo despues obliga a reescribir las URLs de todos los JSON. |
 | 7 | Alumnos + emision de factura + PDF a R2 + envio Resend | — | pendiente | Necesita una factura de ejemplo real. Spec sin escribir: el numero 0004 del INDEX es otra cosa. |
 | 8 | Redirects 301 de las 34 URLs viejas | — | plan definido | Matriz conceptual documentada. Falta crawl final, Search Console e implementación cuando existan todos los destinos. |
 | 9 | Sitemap + robots.txt | — | pendiente | Con el set completo de paginas. |
@@ -210,6 +212,8 @@ contraseña, sesion opaca en Neon.)*
 | 2026-09-21 | El orden de claves del JSON lo fija zod, no el archivo | `safeParse` devuelve un objeto nuevo en el orden en que el schema declara los campos: `homeSchema` pone `resumen` segundo y los 4 `home.json` lo tenian ultimo. El primer guardado movia 6 lineas. Los 5 archivos de contenido normalizados al orden canonico, datos identicos verificados clave por clave ignorando orden |
 | 2026-09-21 | Deploy de la spec 0021 a produccion | `git push origin main` → `702f5c3`; deployment `dojo-da-eb5h1e44m` ● Ready en 20s por webhook, sin incidentes en vercel-status. En `dojo-da-luz.vercel.app`: `/`, `/es`, `/fr`, `/en` y `/api/health` en 200 (`{"ok":true,"db":"up"}`); sin cookie, `/admin`, `/admin/paginas/home`, `/admin/dojos` y `/admin/dojos/nuevo` → 302 a `/admin/entrar` con `X-Robots-Tag`; con sesion, `/admin` → 200 y las 4 rutas del editor → **503 "Falta GITHUB_TOKEN"**, que es lo correcto hasta que se cargue el PAT |
 | 2026-09-21 | Migraciones: nada pendiente para la 0021 | Las 6 tablas de `0001_init.sql` y `0002_admin.sql` ya estaban aplicadas en Neon (`admin`, `admin_login_attempt`, `admin_session`, `alumno`, `factura`, `serie`). El contenido vive en el repo, no en la DB (ADR-0002): el editor no necesita tablas |
+| 2026-09-21 | Spec 0029 + ADR-0026 — frontera del editor de Home | `astro check` 62 archivos 0/0/0, `npm test` 5/5, build con 44 `index.html`. Las 4 homes construidas quedan byte a byte identicas tras migrar 11 campos nuevos. El formulario pasa de 51 a 52 campos, con 0 `nav[...]` y 5 campos de imagen por idioma. Guardar conserva los 4 enlaces del menu; cambiar la foto de la tarjeta de adultos no toca `/aulas/adultos`; una URL invalida da 422; `dojo.photo` y el poster del hero son independientes |
+| 2026-09-21 | El CSS publico dependia de lo que se escribiera en `docs/` | Tailwind v4 sin `@source` escanea el proyecto entero, `.md` incluidos: la palabra "invisible" en un ADR agrego `.invisible{visibility:hidden}` al CSS servido a los visitantes. Arreglado en el origen con `@import 'tailwindcss' source(none)` + `@source '../**/*.{astro,ts}'`. El CSS baja de 28805 a 28173 bytes; de las 305 clases usadas por las 44 paginas no se pierde ninguna |
 
 ## Descartado (y por que)
 

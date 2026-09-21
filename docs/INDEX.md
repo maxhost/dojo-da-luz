@@ -35,6 +35,7 @@ desactualizado es peor que no tenerlo.
 | [0023](adr/0023-jerarquia-equipo-docente.md) | 2026-09-21 | En `/dojo` el equipo docente deja de ser cuatro secciones iguales: Pablo Durán protagonista y los otros tres en fichas compactas | aceptada | `docs/adr/0023-jerarquia-equipo-docente.md` |
 | [0024](adr/0024-parcerias-en-rejilla.md) | 2026-09-21 | Parcerias como rejilla estática de 5 logos por fila, sin recuadro; supersede el carrusel CSS de la spec 0026 | aceptada | `docs/adr/0024-parcerias-en-rejilla.md` |
 | [0025](adr/0025-publicacion-backoffice.md) | 2026-09-21 | El BO publica commiteando a `main`: backend por modo de ejecución, orden canónico del schema y concurrencia por blob sha | aceptada | `docs/adr/0025-publicacion-backoffice.md` |
+| [0026](adr/0026-frontera-editor-home.md) | 2026-09-21 | El BO edita contenido y no estructura: el menú sale del editor; las tarjetas de audiencia y los medios de la Home entran | aceptada | `docs/adr/0026-frontera-editor-home.md` |
 
 ## Specs — que se construye
 
@@ -68,6 +69,8 @@ desactualizado es peor que no tenerlo.
 | [0026](specs/0026-eventos-escolas-identidad.md) | 2026-09-20 | Eventos y Escolas en 4 idiomas, parceiros en la Home, Instagram verificado e identidad azul | implementada | no | `src/lib/{i18n,content}.ts`, `src/components/**`, `src/pages/{eventos,escolas}/**`, `content/*/{home,events,schools}.json` |
 | [0027](specs/0027-jerarquia-equipo-docente.md) | 2026-09-21 | Jerarquía del equipo docente en `/dojo`: Pablo Durán protagonista y tres fichas compactas en una sola sección | implementada | si | `src/components/DojoView.astro`, `docs/**` |
 | [0028](specs/0028-parcerias-en-rejilla.md) | 2026-09-21 | Parcerias deja el carrusel y pasa a rejilla estática de cinco por fila, sin recuadro blanco | implementada | si | `src/components/HomeView.astro`, `src/styles/global.css`, `docs/**` |
+| [0029](specs/0029-editor-home-medios.md) | 2026-09-21 | El editor de Home deja el menú fijo y gana las tarjetas de audiencia y los tres medios de la portada | implementada | si | `src/lib/{content,forms}.ts`, `src/components/**`, `src/pages/admin/paginas/home.astro`, `content/*/home.json` |
+| [0030](specs/0030-medios-r2.md) | 2026-09-21 | Subida de imágenes a R2 desde el BO: sharp genera AVIF/WebP, clave por hash y URL pública en el JSON | cerrada | si | `src/lib/{r2,medios}.ts`, `src/pages/admin/medios/**`, `package.json` |
 
 **"Disjunta?"** = si el trabajo no comparte archivos con otra spec abierta. Es lo que
 habilita paralelizar. Lo decide la spec, no el orquestador en runtime.

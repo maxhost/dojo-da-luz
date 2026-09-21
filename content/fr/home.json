@@ -45,7 +45,8 @@
       "et la terre,"
     ],
     "titleHighlight": "la présence.",
-    "tagline": "Aïkido pour adultes et enfants. Une pratique sans compétition, fondée sur l'attention, l'équilibre et la relation."
+    "tagline": "Aïkido pour adultes et enfants. Une pratique sans compétition, fondée sur l'attention, l'équilibre et la relation.",
+    "poster": "https://static.wixstatic.com/media/ae7240_de66207c487b4e8086d18ed67c88ea93~mv2.jpg/v1/crop/x_218,y_0,w_1165,h_900/fill/w_1600,h_1067,al_c,q_85/IMG_3502_JPG.jpg"
   },
   "practice": {
     "label": "01 · La montagne",
@@ -64,7 +65,19 @@
     "intro": "Découvrez les cours, les horaires et la meilleure façon de commencer pour vous ou pour vos enfants.",
     "adultsLabel": "Adultes",
     "childrenLabel": "Enfants et adolescents",
-    "ctaLabel": "Découvrir les cours"
+    "ctaLabel": "Découvrir les cours",
+    "adults": {
+      "photo": "https://static.wixstatic.com/media/ae7240_de66207c487b4e8086d18ed67c88ea93~mv2.jpg/v1/fill/w_1200,h_900,al_c,q_85/IMG_3502_JPG.jpg",
+      "photoAlt": "Adultes pratiquant l'Aïkido au Dojo da Luz",
+      "title": "Une pratique pour la vie.",
+      "lead": "Sans compétition, ouverte aux débutants comme aux pratiquants expérimentés."
+    },
+    "children": {
+      "photo": "https://static.wixstatic.com/media/ae7240_b0eea689c4ec4721939495f9088211ae~mv2.jpg/v1/fill/w_900,h_1200,al_c,q_85/crian%C3%A7as.jpg",
+      "photoAlt": "Enfants pendant un cours d'Aïkido au Dojo da Luz",
+      "title": "Grandir sans compétition.",
+      "lead": "Une pratique pour développer le corps, l'attention et la relation aux autres."
+    }
   },
   "places": {
     "label": "03 · La terre",
@@ -81,6 +94,7 @@
       "Un lieu",
       "de transmission."
     ],
+    "photo": "https://static.wixstatic.com/media/ae7240_de66207c487b4e8086d18ed67c88ea93~mv2.jpg/v1/crop/x_218,y_0,w_1165,h_900/fill/w_1600,h_1067,al_c,q_85/IMG_3502_JPG.jpg",
     "photoCaption": "Keiko — pratique régulière à Lisbonne",
     "photoAlt": "Pratique partagée au Dojo da Luz",
     "teacher": {
@@ -90,6 +104,7 @@
         "Hombu Dojo, Tokyo"
       ],
       "bio": "Il enseigne à Lisbonne depuis 2015.",
+      "photo": "https://static.wixstatic.com/media/ae7240_4681e435c4ab47dbb9f6db8fe35fa6a5.jpg/v1/fill/w_900,h_1200,al_c,q_85/ae7240_4681e435c4ab47dbb9f6db8fe35fa6a5.jpg",
       "photoAlt": "Pablo Durán"
     }
   },

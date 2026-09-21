@@ -1,4 +1,10 @@
-@import 'tailwindcss';
+/**
+ * `source(none)` apaga el escaneo automatico, que por defecto abarca todo el proyecto:
+ * el 2026-09-21 la palabra "invisible" escrita en un ADR agrego `.invisible` al CSS que
+ * se sirve a los visitantes. El CSS publico no puede depender de la prosa de `docs/`.
+ */
+@import 'tailwindcss' source(none);
+@source '../**/*.{astro,ts}';
 
 @layer base {
   html { scroll-behavior: smooth; }

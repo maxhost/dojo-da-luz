@@ -98,13 +98,25 @@ export function errorDe(errores: Record<string, string>, ruta: string): string |
   )
 }
 
+/** Lo que el editor de Home no toca y hay que conservar del archivo publicado. */
+type BaseHome = {
+  chrome: { nav: { label: string; href: string }[] }
+}
+
 /**
- * El orden de las claves es parte del contrato: `JSON.stringify` respeta el de insercion y
- * el archivo publicado se compara con el que ya esta en el repo. Cambiar una linea tiene
- * que dar un diff de una linea, no del archivo entero.
+ * Se parte del contenido ya publicado y se sobrescribe encima solo lo que el formulario
+ * manda (ADR-0026): el menu, y cualquier campo que salga del editor mas adelante,
+ * sobrevive por construccion y no porque alguien se acuerde de copiarlo.
+ *
+ * El orden de las claves lo fija el schema al validar (ADR-0025), no este objeto.
  */
-export function homeDesdeForm(form: FormData): unknown {
-  const fila = (prefijo: string) => filas(form, prefijo).filter((f) => !f.vacia())
+export function homeDesdeForm(form: FormData, base: BaseHome): unknown {
+  const tarjeta = (clave: 'adults' | 'children') => ({
+    photo: texto(form, `audiences.${clave}.photo`),
+    photoAlt: texto(form, `audiences.${clave}.photoAlt`),
+    title: texto(form, `audiences.${clave}.title`),
+    lead: texto(form, `audiences.${clave}.lead`),
+  })
 
   return {
     seo: { title: texto(form, 'seo.title'), description: texto(form, 'seo.description') },
@@ -112,7 +124,8 @@ export function homeDesdeForm(form: FormData): unknown {
       caption: texto(form, 'chrome.caption'),
       menuLabel: texto(form, 'chrome.menuLabel'),
       skipLink: texto(form, 'chrome.skipLink'),
-      nav: fila('nav').map((f) => ({ label: f.uno('label'), href: f.uno('href') })),
+      // El menu es estructura, no contenido: no esta en el formulario.
+      nav: base.chrome.nav,
       footerNote: {
         areas: texto(form, 'chrome.footerNote.areas'),
         orgType: texto(form, 'chrome.footerNote.orgType'),
@@ -123,6 +136,7 @@ export function homeDesdeForm(form: FormData): unknown {
       titleLines: lineas(form, 'hero.titleLines'),
       titleHighlight: texto(form, 'hero.titleHighlight'),
       tagline: texto(form, 'hero.tagline'),
+      poster: texto(form, 'hero.poster'),
     },
     practice: {
       label: texto(form, 'practice.label'),
@@ -136,6 +150,8 @@ export function homeDesdeForm(form: FormData): unknown {
       adultsLabel: texto(form, 'audiences.adultsLabel'),
       childrenLabel: texto(form, 'audiences.childrenLabel'),
       ctaLabel: texto(form, 'audiences.ctaLabel'),
+      adults: tarjeta('adults'),
+      children: tarjeta('children'),
     },
     places: {
       label: texto(form, 'places.label'),
@@ -146,12 +162,14 @@ export function homeDesdeForm(form: FormData): unknown {
     dojo: {
       label: texto(form, 'dojo.label'),
       titleLines: lineas(form, 'dojo.titleLines'),
+      photo: texto(form, 'dojo.photo'),
       photoCaption: texto(form, 'dojo.photoCaption'),
       photoAlt: texto(form, 'dojo.photoAlt'),
       teacher: {
         name: texto(form, 'dojo.teacher.name'),
         credentialsLines: lineas(form, 'dojo.teacher.credentialsLines'),
         bio: texto(form, 'dojo.teacher.bio'),
+        photo: texto(form, 'dojo.teacher.photo'),
         photoAlt: texto(form, 'dojo.teacher.photoAlt'),
       },
     },

@@ -13,7 +13,8 @@ const admin = Astro.locals.admin!
 
 const ruta = (locale: Locale) => `content/${locale}/home.json`
 
-type Enviado = { valores: Record<string, string>; nav: { label: string; href: string }[] }
+type Enviado = { valores: Record<string, string> }
+type Publicado = { chrome: { nav: { label: string; href: string }[] } }
 
 let errores: Partial<Record<Locale, Record<string, string>>> = {}
 let enviado: Partial<Record<Locale, Enviado>> = {}
@@ -40,19 +41,16 @@ if (Astro.request.method === 'POST') {
     aviso = { tipo: 'error', texto: 'Idioma desconocido.' }
   } else {
     activo = idioma
-    const datos = homeDesdeForm(form)
+    // El menu y cualquier campo fuera del editor salen de lo publicado, no del formulario.
+    const base = JSON.parse((await leerContenido(ruta(idioma))).contenido) as Publicado
+    const datos = homeDesdeForm(form, base)
     const validado = homeSchema.safeParse(datos)
 
     if (!validado.success) {
       Astro.response.status = 422
       const mapa = erroresDe(validado.error)
       errores = { [idioma]: mapa }
-      enviado = {
-        [idioma]: {
-          valores: aplanar(datos),
-          nav: (datos as { chrome?: { nav?: { label: string; href: string }[] } }).chrome?.nav ?? [],
-        },
-      }
+      enviado = { [idioma]: { valores: aplanar(datos) } }
       aviso = { tipo: 'error', texto: `No se publicó nada. ${resumenDeErrores(mapa)}` }
     } else {
       try {
@@ -101,7 +99,6 @@ type Archivo = {
   locale: Locale
   sha: string
   valores: Record<string, string>
-  nav: { label: string; href: string }[]
   errores: Record<string, string>
 }
 
@@ -114,15 +111,11 @@ try {
   archivos = await Promise.all(
   LOCALES.map(async (locale) => {
     const archivo = await leerContenido(ruta(locale))
-    const datos = JSON.parse(archivo.contenido) as {
-      chrome: { nav: { label: string; href: string }[] }
-    }
     const propio = enviado[locale]
     return {
       locale,
       sha: archivo.sha,
-      valores: propio?.valores ?? aplanar(datos),
-      nav: propio?.nav ?? datos.chrome.nav,
+      valores: propio?.valores ?? aplanar(JSON.parse(archivo.contenido)),
       errores: errores[locale] ?? {},
     }
   }),
@@ -183,7 +176,6 @@ const TABS = [
           <FormularioHome
             locale={archivo.locale}
             valores={archivo.valores}
-            nav={archivo.nav}
             errores={archivo.errores}
             sha={archivo.sha}
           />

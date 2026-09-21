@@ -1,0 +1,63 @@
+---
+import { errorDe } from '../../lib/forms'
+
+/**
+ * Campo de imagen (spec 0029). Por ahora es una URL escrita a mano con vista previa: la
+ * subida de archivos a R2 llega con la spec 0030 y entra por este mismo componente.
+ *
+ * La vista previa importa mas de lo que parece: una URL valida que apunta a la imagen
+ * equivocada pasa cualquier validacion, y el unico modo de verlo es verla.
+ */
+
+interface Props {
+  nombre: string
+  etiqueta: string
+  valor: string
+  errores: Record<string, string>
+  ayuda?: string
+  idPrefijo?: string
+}
+
+const { nombre, etiqueta, valor, errores, ayuda, idPrefijo } = Astro.props
+
+const id = `${idPrefijo ? `${idPrefijo}-` : ''}${nombre.replace(/[^a-zA-Z0-9]+/g, '-')}`
+const error = errorDe(errores, nombre)
+---
+
+<div class="mt-5">
+  <label class="block text-sm font-semibold" for={id}>
+    {etiqueta}
+    <span class="text-[#b3261e]" aria-hidden="true">*</span>
+  </label>
+
+  {ayuda && <p class="mt-1 text-xs text-[#625c55]" id={`${id}-ayuda`}>{ayuda}</p>}
+
+  <div class="mt-2 flex items-start gap-4">
+    {valor && (
+      <img
+        class="h-20 w-28 shrink-0 border border-[#d7cec0] bg-white object-cover"
+        src={valor}
+        alt=""
+        loading="lazy"
+      />
+    )}
+    <input
+      class={`w-full border bg-white px-3 py-2 text-sm ${error ? 'border-[#b3261e]' : 'border-[#d7cec0]'}`}
+      id={id}
+      name={nombre}
+      type="url"
+      value={valor}
+      required
+      aria-describedby={[ayuda && `${id}-ayuda`, error && `${id}-error`].filter(Boolean).join(' ') || undefined}
+    />
+  </div>
+
+  <p class="mt-1 text-xs text-[#625c55]">
+    La vista previa se actualiza al guardar. Todavía no se pueden subir archivos: pegá la
+    dirección de una imagen que ya exista.
+  </p>
+
+  {error && (
+    <p class="mt-1 text-xs font-semibold text-[#b3261e]" id={`${id}-error`} role="alert">{error}</p>
+  )}
+</div>

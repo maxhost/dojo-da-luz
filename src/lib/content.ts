@@ -37,6 +37,14 @@ const gallerySchema = z.object({
   ])).length(6),
 })
 
+/** Tarjeta de audiencia de la Home: foto y texto propios, no prestados de la landing. */
+const audienceCardSchema = z.object({
+  photo: z.url(),
+  photoAlt: z.string().min(1),
+  title: z.string().min(1),
+  lead: z.string().min(1),
+})
+
 export const homeSchema = z.object({
   seo: seoSchema,
   /** Frases autocontenidas, con sujeto explicito: lo que un motor generativo puede citar. */
@@ -56,6 +64,8 @@ export const homeSchema = z.object({
     titleLines: linesSchema,
     titleHighlight: z.string().min(1),
     tagline: z.string().min(1),
+    /** Lo que se ve mientras el video carga, y en vez del video si no puede reproducirse. */
+    poster: z.url(),
   }),
   practice: z.object({
     label: z.string().min(1),
@@ -69,6 +79,12 @@ export const homeSchema = z.object({
     adultsLabel: z.string().min(1),
     childrenLabel: z.string().min(1),
     ctaLabel: z.string().min(1),
+    /**
+     * Contenido propio de la portada (ADR-0026). Antes se tomaba prestado de adults.json y
+     * children.json, asi que editar la tarjeta cambiaba el hero de la landing.
+     */
+    adults: audienceCardSchema,
+    children: audienceCardSchema,
   }),
   places: z.object({
     label: z.string().min(1),
@@ -80,12 +96,14 @@ export const homeSchema = z.object({
   dojo: z.object({
     label: z.string().min(1),
     titleLines: linesSchema,
+    photo: z.url(),
     photoCaption: z.string().min(1),
     photoAlt: z.string().min(1),
     teacher: z.object({
       name: z.string().min(1),
       credentialsLines: linesSchema,
       bio: z.string().min(1),
+      photo: z.url(),
       photoAlt: z.string().min(1),
     }),
   }),
