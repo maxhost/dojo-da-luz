@@ -12,6 +12,34 @@
 /** Ruta con puntos hasta una lista dentro del JSON. `pricing.items`, `qa.items`. */
 export type RutaLista = string
 
+/**
+ * Las listas de las paginas de audiencia —Adultos y Criancas— (spec 0036). Mismo criterio:
+ * el largo lo decide el portugues.
+ */
+export const LISTAS_AUDIENCIA: readonly RutaLista[] = [
+  'paragraphs',
+  'goals',
+  'facts',
+  'gallery.items',
+  'qa.items',
+]
+
+/**
+ * Los campos que **siempre** vienen del portugues, tambien en filas que ya existen
+ * (ADR-0032): una foto no se traduce, y si cada idioma pudiera cambiar la suya volveria el
+ * estado "cambiada en tres idiomas de cuatro" que ninguna validacion puede ver.
+ *
+ * `type` va sembrado a proposito: una fila no puede ser foto en portugues y video en
+ * ingles. `src` y `url` son excluyentes —una fila tiene una o la otra— y por eso el
+ * sembrado **borra** en el destino la clave que el portugues no tiene.
+ */
+export const SEMBRADOS_AUDIENCIA: readonly string[] = [
+  'photo',
+  'gallery.items[].type',
+  'gallery.items[].src',
+  'gallery.items[].url',
+]
+
 /** Las cinco listas de `/aulas` cuyo largo lo decide el portugues (spec 0035). */
 export const LISTAS_AULAS: readonly RutaLista[] = [
   'pricing.items',
@@ -53,7 +81,12 @@ function clonar<T>(valor: T): T {
  * Es el costo aceptado en el ADR-0030 — un id por fila seria un campo mas en la pantalla
  * del cliente que no significa nada para el, que es el error que corrigio el ADR-0029.
  */
-export function propagarEstructura<T>(pt: unknown, otro: T, listas: readonly RutaLista[]): T {
+export function propagarEstructura<T>(
+  pt: unknown,
+  otro: T,
+  listas: readonly RutaLista[],
+  sembrados: readonly string[] = [],
+): T {
   const resultado = clonar(otro) as unknown as Obj
 
   for (const ruta of listas) {
@@ -68,7 +101,40 @@ export function propagarEstructura<T>(pt: unknown, otro: T, listas: readonly Rut
     )
   }
 
+  for (const ruta of sembrados) sembrarCampo(pt, resultado, ruta)
+
   return resultado as unknown as T
+}
+
+/**
+ * Copia un campo del portugues al otro idioma. `photo` es un campo suelto;
+ * `gallery.items[].src` se aplica fila por fila.
+ *
+ * Se corre **despues** de propagar la estructura, cuando las listas ya tienen el mismo
+ * largo en los dos lados.
+ */
+function sembrarCampo(pt: unknown, destino: Obj, ruta: string): void {
+  const [prefijo, campo] = ruta.split('[].')
+
+  if (campo === undefined) {
+    const valor = leerRuta(pt, ruta)
+    if (valor !== undefined) escribirRuta(destino, ruta, clonar(valor))
+    return
+  }
+
+  const filasPt = leerRuta(pt, prefijo!)
+  const filasOtro = leerRuta(destino, prefijo!)
+  if (!Array.isArray(filasPt) || !Array.isArray(filasOtro)) return
+
+  filasOtro.forEach((fila, i) => {
+    if (!fila || typeof fila !== 'object') return
+    const filaPt = filasPt[i]
+    const valor =
+      filaPt && typeof filaPt === 'object' ? (filaPt as Obj)[campo] : undefined
+
+    if (valor === undefined) delete (fila as Obj)[campo]
+    else (fila as Obj)[campo] = clonar(valor)
+  })
 }
 
 /**

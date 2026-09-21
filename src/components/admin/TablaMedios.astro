@@ -1,0 +1,275 @@
+---
+import CampoImagen from './CampoImagen.astro'
+import { errorDe } from '../../lib/forms'
+import { idDeYoutube, miniaturaDeYoutube } from '../../lib/youtube'
+
+/**
+ * La galeria en el backoffice (spec 0036). Una fila por medio, un "quitar" por fila, y dos
+ * botones de alta abajo: **Añadir imagen** y **Añadir vídeo**.
+ *
+ * El tipo se elige al crear la fila y no se cambia despues. Un selector "imagen/vídeo" que
+ * mueve los campos de lugar es mas pantalla y menos claridad: para pasar de foto a video se
+ * quita la fila y se añade la otra.
+ *
+ * **Solo la pestaña portuguesa la trae completa** (ADR-0030 y ADR-0032): en es/fr/en no hay
+ * alta ni baja, y la foto y el enlace se ven pero no se tocan. Lo unico que se edita ahi es
+ * la descripcion.
+ */
+
+type Medio = Record<string, string>
+
+interface Props {
+  prefijo: string
+  filas: Medio[]
+  errores: Record<string, string>
+  idPrefijo: string
+  editable: boolean
+  /** Indices cuya descripcion sigue siendo la portuguesa. Vacio en la pestaña portuguesa. */
+  sinTraducir?: number[]
+}
+
+const { prefijo, filas, errores, idPrefijo, editable, sinTraducir = [] } = Astro.props
+
+const id = (i: number | string, campo: string) =>
+  `${idPrefijo}-${prefijo.replace(/\W+/g, '-')}-${i}-${campo}`
+
+const campoClase =
+  'mt-1 w-full border border-[#d7cec0] bg-white px-3 py-2 text-sm text-[#211f1c]'
+
+const marco = 'border border-[#d7cec0] bg-white p-3'
+const rotulo = 'block text-xs font-semibold text-[#625c55]'
+---
+
+<div class="mt-6" data-tabla-medios data-prefijo={prefijo} data-editable={editable ? 'si' : 'no'}>
+  <p class="text-sm font-semibold">Medios de la galería</p>
+  <p class="mt-1 text-xs text-[#625c55]">
+    Sin límite: los que haya se acomodan solos en la página. Las fotos y los vídeos son los
+    mismos en los cuatro idiomas; lo que se traduce es la descripción.
+  </p>
+
+  <ol class="mt-3 list-none space-y-3 p-0" data-lista>
+    {filas.map((fila, i) => {
+      const esVideo = fila.type === 'youtube'
+      const idVideo = esVideo ? idDeYoutube(fila.url ?? '') : null
+      return (
+        <li class={marco} data-fila>
+          <p class="text-xs font-bold uppercase tracking-[.14em] text-[#746d64]">
+            {esVideo ? 'Vídeo de YouTube' : 'Imagen'}
+          </p>
+
+          {sinTraducir.includes(i) && (
+            <p class="mt-2 inline-block bg-[#fff3cd] px-2 py-1 text-xs font-semibold text-[#7a5c00]">
+              Sin traducir — dice lo mismo que en portugués
+            </p>
+          )}
+
+          <input type="hidden" name={`${prefijo}[${i}].type`} value={esVideo ? 'youtube' : 'image'} />
+
+          {esVideo ? (
+            <div data-video>
+              <label class={`${rotulo} mt-3 block`} for={id(i, 'url')}>
+                Enlace de YouTube
+                <input
+                  class={campoClase}
+                  id={id(i, 'url')}
+                  name={`${prefijo}[${i}].url`}
+                  type="url"
+                  value={fila.url ?? ''}
+                  readonly={!editable}
+                  placeholder="https://www.youtube.com/watch?v=…"
+                  data-url-youtube
+                />
+              </label>
+              {!editable && (
+                <p class="mt-1 text-xs text-[#625c55]">Se cambia en la pestaña <strong>Português</strong>.</p>
+              )}
+              <img
+                class="mt-2 block h-32 w-48 border border-[#d7cec0] bg-[#f6f1e8] object-cover"
+                src={idVideo ? miniaturaDeYoutube(idVideo) : ''}
+                alt=""
+                hidden={!idVideo}
+                loading="lazy"
+                data-previa-youtube
+              />
+              <p class="mt-1 text-xs text-[#b3261e]" role="status" data-aviso-youtube></p>
+              {errorDe(errores, `${prefijo}.${i}.url`) && (
+                <p class="mt-1 text-xs font-semibold text-[#b3261e]" role="alert">
+                  {errorDe(errores, `${prefijo}.${i}.url`)}
+                </p>
+              )}
+            </div>
+          ) : (
+            <CampoImagen
+              idPrefijo={idPrefijo}
+              nombre={`${prefijo}[${i}].src`}
+              etiqueta="Imagen"
+              valor={fila.src ?? ''}
+              errores={errores}
+              soloLectura={!editable}
+            />
+          )}
+
+          <label class={`${rotulo} mt-3 block`} for={id(i, 'alt')}>
+            Descripción (la leen los lectores de pantalla y Google)
+            <input
+              class={campoClase}
+              id={id(i, 'alt')}
+              name={`${prefijo}[${i}].alt`}
+              type="text"
+              value={fila.alt ?? ''}
+            />
+            {errorDe(errores, `${prefijo}.${i}.alt`) && (
+              <span class="mt-1 block text-xs font-semibold text-[#b3261e]" role="alert">
+                {errorDe(errores, `${prefijo}.${i}.alt`)}
+              </span>
+            )}
+          </label>
+
+          {editable && (
+            <button class="mt-2 text-xs font-semibold text-[#b3261e] underline" type="button" data-quitar>
+              Quitar
+            </button>
+          )}
+        </li>
+      )
+    })}
+  </ol>
+
+  {editable && (
+    <>
+      <template data-plantilla-imagen>
+        <li class={marco} data-fila>
+          <p class="text-xs font-bold uppercase tracking-[.14em] text-[#746d64]">Imagen</p>
+          <input type="hidden" name={`${prefijo}[__i__].type`} value="image" />
+          <CampoImagen
+            nombre={`${prefijo}[__i__].src`}
+            etiqueta="Imagen"
+            valor=""
+            errores={{}}
+          />
+          <label class={`${rotulo} mt-3 block`}>
+            Descripción (la leen los lectores de pantalla y Google)
+            <input class={campoClase} name={`${prefijo}[__i__].alt`} type="text" />
+          </label>
+          <button class="mt-2 text-xs font-semibold text-[#b3261e] underline" type="button" data-quitar>
+            Quitar
+          </button>
+        </li>
+      </template>
+
+      <template data-plantilla-video>
+        <li class={marco} data-fila>
+          <p class="text-xs font-bold uppercase tracking-[.14em] text-[#746d64]">Vídeo de YouTube</p>
+          <input type="hidden" name={`${prefijo}[__i__].type`} value="youtube" />
+          <div data-video>
+            <label class={`${rotulo} mt-3 block`}>
+              Enlace de YouTube
+              <input
+                class={campoClase}
+                name={`${prefijo}[__i__].url`}
+                type="url"
+                placeholder="https://www.youtube.com/watch?v=…"
+                data-url-youtube
+              />
+            </label>
+            <img
+              class="mt-2 block h-32 w-48 border border-[#d7cec0] bg-[#f6f1e8] object-cover"
+              src=""
+              alt=""
+              hidden
+              data-previa-youtube
+            />
+            <p class="mt-1 text-xs text-[#b3261e]" role="status" data-aviso-youtube></p>
+          </div>
+          <label class={`${rotulo} mt-3 block`}>
+            Descripción (la leen los lectores de pantalla y Google)
+            <input class={campoClase} name={`${prefijo}[__i__].alt`} type="text" />
+          </label>
+          <button class="mt-2 text-xs font-semibold text-[#b3261e] underline" type="button" data-quitar>
+            Quitar
+          </button>
+        </li>
+      </template>
+
+      <div class="mt-3 flex flex-wrap gap-2">
+        <button class="border border-[#1f1b16] bg-white px-4 py-2 text-sm font-semibold" type="button" data-anadir="imagen">
+          Añadir imagen
+        </button>
+        <button class="border border-[#1f1b16] bg-white px-4 py-2 text-sm font-semibold" type="button" data-anadir="video">
+          Añadir vídeo
+        </button>
+      </div>
+    </>
+  )}
+</div>
+
+<script>
+  // El mismo parser que valida al publicar: la miniatura que se ve mientras se edita no
+  // puede salir de una copia del regex que despues se desincroniza.
+  import { idDeYoutube, miniaturaDeYoutube } from '../../lib/youtube'
+
+  const refrescarVideo = (campo: HTMLInputElement) => {
+    const caja = campo.closest<HTMLElement>('[data-video]')
+    const previa = caja?.querySelector<HTMLImageElement>('[data-previa-youtube]')
+    const aviso = caja?.querySelector<HTMLElement>('[data-aviso-youtube]')
+    if (!previa || !aviso) return
+
+    const valor = campo.value.trim()
+    const id = valor ? idDeYoutube(valor) : null
+
+    previa.hidden = id === null
+    if (id) previa.src = miniaturaDeYoutube(id)
+    aviso.textContent = valor && !id ? 'No parece un enlace de YouTube.' : ''
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-tabla-medios]').forEach((tabla) => {
+    tabla.addEventListener('input', (evento) => {
+      const objetivo = evento.target
+      if (objetivo instanceof HTMLInputElement && objetivo.matches('[data-url-youtube]')) {
+        refrescarVideo(objetivo)
+      }
+    })
+
+    if (tabla.dataset.editable !== 'si') return
+
+    const lista = tabla.querySelector<HTMLOListElement>('[data-lista]')
+    const plantillas = {
+      imagen: tabla.querySelector<HTMLTemplateElement>('[data-plantilla-imagen]'),
+      video: tabla.querySelector<HTMLTemplateElement>('[data-plantilla-video]'),
+    }
+    if (!lista) return
+
+    // Los indices no se reusan: basta que sean distintos y crecientes para que el orden
+    // del formulario sea el orden de la galeria.
+    let siguiente = lista.querySelectorAll('[data-fila]').length
+
+    tabla.addEventListener('click', (evento) => {
+      const objetivo = evento.target
+      if (!(objetivo instanceof Element)) return
+
+      objetivo.closest('[data-quitar]')?.closest('[data-fila]')?.remove()
+
+      const anadir = objetivo.closest<HTMLButtonElement>('[data-anadir]')
+      if (!anadir) return
+
+      const plantilla = plantillas[anadir.dataset.anadir as 'imagen' | 'video']
+      if (!plantilla) return
+
+      const fragmento = plantilla.content.cloneNode(true) as DocumentFragment
+      fragmento.querySelectorAll<HTMLElement>('[name]').forEach((campo) => {
+        const nombre = campo.getAttribute('name') ?? ''
+        campo.setAttribute('name', nombre.replace('__i__', String(siguiente)))
+      })
+      siguiente += 1
+      lista.append(fragmento)
+
+      // La miniatura de una fila recien creada necesita que el campo de imagen se enganche
+      // solo: el script de `CampoImagen` ya corrio cuando cargo la pagina.
+      const nueva = lista.querySelector<HTMLElement>('[data-fila]:last-child')
+      nueva?.querySelector<HTMLElement>('[data-campo-imagen]')?.dispatchEvent(
+        new Event('campo-imagen:inicializar', { bubbles: true }),
+      )
+      nueva?.querySelector<HTMLInputElement>('[data-url-youtube], input[type="text"]')?.focus()
+    })
+  })
+</script>

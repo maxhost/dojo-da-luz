@@ -21,15 +21,30 @@ interface Props {
   idPrefijo?: string
   /** Las filas de una lista de largo libre no son obligatorias: la ultima esta vacia. */
   requerido?: boolean
+  /**
+   * En es/fr/en la foto se ve pero no se cambia (ADR-0032): quien traduce necesita mirarla
+   * para escribir la descripcion, y que no se pueda tocar es lo que sostiene la garantia
+   * de que la imagen es la misma en los cuatro idiomas.
+   */
+  soloLectura?: boolean
 }
 
-const { nombre, etiqueta, valor, errores, ayuda, idPrefijo, requerido = true } = Astro.props
+const {
+  nombre,
+  etiqueta,
+  valor,
+  errores,
+  ayuda,
+  idPrefijo,
+  requerido = true,
+  soloLectura = false,
+} = Astro.props
 
 const id = `${idPrefijo ? `${idPrefijo}-` : ''}${nombre.replace(/[^a-zA-Z0-9]+/g, '-')}`
 const error = errorDe(errores, nombre)
 ---
 
-<div class="mt-5" data-campo-imagen>
+<div class="mt-5" data-campo-imagen={soloLectura ? undefined : true}>
   <p class="text-sm font-semibold">
     {etiqueta}
     {requerido && <span class="text-[#b3261e]" aria-hidden="true">*</span>}
@@ -37,6 +52,14 @@ const error = errorDe(errores, nombre)
 
   {ayuda && <p class="mt-1 text-xs text-[#625c55]" id={`${id}-ayuda`}>{ayuda}</p>}
 
+  {soloLectura ? (
+    <>
+      <img class="mt-2 block h-32 w-48 border border-[#d7cec0] bg-[#f6f1e8] object-cover" src={valor} alt="" loading="lazy" />
+      <p class="mt-1 text-xs text-[#625c55]">Se cambia en la pestaña <strong>Português</strong>.</p>
+      <input id={id} name={nombre} type="hidden" value={valor} />
+    </>
+  ) : (
+  <>
   {/* La imagen es el unico control visible: tocarla abre el selector de archivos. */}
   <button
     class="group mt-2 block w-48 cursor-pointer border border-[#d7cec0] bg-white p-0 text-left"
@@ -63,6 +86,8 @@ const error = errorDe(errores, nombre)
   <p class="mt-1 text-xs text-[#625c55]" role="status" data-estado></p>
 
   <input id={id} name={nombre} type="hidden" value={valor} data-url />
+  </>
+  )}
 
   {error && (
     <p class="mt-1 text-xs font-semibold text-[#b3261e]" id={`${id}-error`} role="alert">{error}</p>

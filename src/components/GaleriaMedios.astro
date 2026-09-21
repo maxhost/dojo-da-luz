@@ -1,0 +1,112 @@
+---
+import { idDeYoutube, miniaturaDeYoutube, paginaDeYoutube } from '../lib/youtube'
+import type { ContentOf } from '../lib/content'
+
+/**
+ * La galeria de las paginas de audiencia (ADR-0031). De largo libre: el grid se arma segun
+ * cuantos medios hay, en vez de ser un mosaico calculado para seis.
+ *
+ * El video de YouTube **no se carga hasta que alguien lo toca**: lo que se pinta es la
+ * miniatura que sirve `i.ytimg.com` con un play encima. Un `iframe` incrustado de entrada
+ * trae del orden de 1 MB de codigo ajeno en cada visita, la toque alguien o no.
+ *
+ * Sin JavaScript la miniatura es un enlace al video: la galeria no se rompe, cambia de
+ * destino.
+ */
+
+type Galeria = ContentOf<'adults'>['gallery']
+
+interface Props {
+  gallery: Galeria
+}
+
+const { gallery } = Astro.props
+const medios = gallery.items
+const cuantos = medios.length
+
+/**
+ * `dense` es lo que tapa el hueco cuando la cantidad no cierra con el mosaico: sin el, un
+ * primer medio de 2×2 con seis fotos deja un agujero en la ultima fila.
+ */
+const rejilla =
+  cuantos === 1
+    ? 'grid-cols-1 md:w-1/2 md:mx-auto'
+    : cuantos === 2
+      ? 'grid-cols-2'
+      : 'grid-cols-2 md:grid-cols-3 [grid-auto-flow:dense]'
+
+/** El mosaico —el primero al doble— solo cuando hay medios suficientes para llenarlo. */
+const destacaElPrimero = cuantos >= 5
+---
+
+{cuantos > 0 && (
+  <ul class:list={['mt-10 grid gap-2 sm:gap-4', rejilla]} role="list">
+    {medios.map((item, index) => (
+      <li
+        class:list={[
+          'relative overflow-hidden bg-[#d7cec0]',
+          destacaElPrimero && index === 0 && 'md:col-span-2 md:row-span-2',
+        ]}
+      >
+        {item.type === 'image' ? (
+          <img
+            src={item.src}
+            alt={item.alt}
+            loading="lazy"
+            decoding="async"
+            class="aspect-square h-full w-full object-cover transition-transform duration-500 hover:scale-[1.02]"
+          />
+        ) : (
+          <a
+            class="group block aspect-square h-full w-full"
+            href={paginaDeYoutube(idDeYoutube(item.url)!)}
+            data-youtube={idDeYoutube(item.url)}
+            target="_blank"
+            rel="noopener"
+            aria-label={item.alt}
+          >
+            {/* `hqdefault` viene en 4:3 con franjas negras: el `scale` las saca del cuadro. */}
+            <img
+              src={miniaturaDeYoutube(idDeYoutube(item.url)!)}
+              alt={item.alt}
+              loading="lazy"
+              decoding="async"
+              class="h-full w-full scale-[1.34] object-cover"
+            />
+            <span
+              aria-hidden="true"
+              class="absolute inset-0 grid place-items-center bg-black/25 transition-colors group-hover:bg-black/10"
+            >
+              <span class="grid size-16 place-items-center rounded-full bg-black/65 text-white">
+                <svg viewBox="0 0 24 24" class="size-7 fill-current"><path d="M8 5v14l11-7z" /></svg>
+              </span>
+            </span>
+          </a>
+        )}
+      </li>
+    ))}
+  </ul>
+)}
+
+{medios.some((medio) => medio.type === 'youtube') && (
+  <script is:inline>
+    // Va `is:inline` y condicionado a proposito: una galeria de puras fotos no se lleva
+    // ni una linea de JavaScript.
+    document.querySelectorAll('[data-youtube]').forEach(function (enlace) {
+      enlace.addEventListener('click', function (evento) {
+        var id = enlace.dataset.youtube
+        if (!id) return
+        evento.preventDefault()
+
+        var marco = document.createElement('iframe')
+        marco.src = 'https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0'
+        marco.title = enlace.getAttribute('aria-label') || 'Video'
+        marco.allow = 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture'
+        marco.allowFullscreen = true
+        marco.className = 'aspect-square h-full w-full border-0'
+
+        enlace.replaceWith(marco)
+      })
+    })
+  </script>
+)}

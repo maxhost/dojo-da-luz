@@ -3,6 +3,15 @@
     "title": "Aikido para adultos en Lisboa | Dojo da Luz",
     "description": "Clases de Aikido para adultos en Benfica, Encarnação y Lumiar, desde el mediodía hasta la noche."
   },
+  "chrome": {
+    "caption": "Aikido · Lisboa",
+    "menuLabel": "Menú",
+    "skipLink": "Saltar al contenido",
+    "footerNote": {
+      "areas": "Benfica · Lumiar · Encarnação",
+      "orgType": "Asociación sin fines de lucro"
+    }
+  },
   "eyebrow": "Aikido para adultos",
   "title": "Una práctica para la vida.",
   "lead": "Sin competición y abierta a principiantes y practicantes experimentados.",
@@ -38,14 +47,35 @@
   "photo": "https://static.wixstatic.com/media/ae7240_de66207c487b4e8086d18ed67c88ea93~mv2.jpg/v1/fill/w_1200,h_900,al_c,q_85/IMG_3502_JPG.jpg",
   "photoAlt": "Adultos practicando Aikido en el Dojo da Luz",
   "gallery": {
-    "label": "Galería", "title": "Dentro del dojo.", "intro": "Técnica, atención y encuentros que forman parte de cada clase.",
+    "label": "Galería",
+    "title": "Dentro del dojo.",
+    "intro": "Técnica, atención y encuentros que forman parte de cada clase.",
     "items": [
-      { "type": "image", "src": "https://static.wixstatic.com/media/ae7240_de66207c487b4e8086d18ed67c88ea93~mv2.jpg/v1/fill/w_1200,h_1200,al_c,q_85/IMG_3502_JPG.jpg", "alt": "Adultos practicando Aikido en Dojo da Luz" },
-      { "type": "image", "src": "https://static.wixstatic.com/media/ae7240_de66207c487b4e8086d18ed67c88ea93~mv2.jpg/v1/fill/w_800,h_800,fp_0.35_0.5,q_85/IMG_3502_JPG.jpg", "alt": "Práctica en pareja durante una clase de Aikido" },
-      { "type": "image", "src": "https://static.wixstatic.com/media/ae7240_4681e435c4ab47dbb9f6db8fe35fa6a5.jpg/v1/fill/w_800,h_800,al_c,q_85/ae7240_4681e435c4ab47dbb9f6db8fe35fa6a5.jpg", "alt": "Profesor Pablo Durán en Dojo da Luz" },
-      { "type": "video", "src": "https://videos.pexels.com/video-files/6253397/6253397-uhd_2160_3840_30fps.mp4", "poster": "https://static.wixstatic.com/media/ae7240_de66207c487b4e8086d18ed67c88ea93~mv2.jpg/v1/fill/w_800,h_800,al_c,q_85/IMG_3502_JPG.jpg", "alt": "Vídeo de una práctica de arte marcial en el dojo" },
-      { "type": "image", "src": "https://static.wixstatic.com/media/ae7240_de66207c487b4e8086d18ed67c88ea93~mv2.jpg/v1/fill/w_800,h_800,fp_0.65_0.5,q_85/IMG_3502_JPG.jpg", "alt": "Movimiento y equilibrio durante el entrenamiento de Aikido" },
-      { "type": "image", "src": "https://static.wixstatic.com/media/ae7240_de66207c487b4e8086d18ed67c88ea93~mv2.jpg/v1/fill/w_800,h_800,fp_0.5_0.35,q_85/IMG_3502_JPG.jpg", "alt": "Clase de Aikido para adultos en el tatami" }
+      {
+        "type": "image",
+        "src": "https://static.wixstatic.com/media/ae7240_de66207c487b4e8086d18ed67c88ea93~mv2.jpg/v1/fill/w_1200,h_1200,al_c,q_85/IMG_3502_JPG.jpg",
+        "alt": "Adultos practicando Aikido en Dojo da Luz"
+      },
+      {
+        "type": "image",
+        "src": "https://static.wixstatic.com/media/ae7240_de66207c487b4e8086d18ed67c88ea93~mv2.jpg/v1/fill/w_800,h_800,fp_0.35_0.5,q_85/IMG_3502_JPG.jpg",
+        "alt": "Práctica en pareja durante una clase de Aikido"
+      },
+      {
+        "type": "image",
+        "src": "https://static.wixstatic.com/media/ae7240_4681e435c4ab47dbb9f6db8fe35fa6a5.jpg/v1/fill/w_800,h_800,al_c,q_85/ae7240_4681e435c4ab47dbb9f6db8fe35fa6a5.jpg",
+        "alt": "Profesor Pablo Durán en Dojo da Luz"
+      },
+      {
+        "type": "image",
+        "src": "https://static.wixstatic.com/media/ae7240_de66207c487b4e8086d18ed67c88ea93~mv2.jpg/v1/fill/w_800,h_800,fp_0.65_0.5,q_85/IMG_3502_JPG.jpg",
+        "alt": "Movimiento y equilibrio durante el entrenamiento de Aikido"
+      },
+      {
+        "type": "image",
+        "src": "https://static.wixstatic.com/media/ae7240_de66207c487b4e8086d18ed67c88ea93~mv2.jpg/v1/fill/w_800,h_800,fp_0.5_0.35,q_85/IMG_3502_JPG.jpg",
+        "alt": "Clase de Aikido para adultos en el tatami"
+      }
     ]
   },
   "trialTitle": "Tu primera clase",

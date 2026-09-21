@@ -1,0 +1,43 @@
+---
+export const prerender = false
+
+import Admin from '../../../layouts/Admin.astro'
+import Aviso from '../../../components/admin/Aviso.astro'
+import EditorAudiencia from '../../../components/admin/EditorAudiencia.astro'
+import { pantallaAudiencia } from '../../../lib/audiencia-pantalla'
+
+/**
+ * Editor de `/aulas/criancas` (spec 0036). Es una pantalla propia y no una opcion de otra: edita
+ * una pagina distinta, aunque el formulario sea el mismo que el de la otra audiencia.
+ */
+
+const admin = Astro.locals.admin!
+const pantalla = await pantallaAudiencia('children', Astro.request, Astro.url)
+
+if (pantalla.redirigir) return Astro.redirect(pantalla.redirigir, 303)
+if (pantalla.estado) Astro.response.status = pantalla.estado
+---
+
+<Admin titulo="Crianças" admin={admin}>
+  <h1 class="font-serif text-3xl">Crianças</h1>
+  <p class="mt-4 text-sm text-[#625c55]">
+    La página <code>/aulas/criancas</code>, de arriba hacia abajo. El portugués manda: agregar o
+    quitar una fila, cambiar una foto o cambiar un vídeo se hace en su pestaña y aparece en
+    los cuatro idiomas. En las otras tres se traduce.
+  </p>
+
+  {pantalla.aviso && <Aviso tipo={pantalla.aviso.tipo}>{pantalla.aviso.texto}</Aviso>}
+  {pantalla.sinRepositorio && (
+    <Aviso tipo="error">No se puede abrir el editor: {pantalla.sinRepositorio}</Aviso>
+  )}
+
+  {pantalla.sinRepositorio === null && (
+    <EditorAudiencia
+      pagina="children"
+      archivos={pantalla.archivos}
+      errores={pantalla.errores}
+      shas={pantalla.shas}
+      activo={pantalla.activo}
+    />
+  )}
+</Admin>

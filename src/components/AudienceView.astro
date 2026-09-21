@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro'
 import FormModal from './FormModal.astro'
+import GaleriaMedios from './GaleriaMedios.astro'
 import QaSection from './QaSection.astro'
 import { getContent } from '../lib/content'
 import { faqJsonLd } from '../lib/site'
@@ -10,14 +11,13 @@ interface Props { locale: Locale; page: 'adults' | 'children' }
 const { locale, page } = Astro.props
 const c = getContent(page as PageKey, locale) as ReturnType<typeof getContent<'adults'>>
 const formId = `form-${page}`
-const ui = {
-  pt: { caption: 'Aikido · Lisboa', menu: 'Menu', skip: 'Saltar para o conteúdo', areas: 'Benfica · Lumiar · Encarnação', org: 'Associação sem fins lucrativos' },
-  es: { caption: 'Aikido · Lisboa', menu: 'Menú', skip: 'Saltar al contenido', areas: 'Benfica · Lumiar · Encarnação', org: 'Asociación sin fines de lucro' },
-  fr: { caption: 'Aïkido · Lisbonne', menu: 'Menu', skip: 'Aller au contenu', areas: 'Benfica · Lumiar · Encarnação', org: 'Association à but non lucratif' },
-  en: { caption: 'Aikido · Lisbon', menu: 'Menu', skip: 'Skip to content', areas: 'Benfica · Lumiar · Encarnação', org: 'Non-profit association' },
-}[locale]
+
+// Los cinco textos del borde de la pagina salian de un objeto escrito aca adentro, asi que
+// no habia nada que editar aunque hubiera editor (spec 0036). Ahora viven en el contenido,
+// con la misma forma que en `/aulas`.
+const chrome = c.chrome
 ---
-<Base page={page} locale={locale} title={c.seo.title} description={c.seo.description} skipLink={ui.skip} nav={siteNav(locale)} menuLabel={ui.menu} caption={ui.caption}>
+<Base page={page} locale={locale} title={c.seo.title} description={c.seo.description} skipLink={chrome.skipLink} nav={siteNav(locale)} menuLabel={chrome.menuLabel} caption={chrome.caption}>
   <section class="section-pad bg-[#f6f1e8]"><div class="site-shell grid gap-12 md:grid-cols-[1.05fr_.95fr] md:items-center md:gap-20">
     <div><p class="section-kicker">{c.eyebrow}</p><h1 class="section-title mt-4 text-5xl md:text-7xl">{c.title}</h1><p class="mt-6 text-xl leading-9 text-[#625c55]">{c.lead}</p><button class="button mt-8 bg-[#0099ff] text-white" type="button" data-modal-open={formId}>{c.trialLabel}</button></div>
     <img src={c.photo} alt={c.photoAlt} class="max-h-[38rem] w-full object-cover" fetchpriority="high" />
@@ -34,19 +34,7 @@ const ui = {
         <h2 class="section-title mt-4 text-4xl md:text-6xl">{c.gallery.title}</h2>
         <p class="mt-5 text-lg leading-8 text-[#625c55]">{c.gallery.intro}</p>
       </div>
-      <ul class="mt-10 grid grid-cols-2 gap-2 sm:gap-4 md:grid-cols-3" role="list">
-        {c.gallery.items.map((item, index) => (
-          <li class:list={['relative overflow-hidden bg-[#d7cec0]', index === 0 && 'md:col-span-2 md:row-span-2']}>
-            {item.type === 'image' ? (
-              <img src={item.src} alt={item.alt} loading="lazy" decoding="async" class="aspect-square h-full w-full object-cover transition-transform duration-500 hover:scale-[1.02]" />
-            ) : (
-              <video class="aspect-square h-full w-full object-cover" controls playsinline preload="metadata" poster={item.poster} aria-label={item.alt}>
-                <source src={item.src} type="video/mp4" />
-              </video>
-            )}
-          </li>
-        ))}
-      </ul>
+      <GaleriaMedios gallery={c.gallery} />
     </div>
   </section>
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(faqJsonLd(c.qa.items))} />
@@ -54,5 +42,5 @@ const ui = {
   <QaSection label={c.qa.label} title={c.qa.title} items={c.qa.items} />
 
   <section id="aula-experimental" class="section-pad bg-[#0099ff] text-center text-white"><div class="site-shell"><h2 class="font-serif text-4xl md:text-6xl">{c.trialTitle}</h2><p class="mx-auto mt-5 max-w-2xl text-lg leading-8 text-white/85">{c.trialText}</p><div class="mt-8"><FormModal id={formId} title={c.trialTitle} trigger={c.trialLabel} url={c.formUrl} directLabel={c.directLabel} closeLabel={c.closeLabel} /></div></div></section>
-  <p slot="footer-note" class="text-sm leading-6 text-white/65">{ui.areas}<br />{ui.org}</p>
+  <p slot="footer-note" class="text-sm leading-6 text-white/65">{chrome.footerNote.areas}<br />{chrome.footerNote.orgType}</p>
 </Base>

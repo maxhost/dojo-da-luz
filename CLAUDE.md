@@ -81,6 +81,32 @@ tarea es de UI y no se puede ver el resultado, **el entregable de la primera vue
 codigo**: es el layout campo por campo para que el usuario lo apruebe o lo corrija. El
 codigo va despues. Un `astro check` en verde no dice nada sobre si la pantalla se entiende.
 
+**Que un campo exista en el JSON no prueba que la pagina lo use.** El 2026-09-21 el editor
+de `/aulas` salio a produccion con un bloque "Etiquetas del menu" que editaba `chrome.nav`,
+un campo que **ninguna de las diez vistas lee** —todas arman su menu con `siteNav(locale)`—
+y que estaba muerto en `home.json` y `classes.json` desde el scaffold. Tres de sus cinco
+`href` ni figuraban en el HTML. Lo encontro el cliente preguntando "¿que menu, el navbar o
+el footer?". Antes de poner un campo en un formulario del BO, **buscar quien lo renderiza**
+(`grep` del nombre en `src/`). Que valide contra el schema solo prueba que el archivo esta
+bien formado, no que alguien lo pinte. Un formulario que no hace nada es peor que no
+tenerlo: el cliente escribe, publica y no pasa nada.
+
+**Para probar que algo se borro sin romper nada, compara el HTML construido.**
+`git worktree add /tmp/antes HEAD`, construir ahi, y comparar pagina por pagina. Es una señal
+que el modelo no genero, a diferencia de releer el diff y convencerse.
+**Neutraliza antes el hash del CSS**: cualquier clase de Tailwind nueva cambia el nombre del
+bundle y con el, el hash de las 44 paginas — el 2026-09-21 la comparacion dijo "cambiaron
+todas" y la unica diferencia real en las 36 intactas era `Base.<hash>.css`. Con
+`sed 's|Base\.[A-Za-z0-9_-]*\.css|Base.CSS|g'` antes del `shasum`, quedaron exactamente las
+8 paginas que la spec decia que iban a cambiar.
+
+**El keyring de macOS tapa el token que le pasas a `git push`.** El 2026-09-21 dos intentos
+con un PAT valido fallaron con "Invalid username or token": `credential.helper=osxkeychain`
+esta configurado en `~/.gitconfig` **y** en el de Xcode, corre primero y contesta con una
+credencial vieja. Agregar un helper con `-c` no alcanza: hay que **resetear la lista** con
+`-c credential.helper=` vacio antes de sumar el propio. Y antes de culpar al token,
+verificalo: `curl -H "Authorization: token <t>" https://api.github.com/user`.
+
 **Las reglas verificables van en hooks, no aca.** Los hooks corren fuera del contexto,
 cuestan cero tokens y son deterministas; este archivo es advisory. Si una regla se puede
 chequear con un comando, es un hook — no la escribas aca tambien.

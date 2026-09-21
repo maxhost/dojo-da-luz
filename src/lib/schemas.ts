@@ -4,6 +4,7 @@
  * Las dos mitades no cambian por los mismos motivos.
  */
 import { z } from 'zod'
+import { esEnlaceDeYoutube } from './youtube.ts'
 
 export const seoSchema = z.object({
   title: z.string().min(1),
@@ -31,14 +32,30 @@ export const qaSchema = z.object({
     .max(12),
 })
 
+/**
+ * La galeria es de largo libre y cada medio es una foto subida o un video de YouTube
+ * (ADR-0031). Sin minimo: con cero medios la seccion no se pinta, que es mejor que un
+ * titulo sobre una rejilla vacia.
+ *
+ * Del video se guarda **el enlace, no el id**: es lo que el cliente pego y lo que el
+ * editor le tiene que devolver. El id lo saca `idDeYoutube` al renderizar.
+ */
+export const galleryItemSchema = z.discriminatedUnion('type', [
+  z.object({ type: z.literal('image'), src: z.url(), alt: z.string().min(1) }),
+  z.object({
+    type: z.literal('youtube'),
+    url: z
+      .url()
+      .refine(esEnlaceDeYoutube, 'no es un enlace de YouTube: pega la direccion del video'),
+    alt: z.string().min(1),
+  }),
+])
+
 export const gallerySchema = z.object({
   label: z.string().min(1),
   title: z.string().min(1),
   intro: z.string().min(1),
-  items: z.array(z.discriminatedUnion('type', [
-    z.object({ type: z.literal('image'), src: z.url(), alt: z.string().min(1) }),
-    z.object({ type: z.literal('video'), src: z.url(), poster: z.url(), alt: z.string().min(1) }),
-  ])).length(6),
+  items: z.array(galleryItemSchema),
 })
 
 /** Tarjeta de audiencia de la Home: foto y texto propios, no prestados de la landing. */
@@ -174,6 +191,12 @@ export const classesSchema = z.object({
 
 export const audienceEntrySchema = z.object({
   seo: seoSchema,
+  chrome: z.object({
+    caption: z.string().min(1),
+    menuLabel: z.string().min(1),
+    skipLink: z.string().min(1),
+    footerNote: z.object({ areas: z.string().min(1), orgType: z.string().min(1) }),
+  }),
   eyebrow: z.string().min(1), title: z.string().min(1), lead: z.string().min(1),
   paragraphs: z.array(z.string().min(1)).min(1),
   goalsTitle: z.string().min(1), goals: z.array(z.string().min(1)).min(1),

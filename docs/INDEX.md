@@ -28,7 +28,7 @@ desactualizado es peor que no tenerlo.
 | [0016](adr/0016-ubicacion-backoffice.md) | 2026-09-18 | El BO vive en `/admin` con noindex y guard por Host; el subdominio `bo.` se activa por variable de entorno | aceptada | `docs/adr/0016-ubicacion-backoffice.md` |
 | [0017](adr/0017-dojos-entidad.md) | 2026-09-18 | Los dojos son una entidad en `content/dojos.json` con NAP, coordenadas y horarios estructurados; no van a la DB | aceptada | `docs/adr/0017-dojos-entidad.md` |
 | [0018](adr/0018-geo-motores-generativos.md) | 2026-09-18 | GEO = generative engine optimization: datos estructurados, capa factual citable y crawlers de IA permitidos; nada sin evidencia | aceptada | `docs/adr/0018-geo-motores-generativos.md` |
-| [0019](adr/0019-galerias-audiencias.md) | 2026-09-19 | Galerías de audiencias como contenido estructurado, responsive y sin JavaScript | aceptada | `docs/adr/0019-galerias-audiencias.md` |
+| [0019](adr/0019-galerias-audiencias.md) | 2026-09-19 | Galerías de audiencias como contenido estructurado, responsive y sin JavaScript | superseded por 0031 | `docs/adr/0019-galerias-audiencias.md` |
 | [0020](adr/0020-accesos-audiencias-home.md) | 2026-09-19 | La Home expone Adultos y Crianças como accesos principales directos, sin obligar a pasar por Aulas | aceptada | `docs/adr/0020-accesos-audiencias-home.md` |
 | [0021](adr/0021-identidad-azul.md) | 2026-09-20 | El acento de marca pasa del rojo óxido al azul `#0099ff`; supersede la paleta de acento de 0006 y 0010 | aceptada | `docs/adr/0021-identidad-azul.md` |
 | [0022](adr/0022-eventos-y-escolas.md) | 2026-09-20 | Eventos y Escolas vuelven como páginas propias en los 4 idiomas; supersede la parte de 0012 que dejaba los eventos sin destino | aceptada | `docs/adr/0022-eventos-y-escolas.md` |
@@ -40,6 +40,8 @@ desactualizado es peor que no tenerlo.
 | [0028](adr/0028-imagenes-compartidas.md) | 2026-09-21 | Las imagenes de la Home son compartidas en `content/media.json`; el alt y el pie siguen por idioma, y el campo ofrece subir antes que pegar una URL | aceptada | `docs/adr/0028-imagenes-compartidas.md` |
 | [0029](adr/0029-editar-donde-se-ve.md) | 2026-09-21 | Cada cosa se edita donde se ve: la imagen vuelve a su seccion con la miniatura como boton y el archivo compartido pasa a ser invisible; supersede la UI del 0028 | aceptada | `docs/adr/0029-editar-donde-se-ve.md` |
 | [0030](adr/0030-portugues-dueno-de-la-estructura.md) | 2026-09-21 | Portugues es el dueño de la estructura de las listas editables: el alta y la baja de filas solo ocurren en PT y se propagan a los cuatro idiomas; es/fr/en solo traducen | aceptada | `docs/adr/0030-portugues-dueno-de-la-estructura.md` |
+| [0031](adr/0031-galeria-libre-y-youtube.md) | 2026-09-21 | La galeria de las paginas de audiencia deja de tener seis medios fijos: largo libre, foto subida o video de YouTube, grid adaptativo y el video no carga hasta que se toca; supersede el 0019 | aceptada | `docs/adr/0031-galeria-libre-y-youtube.md` |
+| [0032](adr/0032-portugues-siembra-las-imagenes.md) | 2026-09-21 | En las paginas de audiencia la imagen vive en el contenido de cada idioma y portugues la siembra a los cuatro; solo se cambia desde la pestaña PT; supersede el 0028 para listas de largo libre | aceptada | `docs/adr/0032-portugues-siembra-las-imagenes.md` |
 
 ## Specs — que se construye
 
@@ -80,6 +82,7 @@ desactualizado es peor que no tenerlo.
 | [0033](specs/0033-editor-simple.md) | 2026-09-21 | Un campo por cosa: la imagen se cambia tocando su miniatura donde se ve, se borra el bloque de imagenes y un parceiro vuelve a ser solo un logo | cerrada | si | `src/components/admin/**`, `src/lib/{forms,media-edicion,partners}.ts`, `src/pages/admin/paginas/home.astro` |
 | [0034](specs/0034-horarios-desde-la-entidad.md) | 2026-09-21 | La seccion Horarios de /aulas sale de la entidad de dojos: archivar un dojo lo saca de la pagina | cerrada | no | `src/components/ClassesView.astro`, `src/lib/content.ts`, `content/*/classes.json` |
 | [0035](specs/0035-editor-aulas.md) | 2026-09-21 | Editor de /aulas con listas de largo libre donde portugues manda la estructura y los otros tres idiomas traducen | cerrada | no | `src/pages/admin/paginas/aulas.astro`, `src/components/admin/**`, `src/lib/{aulas-edicion,traduccion,publish}.ts`, `content/**` |
+| [0036](specs/0036-editor-adultos.md) | 2026-09-21 | Editores separados de /aulas/adultos y /aulas/criancas: galeria de largo libre con fotos o videos de YouTube, grid adaptativo y portugues sembrando las imagenes | cerrada | no | `src/pages/admin/paginas/{adultos,criancas}.astro`, `src/components/admin/**`, `src/lib/{audiencia-edicion,audiencia-pantalla,youtube,traduccion,schemas}.ts`, `src/components/AudienceView.astro`, `content/*/{adults,children}.json` |
 
 **"Disjunta?"** = si el trabajo no comparte archivos con otra spec abierta. Es lo que
 habilita paralelizar. Lo decide la spec, no el orquestador en runtime.

@@ -8,19 +8,26 @@ Si una sesion se cae, se cierra o se compacta, se vuelve aca — no al chat. Hay
 Regla: **marcar `hecho` solo con verificacion real** — tests que pasan, comando corrido,
 cosa vista en pantalla. No "deberia andar".
 
-Ultima actualizacion: 2026-09-21 (specs 0034 y 0035: /aulas lee la entidad de dojos y gana
-editor propio en el BO; ademas la verificacion en produccion de las filas 6j y 6l). Antes: 2026-09-21 (handoff) — `main` en `12b27fe`, desplegado, gate verde:
-`astro check` 0/0/0, `npm test` **24/24**, `npm run build` 44 rutas, `/api/health` 200 desde
-`dojo-da-luz.vercel.app`.
+Ultima actualizacion: 2026-09-21 — gate verde: `astro check` **0/0/0**, `npm test`
+**39/39**, `npm run build` 44 rutas. Esta sesion: spec 0036 (editores separados de
+`/aulas/adultos` y `/aulas/criancas`), ADR-0031 (galeria de largo libre con YouTube) y
+ADR-0032 (portugues siembra las imagenes). Verificado contra el BO corriendo, no por
+lectura: publicar PT sembro un video de YouTube en los cuatro idiomas, traducir en ES no
+pudo cambiar ni la foto ni el enlace, y un enlace que no es de YouTube dio 422 con el error
+en su fila. De las 44 paginas construidas **solo cambiaron las 8 de audiencia**, con el
+hash del CSS neutralizado. **Sin commitear ni desplegar al escribir esto.**
 
 **Lo que hay que saber antes de tocar nada:**
 
-1. **La interfaz del editor no conforma al cliente y es lo que sigue.** Tres iteraciones
-   (specs 0031, 0032, 0033) y la ultima tampoco. El cliente lo dijo asi: *"tenes que hacer
-   un form simple donde tenes inputs de texto que modifican textos, inputs de texto que
-   modifican texto de botones, input de imagen que modifica imagenes"*. **Antes de escribir
-   una linea mas de UI, leer "Descartado" abajo: hay tres intentos con su motivo de rechazo,
-   y repetirlos cuesta otra sesion.**
+1. **El editor de `/aulas` es el molde: copialo, no inventes de nuevo.** Despues de tres
+   pantallas rechazadas (specs 0031, 0032, 0033), la cuarta salio aprobada porque se hizo
+   al reves: **el entregable de la primera vuelta fue el layout campo por campo**, el
+   cliente lo corrigio, y recien entonces se escribio codigo. Para la proxima pagina:
+   `src/pages/admin/paginas/aulas.astro` + `FormularioAulas.astro` + `TablaFilas.astro` +
+   `aulas-edicion.ts` son el patron completo. Lo que el cliente pidio textualmente:
+   *"un form simple donde tenes inputs de texto que modifican textos, inputs de texto que
+   modifican texto de botones, input de imagen que modifica imagenes"*, y para las listas
+   *"es una tablita con un quitar, añadir fila. Es simple."*
 2. **Ya se puede ver el BO sin sacar al cliente.** `node --env-file=.env
    scripts/sesion-temporal.mjs` inserta una sesion de 40 minutos en `admin_session` y la
    imprime; `--borrar <token>` la saca. **No toca la contraseña** —`npm run admin:seed` si,
@@ -43,21 +50,37 @@ SEO actual, mejorar GEO.
 
 ## Ahora
 
-### Por donde seguir (corte del 2026-09-21)
+### Por donde seguir (corte del 2026-09-21, segunda sesion)
 
-0. **El editor de `/aulas` esta hecho y falta apretarlo en produccion** (fila 6p). Se
-   verifico entero en local contra la base real: agregar una cuota en portugues la crea en
-   los cuatro idiomas con la marca "sin traducir", y quitarla la borra en los cuatro sin
-   pisar las traducciones de las demas. Lo que falta es el camino de GitHub: un commit con
-   cuatro archivos por la Git Data API, que nunca se ejercito contra el repo.
+**Adultos y Crianças ya tienen editor** (spec 0036, fila 6r). El procedimiento —layout
+campo por campo aprobado **antes** de escribir codigo— se aplico por segunda vez y volvio a
+funcionar: el cliente corrigio cuatro cosas del layout propuesto y recien entonces se
+implemento.
 
-1. **Rediseñar la interfaz del editor de Home con el cliente, no para el cliente** (fila
-   6o). Sigue pendiente para la Home; el editor de `/aulas` ya nacio con el layout aprobado
-   campo por campo antes de escribir codigo, que es el procedimiento que faltaba. Lo que fallo tres veces fue diseñar a ciegas:
-   proponer una pantalla, implementarla entera, desplegarla y recien ahi enterarse de que no
-   era. **Lo que corresponde antes de implementar**: que el cliente apruebe el layout —una
-   descripcion campo por campo, un boceto, o la pantalla misma en una rama de preview— y
-   recien entonces escribir codigo. Ver "Descartado" para los tres intentos y su motivo.
+Las paginas que **siguen sin editor**:
+
+| Pagina | Contenido | Nota |
+|---|---|---|
+| `/contactos` | `contact.json` | **La mas urgente**: duplica las tres sedes en `contact.venues`, con Encarnação incluido. Engancharla a la entidad de dojos necesita sumarle `transporte` a la ficha (fila 6f). |
+| `/dojo` | `dojo.json` | Equipo docente con jerarquia (ADR-0023). |
+| `/aikido`, `/eventos`, `/escolas`, `/outras-artes`, `/professor-pablo-duran` | sus JSON | Sin urgencia conocida. |
+
+**El procedimiento, probado dos veces**: (1) leer el JSON y la vista para enumerar los
+campos, (2) entregar el layout campo por campo y esperar que el cliente lo apruebe o lo
+corrija, (3) escribir la spec y los ADR, (4) implementar copiando el molde —hoy el mejor es
+`audiencia-*` + `FormularioAudiencia`, que ademas sirve dos pantallas—, (5) verificar con
+`scripts/sesion-temporal.mjs` contra el BO corriendo — **no por lectura del codigo**.
+
+0. **Falta apretar el editor de `/aulas` en produccion** (fila 6p). Se verifico entero en
+   local contra la base real: agregar una cuota en portugues la crea en los cuatro idiomas
+   con la marca "sin traducir", y quitarla la borra en los cuatro sin pisar las traducciones
+   de las demas. Lo que **nunca corrio contra GitHub** es `publicarVarios`: el commit con
+   cuatro archivos por la Git Data API (blobs → tree → commit → `PATCH` de la ref sin
+   `force`). Si falla, mirar el codigo de error antes que los permisos.
+
+1. **Rediseñar la interfaz del editor de Home** (fila 6o). Sigue pendiente. Ahora hay un
+   molde aprobado —el de `/aulas`— al que alinearla, incluido el cambio de los textarea de
+   "una linea por renglon" a tablas.
 
 2. **Un fallo de subida se publica como "no habia cambios"** — es el unico defecto que
    dejo esta verificacion. `partnersDesdeForm` descarta en silencio toda fila con `src`
@@ -193,7 +216,8 @@ siguiente guardado del BO reordena el archivo: ruido de una vez, no perdida de d
 | 6n | Spec 0033 — un campo por cosa en el editor | 0033 | implementada, sin probar en el BO | Correccion de UX pedida por el cliente: el bloque "Imágenes de la portada" **se borro** y las cinco imagenes volvieron a su seccion, donde **la miniatura es el boton** que abre el selector de archivos; un parceiro volvio a ser solo un logo mas un "quitar" (nombre y escala viajan ocultos). Publicar un idioma escribe `media.json` tambien, solo si alguna imagen cambio. |
 | 6o | Rediseñar la interfaz del editor con el cliente | — | **bloqueante, sin empezar** | Tres iteraciones rechazadas (0031, 0032, 0033). El pedido textual: *"un form simple donde tenes inputs de texto que modifican textos, inputs de texto que modifican texto de botones, input de imagen que modifica imagenes"*. **No implementar sin que el cliente apruebe el layout antes** — ver Descartado. Requisito practico: conseguir forma de ver el BO (contraseña, o sesion temporal en `admin_session`), porque hasta ahora se diseño sin ver ni una pantalla. |
 | 6p | Spec 0035 — editor de /aulas en el BO | 0035 | implementada, verificada en local | Cuatro pestañas, cinco tablas (cuotas, notas, parrafos, datos de crianças, preguntas) y el layout aprobado por el cliente **antes** de escribir codigo. Portugues manda la estructura (ADR-0030): solo su pestaña tiene "Añadir fila"; publicar PT escribe los cuatro archivos en un commit por la Git Data API. Verificado por HTTP contra el BO corriendo: alta y baja de una cuota propagadas a los cuatro idiomas, marca "sin traducir" en es/fr/en, traducciones de las otras filas intactas. **Falta en produccion**: `publicarVarios` nunca corrio contra GitHub. |
-| 6q | Sacar Encarnação de los textos en prosa | — | pendiente | El dojo cerro. La estructura ya no lo nombra, la prosa si: en `classes.json` (descripcion SEO, pie, `children.facts[2]`, dos respuestas del Q&A) lo puede arreglar el cliente desde `/admin/paginas/aulas`. En `adults.json`, `children.json` y `contact.json` **no hay editor todavia** y hay que tocarlo a mano o darles su spec. |
+| 6r | Spec 0036 — editores de Adultos y Crianças con galeria libre y YouTube | 0036 | implementada, verificada en local | Dos pantallas separadas (`/admin/paginas/adultos` y `/criancas`) sobre un formulario comun, con el layout aprobado por el cliente antes de escribir codigo. La galeria dejo de tener seis medios fijos: se añaden y quitan sin limite, cada uno es una foto subida a R2 o un video de YouTube, y el grid publico se adapta (1, 2, 3-4, 5+). El video no le pide nada a YouTube hasta que alguien lo toca, y una galeria sin videos no se lleva **ni una linea** de JavaScript. Portugues siembra las imagenes (ADR-0032): en es/fr/en la foto y el enlace se ven pero no se cambian, y un POST forjado desde esas pestañas queda igual sin efecto (comprobado). Los cinco textos de cabecera y pie pasaron al contenido. Se borro el mp4 de stock de Pexels de los ocho archivos. **Falta en produccion**: nunca corrio contra GitHub, igual que la fila 6p. |
+| 6q | Sacar Encarnação de los textos en prosa | — | pendiente | El dojo cerro. La estructura ya no lo nombra, la prosa si: en `classes.json` (descripcion SEO, pie, `children.facts[2]`, dos respuestas del Q&A) lo puede arreglar el cliente desde `/admin/paginas/aulas`. `adults.json` y `children.json` ya tienen editor (spec 0036): sus `facts` y su Q&A los puede arreglar el cliente. Queda `contact.json`, sin editor. |
 | 7 | Alumnos + emision de factura + PDF a R2 + envio Resend | — | pendiente | Necesita una factura de ejemplo real. Spec sin escribir: el numero 0004 del INDEX es otra cosa. |
 | 8 | Redirects 301 de las 34 URLs viejas | — | plan definido | Matriz conceptual documentada. Falta crawl final, Search Console e implementación cuando existan todos los destinos. |
 | 9 | Sitemap + robots.txt | — | pendiente | Con el set completo de paginas. |
@@ -302,6 +326,7 @@ Los caminos descartados importan: sin registro, se reintentan.
 | **Bloque "Imágenes de la portada" al final del editor (spec 0032)** | Resolvia un problema real —una foto no se traduce y el editor publica un idioma por POST, asi que estaba cuatro veces— pero lo resolvia en la pantalla equivocada: para cambiar la foto de "04 · O dojo" habia que salir de la seccion, bajar al final, adivinar cual de cinco era y volver. El cliente pregunto "¿que es eso? ¿para que?". **Una caja que necesita un parrafo explicando por que existe ya perdio.** El modelo de datos compartido (`content/media.json`) **si sirve y se queda**; lo que se borro es la seccion (ADR-0029). |
 | **Nombre y ampliacion por cada logo de parceiro (spec 0031)** | El nombre era el texto alternativo y la ampliacion existia por un logo con mucho margen en el archivo. Las dos razones son ciertas y ninguna justifica dos campos de texto por logo en la pantalla del cliente: *"un logo solo deberia ser una imagen"*. Los datos siguen en el JSON y viajan ocultos con la fila. |
 | **Campo de imagen que pide una URL (specs 0029–0030)** | Un `input type="url"` a ancho completo con el selector de archivo abajo y mas chico. El cliente no tiene de donde sacar una direccion — es el problema que abrio la spec 0030. Y hasta el arreglo de la jurisdiccion EU, el boton de subir existia pero fallaba, lo cual enseña a ignorarlo. |
+| **Bloque "Etiquetas del menú" en el editor de /aulas (spec 0035)** | Editaba `chrome.nav`, un campo que **ninguna de las diez vistas lee**: todas arman su menu con `siteNav(locale)` desde `NAV_LABELS`. Tres de sus cinco `href` ni figuraban en el HTML construido. Estaba muerto en `home.json` y `classes.json` desde el scaffold y yo asumi que se renderizaba porque estaba en el JSON. Lo encontro el cliente preguntando "¿que menu, el navbar o el footer?". Se borro el campo entero: las 44 paginas quedaron identicas byte a byte. **El menu no se edita desde ningun lado y esta bien asi** (ADR-0026): son las ocho paginas del sitio. |
 | **Diseñar UI sin que el cliente vea el layout antes** | El error de fondo de las tres filas anteriores, y la razon de que la sesion del 2026-09-21 terminara con el cliente diciendo "olvidate". El ciclo fue siempre el mismo: proponer una pantalla, implementarla entera, desplegarla, y enterarse ahi de que no era. **Ningun agente de esta sesion pudo ver una sola pantalla del backoffice** —hace falta contraseña— asi que cada iteracion fue un diseño a ciegas presentado como terminado. Lo que corresponde: aprobar el layout primero, implementar despues. |
 | Carrusel animado en Parcerias (spec 0026) | Mostraba 3 o 4 de 8 parceiros a la vez y obligaba a esperar el bucle para verlos todos; duplicaba los `<li>` en el HTML con `aria-hidden` y pedia su propio bloque `prefers-reduced-motion`. Sustituido por rejilla estatica en la spec 0028 (ADR-0024). |
 | Recuadro blanco con borde detras de cada logo de parceiro | Ocho cajas compitiendo con los logos sobre el fondo `#f6f1e8`. Y no era lo que producia el blanco visible: eso lo traen los archivos. No reponerlo para disimular assets malos — la respuesta son los logos originales (fila 12). |
