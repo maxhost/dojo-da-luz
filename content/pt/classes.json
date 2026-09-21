@@ -7,28 +7,6 @@
     "caption": "Aikido · Lisboa",
     "menuLabel": "Menu",
     "skipLink": "Saltar para o conteúdo",
-    "nav": [
-      {
-        "label": "Início",
-        "href": "/"
-      },
-      {
-        "label": "Horários",
-        "href": "#horarios"
-      },
-      {
-        "label": "Quotas",
-        "href": "#quotas"
-      },
-      {
-        "label": "Crianças",
-        "href": "#criancas"
-      },
-      {
-        "label": "Aula experimental",
-        "href": "#aula-experimental"
-      }
-    ],
     "footerNote": {
       "areas": "Benfica · Lumiar · Encarnação",
       "orgType": "Associação sem fins lucrativos"

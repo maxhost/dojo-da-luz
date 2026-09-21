@@ -12,24 +12,6 @@
     "caption": "Aikido · Lisboa",
     "menuLabel": "Menú",
     "skipLink": "Saltar al contenido",
-    "nav": [
-      {
-        "label": "La práctica",
-        "href": "#montanha"
-      },
-      {
-        "label": "Clases",
-        "href": "#terra"
-      },
-      {
-        "label": "El dojo",
-        "href": "#dojo"
-      },
-      {
-        "label": "Contacto",
-        "href": "#umbral"
-      }
-    ],
     "footerNote": {
       "areas": "Benfica · Lumiar",
       "orgType": "Asociación sin fines de lucro"

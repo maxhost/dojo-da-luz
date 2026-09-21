@@ -48,8 +48,14 @@ produccion, en los cuatro idiomas.
   cliente dijo explicitamente: "luego diseñaremos los formularios de cada formulario".
 - **`trial.formUrl` no se edita desde el BO.** Viaja en el JSON y se cambia a mano hasta que
   exista la spec de formularios. Un destino mal escrito deja el modal en blanco sin avisar.
-- **Los destinos del menu.** Las cinco etiquetas de `chrome.nav` si se editan; los `href`
-  viajan ocultos y no se tocan (ADR-0026).
+- **El menu, entero.** La primera version de esta spec decia que las cinco etiquetas de
+  `chrome.nav` si se editaban. Era falso y el editor llego a produccion con un bloque
+  "Etiquetas del menu" que no pintaba nada: **`chrome.nav` no lo lee ninguna vista**. Las
+  diez vistas publicas arman su menu con `siteNav(locale)`, que sale de `NAV_LABELS` en
+  `src/lib/i18n.ts` — ocho enlaces a las paginas del sitio, iguales en todas. Tres de los
+  cinco `href` del JSON (`#quotas`, `#criancas`, `#aula-experimental`) ni siquiera existian
+  en el HTML. El campo se borro del schema y de los ocho archivos que lo tenian
+  (`home.json` tambien): las 44 paginas construidas quedaron identicas byte a byte.
 - **La seccion Horários no lleva tabla.** Sus sedes salen de `/admin/dojos` (spec 0034):
   aca solo se editan rotulo, titulo, introduccion y los dos botones. Dos lugares que
   editan la misma sede es el problema que la 0034 acaba de sacar.
@@ -65,7 +71,7 @@ rechazadas (0031, 0032, 0033), donde se implemento sin que nadie viera la pantal
 | Bloque | Campos de texto | Tabla (columnas) |
 |---|---|---|
 | SEO | Título, Descripción | — |
-| Cabecera y pie | Bajada del logo, Botón de menú, Saltar al contenido, 5 etiquetas de menú, Pie · zonas, Pie · tipo de organización | — |
+| Cabecera y pie | Bajada del logo, Botón de menú, Saltar al contenido, Pie · zonas, Pie · tipo de organización | — |
 | Portada | Antetítulo, Titular, Bajada, Temporada, Texto del botón, **foto** | — |
 | 01 · Horários | Rótulo, Título, Introducción, Botón de adultos, Botón de crianças | — (sedes desde `/admin/dojos`) |
 | 02 · Quotas | Rótulo, Título, Introducción | **Cuotas**: Nombre · Precio · Detalle<br>**Notas**: Nota |

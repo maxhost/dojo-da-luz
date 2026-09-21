@@ -152,6 +152,15 @@ shell no puede hacer que una sesion de desarrollo publique contra el repo. `BO_P
 fuerza el camino de GitHub a mano. **Cuidado: guardar desde `/admin` en local ensucia el
 working tree**, igual que editar el JSON a mano.
 
+**Que un campo exista en el JSON no prueba que la pagina lo use.** El 2026-09-21 el editor
+de `/aulas` salio a produccion con un bloque "Etiquetas del menu" que editaba `chrome.nav`
+— un campo que **ninguna vista lee**: las diez arman su menu con `siteNav(locale)` desde
+`NAV_LABELS`. Estaba en `home.json` y `classes.json` desde el scaffold y nadie lo habia
+mirado. Lo encontro el cliente preguntando "¿que menu, el navbar o el footer?". Antes de
+poner un campo en el editor, **buscar quien lo renderiza** (`grep` del nombre en `src/`),
+no alcanza con que valide el schema. El campo se borro; el HTML construido no cambio en
+un solo byte, que es la prueba de que estaba muerto.
+
 **El orden de las claves del contenido lo fija el schema de zod, no el archivo.** Los cinco
 JSON de contenido se normalizaron a ese orden el 2026-09-21 (mismos datos, `resumen` sube
 al segundo lugar en los 4 `home.json`). Si se reordena un campo en `src/lib/content.ts`, el

@@ -18,7 +18,6 @@ const admin = Astro.locals.admin!
 const ruta = (locale: Locale) => `content/${locale}/home.json`
 
 type Enviado = { valores: Record<string, string> }
-type Publicado = { chrome: { nav: { label: string; href: string }[] } }
 
 let errores: Partial<Record<Locale, Record<string, string>>> = {}
 // Las parcerias son un archivo aparte, sin idioma (ADR-0027): su error y lo que se envio
@@ -67,9 +66,7 @@ if (Astro.request.method === 'POST') {
     aviso = { tipo: 'error', texto: 'Idioma desconocido.' }
   } else {
     activo = idioma
-    // El menu y cualquier campo fuera del editor salen de lo publicado, no del formulario.
-    const base = JSON.parse((await leerContenido(ruta(idioma))).contenido) as Publicado
-    const datos = homeDesdeForm(form, base)
+    const datos = homeDesdeForm(form)
     const validado = homeSchema.safeParse(datos)
 
     // Las imagenes son un archivo aparte que viaja en este mismo formulario (ADR-0029):

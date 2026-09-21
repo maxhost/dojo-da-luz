@@ -12,24 +12,6 @@
     "caption": "Aïkido · Lisbonne",
     "menuLabel": "Menu",
     "skipLink": "Aller au contenu",
-    "nav": [
-      {
-        "label": "La pratique",
-        "href": "#montanha"
-      },
-      {
-        "label": "Cours",
-        "href": "#terra"
-      },
-      {
-        "label": "Le dojo",
-        "href": "#dojo"
-      },
-      {
-        "label": "Contact",
-        "href": "#umbral"
-      }
-    ],
     "footerNote": {
       "areas": "Benfica · Lumiar",
       "orgType": "Association à but non lucratif"

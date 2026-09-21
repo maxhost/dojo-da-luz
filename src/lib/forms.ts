@@ -101,19 +101,10 @@ export function errorDe(errores: Record<string, string>, ruta: string): string |
   )
 }
 
-/** Lo que el editor de Home no toca y hay que conservar del archivo publicado. */
-type BaseHome = {
-  chrome: { nav: { label: string; href: string }[] }
-}
-
 /**
- * Se parte del contenido ya publicado y se sobrescribe encima solo lo que el formulario
- * manda (ADR-0026): el menu, y cualquier campo que salga del editor mas adelante,
- * sobrevive por construccion y no porque alguien se acuerde de copiarlo.
- *
  * El orden de las claves lo fija el schema al validar (ADR-0025), no este objeto.
  */
-export function homeDesdeForm(form: FormData, base: BaseHome): unknown {
+export function homeDesdeForm(form: FormData): unknown {
   const tarjeta = (clave: 'adults' | 'children') => ({
     photoAlt: texto(form, `audiences.${clave}.photoAlt`),
     title: texto(form, `audiences.${clave}.title`),
@@ -126,8 +117,6 @@ export function homeDesdeForm(form: FormData, base: BaseHome): unknown {
       caption: texto(form, 'chrome.caption'),
       menuLabel: texto(form, 'chrome.menuLabel'),
       skipLink: texto(form, 'chrome.skipLink'),
-      // El menu es estructura, no contenido: no esta en el formulario.
-      nav: base.chrome.nav,
       footerNote: {
         areas: texto(form, 'chrome.footerNote.areas'),
         orgType: texto(form, 'chrome.footerNote.orgType'),

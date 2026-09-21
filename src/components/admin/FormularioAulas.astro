@@ -83,24 +83,10 @@ const campo = (nombre: string, etiqueta: string, extra: Record<string, unknown> 
     <CampoTexto {...campo('chrome.menuLabel', 'Botón de menú')} />
     <CampoTexto {...campo('chrome.skipLink', 'Saltar al contenido')} />
 
-    <p class="mt-6 text-sm font-semibold">Etiquetas del menú</p>
-    <p class="mt-1 text-xs text-[#625c55]">
-      Se edita cómo se leen. A dónde llevan no: apuntan a secciones de esta misma página y
-      un destino mal escrito rompe la navegación sin que nada lo avise.
+    <p class="mt-6 text-xs text-[#625c55]">
+      El menú de arriba no se edita desde acá: sus ocho enlaces son las páginas del sitio y
+      se llaman igual en todas. El pie sí.
     </p>
-    {lista('chrome.nav').map((entrada: { label: string; href: string }, i: number) => (
-      <>
-        <CampoTexto
-          idPrefijo={locale}
-          nombre={`chrome.nav[${i}].label`}
-          etiqueta={`Menú ${i + 1} · ${entrada.href}`}
-          valor={entrada.label}
-          error={e(`chrome.nav.${i}.label`)}
-          requerido
-        />
-        <input type="hidden" name={`chrome.nav[${i}].href`} value={entrada.href} />
-      </>
-    ))}
 
     <CampoTexto {...campo('chrome.footerNote.areas', 'Pie · zonas')} />
     <CampoTexto {...campo('chrome.footerNote.orgType', 'Pie · tipo de organización')} />

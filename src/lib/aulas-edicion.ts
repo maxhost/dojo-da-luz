@@ -38,8 +38,6 @@ export function aulasDesdeForm(form: FormData): unknown {
       caption: t('chrome.caption'),
       menuLabel: t('chrome.menuLabel'),
       skipLink: t('chrome.skipLink'),
-      // Las etiquetas se editan; los destinos viajan ocultos y no se tocan (ADR-0026).
-      nav: filas(form, 'chrome.nav').map((f) => ({ label: f.uno('label'), href: f.uno('href') })),
       footerNote: {
         areas: t('chrome.footerNote.areas'),
         orgType: t('chrome.footerNote.orgType'),

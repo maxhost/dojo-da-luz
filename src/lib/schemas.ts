@@ -56,7 +56,6 @@ export const homeSchema = z.object({
     caption: z.string().min(1),
     menuLabel: z.string().min(1),
     skipLink: z.string().min(1),
-    nav: z.array(z.object({ label: z.string().min(1), href: z.string().min(1) })).min(1),
     footerNote: z.object({
       areas: z.string().min(1),
       orgType: z.string().min(1),
@@ -124,7 +123,6 @@ export const classesSchema = z.object({
     caption: z.string().min(1),
     menuLabel: z.string().min(1),
     skipLink: z.string().min(1),
-    nav: z.array(z.object({ label: z.string().min(1), href: z.string().min(1) })).min(1),
     footerNote: z.object({ areas: z.string().min(1), orgType: z.string().min(1) }),
   }),
   hero: z.object({
