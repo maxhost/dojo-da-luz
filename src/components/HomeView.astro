@@ -57,7 +57,6 @@ const PARTNERS = [
     zoom: 'scale-[2.25]',
   },
 ]
-const PARTNER_CAROUSEL = [...PARTNERS, ...PARTNERS]
 const dojos = getDojos()
 // Dos tarjetas piden dos columnas; tres, tres. Ambas clases existen literales para Tailwind.
 const columnas = dojos.length === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3'
@@ -241,20 +240,18 @@ const nav = siteNav(locale)
         <p class="section-kicker">{c.partnerships.label}</p>
         <h2 class="section-title mt-4">{c.partnerships.title}</h2>
       </div>
-      <div class="partner-carousel mx-auto mt-12 max-w-5xl overflow-hidden" aria-label={c.partnerships.title}>
-        <ul class="partner-carousel-track list-none p-0">
-          {PARTNER_CAROUSEL.map((partner, index) => (
-          <li class="partner-carousel-item grid min-h-44 place-items-center overflow-hidden border border-[#d7cec0] bg-white px-8 py-9 md:px-12" aria-hidden={index >= PARTNERS.length ? 'true' : undefined}>
-            <img
-              class:list={['max-h-[5.5rem] max-w-[12rem] object-contain', partner.zoom]}
-              src={partner.src}
-              alt={index >= PARTNERS.length ? '' : partner.name}
-              loading="lazy"
-            />
-          </li>
-          ))}
-        </ul>
-      </div>
+      <ul class="mx-auto mt-12 grid max-w-5xl list-none grid-cols-2 gap-x-8 gap-y-10 p-0 sm:grid-cols-3 md:grid-cols-5">
+        {PARTNERS.map((partner) => (
+        <li class="grid h-20 place-items-center overflow-hidden">
+          <img
+            class:list={['max-h-20 w-full object-contain mix-blend-multiply', partner.zoom]}
+            src={partner.src}
+            alt={partner.name}
+            loading="lazy"
+          />
+        </li>
+        ))}
+      </ul>
     </div>
   </section>
 

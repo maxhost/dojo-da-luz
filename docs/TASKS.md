@@ -8,7 +8,7 @@ Si una sesion se cae, se cierra o se compacta, se vuelve aca — no al chat. Hay
 Regla: **marcar `hecho` solo con verificacion real** — tests que pasan, comando corrido,
 cosa vista en pantalla. No "deberia andar".
 
-Ultima actualizacion: 2026-09-21 — spec 0027: jerarquia del equipo docente en `/dojo`, con Pablo Duran protagonista y los otros tres instructores en fichas compactas. Verificada en local (astro check 0/0/0, 44 paginas, tests 5/5) y en produccion. Queda desplegar la 0021: el editor del backoffice.
+Ultima actualizacion: 2026-09-21 — spec 0028: Parcerias en la Home deja el carrusel y pasa a rejilla estatica de cinco por fila, sin recuadro blanco. Antes, spec 0027: jerarquia del equipo docente en `/dojo`. Ambas verificadas y en produccion. Queda desplegar la 0021: el editor del backoffice.
 
 ## Contexto
 
@@ -108,6 +108,7 @@ sesiones abiertas — hoy es el unico camino de recuperacion hasta la spec 0022.
 | 9 | Sitemap + robots.txt | — | pendiente | Con el set completo de paginas. |
 | 10 | Apuntar `aikido-duran.com` a Vercel | — | pendiente | Hoy resuelve a Wix. Va junto con la tarea 8: sin los 301 no se corta. Necesita accesos de DNS del cliente. |
 | 11 | Retratos reales de Ines Martins, Miguel Costa y Sofia Almeida | 0027 | bloqueada | Necesita fotos del cliente. Hoy las tres fichas de `/dojo` muestran escenas de practica de wixstatic, no a la persona que nombran: se sustituye el array `teacherPhotos` sin tocar la composicion. |
+| 12 | Logos reales de los parceiros, con transparencia | 0028 | bloqueada | Necesita los originales del cliente. Los 8 de hoy traen fondo blanco incrustado y 3 son fotografias, no marcas. `mix-blend-multiply` tapa el blanco puro pero no las 2 casi blancas. |
 
 ## Hallazgos del sitio actual
 
@@ -185,6 +186,8 @@ contraseña, sesion opaca en Neon.)*
 | 2026-09-20 | Deploy de la spec 0026 a produccion | `git push origin main` → `01f67af`; deployment `dojo-da-q7ckdlc1e` ● Ready en 16s por webhook de GitHub; las 8 rutas nuevas de `dojo-da-luz.vercel.app` devuelven 200 con su `lang` correcto (`/eventos` y `/escolas` en `pt-PT`, `/es/eventos`, `/es/escuelas`, `/fr/evenements`, `/fr/ecoles`, `/en/events`, `/en/schools`); la raiz sigue en portugues con `x-default` a `www.aikido-duran.com`; el CSS servido tiene 5 `#0099ff` y 0 `#9b3025`; Instagram y Oxanium presentes en la home |
 | 2026-09-21 | Spec 0027 + ADR-0023 — jerarquia del equipo docente en Dojo | `astro check` 48 archivos 0/0/0, `npm test` 5/5 y `npm run build` con 44 `index.html`; `git diff --check` limpio; `/dojo` pasa de 4 secciones de profesor a 1 sola con bloque protagonista y 3 fichas; anclas `#pablo-duran`, `#inês-martins` (con acento, heredado), `#miguel-costa` y `#sofia-almeida` conservadas |
 | 2026-09-21 | Deploy de la spec 0027 a produccion | `git push origin main` → `335976d`; deployment `dojo-da-hn4p4oqhm` ● Ready en 19s por webhook de GitHub, sin incidentes abiertos en vercel-status; `/dojo`, `/es/dojo`, `/fr/dojo` y `/en/dojo` devuelven 200 con `pt-PT`/`es`/`fr`/`en`, un solo retrato `max-h-[42rem]` (antes 4), las 3 fotos `fp_` de las fichas y los 3 `<article>` de instructores |
+| 2026-09-21 | Spec 0028 + ADR-0024 — Parcerias en rejilla | `astro check` 48 archivos 0/0/0, `npm test` 5/5 y `npm run build` con 44 `index.html`; las 4 homes pasan de 16 a 8 `<img>` de parceiro, con 0 `aria-hidden`, 0 `bg-white` y 0 bordes en la seccion; `grep partner-carousel src/` vacio; el CSS construido trae `.mix-blend-multiply{mix-blend-mode:multiply}` y las 8 imagenes la llevan; aprobado a ojo por el cliente en `localhost:4321` |
+| 2026-09-21 | Los logos de parceiros traen el fondo blanco incrustado | Descargados los 8: los 3 PNG con `hasAlpha: no` (Wix los aplano), los otros 5 son JPEG. Pixeles de borde: 6 en `#ffffff` exacto, 2 en `(247,247,247)` y `(245,244,242)`. Quitar `bg-white` del CSS no alcanza; se neutraliza con `mix-blend-multiply` sobre `#f6f1e8`, que no limpia las dos que no son blanco puro |
 
 ## Descartado (y por que)
 
