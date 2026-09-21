@@ -1,0 +1,106 @@
+---
+/**
+ * Campo del backoffice (spec 0021). Sirve para input y textarea porque la diferencia
+ * entre "una linea" y "varias" no cambia nada de lo que rodea al campo: etiqueta, ayuda,
+ * contador y error.
+ *
+ * El contador se pinta ya resuelto en el servidor: sin JavaScript sigue diciendo la
+ * verdad, el script solo lo mantiene vivo mientras se escribe.
+ */
+
+interface Props {
+  nombre: string
+  etiqueta: string
+  valor?: string | number | null
+  tipo?: 'text' | 'number' | 'time' | 'area'
+  requerido?: boolean
+  ayuda?: string
+  error?: string
+  /** Largo recomendado (SEO). Avisa al pasarlo; no bloquea: no es una regla del schema. */
+  recomendado?: number
+  /** Minimo que exige el schema. Avisa antes de que lo haga el build. */
+  minimo?: number
+  filas?: number
+  paso?: string
+  /** Los cuatro idiomas conviven en la misma pagina: sin prefijo los `id` se repiten. */
+  idPrefijo?: string
+}
+
+const {
+  nombre,
+  etiqueta,
+  valor = '',
+  tipo = 'text',
+  requerido = false,
+  ayuda,
+  error,
+  recomendado,
+  minimo,
+  filas = 3,
+  paso,
+  idPrefijo,
+} = Astro.props
+
+const id = `${idPrefijo ? `${idPrefijo}-` : ''}${nombre.replace(/[^a-zA-Z0-9]+/g, '-')}`
+const contenido = valor === null || valor === undefined ? '' : String(valor)
+const largo = contenido.length
+const conContador = recomendado !== undefined || minimo !== undefined
+
+const base =
+  'mt-2 w-full border bg-white px-3 py-2 text-sm ' +
+  (error ? 'border-[#b3261e]' : 'border-[#d7cec0]')
+---
+
+<div class="mt-5">
+  <label class="block text-sm font-semibold" for={id}>
+    {etiqueta}
+    {requerido && <span class="text-[#b3261e]" aria-hidden="true">*</span>}
+  </label>
+
+  {ayuda && <p class="mt-1 text-xs text-[#625c55]" id={`${id}-ayuda`}>{ayuda}</p>}
+
+  {tipo === 'area' ? (
+    <textarea
+      class={base}
+      id={id}
+      name={nombre}
+      rows={filas}
+      required={requerido}
+      aria-describedby={[ayuda && `${id}-ayuda`, conContador && `${id}-cuenta`, error && `${id}-error`]
+        .filter(Boolean)
+        .join(' ') || undefined}
+      data-contador={conContador ? id : undefined}
+      data-recomendado={recomendado}
+      data-minimo={minimo}
+    >{contenido}</textarea>
+  ) : (
+    <input
+      class={base}
+      id={id}
+      name={nombre}
+      type={tipo}
+      value={contenido}
+      required={requerido}
+      step={paso}
+      aria-describedby={[ayuda && `${id}-ayuda`, conContador && `${id}-cuenta`, error && `${id}-error`]
+        .filter(Boolean)
+        .join(' ') || undefined}
+      data-contador={conContador ? id : undefined}
+      data-recomendado={recomendado}
+      data-minimo={minimo}
+    />
+  )}
+
+  {conContador && (
+    <p class="mt-1 text-xs text-[#625c55]" id={`${id}-cuenta`} data-cuenta-de={id}>
+      {largo}
+      {recomendado !== undefined && ` / ${recomendado} recomendados`}
+      {recomendado !== undefined && largo > recomendado && ' — se va a cortar en Google'}
+      {minimo !== undefined && largo > 0 && largo < minimo && ` — corto: el mínimo es ${minimo}`}
+    </p>
+  )}
+
+  {error && (
+    <p class="mt-1 text-xs font-semibold text-[#b3261e]" id={`${id}-error`} role="alert">{error}</p>
+  )}
+</div>

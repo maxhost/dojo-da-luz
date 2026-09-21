@@ -1,0 +1,185 @@
+---
+import {
+  AUDIENCIAS,
+  AUDIENCIA_LABEL,
+  DIAS,
+  DIA_LABEL,
+  VARIANTES,
+  VARIANTE_LABEL,
+} from '../../lib/i18n'
+import type { Horario } from '../../lib/dojos'
+
+/**
+ * Editor de horarios (spec 0021). Dias, audiencia y horas son datos duros: `<select>`,
+ * checkbox y `<input type="time">`, nunca texto libre — el horario mal escrito es el modo
+ * de falla previsible de este formulario.
+ *
+ * Degrada sin JavaScript: siempre se pinta una fila vacia de mas, asi se puede agregar de
+ * a una sin script, y vaciar una fila la borra al guardar.
+ */
+
+interface Props {
+  horarios: Horario[]
+  errores: Record<string, string>
+}
+
+const { horarios, errores } = Astro.props
+
+// La fila extra es la que permite agregar sin JavaScript.
+const filas: (Horario | null)[] = [...horarios, null]
+const dias = DIA_LABEL.es
+---
+
+<fieldset class="mt-8 border border-[#d7cec0] bg-[#fbf8f2] p-4">
+  <legend class="px-2 text-sm font-semibold">Horarios</legend>
+
+  {errores['horarios'] && (
+    <p class="text-xs font-semibold text-[#b3261e]" role="alert">{errores['horarios']}</p>
+  )}
+
+  <ol class="mt-2" data-horarios>
+    {filas.map((horario, i) => (
+      <li class="border-t border-[#e6ded0] py-4 first:border-t-0" data-fila>
+        <div class="flex flex-wrap items-end gap-4">
+          <label class="text-xs font-semibold">
+            Audiencia
+            <select
+              class="mt-1 block border border-[#d7cec0] bg-white px-2 py-1 text-sm font-normal"
+              name={`horarios[${i}].audiencia`}
+            >
+              <option value="">—</option>
+              {AUDIENCIAS.map((a) => (
+                <option value={a} selected={horario?.audiencia === a}>{AUDIENCIA_LABEL.es[a]}</option>
+              ))}
+            </select>
+          </label>
+
+          <label class="text-xs font-semibold">
+            Variante
+            <select
+              class="mt-1 block border border-[#d7cec0] bg-white px-2 py-1 text-sm font-normal"
+              name={`horarios[${i}].variante`}
+            >
+              <option value="">sin variante</option>
+              {VARIANTES.map((v) => (
+                <option value={v} selected={horario?.variante === v}>{VARIANTE_LABEL.es[v]}</option>
+              ))}
+            </select>
+          </label>
+
+          <label class="text-xs font-semibold">
+            Desde
+            <input
+              class="mt-1 block border border-[#d7cec0] bg-white px-2 py-1 text-sm font-normal"
+              type="time"
+              name={`horarios[${i}].desde`}
+              value={horario?.desde ?? ''}
+            />
+          </label>
+
+          <label class="text-xs font-semibold">
+            Hasta
+            <input
+              class="mt-1 block border border-[#d7cec0] bg-white px-2 py-1 text-sm font-normal"
+              type="time"
+              name={`horarios[${i}].hasta`}
+              value={horario?.hasta ?? ''}
+            />
+          </label>
+
+          <button
+            class="ml-auto border border-[#d7cec0] bg-white px-3 py-1 text-xs"
+            type="button"
+            data-quitar
+            hidden
+          >
+            Quitar
+          </button>
+        </div>
+
+        <div class="mt-3 flex flex-wrap gap-x-4 gap-y-1">
+          {DIAS.map((d) => (
+            <label class="text-xs">
+              <input
+                type="checkbox"
+                name={`horarios[${i}].dias`}
+                value={d}
+                checked={horario?.dias.includes(d)}
+              />
+              {' '}{dias[d]}
+            </label>
+          ))}
+        </div>
+
+        {errores[`horarios.${i}`] && (
+          <p class="mt-2 text-xs font-semibold text-[#b3261e]" role="alert">{errores[`horarios.${i}`]}</p>
+        )}
+        {['audiencia', 'dias', 'desde', 'hasta'].map((campo) =>
+          errores[`horarios.${i}.${campo}`] ? (
+            <p class="mt-1 text-xs font-semibold text-[#b3261e]" role="alert">
+              {campo}: {errores[`horarios.${i}.${campo}`]}
+            </p>
+          ) : null,
+        )}
+      </li>
+    ))}
+  </ol>
+
+  <p class="mt-2 text-xs text-[#625c55]">
+    Para borrar un horario, vaciá todos sus campos y guardá. Las horas no se traducen:
+    20:30 es 20:30 en los cuatro idiomas.
+  </p>
+
+  <button
+    class="mt-4 border border-[#d7cec0] bg-white px-3 py-1 text-sm"
+    type="button"
+    data-agregar-horario
+    hidden
+  >
+    Agregar horario
+  </button>
+</fieldset>
+
+<script>
+  // Unica isla del BO junto al contador: clona la ultima fila vacia y renumera.
+  document.querySelectorAll<HTMLElement>('[data-horarios]').forEach((lista) => {
+    const agregar = lista.parentElement?.querySelector<HTMLButtonElement>('[data-agregar-horario]')
+    if (!agregar) return
+
+    const renumerar = () => {
+      lista.querySelectorAll<HTMLElement>('[data-fila]').forEach((fila, i) => {
+        fila.querySelectorAll<HTMLInputElement | HTMLSelectElement>('[name]').forEach((campo) => {
+          campo.name = campo.name.replace(/\[\d+\]/, `[${i}]`)
+        })
+      })
+      lista.querySelectorAll<HTMLButtonElement>('[data-quitar]').forEach((boton) => {
+        boton.hidden = lista.querySelectorAll('[data-fila]').length < 2
+      })
+    }
+
+    agregar.hidden = false
+    agregar.addEventListener('click', () => {
+      const ultima = lista.querySelector<HTMLElement>('[data-fila]:last-child')
+      if (!ultima) return
+
+      const nueva = ultima.cloneNode(true) as HTMLElement
+      nueva.querySelectorAll<HTMLInputElement>('input').forEach((campo) => {
+        if (campo.type === 'checkbox') campo.checked = false
+        else campo.value = ''
+      })
+      nueva.querySelectorAll<HTMLSelectElement>('select').forEach((campo) => (campo.value = ''))
+      nueva.querySelectorAll('[role="alert"]').forEach((error) => error.remove())
+      lista.append(nueva)
+      renumerar()
+    })
+
+    lista.addEventListener('click', (evento) => {
+      const boton = (evento.target as HTMLElement).closest('[data-quitar]')
+      if (!boton) return
+      boton.closest('[data-fila]')?.remove()
+      renumerar()
+    })
+
+    renumerar()
+  })
+</script>

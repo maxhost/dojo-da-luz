@@ -32,7 +32,8 @@ const horarioSchema = z
   .refine((h) => h.hasta > h.desde, { message: '`hasta` tiene que ser posterior a `desde`' })
   .refine((h) => new Set(h.dias).size === h.dias.length, { message: 'dias repetidos' })
 
-const dojoSchema = z.object({
+/** Exportado para el BO: valida un dojo suelto y da errores por campo (spec 0021). */
+export const dojoSchema = z.object({
   slug: z.string().regex(/^[a-z0-9-]+$/, 'slug en minusculas, numeros y guiones'),
   estado: z.enum(['activo', 'archivado']),
   orden: z.number().int().positive(),

@@ -33,8 +33,47 @@ const { titulo, admin = null } = Astro.props
       </div>
     </header>
 
+    {admin && (
+      <nav class="border-b border-[#d7cec0] bg-[#fbf8f2]" aria-label="Secciones">
+        <div class="mx-auto flex max-w-4xl gap-6 px-6 py-2 text-sm">
+          <a href="/admin/paginas/home">Home</a>
+          <a href="/admin/dojos">Dojos</a>
+        </div>
+      </nav>
+    )}
+
     <main class="mx-auto max-w-4xl px-6 py-12">
       <slot />
     </main>
+
+    <script>
+      /**
+       * Contador de caracteres vivo. El valor ya viene resuelto del servidor: esto solo lo
+       * mantiene al dia mientras se escribe, asi que sin JavaScript el campo sigue util.
+       */
+      document
+        .querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('[data-contador]')
+        .forEach((campo) => {
+          const salida = document.querySelector<HTMLElement>(`[data-cuenta-de="${campo.id}"]`)
+          if (!salida) return
+
+          const recomendado = Number(campo.dataset.recomendado)
+          const minimo = Number(campo.dataset.minimo)
+
+          const actualizar = () => {
+            const largo = campo.value.length
+            let texto = String(largo)
+            if (recomendado) {
+              texto += ` / ${recomendado} recomendados`
+              if (largo > recomendado) texto += ' — se va a cortar en Google'
+            }
+            if (minimo && largo > 0 && largo < minimo) texto += ` — corto: el mínimo es ${minimo}`
+            salida.textContent = texto
+          }
+
+          campo.addEventListener('input', actualizar)
+          actualizar()
+        })
+    </script>
   </body>
 </html>

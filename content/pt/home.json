@@ -3,6 +3,11 @@
     "title": "Dojo da Luz — Aikido em Lisboa",
     "description": "Aikido para adultos e crianças em Lisboa: Benfica, Lumiar e Encarnação. Aulas com Pablo Durán, 5.º Dan Aikikai."
   },
+  "resumen": [
+    "O Dojo da Luz é uma associação sem fins lucrativos que ensina Aikido em Lisboa, com aulas em Benfica, no Lumiar e na Encarnação.",
+    "As aulas do Dojo da Luz são orientadas por Pablo Durán, 5.º Dan Aikikai formado no Hombu Dojo de Tóquio, e são para adultos, crianças e adolescentes dos 5 aos 17 anos.",
+    "A prática do Aikido no Dojo da Luz não tem competição: não é necessária experiência prévia para começar e a aula experimental custa 5 €."
+  ],
   "chrome": {
     "caption": "Aikido · Lisboa",
     "menuLabel": "Menu",
@@ -100,10 +105,5 @@
   "partnerships": {
     "label": "06 · Parcerias",
     "title": "Parcerias"
-  },
-  "resumen": [
-    "O Dojo da Luz é uma associação sem fins lucrativos que ensina Aikido em Lisboa, com aulas em Benfica, no Lumiar e na Encarnação.",
-    "As aulas do Dojo da Luz são orientadas por Pablo Durán, 5.º Dan Aikikai formado no Hombu Dojo de Tóquio, e são para adultos, crianças e adolescentes dos 5 aos 17 anos.",
-    "A prática do Aikido no Dojo da Luz não tem competição: não é necessária experiência prévia para começar e a aula experimental custa 5 €."
-  ]
+  }
 }

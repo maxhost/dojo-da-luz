@@ -1,0 +1,69 @@
+---
+export const prerender = false
+
+import Admin from '../../../layouts/Admin.astro'
+import Aviso from '../../../components/admin/Aviso.astro'
+import FormularioDojo from '../../../components/admin/FormularioDojo.astro'
+import { guardarDojo, leerDojos } from '../../../lib/dojos-edicion'
+import { aplanar, dojoDesdeForm } from '../../../lib/forms'
+import type { Horario } from '../../../lib/dojos'
+
+const admin = Astro.locals.admin!
+const slug = Astro.params.slug!
+
+let errores: Record<string, string> = {}
+let aviso: string | null = null
+let enviado: { valores: Record<string, string>; horarios: Horario[] } | null = null
+
+if (Astro.request.method === 'POST') {
+  const form = await Astro.request.formData()
+  const resultado = await guardarDojo(form, slug)
+
+  if (resultado.ok) return Astro.redirect('/admin/dojos?ok=Ficha publicada.', 303)
+
+  Astro.response.status = resultado.estado
+  errores = resultado.errores
+  aviso = resultado.aviso
+
+  const datos = dojoDesdeForm(form, 'activo') as { horarios: Horario[] }
+  enviado = { valores: aplanar(datos), horarios: datos.horarios }
+}
+
+let dojos: Awaited<ReturnType<typeof leerDojos>>['dojos'] = []
+let sha = ''
+let sinRepositorio: string | null = null
+
+try {
+  ({ dojos, sha } = await leerDojos())
+} catch (error) {
+  sinRepositorio = error instanceof Error ? error.message : String(error)
+}
+
+const dojo = dojos.find((d) => d.slug === slug)
+
+// Sin repositorio no se puede saber si el dojo existe: 503, no 404.
+if (sinRepositorio) Astro.response.status = 503
+else if (!dojo) return new Response('Not Found', { status: 404 })
+
+const valores = enviado?.valores ?? (dojo ? aplanar(dojo) : {})
+const horarios = enviado?.horarios ?? dojo?.horarios ?? []
+---
+
+<Admin titulo={dojo ? `Dojo ${dojo.nombre}` : 'Dojo'} admin={admin}>
+  <h1 class="font-serif text-3xl">{dojo?.nombre ?? slug}</h1>
+  <p class="mt-4 text-sm text-[#625c55]">
+    <a href="/admin/dojos">Volver al listado</a>{dojo && ` · estado: ${dojo.estado}`}
+  </p>
+
+  {aviso && <Aviso tipo="error">{aviso}</Aviso>}
+  {sinRepositorio && <Aviso tipo="error">No se puede abrir la ficha: {sinRepositorio}</Aviso>}
+
+  {dojo && <FormularioDojo
+    valores={valores}
+    horarios={horarios}
+    errores={errores}
+    sha={sha}
+    nuevo={false}
+    estado={dojo.estado}
+  />}
+</Admin>

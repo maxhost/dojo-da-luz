@@ -1,0 +1,83 @@
+---
+export const prerender = false
+
+import Admin from '../../../layouts/Admin.astro'
+import Aviso from '../../../components/admin/Aviso.astro'
+import { leerDojos } from '../../../lib/dojos-edicion'
+import { formatAudiencia, formatHorario } from '../../../lib/dojos'
+
+const admin = Astro.locals.admin!
+
+// Igual que en el editor de Home: un repositorio inalcanzable es un aviso, no un 500.
+let dojos: Awaited<ReturnType<typeof leerDojos>>['dojos'] = []
+let sha = ''
+let sinRepositorio: string | null = null
+
+try {
+  ({ dojos, sha } = await leerDojos())
+} catch (error) {
+  Astro.response.status = 503
+  sinRepositorio = error instanceof Error ? error.message : String(error)
+}
+
+const enOrden = [...dojos].sort((a, b) => a.orden - b.orden)
+
+const params = Astro.url.searchParams
+const ok = params.get('ok')
+const fallo = params.get('fallo')
+---
+
+<Admin titulo="Dojos" admin={admin}>
+  <div class="flex items-baseline justify-between">
+    <h1 class="font-serif text-3xl">Dojos</h1>
+    <a class="border border-[#0099ff] px-4 py-2 text-sm no-underline" href="/admin/dojos/nuevo">
+      Nuevo dojo
+    </a>
+  </div>
+
+  <p class="mt-4 text-sm text-[#625c55]">
+    Las sedes y sus horarios se cargan una sola vez: la Home los muestra traducidos en los
+    cuatro idiomas. Archivar saca un dojo del sitio sin perder su ficha.
+  </p>
+
+  {ok && <Aviso tipo="ok">{ok} El sitio tarda 1 o 2 minutos en regenerarse.</Aviso>}
+  {fallo && <Aviso tipo="error">{fallo}</Aviso>}
+  {sinRepositorio && <Aviso tipo="error">No se puede leer el listado: {sinRepositorio}</Aviso>}
+
+  <ul class="mt-8">
+    {enOrden.map((dojo) => (
+      <li class="border-t border-[#d7cec0] py-4">
+        <div class="flex flex-wrap items-baseline gap-3">
+          <a class="font-serif text-xl" href={`/admin/dojos/${dojo.slug}`}>{dojo.nombre}</a>
+          <span class="text-sm text-[#625c55]">{dojo.dojo}</span>
+          <span
+            class={`px-2 py-0.5 text-xs ${
+              dojo.estado === 'activo' ? 'bg-[#e6f6ff] text-[#0b5e8f]' : 'bg-[#eee9df] text-[#625c55]'
+            }`}
+          >
+            {dojo.estado}
+          </span>
+          <span class="text-xs text-[#625c55]">orden {dojo.orden}</span>
+
+          <form class="ml-auto" method="post" action={`/admin/dojos/${dojo.slug}/archivar`}>
+            <input type="hidden" name="sha" value={sha} />
+            <input
+              type="hidden"
+              name="estado"
+              value={dojo.estado === 'activo' ? 'archivado' : 'activo'}
+            />
+            <button class="border border-[#d7cec0] bg-white px-3 py-1 text-sm" type="submit">
+              {dojo.estado === 'activo' ? 'Archivar' : 'Reactivar'}
+            </button>
+          </form>
+        </div>
+
+        <ul class="mt-2 text-sm text-[#625c55]">
+          {dojo.horarios.map((horario) => (
+            <li>{formatAudiencia(horario, 'es')} · {formatHorario(horario, 'es')}</li>
+          ))}
+        </ul>
+      </li>
+    ))}
+  </ul>
+</Admin>

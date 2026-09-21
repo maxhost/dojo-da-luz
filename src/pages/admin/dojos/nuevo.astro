@@ -1,0 +1,58 @@
+---
+export const prerender = false
+
+import Admin from '../../../layouts/Admin.astro'
+import Aviso from '../../../components/admin/Aviso.astro'
+import FormularioDojo from '../../../components/admin/FormularioDojo.astro'
+import { guardarDojo, leerDojos } from '../../../lib/dojos-edicion'
+import { aplanar, dojoDesdeForm } from '../../../lib/forms'
+import type { Horario } from '../../../lib/dojos'
+
+const admin = Astro.locals.admin!
+
+let errores: Record<string, string> = {}
+let aviso: string | null = null
+let valores: Record<string, string> = { 'direccion.pais': 'PT', orden: '' }
+let horarios: Horario[] = []
+
+if (Astro.request.method === 'POST') {
+  const form = await Astro.request.formData()
+  const resultado = await guardarDojo(form, null)
+
+  if (resultado.ok) return Astro.redirect('/admin/dojos?ok=Dojo creado y publicado.', 303)
+
+  Astro.response.status = resultado.estado
+  errores = resultado.errores
+  aviso = resultado.aviso
+
+  // Se repinta lo que el cliente mando, no lo que hay en el repo: nada se pierde.
+  const enviado = dojoDesdeForm(form, 'activo') as { horarios: Horario[] }
+  valores = aplanar(enviado)
+  horarios = enviado.horarios
+}
+
+let dojos: Awaited<ReturnType<typeof leerDojos>>['dojos'] = []
+let sha = ''
+let sinRepositorio: string | null = null
+
+try {
+  ({ dojos, sha } = await leerDojos())
+} catch (error) {
+  Astro.response.status = 503
+  sinRepositorio = error instanceof Error ? error.message : String(error)
+}
+
+if (!valores.orden) valores.orden = String(Math.max(0, ...dojos.map((d) => d.orden)) + 1)
+---
+
+<Admin titulo="Nuevo dojo" admin={admin}>
+  <h1 class="font-serif text-3xl">Nuevo dojo</h1>
+  <p class="mt-4 text-sm text-[#625c55]">
+    <a href="/admin/dojos">Volver al listado</a>
+  </p>
+
+  {aviso && <Aviso tipo="error">{aviso}</Aviso>}
+  {sinRepositorio && <Aviso tipo="error">No se puede abrir el formulario: {sinRepositorio}</Aviso>}
+
+  {sinRepositorio === null && <FormularioDojo valores={valores} horarios={horarios} errores={errores} sha={sha} nuevo estado="activo" />}
+</Admin>

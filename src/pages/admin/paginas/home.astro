@@ -1,0 +1,195 @@
+---
+export const prerender = false
+
+import Admin from '../../../layouts/Admin.astro'
+import Aviso from '../../../components/admin/Aviso.astro'
+import FormularioHome from '../../../components/admin/FormularioHome.astro'
+import { homeSchema } from '../../../lib/content'
+import { aplanar, erroresDe, homeDesdeForm, resumenDeErrores } from '../../../lib/forms'
+import { LOCALES, LOCALE_NAME, isLocale, type Locale } from '../../../lib/i18n'
+import { leerContenido, publicar, serializar } from '../../../lib/publish'
+
+const admin = Astro.locals.admin!
+
+const ruta = (locale: Locale) => `content/${locale}/home.json`
+
+type Enviado = { valores: Record<string, string>; nav: { label: string; href: string }[] }
+
+let errores: Partial<Record<Locale, Record<string, string>>> = {}
+let enviado: Partial<Record<Locale, Enviado>> = {}
+let aviso: { tipo: 'ok' | 'error'; texto: string } | null = null
+let activo: Locale = isLocale(Astro.url.searchParams.get('idioma') ?? '')
+  ? (Astro.url.searchParams.get('idioma') as Locale)
+  : 'pt'
+
+const publicado = Astro.url.searchParams.get('publicado')
+if (publicado && isLocale(publicado)) {
+  activo = publicado
+  aviso = {
+    tipo: 'ok',
+    texto: `Home en ${LOCALE_NAME[publicado]} publicada. El sitio tarda 1 o 2 minutos en regenerarse: hasta entonces la página pública sigue mostrando lo anterior.`,
+  }
+}
+
+if (Astro.request.method === 'POST') {
+  const form = await Astro.request.formData()
+  const idioma = String(form.get('idioma') ?? '')
+
+  if (!isLocale(idioma)) {
+    Astro.response.status = 400
+    aviso = { tipo: 'error', texto: 'Idioma desconocido.' }
+  } else {
+    activo = idioma
+    const datos = homeDesdeForm(form)
+    const validado = homeSchema.safeParse(datos)
+
+    if (!validado.success) {
+      Astro.response.status = 422
+      const mapa = erroresDe(validado.error)
+      errores = { [idioma]: mapa }
+      enviado = {
+        [idioma]: {
+          valores: aplanar(datos),
+          nav: (datos as { chrome?: { nav?: { label: string; href: string }[] } }).chrome?.nav ?? [],
+        },
+      }
+      aviso = { tipo: 'error', texto: `No se publicó nada. ${resumenDeErrores(mapa)}` }
+    } else {
+      try {
+      // Se relee para el control de concurrencia: el `sha` del formulario es el de cuando
+      // se abrio la pagina, no necesariamente el que tiene `main` ahora.
+      const actual = await leerContenido(ruta(idioma))
+      const contenido = serializar(validado.data)
+
+      if (actual.sha !== String(form.get('sha') ?? '')) {
+        Astro.response.status = 409
+        aviso = {
+          tipo: 'error',
+          texto: 'Alguien editó este archivo mientras tanto. No se pisó nada: recargá la página y volvé a aplicar tu cambio.',
+        }
+      } else if (actual.contenido === contenido) {
+        aviso = { tipo: 'ok', texto: 'No había cambios: no se publicó nada.' }
+      } else {
+        const resultado = await publicar({
+          ruta: ruta(idioma),
+          contenido,
+          mensaje: `contenido: Home en ${LOCALE_NAME[idioma]} desde el backoffice`,
+          sha: actual.sha,
+        })
+
+        if (resultado.ok) return Astro.redirect(`/admin/paginas/home?publicado=${idioma}`, 303)
+
+        Astro.response.status = resultado.motivo === 'conflicto' ? 409 : 502
+        aviso = {
+          tipo: 'error',
+          texto:
+            resultado.motivo === 'conflicto'
+              ? 'Alguien editó este archivo mientras tanto. No se pisó nada.'
+              : `No se pudo publicar: ${resultado.detalle}`,
+        }
+      }
+      } catch (error) {
+        Astro.response.status = 503
+        const detalle = error instanceof Error ? error.message : String(error)
+        aviso = { tipo: 'error', texto: `No se pudo publicar: ${detalle}` }
+      }
+    }
+  }
+}
+
+type Archivo = {
+  locale: Locale
+  sha: string
+  valores: Record<string, string>
+  nav: { label: string; href: string }[]
+  errores: Record<string, string>
+}
+
+// Leer el contenido es hablar con un servicio remoto. Que falte el token o se caiga
+// GitHub no es un 500: es un aviso que dice que el editor no puede abrir.
+let archivos: Archivo[] = []
+let sinRepositorio: string | null = null
+
+try {
+  archivos = await Promise.all(
+  LOCALES.map(async (locale) => {
+    const archivo = await leerContenido(ruta(locale))
+    const datos = JSON.parse(archivo.contenido) as {
+      chrome: { nav: { label: string; href: string }[] }
+    }
+    const propio = enviado[locale]
+    return {
+      locale,
+      sha: archivo.sha,
+      valores: propio?.valores ?? aplanar(datos),
+      nav: propio?.nav ?? datos.chrome.nav,
+      errores: errores[locale] ?? {},
+    }
+  }),
+  )
+} catch (error) {
+  Astro.response.status = 503
+  sinRepositorio = error instanceof Error ? error.message : String(error)
+}
+
+/**
+ * Pestañas en CSS: los cuatro formularios estan en la pagina desde el principio, asi que
+ * cambiar de idioma no navega y no pierde lo escrito sin guardar. Las clases van
+ * literales porque Tailwind las busca como texto en el archivo.
+ */
+const TABS = [
+  { locale: 'pt', peer: 'peer/pt', boton: 'peer-checked/pt:bg-[#0099ff] peer-checked/pt:text-white', panel: 'hidden peer-checked/pt:block' },
+  { locale: 'es', peer: 'peer/es', boton: 'peer-checked/es:bg-[#0099ff] peer-checked/es:text-white', panel: 'hidden peer-checked/es:block' },
+  { locale: 'fr', peer: 'peer/fr', boton: 'peer-checked/fr:bg-[#0099ff] peer-checked/fr:text-white', panel: 'hidden peer-checked/fr:block' },
+  { locale: 'en', peer: 'peer/en', boton: 'peer-checked/en:bg-[#0099ff] peer-checked/en:text-white', panel: 'hidden peer-checked/en:block' },
+] as const
+---
+
+<Admin titulo="Home" admin={admin}>
+  <h1 class="font-serif text-3xl">Home</h1>
+  <p class="mt-4 text-sm text-[#625c55]">
+    Cada idioma se publica por separado y genera un commit propio. Cambiar de pestaña no
+    borra lo que escribiste.
+  </p>
+
+  {aviso && <Aviso tipo={aviso.tipo}>{aviso.texto}</Aviso>}
+  {sinRepositorio && <Aviso tipo="error">No se puede abrir el editor: {sinRepositorio}</Aviso>}
+
+  {sinRepositorio === null && (
+  <div class="mt-8">
+    {TABS.map((tab) => (
+      <input
+        class={`${tab.peer} sr-only`}
+        type="radio"
+        name="idioma-activo"
+        id={`tab-${tab.locale}`}
+        checked={activo === tab.locale}
+      />
+    ))}
+
+    {TABS.map((tab) => (
+      <label
+        class={`mr-2 inline-block cursor-pointer border border-[#d7cec0] bg-white px-4 py-2 text-sm ${tab.boton}`}
+        for={`tab-${tab.locale}`}
+      >
+        {LOCALE_NAME[tab.locale]}
+      </label>
+    ))}
+
+    {TABS.map((tab) => {
+      const archivo = archivos.find((a) => a.locale === tab.locale)!
+      return (
+        <section class={tab.panel}>
+          <FormularioHome
+            locale={archivo.locale}
+            valores={archivo.valores}
+            nav={archivo.nav}
+            errores={archivo.errores}
+            sha={archivo.sha}
+          />
+        </section>
+      )
+    })}
+  </div>
+  )}
+</Admin>

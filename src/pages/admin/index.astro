@@ -2,9 +2,11 @@
 export const prerender = false
 
 import Admin from '../../layouts/Admin.astro'
+import { backend } from '../../lib/publish'
 
 // El middleware ya garantizo la sesion: aca nunca es null.
 const admin = Astro.locals.admin!
+const destino = backend()
 ---
 
 <Admin titulo="Panel" admin={admin}>
@@ -13,8 +15,33 @@ const admin = Astro.locals.admin!
     Sesión iniciada como <strong>{admin.email}</strong>.
   </p>
 
+  <ul class="mt-8">
+    <li class="border-t border-[#d7cec0] py-4">
+      <a class="font-serif text-xl" href="/admin/paginas/home">Home</a>
+      <p class="mt-1 text-sm text-[#625c55]">
+        Textos y SEO de la portada en portugués, español, francés e inglés.
+      </p>
+    </li>
+    <li class="border-t border-[#d7cec0] py-4">
+      <a class="font-serif text-xl" href="/admin/dojos">Dojos</a>
+      <p class="mt-1 text-sm text-[#625c55]">
+        Sedes, direcciones y horarios. Se cargan una vez y salen traducidos en los cuatro
+        idiomas.
+      </p>
+    </li>
+  </ul>
+
   <p class="mt-8 border border-[#d7cec0] bg-[#fbf8f2] px-4 py-3 text-sm text-[#625c55]">
-    Todavía no hay nada que editar: los dojos llegan con la spec 0020 y el editor de Home
-    con la 0021. Esta pantalla existe para verificar que la sesión funciona.
+    {destino === 'github' ? (
+      <>
+        Cada guardado es un commit en <code>main</code>: el sitio se reconstruye solo y
+        tarda 1 o 2 minutos en mostrar el cambio.
+      </>
+    ) : (
+      <>
+        <strong>Modo desarrollo.</strong> Sin <code>GITHUB_TOKEN</code> los cambios se
+        escriben en los archivos locales, no en GitHub.
+      </>
+    )}
   </p>
 </Admin>

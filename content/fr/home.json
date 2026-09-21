@@ -3,6 +3,11 @@
     "title": "Dojo da Luz — Aïkido à Lisbonne",
     "description": "Aïkido pour adultes et enfants à Lisbonne : Benfica, Lumiar et Encarnação. Cours avec Pablo Durán, 5e Dan Aikikai."
   },
+  "resumen": [
+    "Le Dojo da Luz est une association à but non lucratif qui enseigne l'Aïkido à Lisbonne, avec des cours à Benfica, au Lumiar et à l'Encarnação.",
+    "Les cours du Dojo da Luz sont dirigés par Pablo Durán, 5e dan Aikikai formé au Hombu Dojo de Tokyo, et s'adressent aux adultes, aux enfants et aux adolescents de 5 à 17 ans.",
+    "La pratique de l'Aïkido au Dojo da Luz se fait sans compétition : aucune expérience préalable n'est nécessaire et le cours d'essai coûte 5 €."
+  ],
   "chrome": {
     "caption": "Aïkido · Lisbonne",
     "menuLabel": "Menu",
@@ -100,10 +105,5 @@
   "partnerships": {
     "label": "06 · Partenariats",
     "title": "Partenariats"
-  },
-  "resumen": [
-    "Le Dojo da Luz est une association à but non lucratif qui enseigne l'Aïkido à Lisbonne, avec des cours à Benfica, au Lumiar et à l'Encarnação.",
-    "Les cours du Dojo da Luz sont dirigés par Pablo Durán, 5e dan Aikikai formé au Hombu Dojo de Tokyo, et s'adressent aux adultes, aux enfants et aux adolescents de 5 à 17 ans.",
-    "La pratique de l'Aïkido au Dojo da Luz se fait sans compétition : aucune expérience préalable n'est nécessaire et le cours d'essai coûte 5 €."
-  ]
+  }
 }

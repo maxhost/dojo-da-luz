@@ -1,0 +1,86 @@
+---
+import CampoTexto from './CampoTexto.astro'
+import EditorHorarios from './EditorHorarios.astro'
+import { errorDe } from '../../lib/forms'
+import type { Horario } from '../../lib/dojos'
+
+/**
+ * Ficha de un dojo (spec 0021, ADR-0017). Los datos duros se cargan una sola vez: no hay
+ * version por idioma porque una calle y un horario no se traducen.
+ */
+
+interface Props {
+  valores: Record<string, string>
+  horarios: Horario[]
+  errores: Record<string, string>
+  sha: string
+  /** En una edicion el slug no se toca: es la clave de la ficha. */
+  nuevo: boolean
+  estado: 'activo' | 'archivado'
+}
+
+const { valores, horarios, errores, sha, nuevo, estado } = Astro.props
+
+const v = (ruta: string) => valores[ruta] ?? ''
+const e = (ruta: string) => errorDe(errores, ruta)
+const seccion = 'mt-8 border border-[#d7cec0] bg-[#fbf8f2] p-4'
+---
+
+<form method="post">
+  <input type="hidden" name="sha" value={sha} />
+  <input type="hidden" name="estado" value={estado} />
+
+  <fieldset class={seccion}>
+    <legend class="px-2 text-sm font-semibold">Identidad</legend>
+
+    {nuevo ? (
+      <CampoTexto
+        nombre="slug"
+        etiqueta="Identificador"
+        valor={v('slug')}
+        error={e('slug')}
+        requerido
+        ayuda="Minúsculas, números y guiones. No se puede cambiar después: es la clave de la ficha."
+      />
+    ) : (
+      <div class="mt-5">
+        <p class="text-sm font-semibold">Identificador</p>
+        <p class="mt-2 border border-[#e6ded0] bg-white px-3 py-2 text-sm text-[#625c55]">
+          {v('slug')}
+        </p>
+        <input type="hidden" name="slug" value={v('slug')} />
+      </div>
+    )}
+
+    <CampoTexto nombre="nombre" etiqueta="Nombre de la sede" valor={v('nombre')} error={e('nombre')} requerido ayuda="Como se lee en la Home: Benfica, Lumiar…" />
+    <CampoTexto nombre="dojo" etiqueta="Nombre del dojo" valor={v('dojo')} error={e('dojo')} requerido ayuda="Dojo da Luz, Núcleo Lumiar…" />
+    <CampoTexto nombre="instalacion" etiqueta="Instalación" valor={v('instalacion')} error={e('instalacion')} ayuda="El pabellón o polideportivo, si la clase es en uno. Vacío si no aplica." />
+    <CampoTexto nombre="orden" etiqueta="Orden" valor={v('orden')} error={e('orden')} tipo="number" requerido ayuda="En qué posición aparece en la Home. Entero mayor que cero." />
+  </fieldset>
+
+  <fieldset class={seccion}>
+    <legend class="px-2 text-sm font-semibold">Dirección y contacto</legend>
+    <p class="text-xs text-[#625c55]">
+      La dirección completa es lo que le falta al sitio para aparecer en el mapa: sin calle
+      y sin código postal, Google no sabe dónde está el dojo.
+    </p>
+    <CampoTexto nombre="direccion.calle" etiqueta="Calle y número" valor={v('direccion.calle')} error={e('direccion.calle')} />
+    <CampoTexto nombre="direccion.codigoPostal" etiqueta="Código postal" valor={v('direccion.codigoPostal')} error={e('direccion.codigoPostal')} />
+    <CampoTexto nombre="direccion.localidad" etiqueta="Localidad" valor={v('direccion.localidad')} error={e('direccion.localidad')} requerido />
+    <CampoTexto nombre="direccion.pais" etiqueta="País" valor={v('direccion.pais')} error={e('direccion.pais')} requerido ayuda="Dos letras: PT, ES, FR." />
+    <CampoTexto nombre="telefono" etiqueta="Teléfono" valor={v('telefono')} error={e('telefono')} />
+    <div class="flex gap-4">
+      <CampoTexto nombre="geo.lat" etiqueta="Latitud" valor={v('geo.lat')} error={e('geo.lat')} tipo="number" paso="any" />
+      <CampoTexto nombre="geo.lng" etiqueta="Longitud" valor={v('geo.lng')} error={e('geo.lng')} tipo="number" paso="any" />
+    </div>
+    <p class="mt-2 text-xs text-[#625c55]">
+      Las coordenadas van juntas o no van: con una sola, la ficha se publica sin mapa.
+    </p>
+  </fieldset>
+
+  <EditorHorarios horarios={horarios} errores={errores} />
+
+  <button class="mt-8 bg-[#0099ff] px-6 py-3 font-semibold text-white" type="submit">
+    {nuevo ? 'Crear y publicar' : 'Publicar cambios'}
+  </button>
+</form>

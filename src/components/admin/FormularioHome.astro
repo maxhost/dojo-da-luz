@@ -1,0 +1,186 @@
+---
+import CampoTexto from './CampoTexto.astro'
+import { errorDe } from '../../lib/forms'
+import { LOCALE_NAME, type Locale } from '../../lib/i18n'
+
+/**
+ * Formulario de la Home para un idioma (spec 0021). Todos los campos de `homeSchema`,
+ * incluido el SEO y el resumen citable de la capa GEO (ADR-0018).
+ *
+ * Los cuatro idiomas se pintan a la vez, cada uno con su formulario: cambiar de idioma es
+ * un cambio de pestaña en CSS, no una navegacion, asi que lo escrito y sin guardar sigue
+ * ahi al volver.
+ */
+
+interface Props {
+  locale: Locale
+  valores: Record<string, string>
+  nav: { label: string; href: string }[]
+  errores: Record<string, string>
+  sha: string
+}
+
+const { locale, valores, nav, errores, sha } = Astro.props
+
+const v = (ruta: string) => valores[ruta] ?? ''
+const e = (ruta: string) => errorDe(errores, ruta)
+
+// Fila vacia de mas: agregar un enlace de menu no necesita JavaScript.
+const filasNav = [...nav, { label: '', href: '' }]
+
+const seccion = 'mt-8 border border-[#d7cec0] bg-[#fbf8f2] p-4'
+---
+
+<form method="post">
+  <input type="hidden" name="idioma" value={locale} />
+  <input type="hidden" name="sha" value={sha} />
+
+  <fieldset class={seccion}>
+    <legend class="px-2 text-sm font-semibold">SEO</legend>
+    <CampoTexto
+      idPrefijo={locale}
+      nombre="seo.title"
+      etiqueta="Título de la página"
+      valor={v('seo.title')}
+      error={e('seo.title')}
+      requerido
+      recomendado={60}
+      ayuda="Lo que se lee como titular en Google y en la pestaña del navegador."
+    />
+    <CampoTexto
+      idPrefijo={locale}
+      nombre="seo.description"
+      etiqueta="Descripción"
+      valor={v('seo.description')}
+      error={e('seo.description')}
+      tipo="area"
+      requerido
+      recomendado={155}
+      ayuda="El párrafo que Google muestra debajo del título."
+    />
+  </fieldset>
+
+  <fieldset class={seccion}>
+    <legend class="px-2 text-sm font-semibold">Resumen citable</legend>
+    <p class="text-xs text-[#625c55]">
+      De 2 a 4 frases completas, cada una con sujeto explícito: son las que ChatGPT o
+      Google citan sin el resto de la página. Mínimo 40 caracteres por frase.
+    </p>
+    <CampoTexto
+      idPrefijo={locale}
+      nombre="resumen"
+      etiqueta="Una frase por línea"
+      valor={v('resumen')}
+      error={e('resumen')}
+      tipo="area"
+      filas={5}
+      requerido
+      minimo={40}
+    />
+  </fieldset>
+
+  <fieldset class={seccion}>
+    <legend class="px-2 text-sm font-semibold">Cabecera y pie</legend>
+    <CampoTexto idPrefijo={locale} nombre="chrome.caption" etiqueta="Bajada del logo" valor={v('chrome.caption')} error={e('chrome.caption')} requerido />
+    <CampoTexto idPrefijo={locale} nombre="chrome.menuLabel" etiqueta="Botón de menú" valor={v('chrome.menuLabel')} error={e('chrome.menuLabel')} requerido />
+    <CampoTexto idPrefijo={locale} nombre="chrome.skipLink" etiqueta="Saltar al contenido" valor={v('chrome.skipLink')} error={e('chrome.skipLink')} requerido />
+    <CampoTexto idPrefijo={locale} nombre="chrome.footerNote.areas" etiqueta="Pie · zonas" valor={v('chrome.footerNote.areas')} error={e('chrome.footerNote.areas')} requerido />
+    <CampoTexto idPrefijo={locale} nombre="chrome.footerNote.orgType" etiqueta="Pie · tipo de organización" valor={v('chrome.footerNote.orgType')} error={e('chrome.footerNote.orgType')} requerido />
+
+    <p class="mt-6 text-sm font-semibold">Menú de la página</p>
+    {e('chrome.nav') && (
+      <p class="mt-1 text-xs font-semibold text-[#b3261e]" role="alert">{e('chrome.nav')}</p>
+    )}
+    <ol class="mt-2">
+      {filasNav.map((enlace, i) => (
+        <li class="flex flex-wrap gap-4 border-t border-[#e6ded0] py-3 first:border-t-0">
+          <label class="text-xs font-semibold">
+            Texto
+            <input
+              class="mt-1 block border border-[#d7cec0] bg-white px-2 py-1 text-sm font-normal"
+              name={`nav[${i}].label`}
+              value={enlace.label}
+            />
+          </label>
+          <label class="text-xs font-semibold">
+            Destino
+            <input
+              class="mt-1 block border border-[#d7cec0] bg-white px-2 py-1 text-sm font-normal"
+              name={`nav[${i}].href`}
+              value={enlace.href}
+            />
+          </label>
+        </li>
+      ))}
+    </ol>
+    <p class="mt-2 text-xs text-[#625c55]">
+      Para borrar un enlace, vaciá sus dos campos y guardá.
+    </p>
+  </fieldset>
+
+  <fieldset class={seccion}>
+    <legend class="px-2 text-sm font-semibold">Portada</legend>
+    <CampoTexto idPrefijo={locale} nombre="hero.eyebrowLines" etiqueta="Antetítulo (una línea por renglón)" valor={v('hero.eyebrowLines')} error={e('hero.eyebrowLines')} tipo="area" filas={2} requerido />
+    <CampoTexto idPrefijo={locale} nombre="hero.titleLines" etiqueta="Titular (una línea por renglón)" valor={v('hero.titleLines')} error={e('hero.titleLines')} tipo="area" filas={2} requerido />
+    <CampoTexto idPrefijo={locale} nombre="hero.titleHighlight" etiqueta="Última palabra destacada" valor={v('hero.titleHighlight')} error={e('hero.titleHighlight')} requerido />
+    <CampoTexto idPrefijo={locale} nombre="hero.tagline" etiqueta="Bajada" valor={v('hero.tagline')} error={e('hero.tagline')} tipo="area" requerido />
+  </fieldset>
+
+  <fieldset class={seccion}>
+    <legend class="px-2 text-sm font-semibold">01 · La práctica</legend>
+    <CampoTexto idPrefijo={locale} nombre="practice.label" etiqueta="Rótulo" valor={v('practice.label')} error={e('practice.label')} requerido />
+    <CampoTexto idPrefijo={locale} nombre="practice.titleLines" etiqueta="Título (una línea por renglón)" valor={v('practice.titleLines')} error={e('practice.titleLines')} tipo="area" filas={2} requerido />
+    <CampoTexto idPrefijo={locale} nombre="practice.paragraphs" etiqueta="Párrafos (uno por línea)" valor={v('practice.paragraphs')} error={e('practice.paragraphs')} tipo="area" filas={4} requerido />
+  </fieldset>
+
+  <fieldset class={seccion}>
+    <legend class="px-2 text-sm font-semibold">02 · Audiencias</legend>
+    <CampoTexto idPrefijo={locale} nombre="audiences.label" etiqueta="Rótulo" valor={v('audiences.label')} error={e('audiences.label')} requerido />
+    <CampoTexto idPrefijo={locale} nombre="audiences.title" etiqueta="Título" valor={v('audiences.title')} error={e('audiences.title')} requerido />
+    <CampoTexto idPrefijo={locale} nombre="audiences.intro" etiqueta="Introducción" valor={v('audiences.intro')} error={e('audiences.intro')} tipo="area" requerido />
+    <CampoTexto idPrefijo={locale} nombre="audiences.adultsLabel" etiqueta="Etiqueta de adultos" valor={v('audiences.adultsLabel')} error={e('audiences.adultsLabel')} requerido />
+    <CampoTexto idPrefijo={locale} nombre="audiences.childrenLabel" etiqueta="Etiqueta de niños" valor={v('audiences.childrenLabel')} error={e('audiences.childrenLabel')} requerido />
+    <CampoTexto idPrefijo={locale} nombre="audiences.ctaLabel" etiqueta="Texto del botón" valor={v('audiences.ctaLabel')} error={e('audiences.ctaLabel')} requerido />
+  </fieldset>
+
+  <fieldset class={seccion}>
+    <legend class="px-2 text-sm font-semibold">03 · Los lugares</legend>
+    <p class="text-xs text-[#625c55]">
+      Las sedes y sus horarios no se editan acá: son fichas de dojo.
+    </p>
+    <CampoTexto idPrefijo={locale} nombre="places.label" etiqueta="Rótulo" valor={v('places.label')} error={e('places.label')} requerido />
+    <CampoTexto idPrefijo={locale} nombre="places.titleLines" etiqueta="Título (una línea por renglón)" valor={v('places.titleLines')} error={e('places.titleLines')} tipo="area" filas={2} requerido />
+    <CampoTexto idPrefijo={locale} nombre="places.lead" etiqueta="Entrada" valor={v('places.lead')} error={e('places.lead')} tipo="area" requerido />
+    <CampoTexto idPrefijo={locale} nombre="places.ctaLabel" etiqueta="Texto del botón" valor={v('places.ctaLabel')} error={e('places.ctaLabel')} requerido />
+  </fieldset>
+
+  <fieldset class={seccion}>
+    <legend class="px-2 text-sm font-semibold">04 · El dojo</legend>
+    <CampoTexto idPrefijo={locale} nombre="dojo.label" etiqueta="Rótulo" valor={v('dojo.label')} error={e('dojo.label')} requerido />
+    <CampoTexto idPrefijo={locale} nombre="dojo.titleLines" etiqueta="Título (una línea por renglón)" valor={v('dojo.titleLines')} error={e('dojo.titleLines')} tipo="area" filas={2} requerido />
+    <CampoTexto idPrefijo={locale} nombre="dojo.photoCaption" etiqueta="Pie de foto" valor={v('dojo.photoCaption')} error={e('dojo.photoCaption')} requerido />
+    <CampoTexto idPrefijo={locale} nombre="dojo.photoAlt" etiqueta="Texto alternativo de la foto" valor={v('dojo.photoAlt')} error={e('dojo.photoAlt')} requerido />
+    <CampoTexto idPrefijo={locale} nombre="dojo.teacher.name" etiqueta="Profesor · nombre" valor={v('dojo.teacher.name')} error={e('dojo.teacher.name')} requerido />
+    <CampoTexto idPrefijo={locale} nombre="dojo.teacher.credentialsLines" etiqueta="Profesor · credenciales (una por línea)" valor={v('dojo.teacher.credentialsLines')} error={e('dojo.teacher.credentialsLines')} tipo="area" filas={2} requerido />
+    <CampoTexto idPrefijo={locale} nombre="dojo.teacher.bio" etiqueta="Profesor · reseña" valor={v('dojo.teacher.bio')} error={e('dojo.teacher.bio')} tipo="area" requerido />
+    <CampoTexto idPrefijo={locale} nombre="dojo.teacher.photoAlt" etiqueta="Profesor · texto alternativo" valor={v('dojo.teacher.photoAlt')} error={e('dojo.teacher.photoAlt')} requerido />
+  </fieldset>
+
+  <fieldset class={seccion}>
+    <legend class="px-2 text-sm font-semibold">05 · El umbral</legend>
+    <CampoTexto idPrefijo={locale} nombre="threshold.label" etiqueta="Rótulo" valor={v('threshold.label')} error={e('threshold.label')} requerido />
+    <CampoTexto idPrefijo={locale} nombre="threshold.titleLines" etiqueta="Título (una línea por renglón)" valor={v('threshold.titleLines')} error={e('threshold.titleLines')} tipo="area" filas={2} requerido />
+    <CampoTexto idPrefijo={locale} nombre="threshold.text" etiqueta="Texto" valor={v('threshold.text')} error={e('threshold.text')} tipo="area" requerido />
+    <CampoTexto idPrefijo={locale} nombre="threshold.ctaLabel" etiqueta="Texto del botón" valor={v('threshold.ctaLabel')} error={e('threshold.ctaLabel')} requerido />
+  </fieldset>
+
+  <fieldset class={seccion}>
+    <legend class="px-2 text-sm font-semibold">06 · Parcerías</legend>
+    <CampoTexto idPrefijo={locale} nombre="partnerships.label" etiqueta="Rótulo" valor={v('partnerships.label')} error={e('partnerships.label')} requerido />
+    <CampoTexto idPrefijo={locale} nombre="partnerships.title" etiqueta="Título" valor={v('partnerships.title')} error={e('partnerships.title')} requerido />
+  </fieldset>
+
+  <button class="mt-8 bg-[#0099ff] px-6 py-3 font-semibold text-white" type="submit">
+    Publicar {LOCALE_NAME[locale]}
+  </button>
+</form>

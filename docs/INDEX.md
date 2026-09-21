@@ -34,6 +34,7 @@ desactualizado es peor que no tenerlo.
 | [0022](adr/0022-eventos-y-escolas.md) | 2026-09-20 | Eventos y Escolas vuelven como páginas propias en los 4 idiomas; supersede la parte de 0012 que dejaba los eventos sin destino | aceptada | `docs/adr/0022-eventos-y-escolas.md` |
 | [0023](adr/0023-jerarquia-equipo-docente.md) | 2026-09-21 | En `/dojo` el equipo docente deja de ser cuatro secciones iguales: Pablo Durán protagonista y los otros tres en fichas compactas | aceptada | `docs/adr/0023-jerarquia-equipo-docente.md` |
 | [0024](adr/0024-parcerias-en-rejilla.md) | 2026-09-21 | Parcerias como rejilla estática de 5 logos por fila, sin recuadro; supersede el carrusel CSS de la spec 0026 | aceptada | `docs/adr/0024-parcerias-en-rejilla.md` |
+| [0025](adr/0025-publicacion-backoffice.md) | 2026-09-21 | El BO publica commiteando a `main`: backend por modo de ejecución, orden canónico del schema y concurrencia por blob sha | aceptada | `docs/adr/0025-publicacion-backoffice.md` |
 
 ## Specs — que se construye
 
@@ -59,7 +60,7 @@ desactualizado es peor que no tenerlo.
 | [0018](specs/0018-iconos-idioma-redes-handoff.md) | 2026-09-18 | Iconos accesibles de idioma, redes verificadas y handoff para Claude Code | implementada | no | `src/layouts/Base.astro`, `src/components/SocialLinks.astro`, `docs/HANDOFF-CLAUDE-CODE.md` |
 | [0019](specs/0019-backoffice-auth.md) | 2026-09-18 | Backoffice en `/admin`: login de un solo admin, sesion en Neon, rate limit y noindex | cerrada | si | `db/migrations/0002_admin.sql`, `src/lib/{auth,admin}.ts`, `src/middleware.ts`, `src/pages/admin/**` |
 | [0020](specs/0020-dojos-entidad.md) | 2026-09-18 | Dojos en `content/dojos.json` con horarios estructurados; la home los renderiza y emite JSON-LD por sede | implementada | si | `content/dojos.json`, `src/lib/{dojos,content,i18n,site}.ts`, `src/components/HomeView.astro`, `content/*/home.json` |
-| [0021](specs/0021-editor-home-dojos.md) | 2026-09-18 | El BO edita la Home en 4 idiomas y hace CRUD de dojos; publica commiteando a `main` via API de GitHub | cerrada | no | `src/lib/publish.ts`, `src/pages/admin/**`, `src/components/admin/**` |
+| [0021](specs/0021-editor-home-dojos.md) | 2026-09-18 | El BO edita la Home en 4 idiomas y hace CRUD de dojos; publica commiteando a `main` via API de GitHub | implementada | no | `src/lib/{publish,forms,dojos-edicion}.ts`, `src/pages/admin/**`, `src/components/admin/**`, `content/**` |
 | [0022](specs/0022-reset-password.md) | 2026-09-18 | Recuperacion de contraseña por email con Resend, token de un solo uso y expulsion de sesiones | borrador | no | `db/migrations/0003_admin_reset.sql`, `src/lib/email.ts`, `src/pages/admin/{recuperar,restablecer}.astro` |
 | [0023](specs/0023-capa-geo.md) | 2026-09-19 | Capa GEO: resumen citable en Home, Q&A con `FAQPage` en Aulas/Adultos/Niños, robots con crawlers de IA y `/llms.txt` | implementada | no | `src/lib/{content,site}.ts`, `src/components/{HomeView,ClassesView,AudienceView}.astro`, `src/pages/llms.txt.ts`, `public/robots.txt`, `content/**` |
 | [0024](specs/0024-galerias-audiencias.md) | 2026-09-19 | Adultos y Crianças incorporan una galería responsive de seis medios editable desde el contenido | implementada | no | `src/lib/content.ts`, `src/components/AudienceView.astro`, `content/*/{adults,children}.json`, `docs/**` |

@@ -8,7 +8,7 @@ Si una sesion se cae, se cierra o se compacta, se vuelve aca — no al chat. Hay
 Regla: **marcar `hecho` solo con verificacion real** — tests que pasan, comando corrido,
 cosa vista en pantalla. No "deberia andar".
 
-Ultima actualizacion: 2026-09-21 — spec 0028: Parcerias en la Home deja el carrusel y pasa a rejilla estatica de cinco por fila, sin recuadro blanco. Antes, spec 0027: jerarquia del equipo docente en `/dojo`. Ambas verificadas y en produccion. Queda desplegar la 0021: el editor del backoffice.
+Ultima actualizacion: 2026-09-21 — spec 0021: el backoffice edita la Home en los 4 idiomas y hace CRUD de dojos. Verificado de punta a punta en local contra `astro dev`; **sin desplegar y sin ejercitar el camino de GitHub**, que necesita `GITHUB_TOKEN` (fila 6e). Antes, specs 0027 y 0028, ambas en produccion.
 
 ## Contexto
 
@@ -85,6 +85,21 @@ el webhook crea el deployment y el alias `dojo-da-luz.vercel.app` se actualiza s
 `ADMIN_EMAIL=... ADMIN_PASSWORD=... npm run admin:seed`, que ademas cierra todas las
 sesiones abiertas — hoy es el unico camino de recuperacion hasta la spec 0022.
 
+**Y ya edita** (spec 0021): `/admin/paginas/home` con los 4 idiomas en una pagina, y
+`/admin/dojos` con alta, edicion, archivado y reactivacion. Lo que no valida contra el
+schema del build no llega al repo, y el editor no puede romper el sitio.
+
+**El BO escribe al disco en `astro dev` y commitea a `main` en produccion** (ADR-0025). Lo
+decide el modo de ejecucion, no la presencia del token: un `GITHUB_TOKEN` vencido en el
+shell no puede hacer que una sesion de desarrollo publique contra el repo. `BO_PUBLICAR=github`
+fuerza el camino de GitHub a mano. **Cuidado: guardar desde `/admin` en local ensucia el
+working tree**, igual que editar el JSON a mano.
+
+**El orden de las claves del contenido lo fija el schema de zod, no el archivo.** Los cinco
+JSON de contenido se normalizaron a ese orden el 2026-09-21 (mismos datos, `resumen` sube
+al segundo lugar en los 4 `home.json`). Si se reordena un campo en `src/lib/content.ts`, el
+siguiente guardado del BO reordena el archivo: ruido de una vez, no perdida de datos.
+
 ## Siguiente
 
 | # | Tarea | Spec | Estado | Notas |
@@ -101,7 +116,9 @@ sesiones abiertas — hoy es el unico camino de recuperacion hasta la spec 0022.
 | 6b | Spec 0020 — dojos como entidad y render en la home | 0020 | hecho | 3 dojos en `content/dojos.json` con horarios estructurados. Falta migrar Aulas y Contacto a la entidad (fila 6f). |
 | 6f | Migrar Aulas y Contacto a la entidad de dojos | — | pendiente | Hoy `classes.schedule.venues` y `contact.venues` siguen duplicando sedes y horarios en 4 idiomas. Ahi entra `transporte` en la entidad. |
 | 6c | Spec 0023 — capa GEO (resumen en Home, Q&A en Aulas/Adultos/Niños, robots, llms.txt) | 0023 | hecho | 13 pares Q&A por idioma con `FAQPage`. Falta que el cliente confirme precios y edades: hoy salen del contenido que ya estaba publicado. |
-| 6e | Spec 0021 — editor de Home y CRUD de dojos en el BO | 0021 | proximo | Spec cerrada. Ultimo de la cadena: 0019 → 0020 → 0023 → 0021. Necesita `GITHUB_TOKEN`. |
+| 6e | Spec 0021 — editor de Home y CRUD de dojos en el BO | 0021 | hecho en local | Verificado contra `astro dev` con backend de disco: 16 comprobaciones en la spec. **No desplegado y sin un solo commit salido por la API de GitHub.** |
+| 6g | Ejercitar el camino de publicacion por GitHub | 0021 | bloqueada | Necesita un PAT de alcance fino sobre `maxhost/dojo-da-luz` con contenido en escritura, cargado en Vercel como `GITHUB_TOKEN`. Sin el, las 4 rutas del editor responden 503 diciendo que falta — el resto del BO (login, panel) funciona igual. |
+| 6h | Que el cliente mire el editor en pantalla | 0021 | pendiente | Verificado por HTTP, no aprobado a ojo. El formulario de Home tiene 51 campos por idioma: es lo primero que conviene que objete. |
 | 7 | Alumnos + emision de factura + PDF a R2 + envio Resend | — | pendiente | Necesita una factura de ejemplo real. Spec sin escribir: el numero 0004 del INDEX es otra cosa. |
 | 8 | Redirects 301 de las 34 URLs viejas | — | plan definido | Matriz conceptual documentada. Falta crawl final, Search Console e implementación cuando existan todos los destinos. |
 | 9 | Sitemap + robots.txt | — | pendiente | Con el set completo de paginas. |
@@ -188,6 +205,9 @@ contraseña, sesion opaca en Neon.)*
 | 2026-09-21 | Spec 0028 + ADR-0024 — Parcerias en rejilla | `astro check` 48 archivos 0/0/0, `npm test` 5/5 y `npm run build` con 44 `index.html`; las 4 homes pasan de 16 a 8 `<img>` de parceiro, con 0 `aria-hidden`, 0 `bg-white` y 0 bordes en la seccion; `grep partner-carousel src/` vacio; el CSS construido trae `.mix-blend-multiply{mix-blend-mode:multiply}` y las 8 imagenes la llevan; aprobado a ojo por el cliente en `localhost:4321` |
 | 2026-09-21 | Los logos de parceiros traen el fondo blanco incrustado | Descargados los 8: los 3 PNG con `hasAlpha: no` (Wix los aplano), los otros 5 son JPEG. Pixeles de borde: 6 en `#ffffff` exacto, 2 en `(247,247,247)` y `(245,244,242)`. Quitar `bg-white` del CSS no alcanza; se neutraliza con `mix-blend-multiply` sobre `#f6f1e8`, que no limpia las dos que no son blanco puro |
 | 2026-09-21 | Deploy de la spec 0028 a produccion | `git push origin main` → `3dc5ba9`; deployment `dojo-da-uohuq04cs` ● Ready en 23s por webhook de GitHub; `/`, `/es`, `/fr` y `/en` devuelven 200 y su seccion de parcerias trae 8 `<img>`, 8 `mix-blend-multiply`, 0 `bg-white`, 0 `aria-hidden` y `md:grid-cols-5`; el CSS servido (`Base.CjxXOUpx.css`) tiene `mix-blend-mode:multiply` y 0 ocurrencias de `partner-carousel` |
+| 2026-09-21 | Spec 0021 + ADR-0025 — editor de Home y CRUD de dojos en el BO | `astro check` 61 archivos 0/0/0, `npm test` 5/5 y `npm run build` con 44 `index.html` (sin cambios en el sitio publico). Contra `astro dev` con sesion real: `/admin/paginas/home` pinta 4 formularios de 51 campos sin un `id` repetido; guardar sin tocar nada no escribe; editar `hero.tagline` en pt da un diff de 2 lineas y no toca los otros 3 idiomas; `seo.title` vacio → 422 nombrando el campo; un `resumen` de 6 caracteres → 422 nombrando `resumen.N`; `sha` viejo → 409 sin pisar el cambio ajeno; alta con `hasta` < `desde` → 422; slug repetido → 422; alta de `alvalade` → aparece en las 4 homes construidas; archivarlo → sale de las 4 y sigue en el listado del BO; editar el telefono de Benfica no toca sus horarios ni los otros dojos; sin cookie las 5 rutas → 302 con `X-Robots-Tag` |
+| 2026-09-21 | Un `GITHUB_TOKEN` vencido en el shell dejaba todo el BO en 401 | El backend de publicacion se elegia por la presencia del token, y en `astro dev` esa variable la aporta el shell — el mismo token vencido que ya rompia `git push`. Arreglado en el codigo, no en una nota: lo decide `import.meta.env.DEV` (ADR-0025). Con token valido habria publicado contra el repo real desde una sesion de desarrollo |
+| 2026-09-21 | El orden de claves del JSON lo fija zod, no el archivo | `safeParse` devuelve un objeto nuevo en el orden en que el schema declara los campos: `homeSchema` pone `resumen` segundo y los 4 `home.json` lo tenian ultimo. El primer guardado movia 6 lineas. Los 5 archivos de contenido normalizados al orden canonico, datos identicos verificados clave por clave ignorando orden |
 
 ## Descartado (y por que)
 
