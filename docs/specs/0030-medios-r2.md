@@ -1,7 +1,7 @@
 ---
 spec: 0030
 fecha: 2026-09-21
-estado: cerrada
+estado: implementada, sin verificar contra R2
 resumen: El backoffice sube imágenes a Cloudflare R2: sharp genera AVIF y WebP en tres anchos, la clave sale del hash del contenido y el JSON guarda la URL pública, de modo que el sitio servido nunca depende de R2 en runtime.
 disjunta: si
 archivos: src/lib/medios.ts, src/lib/r2.ts, src/pages/admin/medios/**, src/components/admin/CampoImagen.astro, package.json
@@ -106,21 +106,41 @@ subir la primera imagen, no después.
 
 ## Verificacion
 
-- [ ] `npm run typecheck`, `npm test` y `npm run build` limpios; el sitio sigue en 44 rutas.
-- [ ] Subir un JPEG de 3000 px deja en R2 **dos** claves —el original y la WebP de 1600 px—
-      y devuelve una URL que responde 200 con `content-type: image/webp` y pesa bastante
-      menos que el original.
-- [ ] Subir **el mismo archivo** dos veces no crea claves nuevas y responde la misma URL.
-- [ ] Subir un PDF renombrado a `.jpg` → rechazado nombrando el motivo, sin escribir en R2.
-- [ ] Un archivo de 11 MB → rechazado, sin escribir en R2.
-- [ ] Elegir una imagen desde el BO y guardar la Home publica un `home.json` cuya URL de
-      imagen es la del bucket, y la home construida la sirve.
-- [ ] `POST /admin/medios` sin cookie de sesión → 302 a `/admin/entrar`, sin escribir nada.
-- [ ] Con R2 caído o mal configurado, el BO lo dice y no publica un JSON con una URL rota.
-- [ ] El tamaño de la función con `sharp` está por debajo del límite de Vercel.
+Hecho:
+
+- [x] `astro check` 0/0/0, `npm test` **9/9** (5 de auth + 4 nuevos de la firma) y
+      `npm run build` con 44 rutas: el sitio público no cambia.
+- [x] **La firma SigV4 es correcta**, contra los vectores públicos de AWS: `get-vanilla` y
+      `get-vanilla-query-order-key-case` dan la firma esperada al byte.
+- [x] Un PDF renombrado a `.jpg` → 422 "No es una imagen que se pueda leer": el formato lo
+      decide `sharp` leyendo los bytes, no la extensión.
+- [x] Archivo vacío → 422. 11 MB → 422 nombrando el tamaño. 9000 px de lado → 422 nombrando
+      las medidas. Ninguno llega a tocar R2: se valida antes de mirar las credenciales.
+- [x] `POST /admin/medios/subir` sin cookie → 302 a `/admin/entrar`.
+- [x] Sin las variables configuradas, el BO dice exactamente cuáles faltan.
+- [x] **El tamaño de la función es 23 MB**, muy por debajo del límite de 250 MB de Vercel:
+      `sharp` entra sin problema y no hace falta el plan B.
+- [x] El dominio público del bucket está activo: responde 404 de R2 a una clave inexistente.
+
+Bloqueado por los permisos del token de R2 (ver Abierto):
+
+- [ ] Subir un JPEG deja en R2 las dos claves y la URL pública responde 200 con
+      `content-type: image/webp`.
+- [ ] Subir el mismo archivo dos veces responde la misma URL sin volver a escribir.
+- [ ] La galería lista lo subido.
+- [ ] Elegir una imagen desde el editor y publicar deja la URL del bucket en el JSON.
 
 ## Abierto
 
+- **El token de R2 no tiene permiso sobre el bucket.** Las tres operaciones —`HEAD`, `PUT` y
+  `ListObjectsV2`— responden `403 AccessDenied` contra
+  `f42a4ec1d9145b1d6f9e043d2c3e262e.r2.cloudflarestorage.com/dojo-da-luz-dev`. El código
+  importa: R2 devuelve `SignatureDoesNotMatch` cuando la firma está mal y `InvalidAccessKeyId`
+  cuando la clave no existe. `AccessDenied` significa que **la firma se validó y la clave es
+  real**, pero ese token no puede tocar ese bucket. Se arregla en Cloudflare → R2 → *Manage
+  R2 API Tokens*: el token tiene que ser de tipo R2, con permiso **Object Read & Write**, y
+  su ámbito tiene que incluir `dojo-da-luz-dev`. **Hasta entonces la subida no está
+  verificada.**
 - **Las credenciales están en Vercel, no en local.** `vercel env pull` devuelve los valores
   vacíos: son variables cifradas y la plataforma no las entrega. Consecuencia práctica: el
   camino que habla con R2 **no se puede verificar en `astro dev`**, solo contra producción.

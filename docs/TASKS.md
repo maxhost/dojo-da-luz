@@ -8,7 +8,7 @@ Si una sesion se cae, se cierra o se compacta, se vuelve aca — no al chat. Hay
 Regla: **marcar `hecho` solo con verificacion real** — tests que pasan, comando corrido,
 cosa vista en pantalla. No "deberia andar".
 
-Ultima actualizacion: 2026-09-21 — spec 0029: el editor de Home deja el menu fijo y gana las 2 tarjetas de audiencia y los 3 medios de la portada. Escrita la spec 0030 (subida a R2), sin implementar: necesita credenciales de Cloudflare. Sigue pendiente cargar `GITHUB_TOKEN` en Vercel (fila 6g).
+Ultima actualizacion: 2026-09-21 — spec 0030 implementada y desplegada: `/admin/medios` sube imagenes a R2 y el campo de imagen del editor sube sin recargar. **La subida no esta verificada**: el token de R2 responde `AccessDenied` en las tres operaciones (fila 6j). `GITHUB_TOKEN` ya cargado en Vercel; falta comprobar que el BO publique de verdad (fila 6g).
 
 ## Contexto
 
@@ -120,7 +120,8 @@ siguiente guardado del BO reordena el archivo: ruido de una vez, no perdida de d
 | 6g | Ejercitar el camino de publicacion por GitHub | 0021 | bloqueada | Necesita un PAT de alcance fino sobre `maxhost/dojo-da-luz` con contenido en escritura, cargado en Vercel como `GITHUB_TOKEN`. Sin el, las 4 rutas del editor responden 503 diciendo que falta — el resto del BO (login, panel) funciona igual. |
 | 6h | Que el cliente mire el editor en pantalla | 0021 | en curso | Primera pasada hecha: de ahi salieron las specs 0029 y 0030. |
 | 6i | Spec 0029 — menu fijo, tarjetas de audiencia y medios en el editor de Home | 0029 | hecho en local | Verificado con las 4 homes construidas byte a byte identicas. Sin desplegar al escribir esto. |
-| 6j | Spec 0030 — subir imagenes a R2 desde el BO | 0030 | bloqueada | Spec cerrada. Necesita `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET` y `R2_PUBLIC_URL` de Cloudflare. **El dominio publico del bucket se decide antes de subir la primera imagen**: cambiarlo despues obliga a reescribir las URLs de todos los JSON. |
+| 6j | Spec 0030 — subir imagenes a R2 desde el BO | 0030 | desplegada, sin verificar | El codigo esta en produccion y el resto funciona, pero **el token de R2 da `AccessDenied` en HEAD, PUT y List**. No es la firma —eso daria `SignatureDoesNotMatch`— ni la clave —daria `InvalidAccessKeyId`—: es el permiso. Arreglar en Cloudflare → R2 → Manage R2 API Tokens: token de tipo R2, **Object Read & Write**, con ambito sobre `dojo-da-luz-dev`. |
+| 6k | Comprobar que el BO publica de verdad en produccion | 0021 | proximo | `GITHUB_TOKEN` ya esta en Vercel. Falta editar algo desde `/admin/paginas/home` en produccion y ver el commit en `main`. |
 | 7 | Alumnos + emision de factura + PDF a R2 + envio Resend | — | pendiente | Necesita una factura de ejemplo real. Spec sin escribir: el numero 0004 del INDEX es otra cosa. |
 | 8 | Redirects 301 de las 34 URLs viejas | — | plan definido | Matriz conceptual documentada. Falta crawl final, Search Console e implementación cuando existan todos los destinos. |
 | 9 | Sitemap + robots.txt | — | pendiente | Con el set completo de paginas. |
@@ -214,6 +215,8 @@ contraseña, sesion opaca en Neon.)*
 | 2026-09-21 | Migraciones: nada pendiente para la 0021 | Las 6 tablas de `0001_init.sql` y `0002_admin.sql` ya estaban aplicadas en Neon (`admin`, `admin_login_attempt`, `admin_session`, `alumno`, `factura`, `serie`). El contenido vive en el repo, no en la DB (ADR-0002): el editor no necesita tablas |
 | 2026-09-21 | Spec 0029 + ADR-0026 — frontera del editor de Home | `astro check` 62 archivos 0/0/0, `npm test` 5/5, build con 44 `index.html`. Las 4 homes construidas quedan byte a byte identicas tras migrar 11 campos nuevos. El formulario pasa de 51 a 52 campos, con 0 `nav[...]` y 5 campos de imagen por idioma. Guardar conserva los 4 enlaces del menu; cambiar la foto de la tarjeta de adultos no toca `/aulas/adultos`; una URL invalida da 422; `dojo.photo` y el poster del hero son independientes |
 | 2026-09-21 | El CSS publico dependia de lo que se escribiera en `docs/` | Tailwind v4 sin `@source` escanea el proyecto entero, `.md` incluidos: la palabra "invisible" en un ADR agrego `.invisible{visibility:hidden}` al CSS servido a los visitantes. Arreglado en el origen con `@import 'tailwindcss' source(none)` + `@source '../**/*.{astro,ts}'`. El CSS baja de 28805 a 28173 bytes; de las 305 clases usadas por las 44 paginas no se pierde ninguna |
+| 2026-09-21 | Spec 0030 — subida a R2, lo que si quedo verificado | `astro check` 0/0/0, `npm test` 9/9 y build con 44 rutas. La firma SigV4 da la firma esperada al byte contra los vectores publicos de AWS (`get-vanilla` y `get-vanilla-query-order-key-case`). Por HTTP contra el endpoint: PDF renombrado a `.jpg` → 422 leyendo los bytes con `sharp`, vacio → 422, 11 MB → 422, 9000 px → 422, sin cookie → 302. La funcion con `sharp` pesa **23 MB** (limite de Vercel: 250 MB). El dominio publico del bucket responde 404 de R2, o sea que esta activo |
+| 2026-09-21 | El token de R2 no tiene permiso sobre el bucket | Las 3 operaciones dan `403 AccessDenied` contra `f42a4ec1d9145b1d6f9e043d2c3e262e.r2.cloudflarestorage.com/dojo-da-luz-dev`. El codigo de error es el dato: R2 devuelve `SignatureDoesNotMatch` si la firma esta mal y `InvalidAccessKeyId` si la clave no existe, asi que firma y clave son correctas y lo que falta es el permiso del token |
 
 ## Descartado (y por que)
 
