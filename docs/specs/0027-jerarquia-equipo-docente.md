@@ -34,7 +34,8 @@ cuatro secciones a pantalla completa, alternando el lado de la imagen. Observabl
   con `loading="lazy"`, nombre, credenciales y sus dos párrafos.
 - Un array `teacherPhotos` con tres URLs de wixstatic ya en uso, recortadas con `fp_`
   distintos, como imagen provisional de las fichas.
-- Conservar los `id` de ancla existentes.
+- Conservar los `id` de ancla existentes, incluido `inês-martins` con acento: el `id`
+  sale de `name.toLowerCase()`, como antes del cambio.
 
 **No entra:**
 
@@ -83,7 +84,8 @@ Es el encabezado real de la sección; los tres instructores son `h3` dentro de `
 - [x] `npm run build` → 44 `index.html` en `.vercel/output/static`
 - [x] `npm test` → 5/5
 - [x] `git diff --check` limpio
-- [x] Producción: `/dojo` y sus tres traducciones sirven un solo bloque de equipo docente
+- [x] Producción: `/dojo`, `/es/dojo`, `/fr/dojo` y `/en/dojo` devuelven 200 con su `lang`
+      correcto, un solo retrato `max-h-[42rem]`, las 3 fotos `fp_` y las 3 fichas
 
 ## Abierto
 
@@ -91,3 +93,6 @@ Es el encabezado real de la sección; los tres instructores son `h3` dentro de `
   nombran. Cuando el cliente entregue fotos, sustituir `teacherPhotos` sin tocar la
   composición. Es deuda visible para cualquiera que mire la página.
 - Las imágenes siguen servidas desde `static.wixstatic.com`, como el resto del sitio.
+- **Ancla con acento.** `#inês-martins` es válido en HTML5 pero necesita
+  percent-encoding en una URL. Es comportamiento heredado, idéntico antes y después
+  de esta spec; se deja anotado, no se cambia aquí.

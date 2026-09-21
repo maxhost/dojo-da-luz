@@ -8,7 +8,7 @@ Si una sesion se cae, se cierra o se compacta, se vuelve aca — no al chat. Hay
 Regla: **marcar `hecho` solo con verificacion real** — tests que pasan, comando corrido,
 cosa vista en pantalla. No "deberia andar".
 
-Ultima actualizacion: 2026-09-21 — spec 0027: jerarquia del equipo docente en `/dojo`, con Pablo Duran protagonista y los otros tres instructores en fichas compactas. Verificada en local (astro check 0/0/0, 44 paginas, tests 5/5) y desplegada. Queda desplegar la 0021: el editor del backoffice.
+Ultima actualizacion: 2026-09-21 — spec 0027: jerarquia del equipo docente en `/dojo`, con Pablo Duran protagonista y los otros tres instructores en fichas compactas. Verificada en local (astro check 0/0/0, 44 paginas, tests 5/5) y en produccion. Queda desplegar la 0021: el editor del backoffice.
 
 ## Contexto
 
@@ -183,7 +183,8 @@ contraseña, sesion opaca en Neon.)*
 | 2026-09-20 | Spec 0026 + ADR 0021/0022 — Eventos, Escolas e identidad azul | `astro check` 0/0/0 (arreglado `teacher.href` en `DojoView`), `npm test` 5/5 y `npm run build` con 44 `index.html` (36 antes); `/eventos` y `/escolas` en `pt-PT`, `/es/eventos`, `/es/escuelas`, `/fr/evenements` y `/en/schools` con su `lang` correcto; `instagram.com/dojodaluz` responde 200 con `og:title` "Pablo Duran"; `git diff --check` limpio |
 | 2026-09-20 | Portugues como idioma de entrada: verificado, sin cambios | Ya lo era en todas las capas: `DEFAULT_LOCALE = 'pt'` y `prefixDefaultLocale: false`, `/` construida como `<html lang="pt-PT">` con titulo portugues, `hreflang="x-default"` a `/`, y `dojo-da-luz.vercel.app/` devuelve 200 en portugues incluso con `Accept-Language: es-ES`. El unico sitio que abre en español es el Wix vivo (`www.aikido-duran.com` sirve `<html lang="es">`): eso se cambia en el panel de Wix, no en este repo |
 | 2026-09-20 | Deploy de la spec 0026 a produccion | `git push origin main` → `01f67af`; deployment `dojo-da-q7ckdlc1e` ● Ready en 16s por webhook de GitHub; las 8 rutas nuevas de `dojo-da-luz.vercel.app` devuelven 200 con su `lang` correcto (`/eventos` y `/escolas` en `pt-PT`, `/es/eventos`, `/es/escuelas`, `/fr/evenements`, `/fr/ecoles`, `/en/events`, `/en/schools`); la raiz sigue en portugues con `x-default` a `www.aikido-duran.com`; el CSS servido tiene 5 `#0099ff` y 0 `#9b3025`; Instagram y Oxanium presentes en la home |
-| 2026-09-21 | Spec 0027 + ADR-0023 — jerarquia del equipo docente en Dojo | `astro check` 48 archivos 0/0/0, `npm test` 5/5 y `npm run build` con 44 `index.html`; `git diff --check` limpio; `/dojo` pasa de 4 secciones de profesor a 1 sola con bloque protagonista y 3 fichas; anclas `#pablo-duran`, `#ines-martins`, `#miguel-costa` y `#sofia-almeida` conservadas |
+| 2026-09-21 | Spec 0027 + ADR-0023 — jerarquia del equipo docente en Dojo | `astro check` 48 archivos 0/0/0, `npm test` 5/5 y `npm run build` con 44 `index.html`; `git diff --check` limpio; `/dojo` pasa de 4 secciones de profesor a 1 sola con bloque protagonista y 3 fichas; anclas `#pablo-duran`, `#inês-martins` (con acento, heredado), `#miguel-costa` y `#sofia-almeida` conservadas |
+| 2026-09-21 | Deploy de la spec 0027 a produccion | `git push origin main` → `335976d`; deployment `dojo-da-hn4p4oqhm` ● Ready en 19s por webhook de GitHub, sin incidentes abiertos en vercel-status; `/dojo`, `/es/dojo`, `/fr/dojo` y `/en/dojo` devuelven 200 con `pt-PT`/`es`/`fr`/`en`, un solo retrato `max-h-[42rem]` (antes 4), las 3 fotos `fp_` de las fichas y los 3 `<article>` de instructores |
 
 ## Descartado (y por que)
 

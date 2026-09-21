@@ -1,114 +1,61 @@
-# Handoff — accesos de audiencias desde la Home
+# Handoff — corte del 2026-09-21
 
-Fecha de corte: 2026-09-19.
+Registro del ultimo corte cerrado, no lista de pendientes. **El estado real del proyecto
+esta en `docs/TASKS.md`**; este archivo solo explica que se cerro por ultima vez y con
+que se verifico.
 
-Este archivo es el punto de reentrada después de `/clear`. Antes de continuar, leer
-`docs/TASKS.md`, `docs/INDEX.md`, `docs/adr/0020-accesos-audiencias-home.md` y
-`docs/specs/0025-accesos-audiencias-home.md`. No reconstruir el estado desde el chat.
+## Que se cerro
 
-## Pedido y resultado
+**Spec 0027 — jerarquia del equipo docente en `/dojo`** (ADR-0023).
 
-El cliente pidió hacer visibles las dos páginas principales de práctica —Adultos y
-Crianças— directamente desde la Home, porque hasta ahora estaban escondidas detrás de
-Aulas y su selector.
+`/dojo` renderizaba cuatro profesores con la misma seccion a pantalla completa,
+alternando el lado de la imagen y repitiendo el mismo retrato cuatro veces. Ahora es una
+sola seccion con dos niveles:
 
-La spec 0025 está implementada localmente:
+- **Pablo Duran** como bloque protagonista: retrato vertical `4/5` con marco azul
+  desplazado, nombre hasta `text-7xl`, biografia completa con filete lateral y el boton
+  a su pagina propia.
+- **Ines Martins, Miguel Costa y Sofia Almeida** en tres fichas compactas sobre fondo
+  `#211e1b`, separadas por filetes: imagen `4/3`, nombre, credenciales y dos parrafos.
+- En movil las fichas se apilan; desde `md` forman tres columnas.
+- Sin rotulo «Equipo docente» ni numeracion: el cliente las pidio fuera.
+- Los cuatro idiomas heredan la jerarquia sin tocar contenido.
 
-- `HomeView.astro` incluye una sección nueva antes de sedes y horarios.
-- La sección muestra dos tarjetas completas enlazables: Adultos y Crianças.
-- Cada tarjeta reutiliza título, introducción, foto y texto alternativo desde
-  `content/*/adults.json` o `content/*/children.json`; no duplica ese contenido en Home.
-- Los textos de encuadre y CTA viven en `home.audiences` y están traducidos en pt/es/fr/en.
-- Los enlaces salen de `pathFor('adults' | 'children', locale)` y respetan las rutas
-  canónicas localizadas.
-- La numeración narrativa posterior de la Home pasó de 02–04 a 03–05.
-- No se añadió JavaScript ejecutable.
+El cambio funcional vivio solo en `src/components/DojoView.astro`.
 
-## Working tree sin commit
+## Procedencia y deuda de proceso
 
-Todos los cambios actuales pertenecen a este lote:
+El codigo llego implementado desde otra herramienta, **sin spec previa**, contra el flujo
+de `CLAUDE.md`. La spec 0027 y el ADR-0023 se escribieron despues, a partir del diff, y lo
+dejan anotado en su encabezado. Se documenta el incumplimiento en vez de disimularlo: lo
+que no esta en `docs/` no sobrevive a la proxima sesion.
 
-```text
- M content/en/home.json
- M content/es/home.json
- M content/fr/home.json
- M content/pt/home.json
- M docs/HANDOFF-CLAUDE-CODE.md
- M docs/INDEX.md
- M docs/TASKS.md
- M src/components/HomeView.astro
- M src/lib/content.ts
-?? docs/adr/0020-accesos-audiencias-home.md
-?? docs/specs/0025-accesos-audiencias-home.md
-```
+## Deuda de producto abierta
 
-No hay commit ni push de la spec 0025. El último commit existente al corte es
-`19dafa0 docs: deploy de las galerías verificado en producción`.
+Las tres imagenes de las fichas secundarias son **fotografias de practica ya alojadas en
+Wix, recortadas con `fp_` distintos** — no retratan a la persona que nombran. No existen
+retratos individuales de esos docentes. Cuando el cliente los entregue, se sustituye el
+array `teacherPhotos` de `DojoView.astro` sin tocar la composicion. Es la fila 11 de
+`docs/TASKS.md`.
 
-## Archivos clave
-
-- `src/components/HomeView.astro`: carga ambos contenidos de audiencia y renderiza las
-  dos tarjetas.
-- `src/lib/content.ts`: `homeSchema` valida el objeto nuevo `audiences`.
-- `content/{pt,es,fr,en}/home.json`: textos localizados y numeración de secciones.
-- `docs/adr/0020-accesos-audiencias-home.md`: decisión de producto.
-- `docs/specs/0025-accesos-audiencias-home.md`: alcance y verificación, marcada
-  `implementada`.
-- `docs/TASKS.md`: estado actualizado; indica que este lote aún queda por desplegar.
-
-## Verificación ejecutada
-
-Se ejecutó después de implementar:
+## Verificacion ejecutada
 
 ```sh
-npm run typecheck
-npm test
-npm run build
-git diff --check
+npm run typecheck   # astro check: 48 archivos, 0 errores / 0 warnings / 0 hints
+npm test            # 5/5
+npm run build       # 44 index.html en .vercel/output/static
+git diff --check    # limpio
 ```
 
-Resultados:
+Commit `335976d`, empujado a `origin/main`; el webhook de Vercel creo el deployment de
+produccion solo.
 
-- Astro check: 0 errores, 0 warnings, 0 hints en 44 archivos.
-- Tests: 5/5.
-- Build: 36 páginas estáticas más `/llms.txt`.
-- Las cuatro Homes generadas contienen sus dos enlaces directos localizados:
-  - PT: `/aulas/adultos` y `/aulas/criancas`
-  - ES: `/es/clases/adultos` y `/es/clases/ninos`
-  - FR: `/fr/cours/adultes` y `/fr/cours/enfants`
-  - EN: `/en/classes/adults` y `/en/classes/children`
-- Las cuatro Homes contienen las fotos de Adultos y Crianças.
-- Cero scripts ejecutables en las Homes; permanece únicamente el JSON-LD existente.
-- `git diff --check` limpio.
+## Como seguir
 
-## Próximo paso seguro
-
-Revisar visualmente la nueva sección si el cliente lo desea. Si se aprueba, hacer commit,
-push y verificar el deployment automático en `https://dojo-da-luz.vercel.app`.
-
-Antes de commitear:
-
-```sh
-git status --short
-npm run typecheck
-npm test
-npm run build
-git diff --check
-```
-
-No descartar ni sobrescribir el working tree. No usar `git reset --hard` ni
-`git checkout --`. Para el push, recordar que el `GH_TOKEN` del shell estaba vencido y
-tapaba el token válido del keyring:
-
-```sh
-env -u GH_TOKEN -u GITHUB_TOKEN git push origin main
-```
-
-Después del push, esperar el deployment por webhook y comprobar la URL pública, no una
-URL protegida del equipo de Vercel.
-
-## Pendientes generales que no pertenecen a este lote
-
-La fuente de verdad es `docs/TASKS.md`. En especial siguen pendientes el crawl/redirects
-del Wix, sitemap final, endpoints de formularios, datos NAP del cliente y la spec 0021 del
-editor de Home/dojos en el backoffice. No mezclarlos con el commit de la spec 0025.
+1. `docs/TASKS.md` → seccion **Siguiente**. El proximo de la cadena es la **spec 0021**:
+   el editor de Home y CRUD de dojos en el backoffice. Necesita `GITHUB_TOKEN`.
+2. Para empujar: `env -u GH_TOKEN -u GITHUB_TOKEN git push origin main` — la `GH_TOKEN`
+   del shell esta vencida y tapa al token del keyring de `gh`.
+3. Verificar siempre contra `dojo-da-luz.vercel.app`, nunca contra la URL del deployment
+   (`*-maxhost27-6230s-projects.vercel.app` esta detras de Vercel Authentication y
+   devuelve 302).
