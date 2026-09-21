@@ -15,7 +15,10 @@ ADR-0032 (portugues siembra las imagenes). Verificado contra el BO corriendo, no
 lectura: publicar PT sembro un video de YouTube en los cuatro idiomas, traducir en ES no
 pudo cambiar ni la foto ni el enlace, y un enlace que no es de YouTube dio 422 con el error
 en su fila. De las 44 paginas construidas **solo cambiaron las 8 de audiencia**, con el
-hash del CSS neutralizado. **Sin commitear ni desplegar al escribir esto.**
+hash del CSS neutralizado. **Commiteado y desplegado**: `main` en `e330802`; en produccion
+`/aulas/adultos`, `/aulas/criancas` y sus tres traducciones ya traen la rejilla adaptativa,
+el pie desde el contenido y **cero** rastro del mp4 de Pexels; `/admin/paginas/{adultos,criancas}`
+contestan 302 al login.
 
 **Lo que hay que saber antes de tocar nada:**
 
@@ -100,6 +103,12 @@ contraseña. Lo que se hizo en esta sesion fue insertar una fila temporal en `ad
 con un token propio y borrarla al terminar — **sin tocar la contraseña**, porque
 `npm run admin:seed` la repone y expulsa al cliente. La base es la misma que usa
 produccion.
+
+**El `GITHUB_TOKEN` de `.env` esta muerto.** El 2026-09-21 `GET /user` con el token del
+archivo local contesto **401**: es un `ghp_` clasico, probablemente expirado. No prueba nada
+sobre el de Vercel —que publico de verdad en la fila 6k— pero **es el primer sospechoso si el
+BO en produccion empieza a contestar que no puede publicar**. Verificarlo antes de tocar
+permisos: `curl -H "Authorization: token <t>" https://api.github.com/user`.
 
 **Scaffold hecho y verificado** (spec 0001): Astro estatico, 4 idiomas, contenido JSON
 validado con zod, head de SEO completo. `dist/` entero pesa 28K y no lleva un solo script
@@ -216,7 +225,7 @@ siguiente guardado del BO reordena el archivo: ruido de una vez, no perdida de d
 | 6n | Spec 0033 — un campo por cosa en el editor | 0033 | implementada, sin probar en el BO | Correccion de UX pedida por el cliente: el bloque "Imágenes de la portada" **se borro** y las cinco imagenes volvieron a su seccion, donde **la miniatura es el boton** que abre el selector de archivos; un parceiro volvio a ser solo un logo mas un "quitar" (nombre y escala viajan ocultos). Publicar un idioma escribe `media.json` tambien, solo si alguna imagen cambio. |
 | 6o | Rediseñar la interfaz del editor con el cliente | — | **bloqueante, sin empezar** | Tres iteraciones rechazadas (0031, 0032, 0033). El pedido textual: *"un form simple donde tenes inputs de texto que modifican textos, inputs de texto que modifican texto de botones, input de imagen que modifica imagenes"*. **No implementar sin que el cliente apruebe el layout antes** — ver Descartado. Requisito practico: conseguir forma de ver el BO (contraseña, o sesion temporal en `admin_session`), porque hasta ahora se diseño sin ver ni una pantalla. |
 | 6p | Spec 0035 — editor de /aulas en el BO | 0035 | implementada, verificada en local | Cuatro pestañas, cinco tablas (cuotas, notas, parrafos, datos de crianças, preguntas) y el layout aprobado por el cliente **antes** de escribir codigo. Portugues manda la estructura (ADR-0030): solo su pestaña tiene "Añadir fila"; publicar PT escribe los cuatro archivos en un commit por la Git Data API. Verificado por HTTP contra el BO corriendo: alta y baja de una cuota propagadas a los cuatro idiomas, marca "sin traducir" en es/fr/en, traducciones de las otras filas intactas. **Falta en produccion**: `publicarVarios` nunca corrio contra GitHub. |
-| 6r | Spec 0036 — editores de Adultos y Crianças con galeria libre y YouTube | 0036 | implementada, verificada en local | Dos pantallas separadas (`/admin/paginas/adultos` y `/criancas`) sobre un formulario comun, con el layout aprobado por el cliente antes de escribir codigo. La galeria dejo de tener seis medios fijos: se añaden y quitan sin limite, cada uno es una foto subida a R2 o un video de YouTube, y el grid publico se adapta (1, 2, 3-4, 5+). El video no le pide nada a YouTube hasta que alguien lo toca, y una galeria sin videos no se lleva **ni una linea** de JavaScript. Portugues siembra las imagenes (ADR-0032): en es/fr/en la foto y el enlace se ven pero no se cambian, y un POST forjado desde esas pestañas queda igual sin efecto (comprobado). Los cinco textos de cabecera y pie pasaron al contenido. Se borro el mp4 de stock de Pexels de los ocho archivos. **Falta en produccion**: nunca corrio contra GitHub, igual que la fila 6p. |
+| 6r | Spec 0036 — editores de Adultos y Crianças con galeria libre y YouTube | 0036 | implementada, verificada en local | Dos pantallas separadas (`/admin/paginas/adultos` y `/criancas`) sobre un formulario comun, con el layout aprobado por el cliente antes de escribir codigo. La galeria dejo de tener seis medios fijos: se añaden y quitan sin limite, cada uno es una foto subida a R2 o un video de YouTube, y el grid publico se adapta (1, 2, 3-4, 5+). El video no le pide nada a YouTube hasta que alguien lo toca, y una galeria sin videos no se lleva **ni una linea** de JavaScript. Portugues siembra las imagenes (ADR-0032): en es/fr/en la foto y el enlace se ven pero no se cambian, y un POST forjado desde esas pestañas queda igual sin efecto (comprobado). Los cinco textos de cabecera y pie pasaron al contenido. Se borro el mp4 de stock de Pexels de los ocho archivos. **Desplegado el 2026-09-21** (`e330802`) y comprobado en las seis paginas publicas. Lo que sigue **sin correr contra GitHub** es el guardado del propio BO —`publicarVarios` con cuatro archivos—, igual que en la fila 6p. |
 | 6q | Sacar Encarnação de los textos en prosa | — | pendiente | El dojo cerro. La estructura ya no lo nombra, la prosa si: en `classes.json` (descripcion SEO, pie, `children.facts[2]`, dos respuestas del Q&A) lo puede arreglar el cliente desde `/admin/paginas/aulas`. `adults.json` y `children.json` ya tienen editor (spec 0036): sus `facts` y su Q&A los puede arreglar el cliente. Queda `contact.json`, sin editor. |
 | 7 | Alumnos + emision de factura + PDF a R2 + envio Resend | — | pendiente | Necesita una factura de ejemplo real. Spec sin escribir: el numero 0004 del INDEX es otra cosa. |
 | 8 | Redirects 301 de las 34 URLs viejas | — | plan definido | Matriz conceptual documentada. Falta crawl final, Search Console e implementación cuando existan todos los destinos. |

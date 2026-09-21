@@ -107,6 +107,14 @@ credencial vieja. Agregar un helper con `-c` no alcanza: hay que **resetear la l
 `-c credential.helper=` vacio antes de sumar el propio. Y antes de culpar al token,
 verificalo: `curl -H "Authorization: token <t>" https://api.github.com/user`.
 
+El 2026-09-21 volvio a pasar con un agravante: **los dos tokens del entorno estaban
+muertos** —el `GITHUB_TOKEN` de `.env` y el `GH_TOKEN` del perfil, los dos 401— y el unico
+vivo era el del keyring de `gh`, que `GH_TOKEN` tapaba por ser la cuenta activa. La receta
+que funciono:
+`GH_TOKEN= GITHUB_TOKEN= bash -c 'T=$(gh auth token) && git -c credential.helper= -c credential.helper="!f(){ echo username=x-access-token; echo \"password=$T\"; };f" push origin main'`.
+`gh auth status` es lo primero que hay que mirar: dice cual credencial esta viva y cual esta
+ganando.
+
 **Las reglas verificables van en hooks, no aca.** Los hooks corren fuera del contexto,
 cuestan cero tokens y son deterministas; este archivo es advisory. Si una regla se puede
 chequear con un comando, es un hook — no la escribas aca tambien.
