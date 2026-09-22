@@ -8,7 +8,7 @@ Si una sesion se cae, se cierra o se compacta, se vuelve aca — no al chat. Hay
 Regla: **marcar `hecho` solo con verificacion real** — tests que pasan, comando corrido,
 cosa vista en pantalla. No "deberia andar".
 
-Ultima actualizacion: 2026-09-21, cuarta sesion — gate verde: `astro check` **0/0/0**
+Ultima actualizacion: 2026-09-22, cuarta sesion — desplegada y verificada en produccion — gate verde: `astro check` **0/0/0**
 (122 archivos), `npm test` **53/53**, `npm run build` 44 rutas + `sitemap.xml`.
 
 **Retomar con:** *"Leer docs/TASKS.md y docs/INDEX.md. Implementar la spec 0047, despues la
@@ -531,6 +531,7 @@ contraseña, sesion opaca en Neon.)*
 | 2026-09-21 | El diff de las 44 paginas se leyo carácter a carácter, no pagina a pagina | Las 44 salieron "distintas" (el navbar esta en todas) y eso no dice nada. Comparadas con `difflib` a nivel de carácter, el cambio entero son **nueve segmentos**: `e→ê`, `n→ñ` y `c→ç` ×242 cada uno, y los seis pedazos de `Idioma→Langue/Language` y `Principal→Principale/Main` ×22. **Cero** diferencias fuera de la spec. Mas informativo que la comparacion pixel a pixel que pedia la spec, y sin el ruido del video del hero |
 | 2026-09-21 | Spec 0045 — 36 redirects `301`, `sitemap.xml` y la linea `Sitemap:` | `astro check` 0/0/0 (122 archivos), **53/53** (14 pruebas nuevas), build 44 rutas + `sitemap.xml`. Las 36 reglas verificadas **dos veces**: simulando el router sobre `.vercel/output/config.json` (36/36 exactas, ninguna vuelve a redirigir, los 36 destinos existen en disco) y **por HTTP** contra el servidor (36/36 dan `301` con `Location` exacto y el destino da `200` sin redirigir). `/no-existe`, `/videos` y `/galeria` → 404: no hay comodines. El sitemap: 44 `<loc>` unicas, los cuatro `hreflang` + `x-default` en cada una, ninguna es un origen redirigido, las 44 dan 200, y el conjunto es **identico** a los 44 `canonical` del HTML construido |
 | 2026-09-21 | El test encontro dos saltos donde la matriz decia uno | `/enlaces-es` y `/links-fr` estaban escritos `/es/#parcerias` y `/fr/#parcerias` —copiados bien del documento 10—, y con `trailingSlash: 'never'` el adapter agrega un `308` de `/es/` a `/es`: dos saltos por cada backlink. Lo encontro `redirects.test.ts` antes del primer build, no la relectura. Y `#quotas` resulto estar traducido (`#cuotas`, `#tarifs`, `#fees`), al contrario de lo que decia el inventario: medido en el HTML. Las dos cosas, corregidas en el doc 10 y en el ADR-0045 |
+| 2026-09-22 | Deploy de las specs 0045 y 0048, verificado en produccion | `git push origin main` → `b73235b`; deployment `dojo-da-ff32fle09` ● Ready en 16 s. Contra `dojo-da-luz.vercel.app`: las **36 reglas** dan `301` con `Location` exacto y su destino `200` —36/36, cero fallos—, y `/no-existe`, `/videos` y `/galeria` dan 404. `/sitemap.xml` responde 200 como `application/xml` con **44 `<loc>`**; `robots.txt` termina en su linea `Sitemap:`. Los `aria-label`: `Main`/`Language` en ingles, `Principale`/`Langue` en frances, `Principal`/`Idioma` en portugues y español; `Português`, `Español` y `Français` con acento |
 
 ## Descartado (y por que)
 
