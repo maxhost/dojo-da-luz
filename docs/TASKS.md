@@ -8,9 +8,15 @@ Si una sesion se cae, se cierra o se compacta, se vuelve aca — no al chat. Hay
 Regla: **marcar `hecho` solo con verificacion real** — tests que pasan, comando corrido,
 cosa vista en pantalla. No "deberia andar".
 
-Ultima actualizacion: 2026-09-21 — gate verde: `astro check` **0/0/0**, `npm test`
-**39/39**, `npm run build` 44 rutas. Esta sesion, nueve entregas seguidas — y con las dos
-ultimas **no queda ninguna pagina de contenido sin editor ni nada del borde sin pantalla**:
+Ultima actualizacion: 2026-09-21, cierre de sesion — gate verde: `astro check` **0/0/0**
+(119 archivos), `npm test` **39/39**, `npm run build` 44 rutas. `main` en produccion.
+
+**Retomar con:** *"Leer docs/TASKS.md y docs/INDEX.md. Implementar la spec 0048, despues la
+0045."* Las dos son disjuntas y no esperan a nadie. La 0049 necesita antes una decision del
+cliente (ver su seccion "Abierto").
+
+Esta sesion, nueve entregas y un plan — con las dos ultimas entregas **no queda ninguna
+pagina de contenido sin editor ni nada del borde sin pantalla**:
 
 1. **Spec 0036** — editores de Adultos y Crianças con galeria de largo libre y YouTube
    (ADR-0031, ADR-0032). Commiteado y desplegado: `main` en `e330802`, comprobado en las
@@ -191,23 +197,49 @@ SEO actual, mejorar GEO.
 de editores esta cerrado, y con la spec 0044 tambien lo esta el borde: **Ajustes** cubre el
 logo, el favicon, el color, el contacto, las redes y el pie.
 
-### Lo que sigue: desplegar, y despues ya no hay editores
+### Lo que sigue: cinco specs planificadas, ninguna implementada
 
-La spec 0043 cerro el recorrido. **Lo inmediato es el deploy** del commit de esta sesion y
-comprobarlo en produccion, como las siete veces anteriores: las cuatro paginas publicas de
-`/professor-*` en 200, "Percurso" legible, y `/admin/paginas/professor` en 200 con sesion
-temporal.
+El recorrido de editores esta cerrado. Lo que queda salio de una **auditoria del sitio
+publico** hecha el 2026-09-21 en las dos direcciones —del codigo al HTML y del HTML al
+contenido, sobre las 44 paginas construidas— para responder una pregunta del cliente: si
+edita todo desde el BO, *¿queda todo bien para SEO y GEO?*
 
-Las tres gotchas que la sesion anterior dejo anotadas, ya resueltas o decididas:
+La respuesta medida: **todo el texto si** —no hay un solo `seo.title`, parrafo, respuesta de
+FAQ ni `alt` que venga del codigo— pero hay seis cosas que editar no arregla. De ahi salen
+estas specs, **todas cerradas menos la ultima, y ninguna implementada**:
 
-1. **Los cinco textos del borde** estaban dentro de `TeacherView.astro`: pasaron a `chrome`
-   en el contenido, y el HTML construido no cambio ni un byte. Hecho.
-2. **El JSON-LD `Person` con `name: 'Pablo Durán'` escrito a mano**: se deja y se dice por
-   que (ADR-0039). No es texto de la pagina sino dato para buscadores, y el dia que el
-   profesor no sea Pablo el cambio es de ruta, no de campo.
-3. **El linaje duplicado con `/dojo`**: **no se unifico, y ahora los dos tienen editor**, o
-   sea que se pueden desincronizar. Es una decision de modelo de contenido —cual manda, o
-   si pasa a ser entidad como los dojos— y necesita su propia spec. Queda abierta.
+| Spec | Que | Disjunta | Bloqueada por |
+|---|---|---|---|
+| **0045** | Los 301 de las 38 URLs del Wix, `sitemap.xml` y el dominio | si | el DNS lo cambia el cliente (el resto no espera) |
+| **0046** | `og:image` e identidad del JSON-LD en Ajustes | no (con 0047) | — |
+| **0047** | Subida prefirmada a R2 + el video de la portada | no (con 0046) | — |
+| **0048** | Los dos `aria-label` traducidos y los acentos de los idiomas | si | — |
+| **0049** | El cierre de la Home al modal de contacto | si | **el formulario no envia**: hay que decidir |
+
+**Orden recomendado:** 0048 (quince minutos) → 0045 (lo que decide si el SEO cuenta) →
+0047 → 0046 → 0049.
+
+**Tres hallazgos de la auditoria que hay que tener a mano:**
+
+1. **Vercel corta el cuerpo de una funcion en 4,5 MB.** Medido contra produccion con un PNG
+   de 5,8 MB: `413 FUNCTION_PAYLOAD_TOO_LARGE`, antes de que corra una linea nuestra. El
+   campo de imagen **anuncia 10 MB** y ademas muestra un error de JavaScript en vez de un
+   mensaje, porque hace `res.json()` sobre una respuesta de texto plano. Es un defecto vivo,
+   no solo un obstaculo para el video (ADR-0044, spec 0047).
+2. **El sitemap del Wix miente por omision.** Lista 34 URLs y hay **tres paginas vivas mas**
+   —`/contactospt`, `/atualidadept`, `/enseignant-fr`— que responden 200 y no figuran. Por
+   eso el export de Search Console del cliente es parte del gate y no un extra
+   (`docs/design/10-inventario-wix.md`).
+3. **El host canonico es `www`, y esta medido**: el Wix hace `301` del apex a `www`. No es
+   una preferencia, es conservar donde esta la autoridad (ADR-0043).
+
+**Lo que el cliente confirmo en esta sesion:**
+
+- Las **ocho etiquetas del menu** se quedan en `i18n.ts`. No se convierten en contenido.
+- **"Dojo da Luz"** es marca y se queda en el codigo.
+- El **DNS** lo configura el cliente con el dueño del dominio "en unos dias".
+- El **cierre de la Home** abre el formulario de contacto en un modal **mobile first**.
+- El host canonico queda a criterio tecnico → medido → `www`.
 
 **La receta, ya probada tres veces.** Con el modulo generico, un editor nuevo es:
 
@@ -489,6 +521,11 @@ contraseña, sesion opaca en Neon.)*
 | 2026-09-21 | La captura de la Home no es determinista: es el video del hero | La comparacion pixel a pixel daba 864.704 pixeles distintos en las cuatro homes. **Capturando la misma pagina dos veces del mismo build** salio el mismo numero: el `<video>` del hero cae en un frame distinto cada vez. Sin ese control, el diff se habria leido como una regresion del cambio de colores. La banda `y 100–787` de las homes queda excluida y anotada, no explicada |
 | 2026-09-21 | El acento tenia tres derivados, no dos | La primera pasada cambio `#0099ff`, `#b3e5ff` y `#006eb8`. Repasando **todos** los hex del sitio publico con `b > r + 20` aparecieron cuatro mas —`#d6f0ff` ×3 y `#cceeff`— usados en antetitulos **sobre** el acento. Con un acento herrumbre habrian quedado celestes sobre fondo naranja, y ningun typecheck lo ve. Buscar la clase de casos y no los casos que ya conocia es lo que lo encontro |
 | 2026-09-21 | Deploy de la spec 0044 y la variante de 256 px contra R2 | `git push origin main` → `f932acc`; deployment `dojo-da-mtxc37cw5` ● Ready en 18 s. En produccion: `/`, `/dojo`, `/es`, `/fr`, `/en`, `/professor-pablo-duran` y `/contactos` en 200, todas con `html:root{--color-acento:#0099ff}`, la nota del pie, **0** `tel:` y **0** menciones al email de relleno, y 3 iconos de Facebook; `/admin/ajustes` sin cookie → 302 con `X-Robots-Tag`. Con sesion temporal contra produccion, un PNG de 1024x1024: `variante=icono` → `medios/5c12a7681bf3/w256.webp` (204 bytes), servido 200 como `image/webp` y medido con `sharp` en **256x256**; sin variante → `w1600.webp` (1952 bytes), clave distinta. Quedan los 3 objetos de la prueba en el bucket, sin referencias |
+| 2026-09-21 | Auditoria del sitio publico: que es editable y que esta hardcodeado | Dos pasadas sobre las 44 paginas construidas: del codigo al HTML (literales en plantillas, atributos y frontmatter de los 13 componentes publicos) y del HTML al contenido (`title`, `meta`, `og`, JSON-LD, `alt`, `aria-label` y nodos de texto cruzados contra **todos** los valores de `content/`, incluidas las uniones de listas). Resultado: **ni un** `seo.title`, `seo.description`, parrafo, respuesta de FAQ, `alt` ni linea de pie sale del codigo. Lo que si: el `ORG` del JSON-LD, el video del hero, `og:image` (no existe), las 8 etiquetas del menu, los 2 `aria-label`, los nombres de idioma sin acento, el `mailto:EMAIL-PENDENTE` y la marca |
+| 2026-09-21 | Crawl del Wix: 34 del sitemap, 3 fuera de el, 1 PDF | `robots.txt` no declara `Sitemap:`; `/sitemap.xml` → `/pages-sitemap.xml` → 34 URLs, **todas 200**, todas con `lastmod 2026-09-13` y **todas con `<html lang="es">`** (incluidas las portuguesas). Probadas a mano las rutas del doc 09: `/contactospt` ("Onde estamos"), `/atualidadept` ("Actualidade") y `/enseignant-fr` ("Pablo Durán") responden 200 y **no estan en el sitemap**; `/professeur-fr` da 404. El PDF de `/fr/aikido` sigue vivo: 6,7 MB. Catorce rutas plausibles mas, todas 404 |
+| 2026-09-21 | El host canonico del dominio real, medido | `http://aikido-duran.com` → 301 a `https://aikido-duran.com` → 301 a `https://www.aikido-duran.com` → 200. El Wix consolida en **`www`**, que es lo que ya dice `astro.config.mjs`. Y los 44 `canonical` apuntan hoy a URLs que **dan 404** en ese dominio: comprobado en `/aulas`, `/dojo` y `/professor-pablo-duran` |
+| 2026-09-21 | mistake→rule: el hook `acento-escrito.sh` | La primera pasada de la spec 0044 migro **tres** tonos del acento porque busque los tres que conocia; el cuarto aparecio al enumerar todos los hex y filtrar por una propiedad (`b > r + 20`). Ahora lo chequea un hook `PostToolUse` sobre `src/components/*.astro` y `src/layouts/*.astro`, que excluye el BO (se queda azul por el ADR-0041) y `global.css` (define el token). Probado con tres casos: componente publico limpio pasa, formulario del BO pasa, componente publico con `#b3e5ff` **falla con exit 2** |
+| 2026-09-21 | mistake→rule: el piso de ruido de una comparacion | Las cuatro homes daban 864.704 pixeles distintos y parecia una regresion del cambio de colores; era el video del hero, que cae en otro fotograma por captura. Se detecto capturando **el mismo build dos veces**. Es advisory —no se chequea con un comando— asi que fue a `CLAUDE.md` |
 
 ## Descartado (y por que)
 

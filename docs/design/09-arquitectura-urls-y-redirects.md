@@ -3,7 +3,13 @@
 Documento operativo para migrar `https://www.aikido-duran.com/` desde Wix a la nueva
 web Astro. Define la arquitectura objetivo y el destino conceptual de las URLs antiguas.
 
-> Este mapa no se activa hasta que exista y haya sido verificado el destino. Antes del
+> **Superseded en los datos por `10-inventario-wix.md` (2026-09-21).** Ese documento trae el
+> crawl real: 34 URLs del sitemap + 3 paginas vivas que el sitemap no lista + el PDF, y
+> **corrige tres destinos de este mapa** —`/parcerias`, `/enlaces-es` y `/links-fr`, que
+> apuntaban a anchors inexistentes en `/dojo` cuando la rejilla de parceiros vive en la
+> Home—. Este documento sigue siendo el diseño y las reglas tecnicas; el 10 es el dato.
+>
+> > Este mapa no se activa hasta que exista y haya sido verificado el destino. Antes del
 > lanzamiento se cruza nuevamente contra el sitemap de Wix, el crawl de 34 URLs y el
 > export de Search Console. Las rutas marcadas **por confirmar** no deben convertirse en
 > reglas de producción basándose solamente en su nombre probable.

@@ -146,6 +146,14 @@ editor: es el dev server. Comproba **primero el archivo en `content/`** y, si va
 HTML, pedilo en un bucle hasta que coincida (`for i in 1 2 3; do curl …; done`) en vez de
 concluir con la primera respuesta.
 
+**Una comparacion de capturas necesita su piso de ruido antes de leerse.** El 2026-09-21 la
+verificacion de la spec 0044 comparo las 44 paginas pixel a pixel y las cuatro homes daban
+**864.704 pixeles distintos**: parecia que el cambio de colores habia roto la portada.
+Capturando **dos veces el mismo build** salio el mismo numero — es el `<video>` del hero, que
+cae en un fotograma distinto en cada captura. La regla general: cuando el oraculo es una
+medicion, **medi primero cuanto se mueve sola** y recien despues leé la diferencia. Sin ese
+control se reporta una regresion que no existe, o peor, se "arregla".
+
 **Las reglas verificables van en hooks, no aca.** Los hooks corren fuera del contexto,
 cuestan cero tokens y son deterministas; este archivo es advisory. Si una regla se puede
 chequear con un comando, es un hook — no la escribas aca tambien.
