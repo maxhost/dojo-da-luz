@@ -130,8 +130,14 @@ en 200 con los tres profesores, el linaje y el bloque de Pablo. Sin cookie,
      azul, el logo reemplazo el circulo dejando el nombre, vaciar Facebook saco el icono de
      las tres posiciones, el telefono y el email aparecieron en el pie **y** en el JSON-LD, y
      sacar Encarnação del pie portugues cambio las once paginas de una publicacion.
-   - **Pendiente de deploy**, y con el la unica verificacion que no se puede hacer local:
-     **la subida a R2 de un logo de 256 px** (las claves de R2 solo estan en produccion).
+   - Desplegada en `f932acc` (deployment `dojo-da-mtxc37cw5`, Ready en 18 s) y comprobada
+     en produccion: las siete rutas miradas en 200 con `html:root{--color-acento:#0099ff}`,
+     el pie con su nota, **cero `tel:` y cero `ola@dojodaluz.example`**, los tres iconos de
+     Facebook, y `/admin/ajustes` sin cookie → 302 con `X-Robots-Tag`.
+   - **La subida de 256 px quedo verificada contra R2 en produccion**: un PNG de 1024 px
+     subido con `variante=icono` quedo en `medios/<hash>/w256.webp`, el dominio publico lo
+     sirve en 200 y medido con `sharp` da **256x256**; el mismo archivo sin variante fue a
+     `w1600.webp` — dos claves, ninguna pisa a la otra.
 
 **Y una noticia que llego sola: `publicarVarios` ya corrio contra GitHub.** El push del
 editor de `/aikido` fue rechazado por no-fast-forward porque `origin/main` tenia el commit
@@ -482,6 +488,7 @@ contraseña, sesion opaca en Neon.)*
 | 2026-09-21 | Spec 0044 + ADR-0041/0042 — la pantalla de ajustes del sitio | `astro check` 119 archivos 0/0/0, `npm test` 39/39, build 44 rutas. **Capturas de las 44 paginas antes/despues comparadas pixel a pixel**: 23 solo con el tono claro corrido 5/255 en un canal, 21 ademas con el segundo renglon del pie 4 px mas abajo (eran dos valores distintos para el mismo bloque, unificados), **0 inesperadas**. Contra el BO corriendo: la pantalla con sus cuatro bloques, dos campos de imagen de 256 px, un selector de color y cuatro areas de pie; sin cambios → "no habia cambios"; hex invalido → 422 nombrando el campo; `sha` viejo → 409; acento `#b34700` → los cuatro tonos siguieron al color (`#b34700`, `#e8c8b3`, `#813300`) y **cero pixeles de los tres azules viejos**, con el BO todavia azul; logo puesto → `<img>` en lugar del circulo con el nombre intacto; Facebook vacio → 0 iconos en las tres posiciones y Instagram en 3; telefono y email → en el pie y en el JSON-LD (un solo bloque, parseable, con `telephone`, `email` y `sameAs`); Encarnação fuera del pie portugues → las once paginas portuguesas en una publicacion |
 | 2026-09-21 | La captura de la Home no es determinista: es el video del hero | La comparacion pixel a pixel daba 864.704 pixeles distintos en las cuatro homes. **Capturando la misma pagina dos veces del mismo build** salio el mismo numero: el `<video>` del hero cae en un frame distinto cada vez. Sin ese control, el diff se habria leido como una regresion del cambio de colores. La banda `y 100–787` de las homes queda excluida y anotada, no explicada |
 | 2026-09-21 | El acento tenia tres derivados, no dos | La primera pasada cambio `#0099ff`, `#b3e5ff` y `#006eb8`. Repasando **todos** los hex del sitio publico con `b > r + 20` aparecieron cuatro mas —`#d6f0ff` ×3 y `#cceeff`— usados en antetitulos **sobre** el acento. Con un acento herrumbre habrian quedado celestes sobre fondo naranja, y ningun typecheck lo ve. Buscar la clase de casos y no los casos que ya conocia es lo que lo encontro |
+| 2026-09-21 | Deploy de la spec 0044 y la variante de 256 px contra R2 | `git push origin main` → `f932acc`; deployment `dojo-da-mtxc37cw5` ● Ready en 18 s. En produccion: `/`, `/dojo`, `/es`, `/fr`, `/en`, `/professor-pablo-duran` y `/contactos` en 200, todas con `html:root{--color-acento:#0099ff}`, la nota del pie, **0** `tel:` y **0** menciones al email de relleno, y 3 iconos de Facebook; `/admin/ajustes` sin cookie → 302 con `X-Robots-Tag`. Con sesion temporal contra produccion, un PNG de 1024x1024: `variante=icono` → `medios/5c12a7681bf3/w256.webp` (204 bytes), servido 200 como `image/webp` y medido con `sharp` en **256x256**; sin variante → `w1600.webp` (1952 bytes), clave distinta. Quedan los 3 objetos de la prueba en el bucket, sin referencias |
 
 ## Descartado (y por que)
 

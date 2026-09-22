@@ -177,11 +177,18 @@ con Chrome headless contra el build servido.
       viejo → **409** sin pisar nada.
 - [x] Sin cookie, `/admin/ajustes` → 302 con `X-Robots-Tag` (el guard es el del middleware).
 
-**Lo que no se pudo verificar local:** la subida a R2 del logo y el favicon. Las claves de R2
-solo existen en Vercel (`vercel env ls` las lista en Production), asi que el endpoint
-contesta `Falta configurar R2` en `astro dev`. El plumbing de la variante **si** esta
-comprobado —el endpoint la acepta y el campo la manda— y **la WebP de 256 px se verifica en
-produccion despues del deploy**, que es donde vive la credencial.
+**La subida de 256 px, verificada en produccion** (no se puede local: las claves de R2 solo
+existen en Vercel, asi que en `astro dev` el endpoint contesta `Falta configurar R2`). Con
+una sesion temporal contra `dojo-da-luz.vercel.app` y un PNG de 1024x1024:
+
+- `variante=icono` → `medios/5c12a7681bf3/w256.webp`, **204 bytes**, y el dominio publico lo
+  sirve con `200` y `image/webp`. Bajado y medido con `sharp`: **256x256**.
+- **el mismo archivo sin variante** → `medios/5c12a7681bf3/w1600.webp`, 1952 bytes. Son dos
+  objetos con dos claves: el ancho va en la clave, asi que subir una imagen como icono no
+  pisa la version de foto ni al reves.
+
+Quedan en el bucket los tres objetos de esa prueba (`original.png`, `w256.webp`, `w1600.webp`
+bajo `medios/5c12a7681bf3/`), sin referencias desde el contenido.
 
 ## Encontrado al verificar, y no arreglado aca
 
