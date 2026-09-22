@@ -50,6 +50,8 @@ desactualizado es peor que no tenerlo.
 | [0038](adr/0038-contacto-desde-la-entidad.md) | 2026-09-21 | Las sedes de /contactos salen de la entidad de dojos y `contact.venues` se borra; solo queda como se llega, traducible e indexado por slug | aceptada | `docs/adr/0038-contacto-desde-la-entidad.md` |
 | [0039](adr/0039-professor-al-molde.md) | 2026-09-21 | `/professor` entra al molde: los cinco textos del borde pasan al contenido y sus cinco listas —Percurso incluido— son de largo libre | aceptada | `docs/adr/0039-professor-al-molde.md` |
 | [0040](adr/0040-titulo-sobre-fondo-oscuro.md) | 2026-09-21 | Un `.section-title` dentro de una seccion `text-white` hereda su color; el titulo invisible deja de poder repetirse | aceptada | `docs/adr/0040-titulo-sobre-fondo-oscuro.md` |
+| [0041](adr/0041-acento-como-token.md) | 2026-09-21 | El acento es un token del tema con tres tonos calculados por `color-mix`, no un hex escrito 74 veces; el BO no sigue el color | aceptada | `docs/adr/0041-acento-como-token.md` |
+| [0042](adr/0042-ajustes-del-sitio.md) | 2026-09-21 | Logo, favicon, acento, contacto, redes y el pie salen de `content/site.json` y se editan en una pantalla; `chrome.footerNote` se borra de los 44 archivos | aceptada | `docs/adr/0042-ajustes-del-sitio.md` |
 
 ## Specs — que se construye
 
@@ -98,6 +100,7 @@ desactualizado es peor que no tenerlo.
 | [0041](specs/0041-editor-escolas.md) | 2026-09-21 | Editor de /escolas: portada, bloque de comunidad y la galeria convertida en lista de medios de largo libre con fotos y videos de YouTube | cerrada | no | `src/pages/admin/paginas/escolas.astro`, `src/components/admin/FormularioEscolas.astro`, `src/lib/{escolas-edicion,schemas,traduccion}.ts`, `src/components/{SchoolsView,GaleriaMedios}.astro`, `content/*/schools.json` |
 | [0042](specs/0042-editor-contactos.md) | 2026-09-21 | Editor de /contactos: textos, etiquetas del formulario y como llegar; las sedes pasan a salir de la entidad de dojos | cerrada | no | `src/pages/admin/paginas/contactos.astro`, `src/components/admin/FormularioContactos.astro`, `src/lib/{contactos-edicion,schemas,traduccion}.ts`, `src/components/ContactView.astro`, `content/*/contact.json` |
 | [0043](specs/0043-editor-professor.md) | 2026-09-21 | Editor de `/professor-pablo-duran` con Percurso como listado de largo libre, y el titulo invisible de esa seccion arreglado en el CSS | cerrada | no | `src/pages/admin/paginas/professor.astro`, `src/components/admin/FormularioProfessor.astro`, `src/lib/{professor-edicion,schemas,traduccion}.ts`, `src/components/TeacherView.astro`, `src/styles/global.css`, `content/*/teacher.json` |
+| [0044](specs/0044-ajustes-del-sitio.md) | 2026-09-21 | Pantalla `/admin/ajustes`: logo, favicon, color de acento, contacto, redes y el pie; el acento pasa a token y el pie sale de los 44 archivos de contenido | cerrada | no | `src/pages/admin/ajustes.astro`, `src/components/admin/{FormularioAjustes,CampoColor}.astro`, `src/lib/{ajustes,ajustes-edicion,medios,schemas,site}.ts`, `src/layouts/Base.astro`, `src/components/**`, `src/styles/global.css`, `content/site.json`, `content/*/*.json` |
 
 **"Disjunta?"** = si el trabajo no comparte archivos con otra spec abierta. Es lo que
 habilita paralelizar. Lo decide la spec, no el orquestador en runtime.

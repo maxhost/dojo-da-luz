@@ -82,12 +82,10 @@ const seccion = 'mt-8 border border-[#d7cec0] bg-[#fbf8f2] p-4'
   </fieldset>
 
   <fieldset class={seccion}>
-    <legend class="px-2 text-sm font-semibold">Cabecera y pie</legend>
+    <legend class="px-2 text-sm font-semibold">Cabecera</legend>
     <CampoTexto idPrefijo={locale} nombre="chrome.caption" etiqueta="Bajada del logo" valor={v('chrome.caption')} error={e('chrome.caption')} requerido />
     <CampoTexto idPrefijo={locale} nombre="chrome.menuLabel" etiqueta="Botón de menú" valor={v('chrome.menuLabel')} error={e('chrome.menuLabel')} requerido />
     <CampoTexto idPrefijo={locale} nombre="chrome.skipLink" etiqueta="Saltar al contenido" valor={v('chrome.skipLink')} error={e('chrome.skipLink')} requerido />
-    <CampoTexto idPrefijo={locale} nombre="chrome.footerNote.areas" etiqueta="Pie · zonas" valor={v('chrome.footerNote.areas')} error={e('chrome.footerNote.areas')} requerido />
-    <CampoTexto idPrefijo={locale} nombre="chrome.footerNote.orgType" etiqueta="Pie · tipo de organización" valor={v('chrome.footerNote.orgType')} error={e('chrome.footerNote.orgType')} requerido />
 
     <p class="mt-6 text-xs text-[#625c55]">
       El menú de la página no se edita desde acá: sus cuatro enlaces apuntan a secciones de

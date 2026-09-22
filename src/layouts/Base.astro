@@ -1,6 +1,7 @@
 ---
 import Seo from '../components/Seo.astro'
 import SocialLinks from '../components/SocialLinks.astro'
+import { getAjustes } from '../lib/ajustes'
 import { LOCALES, LOCALE_ICON, LOCALE_NAME, HREFLANG, pathFor, type Locale, type PageKey } from '../lib/i18n'
 import '../styles/global.css'
 
@@ -17,6 +18,21 @@ interface Props {
 
 const { page, locale, title, description, skipLink = 'Saltar para o conteúdo', nav = [], menuLabel = 'Menu', caption = 'Aikido · Lisboa' } = Astro.props
 const year = new Date().getFullYear()
+
+// El logo, el favicon, el acento, el contacto, las redes y el pie son de las 44 paginas,
+// no de una (ADR-0042): salen de content/site.json y se editan en /admin/ajustes.
+const { marca, contacto, pie } = getAjustes()
+
+// El pie de cada idioma, y la direccion: lo que este vacio no se pinta.
+const lineasPie = pie[locale]
+const hayContacto = Boolean(contacto.telefono || contacto.email || contacto.direccion)
+
+/**
+ * El acento del contenido pisa el token del tema. `html:root` en vez de `:root` a proposito:
+ * con `:root` solo empataria en especificidad con lo que emite Tailwind y el resultado
+ * dependeria del orden en que Astro inyecte el CSS (ADR-0041).
+ */
+const estiloAcento = `html:root{--color-acento:${marca.acento}}`
 ---
 
 <!doctype html>
@@ -27,17 +43,20 @@ const year = new Date().getFullYear()
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;500;700&display=swap" rel="stylesheet" />
-    <Seo page={page} locale={locale} title={title} description={description} />
+    <Seo page={page} locale={locale} title={title} description={description} favicon={marca.favicon} />
+    <style is:inline set:html={estiloAcento}></style>
     <slot name="head" />
     <style is:inline>summary::-webkit-details-marker{display:none}</style>
   </head>
   <body class="m-0 min-h-screen bg-[#f6f1e8] font-sans text-[#211f1c] antialiased">
     <a href="#conteudo" class="sr-only focus:not-sr-only">{skipLink}</a>
 
-    <header class="relative z-30 border-b-4 border-[#0099ff] bg-[#fffdf9]">
+    <header class="relative z-30 border-b-4 border-acento bg-[#fffdf9]">
       <div class="flex min-h-24 w-full items-center justify-between gap-5 px-5 py-4 md:px-10 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:gap-4">
         <a href={pathFor('home', locale)} class="flex items-center gap-4 no-underline lg:justify-self-start">
-          <span aria-hidden="true" class="grid size-14 place-items-center rounded-full border-2 border-[#0099ff] font-serif text-lg font-bold text-[#0099ff]">合気</span>
+          {marca.logo
+            ? <img src={marca.logo} alt="" class="size-14 shrink-0 object-contain" width="56" height="56" />
+            : <span aria-hidden="true" class="grid size-14 place-items-center rounded-full border-2 border-acento font-serif text-lg font-bold text-acento">合気</span>}
           <span>
             <strong class="font-oxanium block text-xl font-bold leading-none md:text-2xl">Dojo da Luz</strong>
             <span class="mt-1 block text-[.68rem] font-bold uppercase tracking-[.18em] text-[#746d64]">{caption}</span>
@@ -46,26 +65,26 @@ const year = new Date().getFullYear()
 
         <nav aria-label="Principal" class="hidden lg:block lg:justify-self-center">
           <ul class="font-oxanium flex list-none items-center gap-4 p-0 text-sm font-medium">
-            {nav.map((item) => <li><a class="hover:text-[#0099ff]" href={item.href}>{item.label}</a></li>)}
+            {nav.map((item) => <li><a class="hover:text-acento" href={item.href}>{item.label}</a></li>)}
           </ul>
         </nav>
 
         <div class="hidden items-center gap-4 lg:flex lg:justify-self-end">
           <nav aria-label="Idioma" class="flex items-center gap-1 border-l border-[#d7cec0] pl-5">
             {LOCALES.map((l) => l === locale
-              ? <span aria-current="page" aria-label={LOCALE_NAME[l]} title={LOCALE_NAME[l]} class="grid size-9 place-items-center rounded-full border border-[#0099ff] bg-[#f6f1e8] text-lg"><span aria-hidden="true">{LOCALE_ICON[l]}</span></span>
+              ? <span aria-current="page" aria-label={LOCALE_NAME[l]} title={LOCALE_NAME[l]} class="grid size-9 place-items-center rounded-full border border-acento bg-[#f6f1e8] text-lg"><span aria-hidden="true">{LOCALE_ICON[l]}</span></span>
               : <a href={pathFor(page, l)} hreflang={HREFLANG[l]} lang={HREFLANG[l]} aria-label={LOCALE_NAME[l]} title={LOCALE_NAME[l]} class="grid size-9 place-items-center rounded-full border border-transparent text-lg hover:border-[#d7cec0]"><span aria-hidden="true">{LOCALE_ICON[l]}</span><span class="sr-only">{LOCALE_NAME[l]}</span></a>)}
           </nav>
           <SocialLinks class="border-l border-[#d7cec0] pl-5" />
         </div>
 
         <details class="relative lg:hidden">
-          <summary class="cursor-pointer list-none border border-[#0099ff] px-4 py-2 text-sm font-bold uppercase tracking-wider text-[#0099ff]">{menuLabel}</summary>
+          <summary class="cursor-pointer list-none border border-acento px-4 py-2 text-sm font-bold uppercase tracking-wider text-acento">{menuLabel}</summary>
           <div class="absolute right-0 top-12 w-64 border border-[#d7cec0] bg-[#fffdf9] p-6 shadow-xl">
             <nav aria-label="Principal"><ul class="font-oxanium space-y-4 p-0 text-xl font-medium">{nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}</ul></nav>
             <nav aria-label="Idioma" class="mt-6 flex items-center gap-2 border-t border-[#d7cec0] pt-5">
               {LOCALES.map((l) => l === locale
-                ? <span aria-current="page" aria-label={LOCALE_NAME[l]} title={LOCALE_NAME[l]} class="grid size-10 place-items-center rounded-full border border-[#0099ff] bg-[#f6f1e8] text-xl"><span aria-hidden="true">{LOCALE_ICON[l]}</span></span>
+                ? <span aria-current="page" aria-label={LOCALE_NAME[l]} title={LOCALE_NAME[l]} class="grid size-10 place-items-center rounded-full border border-acento bg-[#f6f1e8] text-xl"><span aria-hidden="true">{LOCALE_ICON[l]}</span></span>
                 : <a href={pathFor(page, l)} hreflang={HREFLANG[l]} lang={HREFLANG[l]} aria-label={LOCALE_NAME[l]} title={LOCALE_NAME[l]} class="grid size-10 place-items-center rounded-full border border-transparent text-xl hover:border-[#d7cec0]"><span aria-hidden="true">{LOCALE_ICON[l]}</span><span class="sr-only">{LOCALE_NAME[l]}</span></a>)}
             </nav>
             <SocialLinks class="mt-5 border-t border-[#d7cec0] pt-5" />
@@ -80,11 +99,18 @@ const year = new Date().getFullYear()
       <div class="site-shell flex flex-wrap items-start justify-between gap-8">
         <div><p class="font-oxanium text-xl font-bold">Dojo da Luz</p><p class="mt-2 text-sm text-white/55">&copy; {year}</p></div>
         <div class="flex flex-wrap items-start gap-8">
-          <slot name="footer-note" />
-          <address class="not-italic text-sm leading-6 text-white/70">
-            <a class="block hover:text-[#0099ff]" href="tel:+351000000000">+351 000 000 000</a>
-            <a class="block hover:text-[#0099ff]" href="mailto:ola@dojodaluz.example">ola@dojodaluz.example</a>
-          </address>
+          {lineasPie.length > 0 && (
+            <p class="text-sm leading-6 text-white/65">
+              {lineasPie.map((linea, i) => <>{i > 0 && <br />}{linea}</>)}
+            </p>
+          )}
+          {hayContacto && (
+            <address class="not-italic text-sm leading-6 text-white/70">
+              {contacto.telefono && <a class="block hover:text-acento" href={`tel:${(contacto.telefonoEnlace ?? contacto.telefono).replace(/\s+/g, '')}`}>{contacto.telefono}</a>}
+              {contacto.email && <a class="block hover:text-acento" href={`mailto:${contacto.email}`}>{contacto.email}</a>}
+              {contacto.direccion && <span class="block">{contacto.direccion}</span>}
+            </address>
+          )}
           <SocialLinks class="text-white/70" />
         </div>
       </div>

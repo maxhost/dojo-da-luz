@@ -78,18 +78,10 @@ const campo = (nombre: string, etiqueta: string, extra: Record<string, unknown> 
   </fieldset>
 
   <fieldset class={seccion}>
-    <legend class="px-2 text-sm font-semibold">Cabecera y pie</legend>
+    <legend class="px-2 text-sm font-semibold">Cabecera</legend>
     <CampoTexto {...campo('chrome.caption', 'Bajada del logo')} />
     <CampoTexto {...campo('chrome.menuLabel', 'Botón de menú')} />
     <CampoTexto {...campo('chrome.skipLink', 'Saltar al contenido')} />
-
-    <p class="mt-6 text-xs text-[#625c55]">
-      El menú de arriba no se edita desde acá: sus ocho enlaces son las páginas del sitio y
-      se llaman igual en todas. El pie sí.
-    </p>
-
-    <CampoTexto {...campo('chrome.footerNote.areas', 'Pie · zonas')} />
-    <CampoTexto {...campo('chrome.footerNote.orgType', 'Pie · tipo de organización')} />
   </fieldset>
 
   <fieldset class={seccion}>

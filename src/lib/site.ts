@@ -1,3 +1,4 @@
+import { getAjustes } from './ajustes'
 import { getDojos, type Dojo } from './dojos'
 import type { Dia } from './i18n'
 
@@ -6,9 +7,9 @@ import type { Dia } from './i18n'
  *
  * Los barrios y las sedes salen de content/dojos.json (ADR-0017), no de aca.
  *
- * PENDIENTE DEL CLIENTE: moradas completas, telefono, email y URLs de redes.
- * El sitio actual no publica ninguna direccion postal — solo los barrios. No se
- * inventan: para SEO local un NAP incorrecto es peor que uno ausente.
+ * El telefono, el email y las redes salen de `content/site.json` (ADR-0042) y **solo
+ * entran al marcado si estan cargados**: para SEO local un NAP incorrecto es peor que uno
+ * ausente. Las moradas completas siguen en la ficha de cada dojo.
  */
 export const ORG = {
   name: 'Dojo da Luz',
@@ -62,6 +63,9 @@ function locationJsonLd(dojo: Dojo) {
 }
 
 export function sportsClubJsonLd(siteUrl: string) {
+  const { contacto, redes } = getAjustes()
+  const perfiles = [redes.facebook, redes.instagram].filter((url): url is string => url !== null)
+
   return {
     '@context': 'https://schema.org',
     '@type': 'SportsClub',
@@ -69,6 +73,9 @@ export function sportsClubJsonLd(siteUrl: string) {
     alternateName: ORG.alternateName,
     url: siteUrl,
     sport: ORG.sport,
+    ...(contacto.telefono ? { telephone: contacto.telefonoEnlace ?? contacto.telefono } : {}),
+    ...(contacto.email ? { email: contacto.email } : {}),
+    ...(perfiles.length > 0 ? { sameAs: perfiles } : {}),
     address: {
       '@type': 'PostalAddress',
       addressLocality: ORG.city,

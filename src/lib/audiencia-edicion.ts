@@ -66,10 +66,6 @@ export function audienciaDesdeForm(form: FormData): unknown {
       caption: t('chrome.caption'),
       menuLabel: t('chrome.menuLabel'),
       skipLink: t('chrome.skipLink'),
-      footerNote: {
-        areas: t('chrome.footerNote.areas'),
-        orgType: t('chrome.footerNote.orgType'),
-      },
     },
     eyebrow: t('eyebrow'),
     title: t('title'),

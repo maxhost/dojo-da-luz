@@ -6,11 +6,7 @@
   "chrome": {
     "caption": "Aikido · Lisboa",
     "menuLabel": "Menu",
-    "skipLink": "Saltar para o conteúdo",
-    "footerNote": {
-      "areas": "Benfica · Lumiar · Encarnação",
-      "orgType": "Associação sem fins lucrativos"
-    }
+    "skipLink": "Saltar para o conteúdo"
   },
   "eyebrow": "Aikido para adultos",
   "title": "Uma prática para a vida.",

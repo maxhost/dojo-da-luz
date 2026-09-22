@@ -11,11 +11,7 @@
   "chrome": {
     "caption": "Aikido · Lisboa",
     "menuLabel": "Menú",
-    "skipLink": "Saltar al contenido",
-    "footerNote": {
-      "areas": "Benfica · Lumiar",
-      "orgType": "Asociación sin fines de lucro"
-    }
+    "skipLink": "Saltar al contenido"
   },
   "hero": {
     "eyebrowLines": [

@@ -6,11 +6,7 @@
   "chrome": {
     "caption": "Aikido · Lisbon",
     "menuLabel": "Menu",
-    "skipLink": "Skip to content",
-    "footerNote": {
-      "areas": "Benfica · Lumiar · Encarnação",
-      "orgType": "Non-profit association"
-    }
+    "skipLink": "Skip to content"
   },
   "eyebrow": "Other arts",
   "title": "Three practices, one shared inquiry.",

@@ -1,16 +1,28 @@
 ---
+import { getAjustes } from '../lib/ajustes'
+
+/**
+ * Las dos URLs estaban escritas aca (spec 0044): ahora salen de `content/site.json` y se
+ * editan en `/admin/ajustes`.
+ *
+ * **Sin URL no hay icono.** Un perfil que no se verifico no se publica (ADR-0014), y la
+ * forma de no publicarlo es dejar el campo vacio, no un enlace a ninguna parte.
+ */
+
 interface Props { class?: string }
 const { class: className = '' } = Astro.props
+const { redes } = getAjustes()
 const socialLinks = [
-  { name: 'Facebook', href: 'https://www.facebook.com/aikidopabloduran/', icon: 'facebook' },
-  { name: 'Instagram', href: 'https://www.instagram.com/dojodaluz/', icon: 'instagram' },
-]
+  { name: 'Facebook', href: redes.facebook, icon: 'facebook' },
+  { name: 'Instagram', href: redes.instagram, icon: 'instagram' },
+].filter((social): social is { name: string; href: string; icon: string } => social.href !== null)
 ---
 
+{socialLinks.length > 0 && (
 <ul class:list={['m-0 flex list-none items-center gap-2 p-0', className]}>
   {socialLinks.map((social) => (
     <li>
-      <a href={social.href} target="_blank" rel="me noopener noreferrer" aria-label={`${social.name} — Dojo da Luz`} title={social.name} class="grid size-9 place-items-center rounded-full border border-current transition-colors hover:border-[#0099ff] hover:text-[#0099ff]">
+      <a href={social.href} target="_blank" rel="me noopener noreferrer" aria-label={`${social.name} — Dojo da Luz`} title={social.name} class="grid size-9 place-items-center rounded-full border border-current transition-colors hover:border-acento hover:text-acento">
         {social.icon === 'facebook' ? (
           <svg aria-hidden="true" viewBox="0 0 24 24" class="size-4 fill-current"><path d="M13.5 22v-9h3l.45-3.5H13.5V7.27c0-1.01.28-1.7 1.73-1.7H17V2.44A23.8 23.8 0 0 0 14.39 2C11.8 2 10 3.58 10 6.48V9.5H7V13h3v9h3.5Z" /></svg>
         ) : (
@@ -21,3 +33,4 @@ const socialLinks = [
     </li>
   ))}
 </ul>
+)}

@@ -1,0 +1,158 @@
+---
+import CampoColor from './CampoColor.astro'
+import CampoImagen from './CampoImagen.astro'
+import CampoTexto from './CampoTexto.astro'
+import { errorDe } from '../../lib/forms'
+import { LOCALES, LOCALE_NAME } from '../../lib/i18n'
+import type { Ajustes } from '../../lib/ajustes'
+
+/**
+ * Los ajustes del sitio (spec 0044). **La unica pantalla sin pestañas de idioma**: un
+ * telefono, un logo y un color no se traducen.
+ *
+ * Lo unico por idioma es el pie, y van los cuatro recuadros a la vista al mismo tiempo,
+ * porque se publican juntos en un solo commit.
+ */
+
+interface Props {
+  ajustes: Ajustes
+  errores: Record<string, string>
+  sha: string
+}
+
+const { ajustes, errores, sha } = Astro.props
+const e = (ruta: string) => errorDe(errores, ruta)
+
+const seccion = 'mt-8 border border-[#d7cec0] bg-[#fbf8f2] p-4'
+---
+
+<form method="post">
+  <input type="hidden" name="sha" value={sha} />
+
+  <fieldset class={seccion}>
+    <legend class="px-2 text-sm font-semibold">01 · Marca</legend>
+
+    <CampoImagen
+      nombre="marca.logo"
+      etiqueta="Logo"
+      valor={ajustes.marca.logo ?? ''}
+      errores={errores}
+      requerido={false}
+      variante="icono"
+      ayuda="Va en la esquina de arriba a la izquierda y reemplaza el círculo con 合気. El nombre «Dojo da Luz» sigue al lado. Sin logo, queda el círculo."
+    />
+
+    <CampoImagen
+      nombre="marca.favicon"
+      etiqueta="Favicon"
+      valor={ajustes.marca.favicon ?? ''}
+      errores={errores}
+      requerido={false}
+      variante="icono"
+      ayuda="El ícono chico de la pestaña del navegador. Cuadrado y simple: se ve a 32 píxeles."
+    />
+
+    <CampoColor
+      nombre="marca.acento"
+      etiqueta="Color de acento"
+      valor={ajustes.marca.acento}
+      error={e('marca.acento')}
+      ayuda="El color de los botones, los antetítulos y los bordes de todo el sitio. Los tonos claro y oscuro de la marca se calculan de este."
+    />
+
+    <p class="mt-3 text-xs text-[#625c55]">
+      El color cambia las <strong>44 páginas</strong> del sitio de una sola vez. El
+      backoffice no lo usa: sigue siendo azul.
+    </p>
+  </fieldset>
+
+  <fieldset class={seccion}>
+    <legend class="px-2 text-sm font-semibold">02 · Contacto</legend>
+    <p class="text-xs text-[#625c55]">
+      Va en el pie de las 44 páginas. <strong>Lo que quede vacío no se muestra</strong>, y es
+      la opción correcta mientras no haya un dato real: un teléfono inventado es peor que
+      ninguno.
+    </p>
+
+    <CampoTexto
+      nombre="contacto.telefono"
+      etiqueta="Teléfono"
+      valor={ajustes.contacto.telefono ?? ''}
+      error={e('contacto.telefono')}
+      ayuda="Como se lee, con espacios: +351 912 345 678"
+    />
+    <CampoTexto
+      nombre="contacto.telefonoEnlace"
+      etiqueta="Teléfono para el enlace"
+      valor={ajustes.contacto.telefonoEnlace ?? ''}
+      error={e('contacto.telefonoEnlace')}
+      ayuda="Lo que marca el teléfono al tocarlo, sin espacios: +351912345678. Vacío: se usa el de arriba."
+    />
+    <CampoTexto
+      nombre="contacto.email"
+      etiqueta="Email"
+      valor={ajustes.contacto.email ?? ''}
+      error={e('contacto.email')}
+    />
+    <CampoTexto
+      nombre="contacto.direccion"
+      etiqueta="Dirección"
+      valor={ajustes.contacto.direccion ?? ''}
+      error={e('contacto.direccion')}
+      ayuda="Una línea. Las direcciones de cada sede se cargan en «Dojos», no acá."
+    />
+  </fieldset>
+
+  <fieldset class={seccion}>
+    <legend class="px-2 text-sm font-semibold">03 · Redes</legend>
+    <p class="text-xs text-[#625c55]">
+      Los dos íconos de la cabecera y del pie. <strong>Sin dirección no hay ícono</strong>:
+      así se saca una red del sitio sin dejar un enlace a ninguna parte.
+    </p>
+
+    <CampoTexto
+      nombre="redes.facebook"
+      etiqueta="Facebook"
+      valor={ajustes.redes.facebook ?? ''}
+      error={e('redes.facebook')}
+      ayuda="La dirección completa del perfil, empezando con https://"
+    />
+    <CampoTexto
+      nombre="redes.instagram"
+      etiqueta="Instagram"
+      valor={ajustes.redes.instagram ?? ''}
+      error={e('redes.instagram')}
+      ayuda="La dirección completa del perfil, empezando con https://"
+    />
+  </fieldset>
+
+  <fieldset class={seccion}>
+    <legend class="px-2 text-sm font-semibold">04 · Pie de página</legend>
+    <p class="text-xs text-[#625c55]">
+      Las líneas que van en el pie, <strong>una por renglón</strong>. Antes estaban escritas
+      en cada página y había que cambiarlas diez veces; ahora se escriben acá y cambian en
+      las 44. Vacío: el pie no muestra nada.
+    </p>
+
+    <div class="mt-4 grid gap-4 md:grid-cols-2">
+      {LOCALES.map((locale) => (
+        <CampoTexto
+          nombre={`pie.${locale}`}
+          etiqueta={LOCALE_NAME[locale]}
+          valor={ajustes.pie[locale].join('\n')}
+          error={e(`pie.${locale}`)}
+          tipo="area"
+          filas={3}
+        />
+      ))}
+    </div>
+  </fieldset>
+
+  <button class="mt-8 bg-[#0099ff] px-6 py-3 font-semibold text-white" type="submit">
+    Publicar ajustes
+  </button>
+  <p class="mt-2 text-xs text-[#625c55]">
+    Un solo guardado para todo el sitio: no hay pestañas de idioma porque un teléfono, un
+    logo y un color no se traducen.
+  </p>
+</form>

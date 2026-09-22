@@ -16,6 +16,14 @@ import { configR2, existe, listar, subir, urlPublica } from './r2'
 
 export const PREFIJO = 'medios/'
 export const ANCHO_MAXIMO = 1600
+
+/**
+ * El ancho de un **icono**: el logo del navbar mide 56 px y el favicon 32. Servir la de
+ * 1600 para pintar 32 son ~80 KB en cada una de las 44 paginas (spec 0044).
+ */
+export const ANCHO_ICONO = 256
+
+export type Variante = 'foto' | 'icono'
 const BYTES_MAXIMOS = 10 * 1024 * 1024
 const LADO_MAXIMO = 8000
 
@@ -37,7 +45,7 @@ function mensaje(error: unknown): string {
   return error instanceof Error ? error.message : String(error)
 }
 
-export async function subirImagen(archivo: File): Promise<Subida> {
+export async function subirImagen(archivo: File, variante: Variante = 'foto'): Promise<Subida> {
   // Validar primero: rechazar un PDF renombrado no necesita hablar con R2, y asi esta
   // parte se puede verificar sin credenciales.
   if (archivo.size === 0) return { ok: false, motivo: 'El archivo está vacío.' }
@@ -74,7 +82,10 @@ export async function subirImagen(archivo: File): Promise<Subida> {
   if ('falta' in cfg) return { ok: false, motivo: `Falta configurar R2: ${cfg.falta.join(', ')}` }
 
   const hash = createHash('sha256').update(original).digest('hex').slice(0, 12)
-  const claveServida = `${PREFIJO}${hash}/w${ANCHO_MAXIMO}.webp`
+  // La clave lleva el ancho, asi que el mismo archivo subido como foto y como icono son dos
+  // objetos y ninguno pisa al otro.
+  const anchoServido = variante === 'icono' ? ANCHO_ICONO : ANCHO_MAXIMO
+  const claveServida = `${PREFIJO}${hash}/w${anchoServido}.webp`
 
   try {
     if (await existe(cfg, claveServida)) {
@@ -82,8 +93,8 @@ export async function subirImagen(archivo: File): Promise<Subida> {
     }
 
     const servida = await sharp(original)
-      // `withoutEnlargement`: una imagen de 800 px no se estira a 1600.
-      .resize({ width: ANCHO_MAXIMO, withoutEnlargement: true })
+      // `withoutEnlargement`: una imagen de 800 px no se estira al ancho servido.
+      .resize({ width: anchoServido, withoutEnlargement: true })
       .rotate() // respeta la orientación EXIF antes de descartar los metadatos
       .webp({ quality: 82 })
       .toBuffer()

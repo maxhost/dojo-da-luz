@@ -13,15 +13,17 @@ export const seoSchema = z.object({
 
 export const linesSchema = z.array(z.string().min(1)).min(1)
 
-/** Los cinco textos del borde de la pagina: bajada del logo, menu, salto y las dos del pie. */
+/**
+ * Los tres textos del **encabezado**: bajada del logo, boton de menu y salto al contenido.
+ *
+ * Eran cinco: las dos lineas del pie se fueron a `content/site.json` (ADR-0042). Estaban
+ * escritas 44 veces —once archivos por cuatro idiomas— y para cambiar una palabra habia que
+ * abrir diez editores. Ahora el pie se escribe una vez en `/admin/ajustes`.
+ */
 export const chromeSchema = z.object({
   caption: z.string().min(1),
   menuLabel: z.string().min(1),
   skipLink: z.string().min(1),
-  footerNote: z.object({
-    areas: z.string().min(1),
-    orgType: z.string().min(1),
-  }),
 })
 
 /**

@@ -6,11 +6,7 @@
   "chrome": {
     "caption": "Aikido · Lisboa",
     "menuLabel": "Menu",
-    "skipLink": "Saltar para o conteúdo",
-    "footerNote": {
-      "areas": "Benfica · Lumiar · Encarnação",
-      "orgType": "Associação sem fins lucrativos"
-    }
+    "skipLink": "Saltar para o conteúdo"
   },
   "eyebrow": "Agenda do dojo",
   "title": "Encontros para continuar a praticar.",

@@ -127,10 +127,6 @@ export function homeDesdeForm(form: FormData): unknown {
       caption: texto(form, 'chrome.caption'),
       menuLabel: texto(form, 'chrome.menuLabel'),
       skipLink: texto(form, 'chrome.skipLink'),
-      footerNote: {
-        areas: texto(form, 'chrome.footerNote.areas'),
-        orgType: texto(form, 'chrome.footerNote.orgType'),
-      },
     },
     hero: {
       eyebrowLines: lineas(form, 'hero.eyebrowLines'),

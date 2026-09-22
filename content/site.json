@@ -1,0 +1,35 @@
+{
+  "marca": {
+    "logo": null,
+    "favicon": null,
+    "acento": "#0099ff"
+  },
+  "contacto": {
+    "telefono": null,
+    "telefonoEnlace": null,
+    "email": null,
+    "direccion": null
+  },
+  "redes": {
+    "facebook": "https://www.facebook.com/aikidopabloduran/",
+    "instagram": "https://www.instagram.com/dojodaluz/"
+  },
+  "pie": {
+    "pt": [
+      "Benfica · Lumiar · Encarnação",
+      "Associação sem fins lucrativos"
+    ],
+    "es": [
+      "Benfica · Lumiar · Encarnação",
+      "Asociación sin fines de lucro"
+    ],
+    "fr": [
+      "Benfica · Lumiar · Encarnação",
+      "Association à but non lucratif"
+    ],
+    "en": [
+      "Benfica · Lumiar · Encarnação",
+      "Non-profit association"
+    ]
+  }
+}

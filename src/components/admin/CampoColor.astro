@@ -1,0 +1,74 @@
+---
+/**
+ * El color de acento (spec 0044). Dos controles sobre el mismo valor: el selector nativo
+ * del navegador y el hex escrito.
+ *
+ * **El que viaja con el formulario es el selector**, no el texto: es el unico que funciona
+ * sin JavaScript. El campo de texto es un espejo —para poder pegar un hex de una guia de
+ * marca y para poder leer cual es— y el script los mantiene iguales en los dos sentidos.
+ */
+
+interface Props {
+  nombre: string
+  etiqueta: string
+  valor: string
+  error?: string
+  ayuda?: string
+}
+
+const { nombre, etiqueta, valor, error, ayuda } = Astro.props
+const id = nombre.replace(/[^a-zA-Z0-9]+/g, '-')
+---
+
+<div class="mt-5" data-campo-color>
+  <label class="block text-sm font-semibold" for={id}>
+    {etiqueta}<span class="text-[#b3261e]" aria-hidden="true">*</span>
+  </label>
+
+  {ayuda && <p class="mt-1 text-xs text-[#625c55]" id={`${id}-ayuda`}>{ayuda}</p>}
+
+  <div class="mt-2 flex items-center gap-3">
+    <input
+      class="size-12 cursor-pointer border border-[#d7cec0] bg-white p-1"
+      id={id}
+      name={nombre}
+      type="color"
+      value={valor}
+      aria-describedby={ayuda ? `${id}-ayuda` : undefined}
+      data-color
+    />
+    <input
+      class="w-32 border border-[#d7cec0] bg-white px-3 py-2 font-mono text-sm uppercase"
+      type="text"
+      value={valor}
+      spellcheck="false"
+      aria-label={`${etiqueta}: valor en hexadecimal`}
+      data-hex
+    />
+  </div>
+
+  {error && (
+    <p class="mt-1 text-xs font-semibold text-[#b3261e]" role="alert">{error}</p>
+  )}
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-campo-color]').forEach((campo) => {
+    const color = campo.querySelector<HTMLInputElement>('[data-color]')
+    const hex = campo.querySelector<HTMLInputElement>('[data-hex]')
+    if (!color || !hex) return
+
+    // Del selector al texto: en vivo, mientras se arrastra.
+    color.addEventListener('input', () => {
+      hex.value = color.value.toUpperCase()
+    })
+
+    // Del texto al selector: solo cuando lo escrito es un color, para no pisar el valor
+    // bueno mientras se tipea la mitad de un hex.
+    hex.addEventListener('input', () => {
+      const valor = hex.value.trim()
+      const normalizado = valor.startsWith('#') ? valor : `#${valor}`
+      if (/^#[0-9a-fA-F]{6}$/.test(normalizado)) color.value = normalizado.toLowerCase()
+    })
+  })
+</script>

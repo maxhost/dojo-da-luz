@@ -27,6 +27,11 @@ interface Props {
    * de que la imagen es la misma en los cuatro idiomas.
    */
   soloLectura?: boolean
+  /**
+   * `icono` sube una WebP de 256 px en vez de 1600: es lo que piden el logo y el favicon,
+   * que se pintan a 56 y a 32 px (spec 0044).
+   */
+  variante?: 'foto' | 'icono'
 }
 
 const {
@@ -38,13 +43,14 @@ const {
   idPrefijo,
   requerido = true,
   soloLectura = false,
+  variante = 'foto',
 } = Astro.props
 
 const id = `${idPrefijo ? `${idPrefijo}-` : ''}${nombre.replace(/[^a-zA-Z0-9]+/g, '-')}`
 const error = errorDe(errores, nombre)
 ---
 
-<div class="mt-5" data-campo-imagen={soloLectura ? undefined : true}>
+<div class="mt-5" data-campo-imagen={soloLectura ? undefined : true} data-variante={variante}>
   <p class="text-sm font-semibold">
     {etiqueta}
     {requerido && <span class="text-[#b3261e]" aria-hidden="true">*</span>}
@@ -129,6 +135,7 @@ const error = errorDe(errores, nombre)
       try {
         const cuerpo = new FormData()
         cuerpo.append('archivo', elegido)
+        cuerpo.append('variante', campo.dataset.variante ?? 'foto')
         const res = await fetch('/admin/medios/subir', { method: 'POST', body: cuerpo })
         const datos = (await res.json()) as { url?: string; motivo?: string; reusado?: boolean }
 

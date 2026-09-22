@@ -1,0 +1,67 @@
+---
+export const prerender = false
+
+import Admin from '../../layouts/Admin.astro'
+import Aviso from '../../components/admin/Aviso.astro'
+import FormularioAjustes from '../../components/admin/FormularioAjustes.astro'
+import { ajustesDesdeForm, guardarAjustes, leerAjustes } from '../../lib/ajustes-edicion'
+import type { Ajustes } from '../../lib/ajustes'
+
+/** Ajustes del sitio (spec 0044). Un archivo, un formulario, sin idiomas. */
+
+const admin = Astro.locals.admin!
+
+let errores: Record<string, string> = {}
+let aviso: { tipo: 'ok' | 'error'; texto: string } | null = null
+let enviado: Ajustes | null = null
+
+if (Astro.request.method === 'POST') {
+  const form = await Astro.request.formData()
+  const resultado = await guardarAjustes(form, String(form.get('sha') ?? ''))
+
+  if (resultado.ok) {
+    return Astro.redirect('/admin/ajustes?publicado=1', 303)
+  }
+
+  Astro.response.status = resultado.estado
+  errores = resultado.errores
+  aviso = { tipo: resultado.estado === 200 ? 'ok' : 'error', texto: resultado.aviso }
+  // Se repinta lo que se mando, no lo que hay en el repo: nada se pierde al fallar.
+  enviado = ajustesDesdeForm(form) as Ajustes
+}
+
+if (Astro.url.searchParams.has('publicado')) {
+  aviso = {
+    tipo: 'ok',
+    texto: 'Ajustes publicados. El sitio tarda 1 o 2 minutos en regenerarse.',
+  }
+}
+
+let ajustes: Ajustes | null = null
+let sha = ''
+let sinRepositorio: string | null = null
+
+try {
+  const leido = await leerAjustes()
+  ajustes = enviado ?? leido.ajustes
+  sha = leido.sha
+} catch (error) {
+  Astro.response.status = 503
+  sinRepositorio = error instanceof Error ? error.message : String(error)
+}
+---
+
+<Admin titulo="Ajustes" admin={admin}>
+  <h1 class="font-serif text-3xl">Ajustes del sitio</h1>
+  <p class="mt-4 text-sm text-[#625c55]">
+    Lo que es igual en las 44 páginas: el logo, el ícono de la pestaña, el color de la marca,
+    los datos de contacto, las redes y el pie.
+  </p>
+
+  {aviso && <Aviso tipo={aviso.tipo}>{aviso.texto}</Aviso>}
+  {sinRepositorio && (
+    <Aviso tipo="error">No se puede abrir el formulario: {sinRepositorio}</Aviso>
+  )}
+
+  {ajustes && <FormularioAjustes ajustes={ajustes} errores={errores} sha={sha} />}
+</Admin>

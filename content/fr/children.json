@@ -6,11 +6,7 @@
   "chrome": {
     "caption": "Aïkido · Lisbonne",
     "menuLabel": "Menu",
-    "skipLink": "Aller au contenu",
-    "footerNote": {
-      "areas": "Benfica · Lumiar · Encarnação",
-      "orgType": "Association à but non lucratif"
-    }
+    "skipLink": "Aller au contenu"
   },
   "eyebrow": "Aïkido pour enfants et adolescents",
   "title": "Grandir sans compétition.",

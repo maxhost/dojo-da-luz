@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro'
-import { subirImagen } from '../../../lib/medios'
+import { subirImagen, type Variante } from '../../../lib/medios'
 
 export const prerender = false
 
@@ -17,15 +17,19 @@ export const POST: APIRoute = async ({ request }) => {
     })
 
   let archivo: unknown
+  let variante: Variante = 'foto'
   try {
-    archivo = (await request.formData()).get('archivo')
+    const form = await request.formData()
+    archivo = form.get('archivo')
+    // Un valor desconocido cae en 'foto': el ancho lo decide el servidor, no el cliente.
+    if (form.get('variante') === 'icono') variante = 'icono'
   } catch {
     return json({ motivo: 'No se pudo leer el archivo.' }, 400)
   }
 
   if (!(archivo instanceof File)) return json({ motivo: 'Falta el archivo.' }, 400)
 
-  const resultado = await subirImagen(archivo)
+  const resultado = await subirImagen(archivo, variante)
   if (!resultado.ok) return json({ motivo: resultado.motivo }, 422)
 
   return json({ url: resultado.url, bytes: resultado.bytes, reusado: resultado.reusado }, 200)

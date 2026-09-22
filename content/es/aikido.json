@@ -6,11 +6,7 @@
   "chrome": {
     "caption": "Aikido · Lisboa",
     "menuLabel": "Menú",
-    "skipLink": "Saltar al contenido",
-    "footerNote": {
-      "areas": "Benfica · Lumiar · Encarnação",
-      "orgType": "Asociación sin fines de lucro"
-    }
+    "skipLink": "Saltar al contenido"
   },
   "eyebrow": "El arte de la relación",
   "title": "Aikido, un arte marcial para la vida.",

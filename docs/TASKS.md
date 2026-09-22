@@ -9,8 +9,8 @@ Regla: **marcar `hecho` solo con verificacion real** — tests que pasan, comand
 cosa vista en pantalla. No "deberia andar".
 
 Ultima actualizacion: 2026-09-21 — gate verde: `astro check` **0/0/0**, `npm test`
-**39/39**, `npm run build` 44 rutas. Esta sesion, ocho entregas seguidas — y con la
-ultima **no queda ninguna pagina de contenido del sitio sin editor**:
+**39/39**, `npm run build` 44 rutas. Esta sesion, nueve entregas seguidas — y con las dos
+ultimas **no queda ninguna pagina de contenido sin editor ni nada del borde sin pantalla**:
 
 1. **Spec 0036** — editores de Adultos y Crianças con galeria de largo libre y YouTube
    (ADR-0031, ADR-0032). Commiteado y desplegado: `main` en `e330802`, comprobado en las
@@ -107,6 +107,32 @@ en 200 con los tres profesores, el linaje y el bloque de Pablo. Sin cookie,
    `/professor-*` en 200, la captura de la pagina publica con "Percurso" en blanco sobre la
    franja oscura, y `/admin/paginas/professor` sin cookie → 302 con `X-Robots-Tag`.
 
+9. **Spec 0044** — la pantalla `/admin/ajustes` (ADR-0041, ADR-0042). La primera que **no
+   es una pagina**: es lo que se repite en las 44. Trae el logo y el favicon —que antes no
+   existian: el logo era un `<span>` con 合気 y favicon no habia ninguno—, el **color de
+   acento**, el telefono, el email, la direccion, las dos URLs de redes y **las lineas del
+   pie**.
+   - **El acento era un hex escrito 74 veces** y tenia **tres** derivados (`#b3e5ff`,
+     `#006eb8`, `#d6f0ff`/`#cceeff`): ahora es un token del tema y los tres se calculan con
+     `color-mix`, con los porcentajes **medidos** contra los hex viejos. Cambiar el color del
+     sitio entero es un campo. El BO se queda azul a proposito.
+   - **El pie estaba escrito 44 veces** (`chrome.footerNote`, once archivos × cuatro
+     idiomas). Se borro de los once schemas, de los 44 archivos y de las diez pantallas
+     —cada editor perdio dos campos— y ahora se escribe una vez. **Encarnação se puede sacar
+     del pie del sitio entero escribiendo una linea**, que era la fila abierta de la 0042.
+   - **El telefono y el email del pie eran inventados** (`+351 000 000 000`,
+     `ola@dojodaluz.example`) y estaban en produccion: quedan **vacios**, y vacio no se
+     pinta. Los reales los carga el cliente.
+   - Verificado con **capturas de las 44 paginas comparadas pixel a pixel**: 23 solo cambian
+     el tono claro (5/255 en un canal), 21 ademas bajan 4 px el segundo renglon del pie
+     —dos valores distintos para el mismo bloque, unificados—, **cero inesperadas**. Y con el
+     BO corriendo: el acento en herrumbre movio los tres tonos en la pagina y ninguno quedo
+     azul, el logo reemplazo el circulo dejando el nombre, vaciar Facebook saco el icono de
+     las tres posiciones, el telefono y el email aparecieron en el pie **y** en el JSON-LD, y
+     sacar Encarnação del pie portugues cambio las once paginas de una publicacion.
+   - **Pendiente de deploy**, y con el la unica verificacion que no se puede hacer local:
+     **la subida a R2 de un logo de 256 px** (las claves de R2 solo estan en produccion).
+
 **Y una noticia que llego sola: `publicarVarios` ya corrio contra GitHub.** El push del
 editor de `/aikido` fue rechazado por no-fast-forward porque `origin/main` tenia el commit
 `a73982d` — *"contenido: Aulas desde el backoffice (1 archivos)"*, escrito por el BO en
@@ -156,7 +182,8 @@ SEO actual, mejorar GEO.
 **Todas las paginas de contenido tienen editor**: `/` (Home), `/aulas`,
 `/aulas/adultos`, `/aulas/criancas`, `/aikido`, `/dojo`, `/eventos`, `/outras-artes`,
 `/escolas`, `/contactos` y `/professor-pablo-duran` (specs 0021 y 0035 a 0043). El recorrido
-de editores esta cerrado.
+de editores esta cerrado, y con la spec 0044 tambien lo esta el borde: **Ajustes** cubre el
+logo, el favicon, el color, el contacto, las redes y el pie.
 
 ### Lo que sigue: desplegar, y despues ya no hay editores
 
@@ -452,6 +479,9 @@ contraseña, sesion opaca en Neon.)*
 | 2026-09-21 | Spec 0043 + ADR-0039 — editor de `/professor-pablo-duran` | `astro check` 114 archivos 0/0/0, `npm test` 39/39 y build con 44 rutas. Contra el BO corriendo: la pantalla con 9 bloques × 4 idiomas, 1 campo de imagen editable y 5 botones "Añadir fila" sólo en portugués; un séptimo hito creado en PT aparecio en los cuatro archivos y quedo marcado "Sin traducir" en los otros tres; traducirlo en español cambio **solo** `content/es/teacher.json` (2 lineas); un POST forjado desde español con un octavo hito y otra foto quedo en 7 hitos y con la foto portuguesa; formulario vacio → 422 nombrando los campos; sin cookie → 302 con `X-Robots-Tag`. Comparacion del HTML construido contra `HEAD` con el hash del CSS neutralizado: **44 paginas, 0 distintas**, antes y despues de borrar el hito de prueba |
 | 2026-09-21 | ADR-0040 — "Percurso" estaba escrito y no se leia | `.section-title` fija `color: #211f1c` y la seccion es `bg-[#27231f]`: contraste ~1:1. Tres de las cuatro secciones oscuras del sitio lo compensaban a mano con `text-white`; esta no. Arreglado en el CSS y no en ese `<h2>`: `.text-white .section-title { color: inherit }`, misma capa `components` y mas especificidad. **Verificado con captura de Chrome headless** de `/professor-pablo-duran`: en la franja oscura el titulo se lee en blanco. El HTML de las 44 paginas no cambia; el unico archivo distinto es el CSS |
 | 2026-09-21 | Deploy de la spec 0043 a produccion | `git push origin main` → `9b17abf`; deployment `dojo-da-1e1irlnpr` ● Ready en 15 s por webhook. Las cuatro rutas de `/professor-*` en 200; captura de Chrome headless de `dojo-da-luz.vercel.app/professor-pablo-duran`: en la franja `#27231f` el titulo "Percurso" se lee en blanco; `/admin/paginas/professor` sin cookie → 302 a `/admin/entrar` con `X-Robots-Tag` |
+| 2026-09-21 | Spec 0044 + ADR-0041/0042 — la pantalla de ajustes del sitio | `astro check` 119 archivos 0/0/0, `npm test` 39/39, build 44 rutas. **Capturas de las 44 paginas antes/despues comparadas pixel a pixel**: 23 solo con el tono claro corrido 5/255 en un canal, 21 ademas con el segundo renglon del pie 4 px mas abajo (eran dos valores distintos para el mismo bloque, unificados), **0 inesperadas**. Contra el BO corriendo: la pantalla con sus cuatro bloques, dos campos de imagen de 256 px, un selector de color y cuatro areas de pie; sin cambios → "no habia cambios"; hex invalido → 422 nombrando el campo; `sha` viejo → 409; acento `#b34700` → los cuatro tonos siguieron al color (`#b34700`, `#e8c8b3`, `#813300`) y **cero pixeles de los tres azules viejos**, con el BO todavia azul; logo puesto → `<img>` en lugar del circulo con el nombre intacto; Facebook vacio → 0 iconos en las tres posiciones y Instagram en 3; telefono y email → en el pie y en el JSON-LD (un solo bloque, parseable, con `telephone`, `email` y `sameAs`); Encarnação fuera del pie portugues → las once paginas portuguesas en una publicacion |
+| 2026-09-21 | La captura de la Home no es determinista: es el video del hero | La comparacion pixel a pixel daba 864.704 pixeles distintos en las cuatro homes. **Capturando la misma pagina dos veces del mismo build** salio el mismo numero: el `<video>` del hero cae en un frame distinto cada vez. Sin ese control, el diff se habria leido como una regresion del cambio de colores. La banda `y 100–787` de las homes queda excluida y anotada, no explicada |
+| 2026-09-21 | El acento tenia tres derivados, no dos | La primera pasada cambio `#0099ff`, `#b3e5ff` y `#006eb8`. Repasando **todos** los hex del sitio publico con `b > r + 20` aparecieron cuatro mas —`#d6f0ff` ×3 y `#cceeff`— usados en antetitulos **sobre** el acento. Con un acento herrumbre habrian quedado celestes sobre fondo naranja, y ningun typecheck lo ve. Buscar la clase de casos y no los casos que ya conocia es lo que lo encontro |
 
 ## Descartado (y por que)
 
