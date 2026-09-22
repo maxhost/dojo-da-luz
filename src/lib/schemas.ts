@@ -256,8 +256,18 @@ export const dojoSchema = z.object({
   lineage: z.array(z.object({ name: z.string().min(1), role: z.string().min(1), text: z.string().min(1) })).length(3),
 })
 
+/**
+ * `/professor-pablo-duran` (spec 0043). La ultima pagina que entro al molde: `chrome` es
+ * de esta spec, y antes eran cinco textos escritos dentro de `TeacherView.astro`.
+ *
+ * Las cinco listas son de largo libre (ADR-0039). `milestones` es el Percurso, y su `year`
+ * es texto y no un numero a proposito: hoy conviven `2002` y `2009-2015`.
+ *
+ * `lineage` se queda con `.min(1)` y no con el `.length(3)` de `/dojo`: aca la rejilla es
+ * adaptativa y acomoda sola las cajas que haya.
+ */
 export const teacherSchema = z.object({
-  seo:seoSchema,
+  seo:seoSchema, chrome:chromeSchema,
   eyebrow:z.string().min(1), title:z.string().min(1), lead:z.string().min(1), credentials:z.string().min(1),
   photo:z.url(), photoAlt:z.string().min(1),
   biographyTitle:z.string().min(1), biography:z.array(z.string().min(1)).min(1),

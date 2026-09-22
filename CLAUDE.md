@@ -138,6 +138,14 @@ atributo con el `=` (`data-campo-imagen=`) o el texto visible del boton, no el s
 Mira `%{redirect_url}` con `curl -o /dev/null -w`, o comproba el archivo en disco, antes de
 dar por hecho el efecto.
 
+**Despues de publicar desde el BO local, la primera peticion a la pagina publica puede
+traer el contenido viejo.** El 2026-09-21 paso dos veces —`/eventos` y `/outras-artes`
+dijeron "10 tarjetas" y "5 medios" con el archivo ya vacio en disco— porque `astro dev`
+sirve el modulo de contenido cacheado hasta que rehace el grafo. No es un defecto del
+editor: es el dev server. Comproba **primero el archivo en `content/`** y, si vas a mirar el
+HTML, pedilo en un bucle hasta que coincida (`for i in 1 2 3; do curl …; done`) en vez de
+concluir con la primera respuesta.
+
 **Las reglas verificables van en hooks, no aca.** Los hooks corren fuera del contexto,
 cuestan cero tokens y son deterministas; este archivo es advisory. Si una regla se puede
 chequear con un comando, es un hook — no la escribas aca tambien.

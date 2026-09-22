@@ -9,8 +9,8 @@ Regla: **marcar `hecho` solo con verificacion real** — tests que pasan, comand
 cosa vista en pantalla. No "deberia andar".
 
 Ultima actualizacion: 2026-09-21 — gate verde: `astro check` **0/0/0**, `npm test`
-**39/39**, `npm run build` 44 rutas. Esta sesion, siete entregas seguidas — y con la
-ultima **todas las paginas de contenido del sitio tienen editor menos `/professor`**:
+**39/39**, `npm run build` 44 rutas. Esta sesion, ocho entregas seguidas — y con la
+ultima **no queda ninguna pagina de contenido del sitio sin editor**:
 
 1. **Spec 0036** — editores de Adultos y Crianças con galeria de largo libre y YouTube
    (ADR-0031, ADR-0032). Commiteado y desplegado: `main` en `e330802`, comprobado en las
@@ -86,7 +86,23 @@ en 200 con los tres profesores, el linaje y el bloque de Pablo. Sin cookie,
    indexado por el `slug` del dojo, porque *Autocarros* / *Autobuses* si se traduce y la
    ficha del dojo se guarda una sola vez sin traducir (ADR-0017). El editor **no edita
    dojos**: pinta un recuadro por sede activa con su nombre como rotulo intocable, y las de
-   los dojos archivados viajan ocultas para que publicar no las borre.
+   los dojos archivados viajan ocultas para que publicar no las borre. Desplegada en
+   `08e21af` (deployment `dojo-da-6oahgvyay`, Ready en 17 s) y comprobada en produccion: las
+   cuatro paginas de `/contactos` con **dos** tarjetas y **cero** menciones a Encarnação en
+   ellas, `/aulas` con sus dos sedes, y con sesion temporal `/admin/paginas/contactos` en
+   200 con sus seis bloques, los dos recuadros visibles y el de Encarnação oculto.
+8. **Spec 0043** — editor de `/professor-pablo-duran` (ADR-0039, ADR-0040). Noveno y
+   **ultimo** editor: con este el panel lista doce entradas y **todas las paginas de
+   contenido tienen editor**. Lo pedido era el **Percurso como listado**, y lo es: los hitos
+   se añaden y se quitan desde la pestaña portuguesa y bajan a los cuatro idiomas. Los
+   parrafos de biografia, formacion y enseñanza, y las cajas del linaje, tambien. `chrome`
+   entro al contenido —era el unico `teacher.json` sin el— y el HTML construido quedo en
+   **44 paginas, 0 distintas**. Ademas se arreglo lo que el cliente vio en la pagina
+   publica: **"Percurso" estaba escrito y no se leia** —`.section-title` fija `#211f1c` y la
+   franja es `#27231f`—, y se arreglo en el CSS y no en ese `<h2>`:
+   `.text-white .section-title { color: inherit }`, asi que **ninguna seccion oscura futura
+   puede nacer con el titulo invisible** (ADR-0040). Verificado con captura de Chrome
+   headless: el titulo se lee en blanco. **Pendiente de deploy.**
 
 **Y una noticia que llego sola: `publicarVarios` ya corrio contra GitHub.** El push del
 editor de `/aikido` fue rechazado por no-fast-forward porque `origin/main` tenia el commit
@@ -134,13 +150,28 @@ SEO actual, mejorar GEO.
 
 ### Por donde seguir (corte del 2026-09-21, tercera sesion)
 
-**Todas las paginas de contenido ya tienen editor menos una**: `/` (Home), `/aulas`,
+**Todas las paginas de contenido tienen editor**: `/` (Home), `/aulas`,
 `/aulas/adultos`, `/aulas/criancas`, `/aikido`, `/dojo`, `/eventos`, `/outras-artes`,
-`/escolas` y `/contactos` (specs 0021 y 0035 a 0042). **Lo que queda sin editor:**
+`/escolas`, `/contactos` y `/professor-pablo-duran` (specs 0021 y 0035 a 0043). El recorrido
+de editores esta cerrado.
 
-| Pagina | Contenido | Nota |
-|---|---|---|
-| `/professor-pablo-duran` | `teacher.json` | Repite el linaje de `/dojo` en su propio campo; unificarlos es parte de la decision. Sin urgencia conocida. |
+### Lo que sigue: desplegar, y despues ya no hay editores
+
+La spec 0043 cerro el recorrido. **Lo inmediato es el deploy** del commit de esta sesion y
+comprobarlo en produccion, como las siete veces anteriores: las cuatro paginas publicas de
+`/professor-*` en 200, "Percurso" legible, y `/admin/paginas/professor` en 200 con sesion
+temporal.
+
+Las tres gotchas que la sesion anterior dejo anotadas, ya resueltas o decididas:
+
+1. **Los cinco textos del borde** estaban dentro de `TeacherView.astro`: pasaron a `chrome`
+   en el contenido, y el HTML construido no cambio ni un byte. Hecho.
+2. **El JSON-LD `Person` con `name: 'Pablo Durán'` escrito a mano**: se deja y se dice por
+   que (ADR-0039). No es texto de la pagina sino dato para buscadores, y el dia que el
+   profesor no sea Pablo el cambio es de ruta, no de campo.
+3. **El linaje duplicado con `/dojo`**: **no se unifico, y ahora los dos tienen editor**, o
+   sea que se pueden desincronizar. Es una decision de modelo de contenido —cual manda, o
+   si pasa a ser entidad como los dojos— y necesita su propia spec. Queda abierta.
 
 **La receta, ya probada tres veces.** Con el modulo generico, un editor nuevo es:
 
@@ -315,7 +346,7 @@ siguiente guardado del BO reordena el archivo: ruido de una vez, no perdida de d
 | 6u | Spec 0039 — editor de /eventos | 0039 | implementada, verificada en local y **en produccion** (`8953ddb`, deployment `dojo-da-7uhgcm95e`; con sesion temporal, `/admin/paginas/eventos` da 200 con sus cinco bloques, 6 campos de imagen y 1 boton de alta) | La agenda es la primera pagina que **se vacia**: el `.min(3).max(4)` obligaba a inventar un evento para poder borrar otro (ADR-0035). Ahora la lista es de largo libre, se arma en portugues y se traduce, y con cero eventos la pagina no pinta una franja beige vacia sino `emptyText`, editable en los cuatro idiomas. La foto de portada y los cinco textos del borde pasaron al contenido. El `0{index + 1}` que escribia `010` a partir del decimo esta arreglado — dejaba de ser latente justo ahora que la lista puede crecer. Ningun control nuevo: reusa la columna `imagen` de `TablaFilas` que sumo la spec 0038. |
 | 6v | Spec 0040 — editor de /outras-artes | 0040 | implementada, verificada en local y **en produccion** (`cbb9ac4`, deployment `dojo-da-fburjdlp9`; las 4 paginas publicas con la portada nueva y las anclas `arte-1..3`, y con sesion temporal `/admin/paginas/outras-artes` da 200 con sus siete bloques) | Cada arte es un bloque del formulario, no una fila de tabla: tiene once campos y tres listas adentro —parrafos, beneficios, horarios— que van como recuadro de texto, una entrada por renglon (ADR-0033). La portada gana foto de fondo y la pagina gana la galeria de Adultos, con los dos botones de alta. Verificado contra el BO corriendo: foto y video subidos desde portugues aparecieron en los cuatro, un POST forjado desde español con otra portada, otra foto de arte, otro `formUrl`, otra foto de galeria y un cuarto arte quedo en 3 artes, 2 medios y las cuatro cosas portuguesas, vaciar beneficios y borrar el profesor dejo de pintarlos, y con la galeria vacia la seccion entera desaparece. De las 44 paginas construidas cambiaron **exactamente las 4 de `/outras-artes`**, y comparadas etiqueta por etiqueta la unica diferencia es la portada nueva y el ancla por posicion: ni un texto cambio. |
 | 6w | Spec 0041 — editor de /escolas | 0041 | implementada, verificada en local y **en produccion** (`7af0457`, deployment `dojo-da-k2gbmyrzl`; las 4 paginas con sus 4 fotos y cero iframes, Adultos con 5 medios y `/outras-artes` con 0 —las dos intactas— y con sesion temporal `/admin/paginas/escolas` da 200 con sus cinco bloques) | El mas corto de los siete: portada, bloque de comunidad y galeria. Lo que tenia trabajo era la galeria, que era la unica del sitio que no admitia video y exigia entre 4 y 8 fotos (ADR-0037). Verificado contra el BO corriendo: un video de YouTube añadido en portugues aparecio en los cuatro, un POST forjado desde español con tres fotos distintas, un medio de mas y un parrafo de mas quedo en 5 medios, 2 parrafos y las tres fotos portuguesas, con cinco medios la rejilla destaca el primero y el video sale como enlace con miniatura (**cero `<iframe>`**), con uno pasa a columna unica centrada y con cero la franja desaparece. De las 44 paginas cambiaron **exactamente las 4 de `/escolas`** y solo en la rejilla; las de Adultos, Criancas y `/outras-artes` quedaron intactas pese al cambio de prop en `GaleriaMedios`. |
-| 6x | Spec 0042 — editor de /contactos | 0042 | implementada, verificada en local | La unica pagina sin una sola foto ni una lista de largo libre. Lo que tenia trabajo eran las sedes: `contact.venues` se borro y las tarjetas salen de `getDojos()` (ADR-0038), asi que **Encarnação dejo de publicarse**. Verificado contra el BO corriendo: archivar Lumiar desde el editor de Dojos dejo `/contactos` con una tarjeta y `/aulas` con una sede; publicar en ese estado **conservo sus lineas** (viajan en campos ocultos); reactivarlo devolvio todo. Dos defectos encontrados por verificar y no por leer: el endpoint de archivar **falla en silencio sin el `sha`** (303 con `?fallo=` en la query — la primera lectura de "dos tarjetas" no probaba nada), y el bloque `transport` se reescribia entero en cada diff porque el orden de claves salia del formulario; ahora se ordenan alfabeticamente. De las 44 paginas cambiaron **exactamente las 4 de `/contactos`**. |
+| 6x | Spec 0042 — editor de /contactos | 0042 | implementada, verificada en local y **en produccion** (`08e21af`, deployment `dojo-da-6oahgvyay`) | La unica pagina sin una sola foto ni una lista de largo libre. Lo que tenia trabajo eran las sedes: `contact.venues` se borro y las tarjetas salen de `getDojos()` (ADR-0038), asi que **Encarnação dejo de publicarse**. Verificado contra el BO corriendo: archivar Lumiar desde el editor de Dojos dejo `/contactos` con una tarjeta y `/aulas` con una sede; publicar en ese estado **conservo sus lineas** (viajan en campos ocultos); reactivarlo devolvio todo. Dos defectos encontrados por verificar y no por leer: el endpoint de archivar **falla en silencio sin el `sha`** (303 con `?fallo=` en la query — la primera lectura de "dos tarjetas" no probaba nada), y el bloque `transport` se reescribia entero en cada diff porque el orden de claves salia del formulario; ahora se ordenan alfabeticamente. De las 44 paginas cambiaron **exactamente las 4 de `/contactos`**. |
 | 6q | Sacar Encarnação de los textos en prosa | — | pendiente | El dojo cerro. La estructura ya no lo nombra, la prosa si: en `classes.json` (descripcion SEO, pie, `children.facts[2]`, dos respuestas del Q&A) lo puede arreglar el cliente desde `/admin/paginas/aulas`. `adults.json` y `children.json` ya tienen editor (spec 0036): sus `facts` y su Q&A los puede arreglar el cliente. Queda `contact.json`, sin editor. |
 | 7 | Alumnos + emision de factura + PDF a R2 + envio Resend | — | pendiente | Necesita una factura de ejemplo real. Spec sin escribir: el numero 0004 del INDEX es otra cosa. |
 | 8 | Redirects 301 de las 34 URLs viejas | — | plan definido | Matriz conceptual documentada. Falta crawl final, Search Console e implementación cuando existan todos los destinos. |
@@ -415,6 +446,8 @@ contraseña, sesion opaca en Neon.)*
 | 2026-09-21 | CORS no interviene en la subida a R2, y no se configura | Es lo primero que se sospecha ante un 403 y es un callejon sin salida. El `PUT` sale de la funcion de Vercel, servidor contra servidor: CORS lo aplica el navegador y ahi no hay ninguno. Y las imagenes se cargan con `<img src>`, que no necesita CORS en ningun navegador. Solo haria falta si algun dia se sube directo desde el navegador con URL prefirmada |
 | 2026-09-21 | `git checkout -- <directorio>` pisa trabajo ajeno: ahora esta vetado | El agente corrio `git checkout -- content/` para deshacer una prueba en `content/pt/home.json` y de paso reverso la normalizacion de `content/dojos.json`, de la misma sesion y sin commitear. Fix estructural: hook PreToolUse `.claude/hooks/git-restore-amplio.sh`, que bloquea `git checkout --` y `git restore` cuando el destino es un directorio y deja pasar el archivo concreto. Probado con 4 casos que bloquean y 5 que pasan |
 | 2026-09-21 | Un vector de prueba con el hash transcripto de memoria | La prueba de SigV4 traia tres vectores de AWS y uno fallaba: el valor esperado estaba mal, el codigo estaba bien. Se diagnostico codigo sano. Sustituido por la propiedad comprobable (dos valores que solo difieren en espacios dan la misma firma) y anotado en CLAUDE.md |
+| 2026-09-21 | Spec 0043 + ADR-0039 — editor de `/professor-pablo-duran` | `astro check` 114 archivos 0/0/0, `npm test` 39/39 y build con 44 rutas. Contra el BO corriendo: la pantalla con 9 bloques × 4 idiomas, 1 campo de imagen editable y 5 botones "Añadir fila" sólo en portugués; un séptimo hito creado en PT aparecio en los cuatro archivos y quedo marcado "Sin traducir" en los otros tres; traducirlo en español cambio **solo** `content/es/teacher.json` (2 lineas); un POST forjado desde español con un octavo hito y otra foto quedo en 7 hitos y con la foto portuguesa; formulario vacio → 422 nombrando los campos; sin cookie → 302 con `X-Robots-Tag`. Comparacion del HTML construido contra `HEAD` con el hash del CSS neutralizado: **44 paginas, 0 distintas**, antes y despues de borrar el hito de prueba |
+| 2026-09-21 | ADR-0040 — "Percurso" estaba escrito y no se leia | `.section-title` fija `color: #211f1c` y la seccion es `bg-[#27231f]`: contraste ~1:1. Tres de las cuatro secciones oscuras del sitio lo compensaban a mano con `text-white`; esta no. Arreglado en el CSS y no en ese `<h2>`: `.text-white .section-title { color: inherit }`, misma capa `components` y mas especificidad. **Verificado con captura de Chrome headless** de `/professor-pablo-duran`: en la franja oscura el titulo se lee en blanco. El HTML de las 44 paginas no cambia; el unico archivo distinto es el CSS |
 
 ## Descartado (y por que)
 

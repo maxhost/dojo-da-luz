@@ -48,6 +48,8 @@ desactualizado es peor que no tenerlo.
 | [0036](adr/0036-outras-artes-portada-y-galeria.md) | 2026-09-21 | /outras-artes gana portada con foto y una galeria de la pagina que no se pinta vacia, y pierde el id escrito de cada arte, que era un ancla muerta | aceptada | `docs/adr/0036-outras-artes-portada-y-galeria.md` |
 | [0037](adr/0037-galeria-de-escolas.md) | 2026-09-21 | La galeria de /escolas pasa a ser la lista de medios del resto del sitio —foto o video, largo libre, vacia no se pinta— y sigue sin titulo; supersede el minimo de 4 de la spec 0026 | aceptada | `docs/adr/0037-galeria-de-escolas.md` |
 | [0038](adr/0038-contacto-desde-la-entidad.md) | 2026-09-21 | Las sedes de /contactos salen de la entidad de dojos y `contact.venues` se borra; solo queda como se llega, traducible e indexado por slug | aceptada | `docs/adr/0038-contacto-desde-la-entidad.md` |
+| [0039](adr/0039-professor-al-molde.md) | 2026-09-21 | `/professor` entra al molde: los cinco textos del borde pasan al contenido y sus cinco listas —Percurso incluido— son de largo libre | aceptada | `docs/adr/0039-professor-al-molde.md` |
+| [0040](adr/0040-titulo-sobre-fondo-oscuro.md) | 2026-09-21 | Un `.section-title` dentro de una seccion `text-white` hereda su color; el titulo invisible deja de poder repetirse | aceptada | `docs/adr/0040-titulo-sobre-fondo-oscuro.md` |
 
 ## Specs — que se construye
 
@@ -95,6 +97,7 @@ desactualizado es peor que no tenerlo.
 | [0040](specs/0040-editor-outras-artes.md) | 2026-09-21 | Editor de /outras-artes: las tres artes una por una, portada con foto de fondo nueva y galeria de fotos y videos de YouTube para la pagina | cerrada | no | `src/pages/admin/paginas/outras-artes.astro`, `src/components/admin/FormularioOutrasArtes.astro`, `src/lib/{outras-artes-edicion,schemas,traduccion}.ts`, `src/components/OtherArtsView.astro`, `content/*/other-arts.json` |
 | [0041](specs/0041-editor-escolas.md) | 2026-09-21 | Editor de /escolas: portada, bloque de comunidad y la galeria convertida en lista de medios de largo libre con fotos y videos de YouTube | cerrada | no | `src/pages/admin/paginas/escolas.astro`, `src/components/admin/FormularioEscolas.astro`, `src/lib/{escolas-edicion,schemas,traduccion}.ts`, `src/components/{SchoolsView,GaleriaMedios}.astro`, `content/*/schools.json` |
 | [0042](specs/0042-editor-contactos.md) | 2026-09-21 | Editor de /contactos: textos, etiquetas del formulario y como llegar; las sedes pasan a salir de la entidad de dojos | cerrada | no | `src/pages/admin/paginas/contactos.astro`, `src/components/admin/FormularioContactos.astro`, `src/lib/{contactos-edicion,schemas,traduccion}.ts`, `src/components/ContactView.astro`, `content/*/contact.json` |
+| [0043](specs/0043-editor-professor.md) | 2026-09-21 | Editor de `/professor-pablo-duran` con Percurso como listado de largo libre, y el titulo invisible de esa seccion arreglado en el CSS | cerrada | no | `src/pages/admin/paginas/professor.astro`, `src/components/admin/FormularioProfessor.astro`, `src/lib/{professor-edicion,schemas,traduccion}.ts`, `src/components/TeacherView.astro`, `src/styles/global.css`, `content/*/teacher.json` |
 
 **"Disjunta?"** = si el trabajo no comparte archivos con otra spec abierta. Es lo que
 habilita paralelizar. Lo decide la spec, no el orquestador en runtime.

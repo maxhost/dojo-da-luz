@@ -6,12 +6,9 @@ import { pathFor, siteNav, type Locale } from '../lib/i18n'
 interface Props { locale: Locale }
 const { locale } = Astro.props
 const c = getContent('teacher', locale)
-const ui = {
-  pt: { caption: 'Aikido · Lisboa', menu: 'Menu', skip: 'Saltar para o conteúdo', org: 'Associação sem fins lucrativos' },
-  es: { caption: 'Aikido · Lisboa', menu: 'Menú', skip: 'Saltar al contenido', org: 'Asociación sin fines de lucro' },
-  fr: { caption: 'Aïkido · Lisbonne', menu: 'Menu', skip: 'Aller au contenu', org: 'Association à but non lucratif' },
-  en: { caption: 'Aikido · Lisbon', menu: 'Menu', skip: 'Skip to content', org: 'Non-profit association' },
-}[locale]
+// Los cinco textos del borde estaban escritos aca adentro, cuatro idiomas a mano, y el pie
+// era una linea literal: no habia nada que editar aunque hubiera editor (spec 0043).
+const chrome = c.chrome
 const personSchema = {
   '@context': 'https://schema.org',
   '@type': 'Person',
@@ -29,7 +26,7 @@ const personSchema = {
 }
 ---
 
-<Base page="teacher" locale={locale} title={c.seo.title} description={c.seo.description} skipLink={ui.skip} nav={siteNav(locale)} menuLabel={ui.menu} caption={ui.caption}>
+<Base page="teacher" locale={locale} title={c.seo.title} description={c.seo.description} skipLink={chrome.skipLink} nav={siteNav(locale)} menuLabel={chrome.menuLabel} caption={chrome.caption}>
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(personSchema)} />
 
   <section class="section-pad bg-[#f6f1e8]">
@@ -78,5 +75,5 @@ const personSchema = {
     <div class="site-shell"><h2 class="font-serif text-4xl md:text-6xl">{c.dojoCta.title}</h2><p class="mx-auto mt-5 max-w-2xl text-lg leading-8 text-white/85">{c.dojoCta.text}</p><a class="button mt-8 bg-white text-[#006eb8]" href={pathFor('dojo', locale)}>{c.dojoCta.label}</a></div>
   </section>
 
-  <p slot="footer-note" class="text-sm text-white/65">Benfica · Lumiar · Encarnação<br />{ui.org}</p>
+  <p slot="footer-note" class="text-sm text-white/65">{chrome.footerNote.areas}<br />{chrome.footerNote.orgType}</p>
 </Base>

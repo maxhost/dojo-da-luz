@@ -121,6 +121,25 @@ export const SEMBRADOS_ESCOLAS: readonly string[] = [
 ]
 
 /**
+ * Las cinco listas de `/professor-pablo-duran` (spec 0043). `milestones` es el Percurso;
+ * las otras cuatro son parrafos y las cajas del linaje (ADR-0039).
+ *
+ * `lineage` esta aca por el mismo motivo que en `/dojo`: la pantalla la pinta editable
+ * solo en portugues, y esto es lo que impide que un POST forjado en frances le meta una
+ * caja de mas a un solo idioma.
+ */
+export const LISTAS_PROFESSOR: readonly RutaLista[] = [
+  'biography',
+  'milestones',
+  'formation',
+  'teaching',
+  'lineage',
+]
+
+/** El retrato de la portada es el unico medio de la pagina: una foto no se traduce (ADR-0032). */
+export const SEMBRADOS_PROFESSOR: readonly string[] = ['photo']
+
+/**
  * `/contactos` (spec 0042) es la unica pagina **sin listas de largo libre y sin fotos**.
  * Las sedes salen de la entidad de dojos y las lineas de transporte van en un mapa indexado
  * por `slug`, cuyas claves pone la entidad: los cuatro idiomas las tienen iguales sin que

@@ -3,6 +3,15 @@
     "title": "Pablo Durán, professeur d'Aïkido à Lisbonne | Dojo da Luz",
     "description": "Parcours de Pablo Durán, 5e Dan Aikikai et entraîneur IPDJ : formation au Dojo de la Roseraie, pratique au Japon et enseignement à Lisbonne."
   },
+  "chrome": {
+    "caption": "Aïkido · Lisbonne",
+    "menuLabel": "Menu",
+    "skipLink": "Aller au contenu",
+    "footerNote": {
+      "areas": "Benfica · Lumiar · Encarnação",
+      "orgType": "Association à but non lucratif"
+    }
+  },
   "eyebrow": "Professeur d'Aïkido à Lisbonne",
   "title": "Pablo Durán",
   "lead": "Un parcours construit par la pratique quotidienne, la transmission et l'engagement d'enseigner l'Aïkido aux adultes et aux enfants.",
@@ -17,12 +26,36 @@
   ],
   "milestonesTitle": "Parcours",
   "milestones": [
-    { "year": "2002", "title": "Débuts à Jaén", "text": "Il commence l'Aïkido avec Jacinto Camacho et découvre l'enseignement de Seishiro Endo." },
-    { "year": "2009–2015", "title": "Dojo de la Roseraie", "text": "Il vit à Toulouse, pratique quotidiennement avec Franck Noël et passe une période comme uchideshi." },
-    { "year": "2011", "title": "Premières responsabilités pédagogiques", "text": "Il commence à diriger des cours au Dojo de la Roseraie en remplacement des enseignants." },
-    { "year": "2013", "title": "Pratique au Japon", "text": "Il visite le Saku Dojo et l'Aikikai Hombu Dojo de Tokyo lors d'un voyage d'étude d'un mois." },
-    { "year": "2014", "title": "Pédagogie pour enfants", "text": "Il collabore avec l'enseignant des cours enfants et approfondit des méthodes pédagogiques spécifiques." },
-    { "year": "2016", "title": "Dojo da Luz", "text": "Il ouvre à Lisbonne un lieu consacré à l'enseignement régulier de l'Aïkido aux adultes et aux enfants." }
+    {
+      "year": "2002",
+      "title": "Débuts à Jaén",
+      "text": "Il commence l'Aïkido avec Jacinto Camacho et découvre l'enseignement de Seishiro Endo."
+    },
+    {
+      "year": "2009–2015",
+      "title": "Dojo de la Roseraie",
+      "text": "Il vit à Toulouse, pratique quotidiennement avec Franck Noël et passe une période comme uchideshi."
+    },
+    {
+      "year": "2011",
+      "title": "Premières responsabilités pédagogiques",
+      "text": "Il commence à diriger des cours au Dojo de la Roseraie en remplacement des enseignants."
+    },
+    {
+      "year": "2013",
+      "title": "Pratique au Japon",
+      "text": "Il visite le Saku Dojo et l'Aikikai Hombu Dojo de Tokyo lors d'un voyage d'étude d'un mois."
+    },
+    {
+      "year": "2014",
+      "title": "Pédagogie pour enfants",
+      "text": "Il collabore avec l'enseignant des cours enfants et approfondit des méthodes pédagogiques spécifiques."
+    },
+    {
+      "year": "2016",
+      "title": "Dojo da Luz",
+      "text": "Il ouvre à Lisbonne un lieu consacré à l'enseignement régulier de l'Aïkido aux adultes et aux enfants."
+    }
   ],
   "formationTitle": "Formation continue",
   "formation": [
@@ -38,9 +71,25 @@
   "lineageTitle": "Une transmission vivante",
   "lineageIntro": "L'enseignement de Pablo Durán s'inscrit dans une lignée pédagogique reliant le Dojo da Luz au Dojo de la Roseraie et à l'Aikikai de Tokyo.",
   "lineage": [
-    { "name": "Franck Noël", "role": "Professeur principal · 7e Dan Shihan", "text": "Fondateur du Dojo de la Roseraie à Toulouse et référence directe de Pablo Durán depuis 2009." },
-    { "name": "Seigo Yamaguchi", "role": "Professeur de l'Aikikai Hombu Dojo", "text": "Une influence centrale dans la pratique de Franck Noël et de nombreux enseignants japonais et européens." },
-    { "name": "Aikikai de Tokyo", "role": "Centre mondial de l'Aïkido", "text": "Institution responsable du grade Aikikai de Pablo Durán et de la continuité technique de la discipline." }
+    {
+      "name": "Franck Noël",
+      "role": "Professeur principal · 7e Dan Shihan",
+      "text": "Fondateur du Dojo de la Roseraie à Toulouse et référence directe de Pablo Durán depuis 2009."
+    },
+    {
+      "name": "Seigo Yamaguchi",
+      "role": "Professeur de l'Aikikai Hombu Dojo",
+      "text": "Une influence centrale dans la pratique de Franck Noël et de nombreux enseignants japonais et européens."
+    },
+    {
+      "name": "Aikikai de Tokyo",
+      "role": "Centre mondial de l'Aïkido",
+      "text": "Institution responsable du grade Aikikai de Pablo Durán et de la continuité technique de la discipline."
+    }
   ],
-  "dojoCta": { "title": "Découvrir le Dojo da Luz", "text": "Découvrez le lieu, la communauté de pratique et la ligne de transmission du dojo à Lisbonne.", "label": "Voir la page du dojo" }
+  "dojoCta": {
+    "title": "Découvrir le Dojo da Luz",
+    "text": "Découvrez le lieu, la communauté de pratique et la ligne de transmission du dojo à Lisbonne.",
+    "label": "Voir la page du dojo"
+  }
 }
