@@ -1,1 +1,43 @@
-{"seo":{"title":"Contacto y lugares | Dojo da Luz Lisboa","description":"Lugares, transporte y contacto del Dojo da Luz en Benfica, Lumiar y Encarnação."},"eyebrow":"Contacto","title":"Encuentra tu dojo.","lead":"Elige el lugar más cercano o envíanos un mensaje sobre clases regulares y particulares.","venues":[{"name":"Dojo da Luz","area":"Benfica","transport":["Igreja de Benfica","Autobuses 716, 729, 746 y 758"]},{"name":"Núcleo Lumiar","area":"Lumiar / Ameixoeira","transport":["Metro Ameixoeira · línea amarilla","Autobús 703"]},{"name":"Dojo da Luz","area":"Encarnação","transport":["Metro Encarnação · línea roja","A unos 10 minutos a pie"]}],"privateTitle":"Clases particulares","privateText":"Consulta las clases particulares y los formatos adaptados a tu disponibilidad.","formTitle":"Escríbenos","fields":{"name":"Nombre","email":"Email","subject":"Asunto","message":"Mensaje","submit":"Enviar mensaje","pending":"Envío pendiente de configurar el email del dojo."}}
+{
+  "seo": {
+    "title": "Contacto y lugares | Dojo da Luz Lisboa",
+    "description": "Lugares, transporte y contacto del Dojo da Luz en Benfica, Lumiar y Encarnação."
+  },
+  "chrome": {
+    "caption": "Aikido · Lisboa",
+    "menuLabel": "Menú",
+    "skipLink": "Saltar al contenido",
+    "footerNote": {
+      "areas": "Benfica · Lumiar · Encarnação",
+      "orgType": "Asociación sin fines de lucro"
+    }
+  },
+  "eyebrow": "Contacto",
+  "title": "Encuentra tu dojo.",
+  "lead": "Elige el lugar más cercano o envíanos un mensaje sobre clases regulares y particulares.",
+  "transport": {
+    "benfica": [
+      "Igreja de Benfica",
+      "Autobuses 716, 729, 746 y 758"
+    ],
+    "lumiar": [
+      "Metro Ameixoeira · línea amarilla",
+      "Autobús 703"
+    ],
+    "encarnacao": [
+      "Metro Encarnação · línea roja",
+      "A unos 10 minutos a pie"
+    ]
+  },
+  "privateTitle": "Clases particulares",
+  "privateText": "Consulta las clases particulares y los formatos adaptados a tu disponibilidad.",
+  "formTitle": "Escríbenos",
+  "fields": {
+    "name": "Nombre",
+    "email": "Email",
+    "subject": "Asunto",
+    "message": "Mensaje",
+    "submit": "Enviar mensaje",
+    "pending": "Envío pendiente de configurar el email del dojo."
+  }
+}

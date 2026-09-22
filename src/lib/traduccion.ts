@@ -120,6 +120,18 @@ export const SEMBRADOS_ESCOLAS: readonly string[] = [
   'gallery[].url',
 ]
 
+/**
+ * `/contactos` (spec 0042) es la unica pagina **sin listas de largo libre y sin fotos**.
+ * Las sedes salen de la entidad de dojos y las lineas de transporte van en un mapa indexado
+ * por `slug`, cuyas claves pone la entidad: los cuatro idiomas las tienen iguales sin que
+ * haya nada que propagar.
+ *
+ * Las dos constantes existen igual, vacias, porque el descriptor las exige y un `[]`
+ * escrito a proposito dice mas que una omision.
+ */
+export const LISTAS_CONTACTOS: readonly RutaLista[] = []
+export const SEMBRADOS_CONTACTOS: readonly string[] = []
+
 /** Las cinco listas de `/aulas` cuyo largo lo decide el portugues (spec 0035). */
 export const LISTAS_AULAS: readonly RutaLista[] = [
   'pricing.items',

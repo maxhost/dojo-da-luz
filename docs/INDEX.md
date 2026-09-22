@@ -47,6 +47,7 @@ desactualizado es peor que no tenerlo.
 | [0035](adr/0035-eventos-lista-viva.md) | 2026-09-21 | La lista de /eventos es de largo libre y el vacio es un estado con texto propio; supersede el minimo de 3 de la spec 0026 | aceptada | `docs/adr/0035-eventos-lista-viva.md` |
 | [0036](adr/0036-outras-artes-portada-y-galeria.md) | 2026-09-21 | /outras-artes gana portada con foto y una galeria de la pagina que no se pinta vacia, y pierde el id escrito de cada arte, que era un ancla muerta | aceptada | `docs/adr/0036-outras-artes-portada-y-galeria.md` |
 | [0037](adr/0037-galeria-de-escolas.md) | 2026-09-21 | La galeria de /escolas pasa a ser la lista de medios del resto del sitio —foto o video, largo libre, vacia no se pinta— y sigue sin titulo; supersede el minimo de 4 de la spec 0026 | aceptada | `docs/adr/0037-galeria-de-escolas.md` |
+| [0038](adr/0038-contacto-desde-la-entidad.md) | 2026-09-21 | Las sedes de /contactos salen de la entidad de dojos y `contact.venues` se borra; solo queda como se llega, traducible e indexado por slug | aceptada | `docs/adr/0038-contacto-desde-la-entidad.md` |
 
 ## Specs — que se construye
 
@@ -93,6 +94,7 @@ desactualizado es peor que no tenerlo.
 | [0039](specs/0039-editor-eventos.md) | 2026-09-21 | Editor de /eventos: listado de largo libre que se arma en portugues, alternancia izquierda/derecha por posicion y el estado "no hay eventos proximos" | cerrada | no | `src/pages/admin/paginas/eventos.astro`, `src/components/admin/FormularioEventos.astro`, `src/lib/{eventos-edicion,schemas,traduccion}.ts`, `src/components/EventsView.astro`, `content/*/events.json` |
 | [0040](specs/0040-editor-outras-artes.md) | 2026-09-21 | Editor de /outras-artes: las tres artes una por una, portada con foto de fondo nueva y galeria de fotos y videos de YouTube para la pagina | cerrada | no | `src/pages/admin/paginas/outras-artes.astro`, `src/components/admin/FormularioOutrasArtes.astro`, `src/lib/{outras-artes-edicion,schemas,traduccion}.ts`, `src/components/OtherArtsView.astro`, `content/*/other-arts.json` |
 | [0041](specs/0041-editor-escolas.md) | 2026-09-21 | Editor de /escolas: portada, bloque de comunidad y la galeria convertida en lista de medios de largo libre con fotos y videos de YouTube | cerrada | no | `src/pages/admin/paginas/escolas.astro`, `src/components/admin/FormularioEscolas.astro`, `src/lib/{escolas-edicion,schemas,traduccion}.ts`, `src/components/{SchoolsView,GaleriaMedios}.astro`, `content/*/schools.json` |
+| [0042](specs/0042-editor-contactos.md) | 2026-09-21 | Editor de /contactos: textos, etiquetas del formulario y como llegar; las sedes pasan a salir de la entidad de dojos | cerrada | no | `src/pages/admin/paginas/contactos.astro`, `src/components/admin/FormularioContactos.astro`, `src/lib/{contactos-edicion,schemas,traduccion}.ts`, `src/components/ContactView.astro`, `content/*/contact.json` |
 
 **"Disjunta?"** = si el trabajo no comparte archivos con otra spec abierta. Es lo que
 habilita paralelizar. Lo decide la spec, no el orquestador en runtime.

@@ -1,1 +1,43 @@
-{"seo":{"title":"Contactos e locais | Dojo da Luz Lisboa","description":"Locais, transportes e contacto do Dojo da Luz em Benfica, Lumiar e Encarnação."},"eyebrow":"Contactos","title":"Encontra o teu dojo.","lead":"Escolhe o local mais próximo ou envia-nos uma mensagem sobre aulas regulares e particulares.","venues":[{"name":"Dojo da Luz","area":"Benfica","transport":["Igreja de Benfica","Autocarros 716, 729, 746 e 758"]},{"name":"Núcleo Lumiar","area":"Lumiar / Ameixoeira","transport":["Metro Ameixoeira · linha amarela","Autocarro 703"]},{"name":"Dojo da Luz","area":"Encarnação","transport":["Metro Encarnação · linha vermelha","A cerca de 10 minutos a pé"]}],"privateTitle":"Aulas particulares","privateText":"Informa-te sobre aulas particulares e formatos adaptados à tua disponibilidade.","formTitle":"Fala connosco","fields":{"name":"Nome","email":"Email","subject":"Assunto","message":"Mensagem","submit":"Enviar mensagem","pending":"Envio pendente de configuração do email do dojo."}}
+{
+  "seo": {
+    "title": "Contactos e locais | Dojo da Luz Lisboa",
+    "description": "Locais, transportes e contacto do Dojo da Luz em Benfica, Lumiar e Encarnação."
+  },
+  "chrome": {
+    "caption": "Aikido · Lisboa",
+    "menuLabel": "Menu",
+    "skipLink": "Saltar para o conteúdo",
+    "footerNote": {
+      "areas": "Benfica · Lumiar · Encarnação",
+      "orgType": "Associação sem fins lucrativos"
+    }
+  },
+  "eyebrow": "Contactos",
+  "title": "Encontra o teu dojo.",
+  "lead": "Escolhe o local mais próximo ou envia-nos uma mensagem sobre aulas regulares e particulares.",
+  "transport": {
+    "benfica": [
+      "Igreja de Benfica",
+      "Autocarros 716, 729, 746 e 758"
+    ],
+    "lumiar": [
+      "Metro Ameixoeira · linha amarela",
+      "Autocarro 703"
+    ],
+    "encarnacao": [
+      "Metro Encarnação · linha vermelha",
+      "A cerca de 10 minutos a pé"
+    ]
+  },
+  "privateTitle": "Aulas particulares",
+  "privateText": "Informa-te sobre aulas particulares e formatos adaptados à tua disponibilidade.",
+  "formTitle": "Fala connosco",
+  "fields": {
+    "name": "Nome",
+    "email": "Email",
+    "subject": "Assunto",
+    "message": "Mensagem",
+    "submit": "Enviar mensagem",
+    "pending": "Envio pendente de configuração do email do dojo."
+  }
+}

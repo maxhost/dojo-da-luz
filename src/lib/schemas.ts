@@ -268,25 +268,29 @@ export const teacherSchema = z.object({
   dojoCta:z.object({ title:z.string().min(1), text:z.string().min(1), label:z.string().min(1) }),
 })
 
+/**
+ * `/contactos` (spec 0042). Las sedes **ya no viven aca**: salen de `content/dojos.json`
+ * (ADR-0038), que es lo que hace que archivar un dojo lo saque de la pagina. Encarnação
+ * cerro y seguia publicado solo en esta.
+ *
+ * Lo que queda es `transport`: como se llega a cada sede, **indexado por el `slug` del
+ * dojo**. Es contenido traducible —*Autocarros* / *Autobuses*— y por eso no puede estar en
+ * la ficha del dojo, que se guarda una sola vez sin traducir (ADR-0017).
+ *
+ * Un mapa y no una lista: reordenar los dojos no desalinea las lineas, y una clave huerfana
+ * —de un dojo borrado— se ignora en vez de romper el build.
+ */
 export const contactSchema = z.object({
-  seo: seoSchema, eyebrow:z.string().min(1), title:z.string().min(1), lead:z.string().min(1),
-  venues:z.array(z.object({ name:z.string().min(1), area:z.string().min(1), transport:z.array(z.string().min(1)).min(1) })).min(1),
-  privateTitle:z.string().min(1), privateText:z.string().min(1), formTitle:z.string().min(1),
-  fields:z.object({ name:z.string().min(1), email:z.string().min(1), subject:z.string().min(1), message:z.string().min(1), submit:z.string().min(1), pending:z.string().min(1) }),
+  seo: seoSchema, chrome: chromeSchema,
+  eyebrow: z.string().min(1), title: z.string().min(1), lead: z.string().min(1),
+  transport: z.record(z.string(), z.array(z.string().min(1))),
+  privateTitle: z.string().min(1), privateText: z.string().min(1), formTitle: z.string().min(1),
+  fields: z.object({
+    name: z.string().min(1), email: z.string().min(1), subject: z.string().min(1),
+    message: z.string().min(1), submit: z.string().min(1), pending: z.string().min(1),
+  }),
 })
 
-/**
- * `/outras-artes` (spec 0040). Tres cambios sobre lo que habia:
- *
- * - **Portada con foto** (ADR-0036), decorativa: va detras de un velo negro y del titular.
- * - **Una galeria de la pagina**, no una por arte, con la misma forma que las de audiencia
- *   (ADR-0031). Nace vacia y mientras lo este la seccion no se pinta.
- * - **Sin `id` por arte**: era un ancla HTML que no enlazaba nadie, igual que en `/aikido`.
- *   El ancla la pone la vista por posicion.
- *
- * `formUrl` sigue sin editarse desde el BO (spec 0035): viaja oculto en el formulario y
- * sembrado desde portugues.
- */
 export const otherArtsSchema = z.object({
   seo: seoSchema, chrome: chromeSchema,
   eyebrow: z.string().min(1), title: z.string().min(1), lead: z.string().min(1),

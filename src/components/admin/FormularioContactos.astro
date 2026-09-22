@@ -1,0 +1,146 @@
+---
+import CampoTexto from './CampoTexto.astro'
+import { errorDe } from '../../lib/forms'
+import { getDojos } from '../../lib/dojos'
+import { LOCALES, LOCALE_NAME, type Locale } from '../../lib/i18n'
+
+/**
+ * El formulario de `/contactos` para un idioma (spec 0042). Los cuatro se pintan a la vez:
+ * cambiar de pestaña es CSS, no una navegacion.
+ *
+ * **Los dojos no se editan aca** (ADR-0038). Se pinta un recuadro por dojo **activo** con
+ * su nombre como rotulo que no se puede tocar, y dentro solo las lineas de como se llega,
+ * que si se traducen. Dar de alta, archivar o renombrar una sede es la pantalla de Dojos.
+ */
+
+interface Props {
+  locale: Locale
+  datos: Record<string, any>
+  errores: Record<string, string>
+  shas: Record<Locale, string>
+  /** Ruta de lista → indices sin traducir. Esta pagina no tiene listas: llega vacio. */
+  sinTraducir: Record<string, number[]>
+}
+
+const { locale, datos, errores, shas } = Astro.props
+
+const v = (ruta: string): string =>
+  ruta.split('.').reduce<any>((actual, clave) => actual?.[clave], datos) ?? ''
+const e = (ruta: string) => errorDe(errores, ruta)
+
+const dojos = getDojos()
+const transporte: Record<string, string[]> = datos.transport ?? {}
+const lineasDe = (slug: string) => (transporte[slug] ?? []).join('\n')
+
+/**
+ * Las lineas de los dojos que ya no estan activos. No se pintan —su tarjeta no sale en la
+ * pagina— pero viajan ocultas: si no, publicar una vez las borraria, y reactivar el dojo lo
+ * devolveria a la pagina sin saber como se llega.
+ */
+const archivados = Object.keys(transporte).filter((slug) => !dojos.some((d) => d.slug === slug))
+
+const seccion = 'mt-8 border border-[#d7cec0] bg-[#fbf8f2] p-4'
+
+const campo = (nombre: string, etiqueta: string, extra: Record<string, unknown> = {}) => ({
+  idPrefijo: locale,
+  nombre,
+  etiqueta,
+  valor: v(nombre),
+  error: e(nombre),
+  requerido: true,
+  ...extra,
+})
+---
+
+<form method="post">
+  <input type="hidden" name="idioma" value={locale} />
+  {/* Los cuatro `sha`: publicar portugues toca los cuatro archivos y los verifica todos. */}
+  {LOCALES.map((otro) => <input type="hidden" name={`sha.${otro}`} value={shas[otro]} />)}
+
+  {archivados.map((slug) => (
+    <textarea hidden name={`transport.${slug}`}>{lineasDe(slug)}</textarea>
+  ))}
+
+  <fieldset class={seccion}>
+    <legend class="px-2 text-sm font-semibold">Cabecera y pie</legend>
+    <CampoTexto {...campo('chrome.caption', 'Bajada del logo')} />
+    <CampoTexto {...campo('chrome.menuLabel', 'Botón de menú')} />
+    <CampoTexto {...campo('chrome.skipLink', 'Saltar al contenido')} />
+
+    <p class="mt-6 text-xs text-[#625c55]">
+      El menú de arriba no se edita desde acá: sus ocho enlaces son las páginas del sitio y
+      se llaman igual en todas. El pie sí.
+    </p>
+
+    <CampoTexto {...campo('chrome.footerNote.areas', 'Pie · zonas')} />
+    <CampoTexto {...campo('chrome.footerNote.orgType', 'Pie · tipo de organización')} />
+  </fieldset>
+
+  <fieldset class={seccion}>
+    <legend class="px-2 text-sm font-semibold">SEO</legend>
+    <CampoTexto {...campo('seo.title', 'Título de la página', { recomendado: 60, ayuda: 'Lo que se lee como titular en Google y en la pestaña del navegador.' })} />
+    <CampoTexto {...campo('seo.description', 'Descripción', { tipo: 'area', recomendado: 155, ayuda: 'El párrafo que Google muestra debajo del título.' })} />
+  </fieldset>
+
+  <fieldset class={seccion}>
+    <legend class="px-2 text-sm font-semibold">01 · Portada</legend>
+    <CampoTexto {...campo('eyebrow', 'Antetítulo')} />
+    <CampoTexto {...campo('title', 'Titular')} />
+    <CampoTexto {...campo('lead', 'Bajada', { tipo: 'area' })} />
+  </fieldset>
+
+  <fieldset class={seccion}>
+    <legend class="px-2 text-sm font-semibold">02 · Cómo llegar</legend>
+    <p class="text-xs text-[#625c55]">
+      Un recuadro por sede abierta. <strong>Las sedes no se editan acá</strong>: se dan de
+      alta, se archivan y se ordenan en <a class="underline" href="/admin/dojos">Dojos</a>,
+      y esta página las toma de ahí. Acá se escribe cómo se llega a cada una, que sí se
+      traduce.
+    </p>
+
+    {dojos.map((dojo) => (
+      <div class="mt-5 border border-[#d7cec0] bg-white p-4">
+        <p class="text-sm font-semibold">
+          {dojo.nombre} · <span class="font-normal text-[#625c55]">{dojo.dojo}</span>
+        </p>
+        <CampoTexto
+          idPrefijo={locale}
+          nombre={`transport.${dojo.slug}`}
+          etiqueta="Cómo llegar (una línea por entrada)"
+          valor={lineasDe(dojo.slug)}
+          error={e(`transport.${dojo.slug}`)}
+          tipo="area"
+          requerido={false}
+          ayuda="Metro, autobuses, referencias. Vacío: la tarjeta sale sin la lista."
+        />
+      </div>
+    ))}
+
+    {dojos.length === 0 && (
+      <p class="mt-5 text-sm text-[#b3261e]">
+        No hay ninguna sede activa. La sección de sedes no se pinta en la página.
+      </p>
+    )}
+  </fieldset>
+
+  <fieldset class={seccion}>
+    <legend class="px-2 text-sm font-semibold">03 · Clases particulares</legend>
+    <CampoTexto {...campo('privateTitle', 'Título')} />
+    <CampoTexto {...campo('privateText', 'Texto', { tipo: 'area' })} />
+  </fieldset>
+
+  <fieldset class={seccion}>
+    <legend class="px-2 text-sm font-semibold">04 · Formulario</legend>
+    <CampoTexto {...campo('formTitle', 'Título')} />
+    <CampoTexto {...campo('fields.name', 'Etiqueta · nombre')} />
+    <CampoTexto {...campo('fields.email', 'Etiqueta · email')} />
+    <CampoTexto {...campo('fields.subject', 'Etiqueta · asunto')} />
+    <CampoTexto {...campo('fields.message', 'Etiqueta · mensaje')} />
+    <CampoTexto {...campo('fields.submit', 'Texto del botón')} />
+    <CampoTexto {...campo('fields.pending', 'Aviso debajo del botón', { tipo: 'area', ayuda: 'El formulario todavía no envía: falta configurar el email del dojo. Esta línea es lo que explica por qué el botón está apagado.' })} />
+  </fieldset>
+
+  <button class="mt-8 bg-[#0099ff] px-6 py-3 font-semibold text-white" type="submit">
+    Publicar Contactos en {LOCALE_NAME[locale]}
+  </button>
+</form>

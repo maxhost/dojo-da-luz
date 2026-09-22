@@ -130,6 +130,14 @@ build, asi que `'[data-campo-imagen]'` y `'[data-anadir]'` aparecen tambien dent
 `<script>`, y el dev server no —los sirve como archivo aparte. No era un defecto. Conta el
 atributo con el `=` (`data-campo-imagen=`) o el texto visible del boton, no el selector.
 
+**Un `303` del backoffice no prueba que haya pasado algo: lee la query del `Location`.** El
+2026-09-21 la comprobacion de que archivar un dojo saca su tarjeta de `/contactos` dio
+"dos tarjetas" y casi se publica como verificada: el POST a `/admin/dojos/<slug>/archivar`
+**no archivo nada** porque le faltaba el `sha`, y ese endpoint contesta igual `303` —pero a
+`?fallo=...` en vez de `?ok=...`—. Un redirect es el camino feliz y el infeliz a la vez.
+Mira `%{redirect_url}` con `curl -o /dev/null -w`, o comproba el archivo en disco, antes de
+dar por hecho el efecto.
+
 **Las reglas verificables van en hooks, no aca.** Los hooks corren fuera del contexto,
 cuestan cero tokens y son deterministas; este archivo es advisory. Si una regla se puede
 chequear con un comando, es un hook — no la escribas aca tambien.

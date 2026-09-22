@@ -9,8 +9,8 @@ Regla: **marcar `hecho` solo con verificacion real** — tests que pasan, comand
 cosa vista en pantalla. No "deberia andar".
 
 Ultima actualizacion: 2026-09-21 — gate verde: `astro check` **0/0/0**, `npm test`
-**39/39**, `npm run build` 44 rutas. Esta sesion, seis entregas seguidas — y con la
-ultima **las siete paginas de contenido tienen editor**:
+**39/39**, `npm run build` 44 rutas. Esta sesion, siete entregas seguidas — y con la
+ultima **todas las paginas de contenido del sitio tienen editor menos `/professor`**:
 
 1. **Spec 0036** — editores de Adultos y Crianças con galeria de largo libre y YouTube
    (ADR-0031, ADR-0032). Commiteado y desplegado: `main` en `e330802`, comprobado en las
@@ -78,6 +78,15 @@ en 200 con los tres profesores, el linaje y el bloque de Pablo. Sin cookie,
    medios y `/outras-artes` con la galeria todavia vacia. **El panel del BO lista ahora once
    entradas**: Home, Aulas, Adultos, Crianças, Aikido, O dojo, Eventos, Outras artes,
    Escolas, Imágenes y Dojos.
+7. **Spec 0042** — editor de `/contactos` (ADR-0038). Octavo editor, y de paso **cierra la
+   fila 6f**: las sedes dejan de estar duplicadas en `contact.venues` y salen de la entidad
+   de dojos, igual que en `/aulas`. Consecuencia inmediata: **Encarnação desaparece de
+   `/contactos` en los cuatro idiomas** —cerro hace tiempo y era la ultima pagina que lo
+   seguia publicando—. Lo unico que queda en el contenido traducible es **como se llega**,
+   indexado por el `slug` del dojo, porque *Autocarros* / *Autobuses* si se traduce y la
+   ficha del dojo se guarda una sola vez sin traducir (ADR-0017). El editor **no edita
+   dojos**: pinta un recuadro por sede activa con su nombre como rotulo intocable, y las de
+   los dojos archivados viajan ocultas para que publicar no las borre.
 
 **Y una noticia que llego sola: `publicarVarios` ya corrio contra GitHub.** El push del
 editor de `/aikido` fue rechazado por no-fast-forward porque `origin/main` tenia el commit
@@ -125,13 +134,12 @@ SEO actual, mejorar GEO.
 
 ### Por donde seguir (corte del 2026-09-21, tercera sesion)
 
-**Las siete paginas de contenido ya tienen editor**: `/` (Home), `/aulas`,
-`/aulas/adultos`, `/aulas/criancas`, `/aikido`, `/dojo`, `/eventos`, `/outras-artes` y
-`/escolas` (specs 0021 y 0035 a 0041). **Lo que queda sin editor:**
+**Todas las paginas de contenido ya tienen editor menos una**: `/` (Home), `/aulas`,
+`/aulas/adultos`, `/aulas/criancas`, `/aikido`, `/dojo`, `/eventos`, `/outras-artes`,
+`/escolas` y `/contactos` (specs 0021 y 0035 a 0042). **Lo que queda sin editor:**
 
 | Pagina | Contenido | Nota |
 |---|---|---|
-| `/contactos` | `contact.json` | **La mas urgente**: duplica las tres sedes en `contact.venues`, con Encarnação incluido. Engancharla a la entidad de dojos necesita sumarle `transporte` a la ficha (fila 6f). Su formulario esta visible pero **no envia**: falta email/endpoint. |
 | `/professor-pablo-duran` | `teacher.json` | Repite el linaje de `/dojo` en su propio campo; unificarlos es parte de la decision. Sin urgencia conocida. |
 
 **La receta, ya probada tres veces.** Con el modulo generico, un editor nuevo es:
@@ -288,7 +296,7 @@ siguiente guardado del BO reordena el archivo: ruido de una vez, no perdida de d
 | 6 | Spec 0019 — backoffice: login y sesion | 0019 | hecho | `/admin` con guard por Host, noindex, rate limit y sesion en Neon. Sin reset por email: eso es la 0022. |
 | 6d | Spec 0022 — recuperacion de contraseña por Resend | 0022 | bloqueada | Decision del cliente: arrancar sin Resend. Necesita `RESEND_API_KEY`. Mientras tanto la contraseña se repone con `npm run admin:seed`. |
 | 6b | Spec 0020 — dojos como entidad y render en la home | 0020 | hecho | 3 dojos en `content/dojos.json` con horarios estructurados. Falta migrar Aulas y Contacto a la entidad (fila 6f). |
-| 6f | Migrar Aulas y Contacto a la entidad de dojos | 0034 | **a medias** | `/aulas` ya lee la entidad (spec 0034): archivar un dojo lo saca de la pagina, comprobado en las dos direcciones. Falta `/contactos`, que sigue con `contact.venues` — necesita sumarle `transporte` a la ficha de dojo. |
+| 6f | Migrar Aulas y Contacto a la entidad de dojos | 0034, 0042 | **hecho** | Las dos leen la entidad: archivar un dojo lo saca de `/aulas` y de `/contactos`, comprobado en las dos direcciones con el BO corriendo. `contact.venues` se borro; como se llega quedo en el contenido traducible indexado por `slug` (ADR-0038). |
 | 6c | Spec 0023 — capa GEO (resumen en Home, Q&A en Aulas/Adultos/Niños, robots, llms.txt) | 0023 | hecho | 13 pares Q&A por idioma con `FAQPage`. Falta que el cliente confirme precios y edades: hoy salen del contenido que ya estaba publicado. |
 | 6e | Spec 0021 — editor de Home y CRUD de dojos en el BO | 0021 | hecho en local | Verificado contra `astro dev` con backend de disco: 16 comprobaciones en la spec. **No desplegado y sin un solo commit salido por la API de GitHub.** |
 | 6g | Ejercitar el camino de publicacion por GitHub | 0021 | bloqueada | Necesita un PAT de alcance fino sobre `maxhost/dojo-da-luz` con contenido en escritura, cargado en Vercel como `GITHUB_TOKEN`. Sin el, las 4 rutas del editor responden 503 diciendo que falta — el resto del BO (login, panel) funciona igual. |
@@ -307,6 +315,7 @@ siguiente guardado del BO reordena el archivo: ruido de una vez, no perdida de d
 | 6u | Spec 0039 — editor de /eventos | 0039 | implementada, verificada en local y **en produccion** (`8953ddb`, deployment `dojo-da-7uhgcm95e`; con sesion temporal, `/admin/paginas/eventos` da 200 con sus cinco bloques, 6 campos de imagen y 1 boton de alta) | La agenda es la primera pagina que **se vacia**: el `.min(3).max(4)` obligaba a inventar un evento para poder borrar otro (ADR-0035). Ahora la lista es de largo libre, se arma en portugues y se traduce, y con cero eventos la pagina no pinta una franja beige vacia sino `emptyText`, editable en los cuatro idiomas. La foto de portada y los cinco textos del borde pasaron al contenido. El `0{index + 1}` que escribia `010` a partir del decimo esta arreglado — dejaba de ser latente justo ahora que la lista puede crecer. Ningun control nuevo: reusa la columna `imagen` de `TablaFilas` que sumo la spec 0038. |
 | 6v | Spec 0040 — editor de /outras-artes | 0040 | implementada, verificada en local y **en produccion** (`cbb9ac4`, deployment `dojo-da-fburjdlp9`; las 4 paginas publicas con la portada nueva y las anclas `arte-1..3`, y con sesion temporal `/admin/paginas/outras-artes` da 200 con sus siete bloques) | Cada arte es un bloque del formulario, no una fila de tabla: tiene once campos y tres listas adentro —parrafos, beneficios, horarios— que van como recuadro de texto, una entrada por renglon (ADR-0033). La portada gana foto de fondo y la pagina gana la galeria de Adultos, con los dos botones de alta. Verificado contra el BO corriendo: foto y video subidos desde portugues aparecieron en los cuatro, un POST forjado desde español con otra portada, otra foto de arte, otro `formUrl`, otra foto de galeria y un cuarto arte quedo en 3 artes, 2 medios y las cuatro cosas portuguesas, vaciar beneficios y borrar el profesor dejo de pintarlos, y con la galeria vacia la seccion entera desaparece. De las 44 paginas construidas cambiaron **exactamente las 4 de `/outras-artes`**, y comparadas etiqueta por etiqueta la unica diferencia es la portada nueva y el ancla por posicion: ni un texto cambio. |
 | 6w | Spec 0041 — editor de /escolas | 0041 | implementada, verificada en local y **en produccion** (`7af0457`, deployment `dojo-da-k2gbmyrzl`; las 4 paginas con sus 4 fotos y cero iframes, Adultos con 5 medios y `/outras-artes` con 0 —las dos intactas— y con sesion temporal `/admin/paginas/escolas` da 200 con sus cinco bloques) | El mas corto de los siete: portada, bloque de comunidad y galeria. Lo que tenia trabajo era la galeria, que era la unica del sitio que no admitia video y exigia entre 4 y 8 fotos (ADR-0037). Verificado contra el BO corriendo: un video de YouTube añadido en portugues aparecio en los cuatro, un POST forjado desde español con tres fotos distintas, un medio de mas y un parrafo de mas quedo en 5 medios, 2 parrafos y las tres fotos portuguesas, con cinco medios la rejilla destaca el primero y el video sale como enlace con miniatura (**cero `<iframe>`**), con uno pasa a columna unica centrada y con cero la franja desaparece. De las 44 paginas cambiaron **exactamente las 4 de `/escolas`** y solo en la rejilla; las de Adultos, Criancas y `/outras-artes` quedaron intactas pese al cambio de prop en `GaleriaMedios`. |
+| 6x | Spec 0042 — editor de /contactos | 0042 | implementada, verificada en local | La unica pagina sin una sola foto ni una lista de largo libre. Lo que tenia trabajo eran las sedes: `contact.venues` se borro y las tarjetas salen de `getDojos()` (ADR-0038), asi que **Encarnação dejo de publicarse**. Verificado contra el BO corriendo: archivar Lumiar desde el editor de Dojos dejo `/contactos` con una tarjeta y `/aulas` con una sede; publicar en ese estado **conservo sus lineas** (viajan en campos ocultos); reactivarlo devolvio todo. Dos defectos encontrados por verificar y no por leer: el endpoint de archivar **falla en silencio sin el `sha`** (303 con `?fallo=` en la query — la primera lectura de "dos tarjetas" no probaba nada), y el bloque `transport` se reescribia entero en cada diff porque el orden de claves salia del formulario; ahora se ordenan alfabeticamente. De las 44 paginas cambiaron **exactamente las 4 de `/contactos`**. |
 | 6q | Sacar Encarnação de los textos en prosa | — | pendiente | El dojo cerro. La estructura ya no lo nombra, la prosa si: en `classes.json` (descripcion SEO, pie, `children.facts[2]`, dos respuestas del Q&A) lo puede arreglar el cliente desde `/admin/paginas/aulas`. `adults.json` y `children.json` ya tienen editor (spec 0036): sus `facts` y su Q&A los puede arreglar el cliente. Queda `contact.json`, sin editor. |
 | 7 | Alumnos + emision de factura + PDF a R2 + envio Resend | — | pendiente | Necesita una factura de ejemplo real. Spec sin escribir: el numero 0004 del INDEX es otra cosa. |
 | 8 | Redirects 301 de las 34 URLs viejas | — | plan definido | Matriz conceptual documentada. Falta crawl final, Search Console e implementación cuando existan todos los destinos. |
