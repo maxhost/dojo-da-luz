@@ -2,6 +2,7 @@
 import { defineConfig } from 'astro/config'
 import vercel from '@astrojs/vercel'
 import tailwindcss from '@tailwindcss/vite'
+import { redirectsParaAstro } from './src/lib/redirects.ts'
 
 // ADR-0001: output estatico y cero APIs propietarias del host. Nada de ISR ni
 // middleware — el sitio publico tiene que poder mudarse de Vercel en horas.
@@ -12,6 +13,10 @@ export default defineConfig({
   // sitio publico siguen siendo HTML prerenderizado.
   adapter: vercel(),
   trailingSlash: 'never',
+  // Las 36 URLs del Wix (spec 0045). El mapa vive en `src/lib/redirects.ts` para que
+  // `redirects.test.ts` pueda cruzar cada destino contra las 44 rutas reales: escritas
+  // aca serian literales que nadie puede probar hasta el dia del cambio de DNS.
+  redirects: redirectsParaAstro(),
   build: { format: 'directory' },
   i18n: {
     defaultLocale: 'pt',

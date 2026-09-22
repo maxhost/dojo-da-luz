@@ -12,9 +12,9 @@ export const HREFLANG: Record<Locale, string> = {
 }
 
 export const LOCALE_NAME: Record<Locale, string> = {
-  pt: 'Portugues',
-  es: 'Espanol',
-  fr: 'Francais',
+  pt: 'Português',
+  es: 'Español',
+  fr: 'Français',
   en: 'English',
 }
 
@@ -53,6 +53,19 @@ const NAV_LABELS: Record<Locale, Record<'home' | 'classes' | 'aikido' | 'dojo' |
   es: { home: 'Inicio', classes: 'Clases', aikido: 'La práctica', dojo: 'El dojo', events: 'Eventos', schools: 'Escuelas', otherArts: 'Otras artes', contact: 'Contacto' },
   fr: { home: 'Accueil', classes: 'Cours', aikido: 'La pratique', dojo: 'Le dojo', events: 'Événements', schools: 'Écoles', otherArts: 'Autres arts', contact: 'Contact' },
   en: { home: 'Home', classes: 'Classes', aikido: 'The practice', dojo: 'The dojo', events: 'Events', schools: 'Schools', otherArts: 'Other arts', contact: 'Contact' },
+}
+
+/**
+ * Nombre de los dos `<nav>` del encabezado: lo primero que anuncia un lector de pantalla
+ * al entrar en la navegacion (spec 0048). Es vocabulario de interfaz, como NAV_LABELS, y
+ * por eso vive aca y no en el contenido. Portugues y español comparten valor y aun asi
+ * estan escritos los dos: la tabla completa se lee de un golpe.
+ */
+export const NAV_ARIA: Record<Locale, { principal: string; idioma: string }> = {
+  pt: { principal: 'Principal', idioma: 'Idioma' },
+  es: { principal: 'Principal', idioma: 'Idioma' },
+  fr: { principal: 'Principale', idioma: 'Langue' },
+  en: { principal: 'Main', idioma: 'Language' },
 }
 
 /**

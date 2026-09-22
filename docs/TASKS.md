@@ -8,12 +8,13 @@ Si una sesion se cae, se cierra o se compacta, se vuelve aca — no al chat. Hay
 Regla: **marcar `hecho` solo con verificacion real** — tests que pasan, comando corrido,
 cosa vista en pantalla. No "deberia andar".
 
-Ultima actualizacion: 2026-09-21, cierre de sesion — gate verde: `astro check` **0/0/0**
-(119 archivos), `npm test` **39/39**, `npm run build` 44 rutas. `main` en produccion.
+Ultima actualizacion: 2026-09-21, cuarta sesion — gate verde: `astro check` **0/0/0**
+(122 archivos), `npm test` **53/53**, `npm run build` 44 rutas + `sitemap.xml`.
 
-**Retomar con:** *"Leer docs/TASKS.md y docs/INDEX.md. Implementar la spec 0048, despues la
-0045."* Las dos son disjuntas y no esperan a nadie. La 0049 necesita antes una decision del
-cliente (ver su seccion "Abierto").
+**Retomar con:** *"Leer docs/TASKS.md y docs/INDEX.md. Implementar la spec 0047, despues la
+0046."* Las dos comparten archivos entre si y van en ese orden. La 0049 necesita antes una
+decision del cliente (ver su seccion "Abierto"), y a la 0045 solo le falta el dominio, que
+depende del DNS del cliente (fila 10).
 
 Esta sesion, nueve entregas y un plan — con las dos ultimas entregas **no queda ninguna
 pagina de contenido sin editor ni nada del borde sin pantalla**:
@@ -210,14 +211,14 @@ estas specs, **todas cerradas menos la ultima, y ninguna implementada**:
 
 | Spec | Que | Disjunta | Bloqueada por |
 |---|---|---|---|
-| **0045** | Los 301 de las 38 URLs del Wix, `sitemap.xml` y el dominio | si | el DNS lo cambia el cliente (el resto no espera) |
+| ~~**0045**~~ | Los 301 de las 38 URLs del Wix, `sitemap.xml` y el dominio | si | **hecha salvo el dominio**, que espera el DNS del cliente (fila 10) |
 | **0046** | `og:image` e identidad del JSON-LD en Ajustes | no (con 0047) | — |
 | **0047** | Subida prefirmada a R2 + el video de la portada | no (con 0046) | — |
-| **0048** | Los dos `aria-label` traducidos y los acentos de los idiomas | si | — |
+| ~~**0048**~~ | Los dos `aria-label` traducidos y los acentos de los idiomas | si | **hecha** |
 | **0049** | El cierre de la Home al modal de contacto | si | **el formulario no envia**: hay que decidir |
 
-**Orden recomendado:** 0048 (quince minutos) → 0045 (lo que decide si el SEO cuenta) →
-0047 → 0046 → 0049.
+**Orden recomendado:** ~~0048~~ → ~~0045~~ → **0047 → 0046 → 0049**. Las dos primeras estan
+hechas y verificadas (ver "Hecho"); quedan las tres ultimas.
 
 **Tres hallazgos de la auditoria que hay que tener a mano:**
 
@@ -417,9 +418,9 @@ siguiente guardado del BO reordena el archivo: ruido de una vez, no perdida de d
 | 6x | Spec 0042 — editor de /contactos | 0042 | implementada, verificada en local y **en produccion** (`08e21af`, deployment `dojo-da-6oahgvyay`) | La unica pagina sin una sola foto ni una lista de largo libre. Lo que tenia trabajo eran las sedes: `contact.venues` se borro y las tarjetas salen de `getDojos()` (ADR-0038), asi que **Encarnação dejo de publicarse**. Verificado contra el BO corriendo: archivar Lumiar desde el editor de Dojos dejo `/contactos` con una tarjeta y `/aulas` con una sede; publicar en ese estado **conservo sus lineas** (viajan en campos ocultos); reactivarlo devolvio todo. Dos defectos encontrados por verificar y no por leer: el endpoint de archivar **falla en silencio sin el `sha`** (303 con `?fallo=` en la query — la primera lectura de "dos tarjetas" no probaba nada), y el bloque `transport` se reescribia entero en cada diff porque el orden de claves salia del formulario; ahora se ordenan alfabeticamente. De las 44 paginas cambiaron **exactamente las 4 de `/contactos`**. |
 | 6q | Sacar Encarnação de los textos en prosa | — | pendiente | El dojo cerro. La estructura ya no lo nombra, la prosa si: en `classes.json` (descripcion SEO, pie, `children.facts[2]`, dos respuestas del Q&A) lo puede arreglar el cliente desde `/admin/paginas/aulas`. `adults.json` y `children.json` ya tienen editor (spec 0036): sus `facts` y su Q&A los puede arreglar el cliente. Queda `contact.json`, sin editor. |
 | 7 | Alumnos + emision de factura + PDF a R2 + envio Resend | — | pendiente | Necesita una factura de ejemplo real. Spec sin escribir: el numero 0004 del INDEX es otra cosa. |
-| 8 | Redirects 301 de las 34 URLs viejas | — | plan definido | Matriz conceptual documentada. Falta crawl final, Search Console e implementación cuando existan todos los destinos. |
-| 9 | Sitemap + robots.txt | — | pendiente | Con el set completo de paginas. |
-| 10 | Apuntar `aikido-duran.com` a Vercel | — | pendiente | Hoy resuelve a Wix. Va junto con la tarea 8: sin los 301 no se corta. Necesita accesos de DNS del cliente. |
+| 8 | Redirects 301 de las 38 URLs viejas | 0045 | **hecho** | 36 reglas en `src/lib/redirects.ts`, consumidas por `astro.config.mjs` y traducidas por el adapter a `301` de plataforma. Las 36 probadas por HTTP: `301` con `Location` exacto, un solo salto, destino `200`. `/no-existe` y `/videos` dan 404: sin comodines. 14 pruebas en `redirects.test.ts`. Falta el export de Search Console del cliente para cerrar el inventario. |
+| 9 | Sitemap + robots.txt | 0045 | **hecho** | `src/pages/sitemap.xml.ts` genera 44 `<loc>` de `PAGES × LOCALES` con `hreflang` reciproco y `x-default`; sus 44 URLs son **exactamente** los 44 `canonical` del HTML construido y ninguna es un origen redirigido. `robots.txt` con su linea `Sitemap:`. ADR-0045. |
+| 10 | Apuntar `aikido-duran.com` a Vercel | 0045 | pendiente | **Lo unico que falta de la 0045.** Los 301 ya estan desplegables, asi que el orden del ADR-0043 se cumple. `vercel domains ls` (2026-09-21): el dominio **no esta** en la cuenta; agregarlo es un cambio en la cuenta del cliente y no se hizo sin pedirlo. Despues del DNS: repetir las 36 reglas contra `www.aikido-duran.com`, comprobar apex→www y http→https, y enviar el sitemap a Search Console. |
 | 11 | Retratos reales de Ines Martins, Miguel Costa y Sofia Almeida | 0027 | bloqueada | Necesita fotos del cliente. Hoy las tres fichas de `/dojo` muestran escenas de practica de wixstatic, no a la persona que nombran: se sustituye el array `teacherPhotos` sin tocar la composicion. |
 | 12 | Logos reales de los parceiros, con transparencia | 0028 | bloqueada | Necesita los originales del cliente. Los 8 de hoy traen fondo blanco incrustado y 3 son fotografias, no marcas. `mix-blend-multiply` tapa el blanco puro pero no las 2 casi blancas. |
 
@@ -526,6 +527,10 @@ contraseña, sesion opaca en Neon.)*
 | 2026-09-21 | El host canonico del dominio real, medido | `http://aikido-duran.com` → 301 a `https://aikido-duran.com` → 301 a `https://www.aikido-duran.com` → 200. El Wix consolida en **`www`**, que es lo que ya dice `astro.config.mjs`. Y los 44 `canonical` apuntan hoy a URLs que **dan 404** en ese dominio: comprobado en `/aulas`, `/dojo` y `/professor-pablo-duran` |
 | 2026-09-21 | mistake→rule: el hook `acento-escrito.sh` | La primera pasada de la spec 0044 migro **tres** tonos del acento porque busque los tres que conocia; el cuarto aparecio al enumerar todos los hex y filtrar por una propiedad (`b > r + 20`). Ahora lo chequea un hook `PostToolUse` sobre `src/components/*.astro` y `src/layouts/*.astro`, que excluye el BO (se queda azul por el ADR-0041) y `global.css` (define el token). Probado con tres casos: componente publico limpio pasa, formulario del BO pasa, componente publico con `#b3e5ff` **falla con exit 2** |
 | 2026-09-21 | mistake→rule: el piso de ruido de una comparacion | Las cuatro homes daban 864.704 pixeles distintos y parecia una regresion del cambio de colores; era el video del hero, que cae en otro fotograma por captura. Se detecto capturando **el mismo build dos veces**. Es advisory —no se chequea con un comando— asi que fue a `CLAUDE.md` |
+| 2026-09-21 | Spec 0048 — los dos `aria-label` traducidos y los idiomas con acento | `astro check` 0/0/0, 39/39, build 44 rutas. En el HTML construido: **0** `aria-label="Idioma"` en las 11 paginas inglesas y las 11 francesas (dicen `Language` y `Langue`), 44 `Idioma` que son las 22 portuguesas y 22 españolas, y **0** apariciones de `Portugues` sin acento. Con el BO corriendo y una sesion temporal, `/admin/paginas/dojo` muestra `Português`, `Español`, `Français` e `English` y ninguna sin acento |
+| 2026-09-21 | El diff de las 44 paginas se leyo carácter a carácter, no pagina a pagina | Las 44 salieron "distintas" (el navbar esta en todas) y eso no dice nada. Comparadas con `difflib` a nivel de carácter, el cambio entero son **nueve segmentos**: `e→ê`, `n→ñ` y `c→ç` ×242 cada uno, y los seis pedazos de `Idioma→Langue/Language` y `Principal→Principale/Main` ×22. **Cero** diferencias fuera de la spec. Mas informativo que la comparacion pixel a pixel que pedia la spec, y sin el ruido del video del hero |
+| 2026-09-21 | Spec 0045 — 36 redirects `301`, `sitemap.xml` y la linea `Sitemap:` | `astro check` 0/0/0 (122 archivos), **53/53** (14 pruebas nuevas), build 44 rutas + `sitemap.xml`. Las 36 reglas verificadas **dos veces**: simulando el router sobre `.vercel/output/config.json` (36/36 exactas, ninguna vuelve a redirigir, los 36 destinos existen en disco) y **por HTTP** contra el servidor (36/36 dan `301` con `Location` exacto y el destino da `200` sin redirigir). `/no-existe`, `/videos` y `/galeria` → 404: no hay comodines. El sitemap: 44 `<loc>` unicas, los cuatro `hreflang` + `x-default` en cada una, ninguna es un origen redirigido, las 44 dan 200, y el conjunto es **identico** a los 44 `canonical` del HTML construido |
+| 2026-09-21 | El test encontro dos saltos donde la matriz decia uno | `/enlaces-es` y `/links-fr` estaban escritos `/es/#parcerias` y `/fr/#parcerias` —copiados bien del documento 10—, y con `trailingSlash: 'never'` el adapter agrega un `308` de `/es/` a `/es`: dos saltos por cada backlink. Lo encontro `redirects.test.ts` antes del primer build, no la relectura. Y `#quotas` resulto estar traducido (`#cuotas`, `#tarifs`, `#fees`), al contrario de lo que decia el inventario: medido en el HTML. Las dos cosas, corregidas en el doc 10 y en el ADR-0045 |
 
 ## Descartado (y por que)
 

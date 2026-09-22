@@ -154,6 +154,21 @@ cae en un fotograma distinto en cada captura. La regla general: cuando el oracul
 medicion, **medi primero cuanto se mueve sola** y recien despues leé la diferencia. Sin ese
 control se reporta una regresion que no existe, o peor, se "arregla".
 
+**Si todas las unidades de una comparacion salen distintas, la granularidad esta mal.** El
+2026-09-21 la spec 0048 dio **44 de 44 paginas distintas** y ese numero no dice nada: el
+navbar esta en las 44, asi que cualquier cambio del borde las toca todas. Comparadas con
+`difflib` a nivel de **carácter**, el cambio entero eran nueve segmentos —tres acentos y
+seis pedazos de dos palabras— y ahi si se podia afirmar "cero diferencias fuera de la spec".
+Cuando el oraculo contesta "cambio todo", no confirma ni refuta: baja un nivel de
+granularidad antes de leerlo.
+
+**El `antes` de una comparacion se identifica antes de creerle.** El 2026-09-21
+`cp -R .vercel/output/static /tmp/antes-static` **no sobreescribio** el directorio: como ya
+existia de una sesion anterior, copio *adentro* y dejo dos builds mezclados —88 archivos
+donde habia 44—. Comparar contra el de las 20:24 habria atribuido a la spec del dia los
+cambios de la sesion anterior. Lo delato el conteo, y lo confirmo `stat -f '%Sm'`. Antes de
+leer un diff, comproba la **fecha** del baseline, no solo que el directorio exista.
+
 **Las reglas verificables van en hooks, no aca.** Los hooks corren fuera del contexto,
 cuestan cero tokens y son deterministas; este archivo es advisory. Si una regla se puede
 chequear con un comando, es un hook — no la escribas aca tambien.

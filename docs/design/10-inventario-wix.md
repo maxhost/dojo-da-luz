@@ -54,8 +54,9 @@ una tarea: es una mejora que ya esta hecha y conviene no perderla de vista al co
 
 ## Matriz definitiva
 
-Reglas: `301` permanente, **un solo salto**, sin comodines, y **ningun destino que devuelva
-404 o apunte a un anchor inexistente** — los anchors de esta tabla estan verificados contra
+Reglas: `301` permanente, **un solo salto**, sin comodines, destinos **sin barra final**
+(`trailingSlash: 'never'`: con barra, el adapter agrega un `308` y son dos saltos — ADR-0045)
+y **ningun destino que devuelva 404 o apunte a un anchor inexistente** — los anchors de esta tabla estan verificados contra
 el HTML construido.
 
 ### No necesitan regla
@@ -67,71 +68,71 @@ el HTML construido.
 | Origen | Destino |
 |---|---|
 | `/iniciopt` | `/` |
-| `/inicioes` | `/es/` |
-| `/accueil-fr` | `/fr/` |
+| `/inicioes` | `/es` |
+| `/accueil-fr` | `/fr` |
 
 ### Aulas y conversion
 
 | Origen | Destino |
 |---|---|
-| `/horarios-e-preospt` | `/aulas/` |
-| `/horarios-tarifases` | `/es/clases/` |
-| `/horaires-et-tarifs-fr` | `/fr/cours/` |
-| `/aula-experimental` | `/aulas/adultos/#aula-experimental` |
-| `/criancas` | `/aulas/criancas/` |
+| `/horarios-e-preospt` | `/aulas` |
+| `/horarios-tarifases` | `/es/clases` |
+| `/horaires-et-tarifs-fr` | `/fr/cours` |
+| `/aula-experimental` | `/aulas/adultos#aula-experimental` |
+| `/criancas` | `/aulas/criancas` |
 
 ### Aikido, videos y lecturas
 
 | Origen | Destino | Por que |
 |---|---|---|
-| `/aikidopt` | `/aikido/` | |
-| `/aikidoes` | `/es/aikido/` | |
-| `/akido-fr` | `/fr/aikido/` | typo historico del origen, se preserva |
-| `/videospt` | `/aikido/` | videos historicos de Aikido |
-| `/videos-es` | `/es/aikido/` | idem |
-| `/videos-fr` | `/fr/aikido/` | idem |
-| `/lectura-es` | `/es/aikido/` | bibliografia de la disciplina |
-| `/lecture-fr` | `/fr/aikido/` | idem |
-| el PDF de 6,7 MB | `/fr/aikido/` | lo que ya decia el documento 09 |
+| `/aikidopt` | `/aikido` | |
+| `/aikidoes` | `/es/aikido` | |
+| `/akido-fr` | `/fr/aikido` | typo historico del origen, se preserva |
+| `/videospt` | `/aikido` | videos historicos de Aikido |
+| `/videos-es` | `/es/aikido` | idem |
+| `/videos-fr` | `/fr/aikido` | idem |
+| `/lectura-es` | `/es/aikido` | bibliografia de la disciplina |
+| `/lecture-fr` | `/fr/aikido` | idem |
+| el PDF de 6,7 MB | `/fr/aikido` | lo que ya decia el documento 09 |
 
 ### Dojo, profesor y galerias
 
 | Origen | Destino | Por que |
 |---|---|---|
-| `/dojo-da-luz-pt` | `/dojo/` | |
-| `/dojo-da-luz-es` | `/es/dojo/` | |
-| `/dojo-da-luz-fr` | `/fr/dojo/` | |
-| `/prefessorpt` | `/professor-pablo-duran/` | typo historico, se preserva |
-| `/profesores` | `/es/profesor-pablo-duran/` | |
-| `/enseignant-fr` | `/fr/professeur-pablo-duran/` | **fuera del sitemap** |
-| `/fotospt` | `/dojo/` | la galeria depende del dojo |
-| `/fotos-es` | `/es/dojo/` | idem |
-| `/photos-fr` | `/fr/dojo/` | idem |
+| `/dojo-da-luz-pt` | `/dojo` | |
+| `/dojo-da-luz-es` | `/es/dojo` | |
+| `/dojo-da-luz-fr` | `/fr/dojo` | |
+| `/prefessorpt` | `/professor-pablo-duran` | typo historico, se preserva |
+| `/profesores` | `/es/profesor-pablo-duran` | |
+| `/enseignant-fr` | `/fr/professeur-pablo-duran` | **fuera del sitemap** |
+| `/fotospt` | `/dojo` | la galeria depende del dojo |
+| `/fotos-es` | `/es/dojo` | idem |
+| `/photos-fr` | `/fr/dojo` | idem |
 
 ### Contacto
 
 | Origen | Destino |
 |---|---|
-| `/contactospt` | `/contactos/` |
-| `/contacto-es` | `/es/contacto/` |
-| `/coordonnees-fr` | `/fr/contact/` |
+| `/contactospt` | `/contactos` |
+| `/contacto-es` | `/es/contacto` |
+| `/coordonnees-fr` | `/fr/contact` |
 
 ### Actualidad y eventos
 
 | Origen | Destino |
 |---|---|
-| `/eventos-e-destaquespt` | `/eventos/` |
-| `/atualidadept` | `/eventos/` |
-| `/actualidad-es` | `/es/eventos/` |
-| `/actualit-fr` | `/fr/evenements/` |
+| `/eventos-e-destaquespt` | `/eventos` |
+| `/atualidadept` | `/eventos` |
+| `/actualidad-es` | `/es/eventos` |
+| `/actualit-fr` | `/fr/evenements` |
 
 ### Parcerias y enlaces — **corrige el documento 09**
 
 | Origen | Destino segun 09 | Destino real |
 |---|---|---|
 | `/parcerias` | `/dojo/#parcerias` | **`/#parcerias`** |
-| `/enlaces-es` | `/es/dojo/#colaboraciones` | **`/es/#parcerias`** |
-| `/links-fr` | `/fr/dojo/#partenaires` | **`/fr/#parcerias`** |
+| `/enlaces-es` | `/es/dojo/#colaboraciones` | **`/es#parcerias`** |
+| `/links-fr` | `/fr/dojo/#partenaires` | **`/fr#parcerias`** |
 
 La rejilla de parceiros vive en la **Home** desde el ADR-0024, no en `/dojo`. Los anchors
 `#colaboraciones` y `#partenaires` **no existen en ninguna pagina del sitio**; `#parcerias`
@@ -144,9 +145,10 @@ reglas tecnicas de ese mismo documento prohiben.
 | Anchor | Existe en |
 |---|---|
 | `#parcerias`, `#aulas`, `#dojo`, `#umbral` | las 4 homes |
-| `#aula-experimental` | `/aulas/` y `/aulas/adultos/` (4 idiomas) |
-| `#horarios`, `#quotas`, `#criancas`, `#faq` | `/aulas/` |
-| `#pablo-duran` | `/dojo/` |
+| `#aula-experimental` | `/aulas` y `/aulas/adultos` (4 idiomas) |
+| `#horarios`, `#criancas`, `#faq` | `/aulas` (4 idiomas) |
+| `#quotas` / `#cuotas` / `#tarifs` / `#fees` | `/aulas` — **este si esta traducido** (ADR-0045) |
+| `#pablo-duran` | `/dojo` |
 
 ## Lo que falta antes de lanzar
 

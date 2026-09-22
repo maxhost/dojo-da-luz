@@ -2,7 +2,7 @@
 import Seo from '../components/Seo.astro'
 import SocialLinks from '../components/SocialLinks.astro'
 import { getAjustes } from '../lib/ajustes'
-import { LOCALES, LOCALE_ICON, LOCALE_NAME, HREFLANG, pathFor, type Locale, type PageKey } from '../lib/i18n'
+import { LOCALES, LOCALE_ICON, LOCALE_NAME, HREFLANG, NAV_ARIA, pathFor, type Locale, type PageKey } from '../lib/i18n'
 import '../styles/global.css'
 
 interface Props {
@@ -22,6 +22,9 @@ const year = new Date().getFullYear()
 // El logo, el favicon, el acento, el contacto, las redes y el pie son de las 44 paginas,
 // no de una (ADR-0042): salen de content/site.json y se editan en /admin/ajustes.
 const { marca, contacto, pie } = getAjustes()
+
+// Los nombres de los dos <nav>, en el idioma de la pagina (spec 0048).
+const navAria = NAV_ARIA[locale]
 
 // El pie de cada idioma, y la direccion: lo que este vacio no se pinta.
 const lineasPie = pie[locale]
@@ -63,14 +66,14 @@ const estiloAcento = `html:root{--color-acento:${marca.acento}}`
           </span>
         </a>
 
-        <nav aria-label="Principal" class="hidden lg:block lg:justify-self-center">
+        <nav aria-label={navAria.principal} class="hidden lg:block lg:justify-self-center">
           <ul class="font-oxanium flex list-none items-center gap-4 p-0 text-sm font-medium">
             {nav.map((item) => <li><a class="hover:text-acento" href={item.href}>{item.label}</a></li>)}
           </ul>
         </nav>
 
         <div class="hidden items-center gap-4 lg:flex lg:justify-self-end">
-          <nav aria-label="Idioma" class="flex items-center gap-1 border-l border-[#d7cec0] pl-5">
+          <nav aria-label={navAria.idioma} class="flex items-center gap-1 border-l border-[#d7cec0] pl-5">
             {LOCALES.map((l) => l === locale
               ? <span aria-current="page" aria-label={LOCALE_NAME[l]} title={LOCALE_NAME[l]} class="grid size-9 place-items-center rounded-full border border-acento bg-[#f6f1e8] text-lg"><span aria-hidden="true">{LOCALE_ICON[l]}</span></span>
               : <a href={pathFor(page, l)} hreflang={HREFLANG[l]} lang={HREFLANG[l]} aria-label={LOCALE_NAME[l]} title={LOCALE_NAME[l]} class="grid size-9 place-items-center rounded-full border border-transparent text-lg hover:border-[#d7cec0]"><span aria-hidden="true">{LOCALE_ICON[l]}</span><span class="sr-only">{LOCALE_NAME[l]}</span></a>)}
@@ -81,8 +84,8 @@ const estiloAcento = `html:root{--color-acento:${marca.acento}}`
         <details class="relative lg:hidden">
           <summary class="cursor-pointer list-none border border-acento px-4 py-2 text-sm font-bold uppercase tracking-wider text-acento">{menuLabel}</summary>
           <div class="absolute right-0 top-12 w-64 border border-[#d7cec0] bg-[#fffdf9] p-6 shadow-xl">
-            <nav aria-label="Principal"><ul class="font-oxanium space-y-4 p-0 text-xl font-medium">{nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}</ul></nav>
-            <nav aria-label="Idioma" class="mt-6 flex items-center gap-2 border-t border-[#d7cec0] pt-5">
+            <nav aria-label={navAria.principal}><ul class="font-oxanium space-y-4 p-0 text-xl font-medium">{nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}</ul></nav>
+            <nav aria-label={navAria.idioma} class="mt-6 flex items-center gap-2 border-t border-[#d7cec0] pt-5">
               {LOCALES.map((l) => l === locale
                 ? <span aria-current="page" aria-label={LOCALE_NAME[l]} title={LOCALE_NAME[l]} class="grid size-10 place-items-center rounded-full border border-acento bg-[#f6f1e8] text-xl"><span aria-hidden="true">{LOCALE_ICON[l]}</span></span>
                 : <a href={pathFor(page, l)} hreflang={HREFLANG[l]} lang={HREFLANG[l]} aria-label={LOCALE_NAME[l]} title={LOCALE_NAME[l]} class="grid size-10 place-items-center rounded-full border border-transparent text-xl hover:border-[#d7cec0]"><span aria-hidden="true">{LOCALE_ICON[l]}</span><span class="sr-only">{LOCALE_NAME[l]}</span></a>)}
