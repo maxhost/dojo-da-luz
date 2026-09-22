@@ -102,7 +102,10 @@ en 200 con los tres profesores, el linaje y el bloque de Pablo. Sin cookie,
    franja es `#27231f`—, y se arreglo en el CSS y no en ese `<h2>`:
    `.text-white .section-title { color: inherit }`, asi que **ninguna seccion oscura futura
    puede nacer con el titulo invisible** (ADR-0040). Verificado con captura de Chrome
-   headless: el titulo se lee en blanco. **Pendiente de deploy.**
+   headless: el titulo se lee en blanco. Desplegada en `9b17abf` (deployment
+   `dojo-da-1e1irlnpr`, Ready en 15 s) y comprobada en produccion: las cuatro rutas de
+   `/professor-*` en 200, la captura de la pagina publica con "Percurso" en blanco sobre la
+   franja oscura, y `/admin/paginas/professor` sin cookie → 302 con `X-Robots-Tag`.
 
 **Y una noticia que llego sola: `publicarVarios` ya corrio contra GitHub.** El push del
 editor de `/aikido` fue rechazado por no-fast-forward porque `origin/main` tenia el commit
@@ -448,6 +451,7 @@ contraseña, sesion opaca en Neon.)*
 | 2026-09-21 | Un vector de prueba con el hash transcripto de memoria | La prueba de SigV4 traia tres vectores de AWS y uno fallaba: el valor esperado estaba mal, el codigo estaba bien. Se diagnostico codigo sano. Sustituido por la propiedad comprobable (dos valores que solo difieren en espacios dan la misma firma) y anotado en CLAUDE.md |
 | 2026-09-21 | Spec 0043 + ADR-0039 — editor de `/professor-pablo-duran` | `astro check` 114 archivos 0/0/0, `npm test` 39/39 y build con 44 rutas. Contra el BO corriendo: la pantalla con 9 bloques × 4 idiomas, 1 campo de imagen editable y 5 botones "Añadir fila" sólo en portugués; un séptimo hito creado en PT aparecio en los cuatro archivos y quedo marcado "Sin traducir" en los otros tres; traducirlo en español cambio **solo** `content/es/teacher.json` (2 lineas); un POST forjado desde español con un octavo hito y otra foto quedo en 7 hitos y con la foto portuguesa; formulario vacio → 422 nombrando los campos; sin cookie → 302 con `X-Robots-Tag`. Comparacion del HTML construido contra `HEAD` con el hash del CSS neutralizado: **44 paginas, 0 distintas**, antes y despues de borrar el hito de prueba |
 | 2026-09-21 | ADR-0040 — "Percurso" estaba escrito y no se leia | `.section-title` fija `color: #211f1c` y la seccion es `bg-[#27231f]`: contraste ~1:1. Tres de las cuatro secciones oscuras del sitio lo compensaban a mano con `text-white`; esta no. Arreglado en el CSS y no en ese `<h2>`: `.text-white .section-title { color: inherit }`, misma capa `components` y mas especificidad. **Verificado con captura de Chrome headless** de `/professor-pablo-duran`: en la franja oscura el titulo se lee en blanco. El HTML de las 44 paginas no cambia; el unico archivo distinto es el CSS |
+| 2026-09-21 | Deploy de la spec 0043 a produccion | `git push origin main` → `9b17abf`; deployment `dojo-da-1e1irlnpr` ● Ready en 15 s por webhook. Las cuatro rutas de `/professor-*` en 200; captura de Chrome headless de `dojo-da-luz.vercel.app/professor-pablo-duran`: en la franja `#27231f` el titulo "Percurso" se lee en blanco; `/admin/paginas/professor` sin cookie → 302 a `/admin/entrar` con `X-Robots-Tag` |
 
 ## Descartado (y por que)
 
