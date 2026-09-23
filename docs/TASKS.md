@@ -8,14 +8,15 @@ Si una sesion se cae, se cierra o se compacta, se vuelve aca — no al chat. Hay
 Regla: **marcar `hecho` solo con verificacion real** — tests que pasan, comando corrido,
 cosa vista en pantalla. No "deberia andar".
 
-Ultima actualizacion: 2026-09-22, quinta sesion — spec 0050 **completa salvo las
-credenciales de Resend**, sin commit y sin desplegar — gate verde: `astro check` **0/0/0**
+Ultima actualizacion: 2026-09-22, quinta sesion — spec 0050 **desplegada y verificada en
+produccion**, salvo las credenciales de Resend — gate verde: `astro check` **0/0/0**
 (141 archivos), `npm test` **85/85**, `npm run build` 44 rutas + `sitemap.xml`.
 
 **Retomar con:** *"Leer docs/TASKS.md y la spec 0050. Falta cargar `RESEND_API_KEY`,
-`FORM_FROM_EMAIL` y `FORM_TO_EMAIL` en Vercel, probar un envio real y desplegar."* La
-migracion `0003` ya esta aplicada en Neon. La 0049 quedó supersedida. A la 0045 solo le
-falta el dominio, que depende del DNS del cliente (fila 10).
+`FORM_FROM_EMAIL` y `FORM_TO_EMAIL` en Vercel y probar un envio real de punta a punta."*
+La migracion `0003` ya esta aplicada en Neon y el codigo esta en `main` (`dcfc62a`). La
+0049 quedó supersedida. A la 0045 solo le falta el dominio, que depende del DNS del
+cliente (fila 10).
 
 Esta sesion, nueve entregas y un plan — con las dos ultimas entregas **no queda ninguna
 pagina de contenido sin editor ni nada del borde sin pantalla**:
@@ -259,15 +260,22 @@ commit y sin desplegar.**
 - `db/migrations/0003_form_rate_limit.sql` **aplicada en Neon** con `npm run db:migrate`:
   la tabla tiene sus cuatro columnas y sus tres indices, y 0 filas.
 
+**Desplegado el 2026-09-22:** `dcfc62a` en `main` —la 0050 junto con el rediseño
+mobile-first del BO, que venia sin commitear— y deployment `dojo-da-rj0mj5r06` ● Ready en
+19 s. En `dojo-da-luz.vercel.app`: las seis rutas probadas en 200; `/aulas`, `/es/clases`,
+`/fr/cours` y `/en/classes` con **un** `select` de horarios, el honeypot y **cero**
+`docs.google.com/forms` ni `forms.gle`; el endpoint sin credenciales → **503**; el aviso de
+envio no disponible sale en los cuatro idiomas; `/admin/formularios`, `/nuevo` y la ficha
+sin cookie → 302 a `/admin/entrar`.
+
 **Falta:**
 
 1. Cargar `RESEND_API_KEY`, `FORM_FROM_EMAIL` (dominio verificado) y `FORM_TO_EMAIL` en
    Vercel, y probar un envio real de punta a punta. Hasta entonces el boton se ve
-   deshabilitado tambien en produccion.
-2. Commit y deploy: el working tree trae ademas el rediseño mobile-first del admin.
-3. Decidido y **no** hecho: `/contactos` sigue con su formulario fijo y el boton
+   deshabilitado tambien en produccion — que es lo correcto, no un defecto.
+2. Decidido y **no** hecho: `/contactos` sigue con su formulario fijo y el boton
    deshabilitado, fuera de la entidad.
-4. `trial.directLabel` y el `directLabel` de Adultos/Crianças quedaron **sin uso** —eran el
+3. `trial.directLabel` y el `directLabel` de Adultos/Crianças quedaron **sin uso** —eran el
    enlace para abrir el formulario externo aparte—. Se dejan para no ampliar el diff.
 
 ### Plan histórico de la auditoría del 2026-09-21
