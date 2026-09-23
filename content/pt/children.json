@@ -77,7 +77,7 @@
   "trialTitle": "Experimentar uma aula",
   "trialText": "Marca uma aula experimental para conhecer o professor, o espaço e a prática.",
   "trialLabel": "Marcar aula infantil",
-  "formUrl": "https://docs.google.com/forms/d/e/1FAIpQLSfN-rw5gQ82gukAPdRKHsFkXvcjtogv7gWqgELtnek_6i2Biw/viewform",
+  "formId": "aula-experimental-aikido",
   "directLabel": "Abrir formulário numa nova janela",
   "closeLabel": "Fechar",
   "qa": {

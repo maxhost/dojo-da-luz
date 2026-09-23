@@ -1,15 +1,50 @@
 ---
-interface Props { id: string; title: string; trigger: string; url: string; directLabel: string; closeLabel: string }
-const { id, title, trigger, url, directLabel, closeLabel } = Astro.props
+import FormularioPublico from './FormularioPublico.astro'
+import { getFormulario } from '../lib/formularios'
+import type { Locale } from '../lib/i18n'
+
+interface Props {
+  id: string
+  title: string
+  trigger: string
+  closeLabel: string
+  /**
+   * Con `formId` y `locale` se pinta el formulario propio del dojo desde su definicion
+   * (spec 0050); sin ellos se conserva el formulario externo de Outras artes.
+   */
+  locale?: Locale
+  formId?: string
+  url?: string
+  directLabel?: string
+}
+const { id, title, trigger, closeLabel, locale, formId = '', url = '', directLabel = '' } = Astro.props
+
+// Un CTA que apunta a un formulario que no existe rompe el build, no la pagina: el error
+// tiene que aparecer al publicar y no cuando alguien quiere apuntarse a una clase.
+const formulario = formId ? getFormulario(formId) : null
+if (formId && !formulario) {
+  throw new Error(`FormModal "${id}": no existe el formulario ${formId} en content/forms.json`)
+}
 ---
 <button class="button bg-white text-acento-oscuro" type="button" data-modal-open={id}>{trigger}</button>
-<dialog id={id} class="m-auto w-[min(94vw,48rem)] border-0 bg-white p-0 text-[#211f1c] backdrop:bg-black/70">
-  <div class="flex items-center justify-between border-b border-[#d7cec0] p-4">
-    <h2 class="font-serif text-2xl">{title}</h2>
-    <button type="button" class="px-3 py-2 font-bold" data-modal-close={id} aria-label={closeLabel}>×</button>
+<dialog id={id} class="m-auto max-h-[92dvh] w-[min(94vw,40rem)] overflow-hidden rounded-xl border-0 bg-white p-0 text-[#211f1c] shadow-2xl backdrop:bg-black/70">
+  <div class="flex items-start justify-between gap-4 border-b border-[#d7cec0] px-5 py-4 sm:px-7 sm:py-5">
+    <div>
+      <p class="text-xs font-bold uppercase tracking-[.14em] text-acento">Dojo da Luz</p>
+      <h2 class="mt-1 font-serif text-2xl leading-tight sm:text-3xl">{title}</h2>
+    </div>
+    <button type="button" class="-mr-2 grid size-11 shrink-0 place-items-center rounded-full text-2xl font-normal text-[#625c55] hover:bg-[#f1ece4]" data-modal-close={id} aria-label={closeLabel}>×</button>
   </div>
-  <iframe title={title} data-form-src={url} class="h-[70vh] w-full border-0" loading="lazy"></iframe>
-  <p class="border-t border-[#d7cec0] p-4 text-center text-sm"><a href={url} target="_blank" rel="noopener">{directLabel}</a></p>
+  <div class="max-h-[calc(92dvh-6rem)] overflow-y-auto p-5 sm:p-7">
+    {formulario && locale ? (
+      <FormularioPublico formulario={formulario} locale={locale} idPrefijo={id} />
+    ) : (
+      <>
+        <iframe title={title} data-form-src={url} class="h-[65vh] w-full border-0" loading="lazy"></iframe>
+        <p class="mt-4 text-center text-sm"><a href={url} target="_blank" rel="noopener">{directLabel}</a></p>
+      </>
+    )}
+  </div>
 </dialog>
 <script>
   document.querySelectorAll('[data-modal-open]').forEach((button) => button.addEventListener('click', () => {
@@ -27,4 +62,9 @@ const { id, title, trigger, url, directLabel, closeLabel } = Astro.props
     const dialog = document.getElementById(target)
     if (dialog instanceof HTMLDialogElement) dialog.close()
   }))
+  document.querySelectorAll<HTMLDialogElement>('dialog').forEach((dialog) => {
+    dialog.addEventListener('click', (event) => {
+      if (event.target === dialog) dialog.close()
+    })
+  })
 </script>

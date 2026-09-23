@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro'
+import FormModal from './FormModal.astro'
 import { getContent } from '../lib/content'
 import { formatAudiencia, formatHorario, getDojos } from '../lib/dojos'
 import { pathFor, siteNav, type Locale } from '../lib/i18n'
@@ -26,6 +27,7 @@ const classesPath = pathFor('classes', locale)
 const adultsPath = pathFor('adults', locale)
 const childrenPath = pathFor('children', locale)
 const nav = siteNav(locale)
+const cerrarFormulario = { pt: 'Fechar formulário', es: 'Cerrar formulario', fr: 'Fermer le formulaire', en: 'Close form' }[locale]
 ---
 
 <Base
@@ -192,7 +194,16 @@ const nav = siteNav(locale)
         {c.threshold.titleLines.join(' ')}
       </h2>
       <p class="mx-auto mt-6 max-w-2xl text-lg leading-8 text-white/85">{c.threshold.text}</p>
-      <a href="mailto:EMAIL-PENDENTE" class="button mt-9 bg-white text-acento-oscuro">{c.threshold.ctaLabel}</a>
+      <div class="mt-9">
+        <FormModal
+          id={`home-contact-${locale}`}
+          title={c.threshold.titleLines.join(' ')}
+          trigger={c.threshold.ctaLabel}
+          closeLabel={cerrarFormulario}
+          locale={locale}
+          formId={c.threshold.formId}
+        />
+      </div>
     </div>
   </section>
 

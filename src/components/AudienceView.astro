@@ -10,7 +10,7 @@ import { siteNav, type Locale, type PageKey } from '../lib/i18n'
 interface Props { locale: Locale; page: 'adults' | 'children' }
 const { locale, page } = Astro.props
 const c = getContent(page as PageKey, locale) as ReturnType<typeof getContent<'adults'>>
-const formId = `form-${page}`
+const idModal = `form-${page}`
 
 // Los cinco textos del borde de la pagina salian de un objeto escrito aca adentro, asi que
 // no habia nada que editar aunque hubiera editor (spec 0036). Ahora viven en el contenido,
@@ -19,7 +19,7 @@ const chrome = c.chrome
 ---
 <Base page={page} locale={locale} title={c.seo.title} description={c.seo.description} skipLink={chrome.skipLink} nav={siteNav(locale)} menuLabel={chrome.menuLabel} caption={chrome.caption}>
   <section class="section-pad bg-[#f6f1e8]"><div class="site-shell grid gap-12 md:grid-cols-[1.05fr_.95fr] md:items-center md:gap-20">
-    <div><p class="section-kicker">{c.eyebrow}</p><h1 class="section-title mt-4 text-5xl md:text-7xl">{c.title}</h1><p class="mt-6 text-xl leading-9 text-[#625c55]">{c.lead}</p><button class="button mt-8 bg-acento text-white" type="button" data-modal-open={formId}>{c.trialLabel}</button></div>
+    <div><p class="section-kicker">{c.eyebrow}</p><h1 class="section-title mt-4 text-5xl md:text-7xl">{c.title}</h1><p class="mt-6 text-xl leading-9 text-[#625c55]">{c.lead}</p><button class="button mt-8 bg-acento text-white" type="button" data-modal-open={idModal}>{c.trialLabel}</button></div>
     <img src={c.photo} alt={c.photoAlt} class="max-h-[38rem] w-full object-cover" fetchpriority="high" />
   </div></section>
   <section class="section-pad bg-white"><div class="site-shell grid gap-12 md:grid-cols-2 md:gap-20">
@@ -41,5 +41,5 @@ const chrome = c.chrome
 
   <QaSection label={c.qa.label} title={c.qa.title} items={c.qa.items} />
 
-  <section id="aula-experimental" class="section-pad bg-acento text-center text-white"><div class="site-shell"><h2 class="font-serif text-4xl md:text-6xl">{c.trialTitle}</h2><p class="mx-auto mt-5 max-w-2xl text-lg leading-8 text-white/85">{c.trialText}</p><div class="mt-8"><FormModal id={formId} title={c.trialTitle} trigger={c.trialLabel} url={c.formUrl} directLabel={c.directLabel} closeLabel={c.closeLabel} /></div></div></section>
+  <section id="aula-experimental" class="section-pad bg-acento text-center text-white"><div class="site-shell"><h2 class="font-serif text-4xl md:text-6xl">{c.trialTitle}</h2><p class="mx-auto mt-5 max-w-2xl text-lg leading-8 text-white/85">{c.trialText}</p><div class="mt-8"><FormModal id={idModal} title={c.trialTitle} trigger={c.trialLabel} closeLabel={c.closeLabel} locale={locale} formId={c.formId} /></div></div></section>
 </Base>

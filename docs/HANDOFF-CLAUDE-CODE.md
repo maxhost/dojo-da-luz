@@ -1,90 +1,105 @@
-# Handoff — corte del 2026-09-21
+# Handoff — rediseño mobile-first del administrador (2026-09-22)
 
-Registro del ultimo corte cerrado, no lista de pendientes. **El estado real del proyecto
-esta en `docs/TASKS.md`**; este archivo solo explica que se cerro por ultima vez y con
-que se verifico.
+Este corte deja rediseñados el acceso, la navegación y todos los editores de páginas del
+backoffice. Los cambios están **sin commit y sin desplegar**. El estado funcional general
+del proyecto y la deuda de producto siguen viviendo en `docs/TASKS.md`.
 
-## Que se cerro
+## Qué se hizo
 
-Dos specs, ambas desplegadas y verificadas en produccion.
+### Login y shell del administrador
 
-### Spec 0027 — jerarquia del equipo docente en `/dojo` (ADR-0023)
+- Login centrado, compacto y táctil, separado visualmente del panel autenticado.
+- Sidebar oscuro permanente en escritorio con las 14 secciones reales del admin.
+- Drawer accesible en móvil: abre desde la barra superior y cierra con botón, fondo o
+  `Escape`.
+- Estado activo, email y cierre de sesión integrados en el sidebar.
+- La portada `/admin` dejó de duplicar todo el menú y ahora funciona como bienvenida y
+  explicación breve.
+- El área de trabajo pasó a un contenedor más amplio (`max-w-5xl`).
 
-`/dojo` renderizaba cuatro profesores con la misma seccion a pantalla completa,
-alternando el lado de la imagen y repitiendo el mismo retrato cuatro veces. Ahora es una
-sola seccion con dos niveles: **Pablo Duran** protagonista (retrato `4/5` con marco azul,
-nombre hasta `text-7xl`, biografia con filete lateral y boton a su pagina) y **Ines,
-Miguel y Sofia** en tres fichas compactas sobre `#211e1b`. Sin rotulo «Equipo docente» ni
-numeracion. Los cuatro idiomas heredan la jerarquia sin tocar contenido.
+Archivos centrales: `src/layouts/Admin.astro`, `src/pages/admin/entrar.astro` y
+`src/pages/admin/index.astro`.
 
-Vivio solo en `src/components/DojoView.astro`. Commit `335976d`, deployment
-`dojo-da-hn4p4oqhm`.
+### Patrón común para los editores de páginas
 
-### Spec 0028 — Parcerias en rejilla (ADR-0024)
+Se aplicó el mismo patrón a Home, Aulas, Adultos, Crianças, Aikido, O dojo, Eventos,
+Outras artes, Escolas, Professor y Contactos:
 
-El carrusel CSS mostraba 3 o 4 de los 8 parceiros a la vez, cada uno dentro de un recuadro
-blanco con borde. Ahora es una rejilla estatica: los ocho juntos, **5 por fila** en
-escritorio, 3 en tablet, 2 en movil, sin recuadro, en celdas `h-20` con `object-contain`.
-Se fueron `PARTNER_CAROUSEL`, las reglas `.partner-carousel*`, el `@keyframes` y su bloque
-`prefers-reduced-motion`.
+- cabecera editorial uniforme;
+- selector de idiomas fijo, abreviado en móvil;
+- cambio de idioma sin perder campos todavía no publicados;
+- selector «Ir a una sección» en móvil;
+- mini sidebar de secciones fijo en escritorio;
+- secciones en tarjetas blancas con jerarquía clara;
+- acción de publicación flotante al pie;
+- avisos consistentes sobre lo que solo se cambia en portugués;
+- controles y áreas táctiles pensados desde móvil.
 
-`src/components/HomeView.astro` y `src/styles/global.css`. Commits `3dc5ba9` y `046adcc`,
-deployment `dojo-da-uohuq04cs`.
+`src/components/admin/NavegacionEditor.astro` es el componente nuevo que centraliza el
+mini sidebar y el selector móvil. `EditorPestanas.astro` centraliza el selector de idiomas
+para casi todos los editores; Home conserva su montaje específico porque también publica
+media y parcerías por flujos separados.
 
-## Los dos hallazgos que importan
+### Controles compartidos
 
-**El blanco de los logos no esta en el CSS, esta en los archivos.** Se descargaron los
-ocho: los tres PNG vienen con `hasAlpha: no` porque Wix los aplano al generarlos, y los
-otros cinco son JPEG, que por formato no admiten transparencia. Pixeles de borde: seis en
-`#ffffff` exacto, dos en `(247,247,247)` y `(245,244,242)`. Quitar `bg-white` del markup
-no alcanzaba. Se neutraliza con `mix-blend-multiply` sobre el `#f6f1e8` de la seccion: el
-blanco puro se vuelve el propio fondo. **No limpia las dos que no son blanco puro** — les
-queda un rectangulo apenas visible que solo se arregla con los originales. Esto genero una
-linea nueva en `CLAUDE.md`.
+- `CampoTexto.astro`: controles de al menos 44 px, foco visible, bordes y errores más
+  claros.
+- `CampoImagen.astro`: miniaturas responsivas, botones más grandes y mejor estado visual.
+- `TablaFilas.astro`: filas como tarjetas, inputs móviles y acciones «Añadir/Quitar» más
+  explícitas.
+- `TablaMedios.astro`: tarjetas de imagen/vídeo, previews responsivas y controles táctiles.
+- `EditorParcerias.astro`: rejilla y botones alineados con el sistema nuevo.
 
-**El ancla de Ines lleva acento.** Es `#inês-martins`, porque el `id` sale de
-`name.toLowerCase()`. Valido en HTML5 pero necesita percent-encoding en una URL. Es
-heredado, identico antes y despues de la 0027: se dejo anotado, no se cambio.
+La lógica de publicación, validación, concurrencia, propagación desde portugués y subida
+de imágenes no se cambió.
 
-## Deuda de producto abierta
+## Cobertura comprobada
 
-Las dos son del cliente y estan en `docs/TASKS.md`:
+Una búsqueda final sobre `src/pages/admin/paginas` y sus formularios confirmó que ningún
+editor editorial conserva la estructura visual anterior. Los formularios que aún usan el
+estilo original son otras áreas del backoffice:
 
-- **Fila 11** — retratos reales de Ines, Miguel y Sofia. Hoy las tres fichas de `/dojo`
-  muestran escenas de practica de wixstatic, no a la persona que nombran. Se sustituye el
-  array `teacherPhotos` sin tocar la composicion.
-- **Fila 12** — logos reales de los parceiros, con transparencia. Los ocho traen fondo
-  blanco incrustado y tres son fotografias, no marcas.
+- `FormularioAjustes.astro` (`/admin/ajustes`);
+- `FormularioDojo.astro` (alta y edición de fichas en `/admin/dojos`).
 
-## Procedencia de la 0027
+Esos dos son el siguiente frente natural si se quiere que **todo** el backoffice, no solo
+los editores de páginas, comparta el patrón.
 
-Su codigo llego implementado desde otra herramienta, **sin spec previa**, contra el flujo
-de `CLAUDE.md`. La spec y el ADR se escribieron despues, a partir del diff, y lo dejan
-anotado en su encabezado. Se documenta el incumplimiento en vez de disimularlo.
+## Estado del árbol de trabajo
 
-## Verificacion ejecutada
+Hay 31 archivos modificados y un archivo nuevo. Todo pertenece a este rediseño; no hay
+commit creado. Antes de continuar, revisar con:
 
 ```sh
-npm run typecheck   # astro check: 48 archivos, 0 errores / 0 warnings / 0 hints
-npm test            # 5/5
-npm run build       # 44 index.html en .vercel/output/static
+git status --short
+git diff --check
+git diff --stat
+```
+
+No hacer reset ni descartar: el conjunto completo es intencional y las piezas compartidas
+dependen unas de otras.
+
+## Verificación ejecutada
+
+```sh
+npm run typecheck   # 123 archivos, 0 errores / 0 warnings / 0 hints
+npm test            # 53/53
+npm run build       # build server de Vercel completo
 git diff --check    # limpio
 ```
 
-No hay script `lint` en `package.json`: el gate es typecheck + test + build.
+No hay script `lint` en `package.json`. No se hizo commit, push ni deploy en este corte.
 
-En produccion: `/dojo` y sus tres traducciones sirven un solo bloque de equipo docente;
-las cuatro homes sirven 8 `<img>` de parceiro (antes 16) con `mix-blend-multiply`, 0
-`bg-white`, 0 `aria-hidden`, y el CSS publicado ya no contiene `partner-carousel`.
+## Cómo seguir
 
-## Como seguir
-
-1. `docs/TASKS.md` → seccion **Siguiente**. El proximo de la cadena es la **spec 0021**:
-   el editor de Home y CRUD de dojos en el backoffice. Necesita `GITHUB_TOKEN`.
-2. Para empujar: `env -u GH_TOKEN -u GITHUB_TOKEN git push origin main` — la `GH_TOKEN`
-   del shell esta vencida y tapa al token del keyring de `gh`.
-3. Verificar siempre contra `dojo-da-luz.vercel.app`, nunca contra la URL del deployment
-   (`*-maxhost27-6230s-projects.vercel.app` esta detras de Vercel Authentication y
-   devuelve 302).
-4. `vercel ls` cambia de linea segun el ancho de la salida: filtrar por el id del
-   deployment (`grep dojo-da-xxxxx`), no por numero de linea.
+1. Implementar la **spec 0050**, cerrada, siguiendo el ADR-0046. Codex deja la UI base en
+   `ContactForm.astro` y `FormModal.astro`; Claude Code implementa la entidad, el CRUD, la
+   propagación de traducciones, las referencias `formId`, el endpoint y Resend. No derivar
+   opciones de horarios desde Dojos: son texto independiente administrado en el formulario.
+2. Revisar visualmente los editores en móvil real o emulación estrecha, sobre todo listas
+   largas, galería y la barra flotante de publicación.
+3. Si el patrón queda aprobado, aplicarlo a `/admin/ajustes` y a crear/editar Dojos.
+4. Crear un commit único del sistema visual del admin o separarlo en dos commits:
+   `shell/login` y `editores mobile-first`.
+5. Después del deploy, comprobar login, drawer móvil, cambio de idioma sin pérdida y una
+   publicación de prueba en portugués y otra traducción.

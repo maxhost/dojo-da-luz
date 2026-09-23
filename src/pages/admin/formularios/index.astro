@@ -1,0 +1,91 @@
+---
+export const prerender = false
+
+import Admin from '../../../layouts/Admin.astro'
+import Aviso from '../../../components/admin/Aviso.astro'
+import { leerFormularios, referenciasPorFormulario } from '../../../lib/formularios-edicion'
+import type { Formulario } from '../../../lib/formularios'
+
+/** Listado de formularios (spec 0050). */
+
+const admin = Astro.locals.admin!
+
+// Como en el listado de dojos: un repositorio inalcanzable es un aviso, no un 500.
+let forms: Formulario[] = []
+let sha = ''
+let usos: Record<string, string[]> = {}
+let sinRepositorio: string | null = null
+
+try {
+  ;({ forms, sha } = await leerFormularios())
+  usos = await referenciasPorFormulario()
+} catch (error) {
+  Astro.response.status = 503
+  sinRepositorio = error instanceof Error ? error.message : String(error)
+}
+
+const params = Astro.url.searchParams
+const ok = params.get('ok')
+const fallo = params.get('fallo')
+---
+
+<Admin titulo="Formularios" admin={admin}>
+  <header class="flex flex-wrap items-baseline justify-between gap-3">
+    <div class="max-w-2xl">
+      <p class="text-xs font-bold uppercase tracking-[0.16em] text-[#0077c7]">Gestión</p>
+      <h1 class="mt-2 font-serif text-3xl leading-tight sm:text-4xl">Formularios</h1>
+      <p class="mt-3 text-sm leading-6 text-[#625c55] sm:text-base">
+        Un formulario se crea una vez y se puede usar desde varios botones del sitio. Las
+        respuestas llegan por email al dojo: no se guardan en el sitio.
+      </p>
+    </div>
+    <a class="inline-flex min-h-12 items-center rounded-md bg-[#0099ff] px-5 font-semibold text-white no-underline hover:bg-[#0077c7]" href="/admin/formularios/nuevo">
+      Nuevo formulario
+    </a>
+  </header>
+
+  {ok && <Aviso tipo="ok">{ok} El sitio tarda 1 o 2 minutos en regenerarse.</Aviso>}
+  {fallo && <Aviso tipo="error">{fallo}</Aviso>}
+  {sinRepositorio && <Aviso tipo="error">No se puede leer el listado: {sinRepositorio}</Aviso>}
+
+  {sinRepositorio === null && forms.length === 0 && (
+    <p class="mt-8 rounded-xl border border-dashed border-[#c9c0b3] p-6 text-sm leading-6 text-[#625c55]">
+      Todavía no hay ningún formulario. Creá el primero con «Nuevo formulario».
+    </p>
+  )}
+
+  <ul class="mt-8 grid gap-3">
+    {forms.map((formulario) => (
+      <li class="rounded-xl border border-[#d7cec0] bg-white p-4 sm:p-5">
+        <div class="flex flex-wrap items-baseline gap-3">
+          <a class="font-serif text-xl" href={`/admin/formularios/${formulario.id}`}>{formulario.nombre}</a>
+          <span
+            class:list={[
+              'rounded-md px-2 py-0.5 text-xs font-bold',
+              formulario.estado === 'activo' ? 'bg-[#e6f6ff] text-[#0b5e8f]' : 'bg-[#eee9df] text-[#625c55]',
+            ]}
+          >
+            {formulario.estado}
+          </span>
+          <span class="text-sm text-[#625c55]">
+            {formulario.fields.length} {formulario.fields.length === 1 ? 'campo' : 'campos'}
+          </span>
+
+          <form class="ml-auto" method="post" action={`/admin/formularios/${formulario.id}/archivar`}>
+            <input type="hidden" name="sha" value={sha} />
+            <input type="hidden" name="estado" value={formulario.estado === 'activo' ? 'archivado' : 'activo'} />
+            <button class="min-h-11 rounded-md border border-[#c9c0b3] bg-white px-4 text-sm font-semibold hover:bg-[#f1ece4]" type="submit">
+              {formulario.estado === 'activo' ? 'Archivar' : 'Reactivar'}
+            </button>
+          </form>
+        </div>
+
+        <p class="mt-2 text-sm leading-6 text-[#625c55]">
+          {usos[formulario.id]?.length
+            ? <>Se usa en <strong>{usos[formulario.id]!.join(', ')}</strong>.</>
+            : 'No lo usa ninguna página todavía.'}
+        </p>
+      </li>
+    ))}
+  </ul>
+</Admin>

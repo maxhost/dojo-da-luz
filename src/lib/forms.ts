@@ -172,6 +172,7 @@ export function homeDesdeForm(form: FormData): unknown {
       titleLines: lineas(form, 'threshold.titleLines'),
       text: texto(form, 'threshold.text'),
       ctaLabel: texto(form, 'threshold.ctaLabel'),
+      formId: texto(form, 'threshold.formId'),
     },
     partnerships: {
       label: texto(form, 'partnerships.label'),

@@ -18,12 +18,11 @@ if (pantalla.estado) Astro.response.status = pantalla.estado
 ---
 
 <Admin titulo="Aikido" admin={admin}>
-  <h1 class="font-serif text-3xl">Aikido</h1>
-  <p class="mt-4 text-sm text-[#625c55]">
-    La página <code>/aikido</code>, de arriba hacia abajo. El portugués manda: agregar o
-    quitar una sección y cambiar una foto se hace en su pestaña y aparece en los cuatro
-    idiomas. En las otras tres se traduce.
-  </p>
+  <header class="max-w-3xl">
+    <p class="text-xs font-bold uppercase tracking-[0.16em] text-[#0077c7]">Contenido del sitio</p>
+    <h1 class="mt-2 font-serif text-3xl leading-tight sm:text-4xl">Página Aikido</h1>
+    <p class="mt-3 text-sm leading-6 text-[#625c55] sm:text-base">Editá la presentación del Aikido, sus secciones explicativas, el bloque de O-Sensei y el cierre. La estructura y las fotos compartidas se administran en portugués.</p>
+  </header>
 
   {pantalla.aviso && <Aviso tipo={pantalla.aviso.tipo}>{pantalla.aviso.texto}</Aviso>}
   {pantalla.sinRepositorio && (

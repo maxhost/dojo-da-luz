@@ -55,6 +55,7 @@ desactualizado es peor que no tenerlo.
 | [0043](adr/0043-host-canonico-y-orden-de-lanzamiento.md) | 2026-09-21 | `www.aikido-duran.com` es el host canonico (medido contra el sitio actual) y los 301 se despliegan **antes** de mover el DNS | aceptada | `docs/adr/0043-host-canonico-y-orden-de-lanzamiento.md` |
 | [0044](adr/0044-subida-prefirmada.md) | 2026-09-21 | Los archivos de mas de 4 MB suben prefirmados del navegador a R2 porque Vercel corta el cuerpo en 4,5 MB; revierte el descarte de CORS de la spec 0030 | aceptada | `docs/adr/0044-subida-prefirmada.md` |
 | [0045](adr/0045-sitemap-propio-y-destinos-sin-barra.md) | 2026-09-21 | El `sitemap.xml` se genera de `PAGES × LOCALES` con `hreflang` reciproco y sin `lastmod`, sus 44 `loc` son identicos a los `canonical`, y los destinos de los 301 van sin barra final | aceptada | `docs/adr/0045-sitemap-propio-y-destinos-sin-barra.md` |
+| [0046](adr/0046-formularios-como-entidad.md) | 2026-09-22 | Los formularios son una entidad global reutilizable relacionada por formId; portugués manda la estructura, los otros idiomas traducen y las opciones son texto independiente | aceptada | `docs/adr/0046-formularios-como-entidad.md` |
 
 ## Specs — que se construye
 
@@ -108,7 +109,8 @@ desactualizado es peor que no tenerlo.
 | [0046](specs/0046-ajustes-compartir-identidad.md) | 2026-09-21 | Imagen para compartir (`og:image`) e identidad para buscadores en Ajustes; el `ORG` del JSON-LD sale del codigo | cerrada | no | `src/lib/{ajustes,ajustes-edicion,medios,site}.ts`, `src/components/{Seo,TeacherView}.astro`, `content/site.json` |
 | [0047](specs/0047-medios-grandes-y-video.md) | 2026-09-21 | Subida prefirmada a R2 —hoy Vercel corta en 4,5 MB— y el video de la portada de la Home al editor | cerrada | no | `src/lib/{r2,medios}.ts`, `src/pages/admin/medios/firmar.ts`, `src/components/admin/CampoVideo.astro`, `content/*/home.json` |
 | [0048](specs/0048-accesibilidad-e-idioma.md) | 2026-09-21 | Los dos `aria-label` del navbar traducidos y los nombres de idioma con acentos | implementada | si | `src/lib/i18n.ts`, `src/layouts/Base.astro` |
-| [0049](specs/0049-contacto-en-modal.md) | 2026-09-21 | El cierre de la Home deja el `mailto:EMAIL-PENDENTE` y abre el formulario de contacto en un modal movil | **borrador**: el formulario todavia no envia | si | `src/components/{FormularioContacto,ModalContacto,HomeView,ContactView}.astro` |
+| [0049](specs/0049-contacto-en-modal.md) | 2026-09-21 | El cierre de la Home deja el `mailto:EMAIL-PENDENTE` y abre el formulario de contacto en un modal movil | supersedida por 0050 | si | `src/components/{FormularioContacto,ModalContacto,HomeView,ContactView}.astro` |
+| [0050](specs/0050-formularios-reutilizables-resend.md) | 2026-09-22 | Constructor acotado de formularios reutilizables y traducibles, asignación por formId y envío validado mediante Resend | **cerrada** | no | `content/forms.json`, `src/lib/formularios*.ts`, `src/pages/admin/formularios/**`, `src/pages/api/formularios/**`, `src/components/**` |
 
 **"Disjunta?"** = si el trabajo no comparte archivos con otra spec abierta. Es lo que
 habilita paralelizar. Lo decide la spec, no el orquestador en runtime.

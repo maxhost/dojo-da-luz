@@ -1,0 +1,45 @@
+---
+import { getContent } from '../lib/content'
+import type { Locale } from '../lib/i18n'
+
+interface Props {
+  locale: Locale
+  idPrefijo: string
+  asuntoInicial?: string
+  mostrarTitulo?: boolean
+}
+
+const { locale, idPrefijo, asuntoInicial = '', mostrarTitulo = true } = Astro.props
+const c = getContent('contact', locale)
+const id = (campo: string) => `${idPrefijo}-${campo}`
+const control = 'mt-2 min-h-12 w-full rounded-md border border-[#bfb5a7] bg-white px-3.5 py-3 text-base text-[#211f1c] outline-none transition placeholder:text-[#8a8279] hover:border-[#968b7e] focus:border-acento focus:ring-2 focus:ring-acento/20'
+---
+
+<form class="grid gap-5" aria-describedby={id('pending')} data-contact-form>
+  {mostrarTitulo && <h2 class="font-serif text-3xl">{c.formTitle}</h2>}
+
+  <label class="text-sm font-semibold" for={id('name')}>
+    {c.fields.name}
+    <input class={control} id={id('name')} name="name" autocomplete="name" required />
+  </label>
+
+  <label class="text-sm font-semibold" for={id('email')}>
+    {c.fields.email}
+    <input class={control} id={id('email')} type="email" name="email" autocomplete="email" inputmode="email" required />
+  </label>
+
+  <label class="text-sm font-semibold" for={id('subject')}>
+    {c.fields.subject}
+    <input class={control} id={id('subject')} name="subject" value={asuntoInicial} required />
+  </label>
+
+  <label class="text-sm font-semibold" for={id('message')}>
+    {c.fields.message}
+    <textarea class={`${control} min-h-36 resize-y`} id={id('message')} name="message" rows="5" required></textarea>
+  </label>
+
+  <button class="button w-full cursor-not-allowed rounded-md bg-acento text-white opacity-60" type="button" disabled aria-disabled="true">
+    {c.fields.submit}
+  </button>
+  <p id={id('pending')} class="text-sm leading-6 text-[#756e66]">{c.fields.pending}</p>
+</form>

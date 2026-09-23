@@ -1,0 +1,76 @@
+---
+export const prerender = false
+
+import Admin from '../../../layouts/Admin.astro'
+import Aviso from '../../../components/admin/Aviso.astro'
+import FormularioFormulario from '../../../components/admin/FormularioFormulario.astro'
+import { guardarFormulario, leerFormularios } from '../../../lib/formularios-edicion'
+import { formularioDesdeForm } from '../../../lib/formularios-parse'
+import type { Formulario } from '../../../lib/formularios'
+
+/**
+ * Alta de un formulario (spec 0050). Solo en portugues: la estructura no se crea desde una
+ * traduccion (ADR-0046), asi que esta pantalla no tiene pestañas de idioma.
+ */
+
+const admin = Astro.locals.admin!
+
+const vacio: Formulario = {
+  id: '',
+  nombre: '',
+  estado: 'activo',
+  submitLabel: { pt: '', es: '', fr: '', en: '' },
+  successMessage: { pt: '', es: '', fr: '', en: '' },
+  fields: [],
+}
+
+let errores: Record<string, string> = {}
+let aviso: string | null = null
+let formulario = vacio
+
+if (Astro.request.method === 'POST') {
+  const form = await Astro.request.formData()
+  const resultado = await guardarFormulario(form, null)
+
+  if (resultado.ok) {
+    return Astro.redirect(`/admin/formularios/${resultado.id}?creado=si`, 303)
+  }
+
+  Astro.response.status = resultado.estado
+  errores = resultado.errores
+  aviso = resultado.aviso
+  // Se repinta lo que el cliente mando, no un formulario en blanco: nada se pierde.
+  formulario = formularioDesdeForm(form, 'pt', null, '') as Formulario
+}
+
+let sha = ''
+let sinRepositorio: string | null = null
+
+try {
+  ;({ sha } = await leerFormularios())
+} catch (error) {
+  Astro.response.status = 503
+  sinRepositorio = error instanceof Error ? error.message : String(error)
+}
+---
+
+<Admin titulo="Nuevo formulario" admin={admin}>
+  <header class="max-w-3xl">
+    <p class="text-xs font-bold uppercase tracking-[0.16em] text-[#0077c7]">Gestión</p>
+    <h1 class="mt-2 font-serif text-3xl leading-tight sm:text-4xl">Nuevo formulario</h1>
+    <p class="mt-3 text-sm leading-6 text-[#625c55] sm:text-base">
+      Se crea en portugués. Al guardarlo vas a poder traducirlo a español, francés e inglés,
+      y elegirlo desde el botón de cualquier página.
+    </p>
+    <p class="mt-3 text-sm"><a href="/admin/formularios">Volver al listado</a></p>
+  </header>
+
+  {aviso && <Aviso tipo="error">{aviso}</Aviso>}
+  {sinRepositorio && <Aviso tipo="error">No se puede abrir el formulario: {sinRepositorio}</Aviso>}
+
+  {sinRepositorio === null && (
+    <div class="mt-7">
+      <FormularioFormulario locale="pt" formulario={formulario} errores={errores} sha={sha} nuevo />
+    </div>
+  )}
+</Admin>

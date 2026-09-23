@@ -1,13 +1,18 @@
 ---
 spec: 0049
 fecha: 2026-09-21
-estado: borrador
+estado: supersedida por 0050
 resumen: El boton del cierre de la Home deja de abrir mailto:EMAIL-PENDENTE y abre el formulario de contacto en un modal pensado para movil; el formulario se extrae a un componente reutilizable.
 disjunta: si
 archivos: src/components/{FormularioContacto,ModalContacto,HomeView,ContactView}.astro, src/lib/schemas.ts
 ---
 
 # 0049 — El contacto en un modal
+
+> **Supersedida por la spec 0050 y el ADR-0046.** La extracción visual del formulario y
+> el modal ya existen en el working tree, pero el producto dejó de ser «el formulario de
+> Contactos dentro de un modal»: ahora son formularios reutilizables asignados por ID,
+> editables desde el backoffice y enviados por Resend.
 
 > **Esta spec queda en `borrador` a proposito.** Lo que pide el cliente se puede construir
 > hoy, pero el formulario que va adentro **todavia no envia nada**, y eso es una decision

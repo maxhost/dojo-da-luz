@@ -107,7 +107,7 @@
     "text": "Podes aparecer para fazer uma aula experimental. Não é necessária experiência prévia.",
     "note": "A aula experimental custa 5 €, descontados no valor da primeira mensalidade.",
     "ctaLabel": "Marcar aula experimental",
-    "formUrl": "https://www.aikido-duran.com/aula-experimental",
+    "formId": "aula-experimental-aikido",
     "directLabel": "Abrir formulário numa nova janela",
     "closeLabel": "Fechar"
   },

@@ -88,7 +88,8 @@
       "c'est commencer."
     ],
     "text": "Aucune expérience n'est nécessaire. Choisissez le lieu et nous vous expliquerons tout ce qu'il faut pour votre premier cours.",
-    "ctaLabel": "Réserver un cours d'essai"
+    "ctaLabel": "Réserver un cours d'essai",
+    "formId": "aula-experimental-aikido"
   },
   "partnerships": {
     "label": "06 · Partenariats",

@@ -8,6 +8,40 @@ interface Props {
 }
 
 const { titulo, admin = null } = Astro.props
+const ruta = Astro.url.pathname.replace(/\/$/, '') || '/'
+
+const grupos = [
+  {
+    titulo: 'Contenido',
+    items: [
+      { href: '/admin/paginas/home', etiqueta: 'Home' },
+      { href: '/admin/paginas/aulas', etiqueta: 'Aulas' },
+      { href: '/admin/paginas/adultos', etiqueta: 'Adultos' },
+      { href: '/admin/paginas/criancas', etiqueta: 'Crianças' },
+      { href: '/admin/paginas/aikido', etiqueta: 'Aikido' },
+      { href: '/admin/paginas/dojo', etiqueta: 'O dojo' },
+      { href: '/admin/paginas/eventos', etiqueta: 'Eventos' },
+      { href: '/admin/paginas/outras-artes', etiqueta: 'Outras artes' },
+      { href: '/admin/paginas/escolas', etiqueta: 'Escolas' },
+      { href: '/admin/paginas/professor', etiqueta: 'Professor' },
+      { href: '/admin/paginas/contactos', etiqueta: 'Contactos' },
+    ],
+  },
+  {
+    titulo: 'Gestión',
+    items: [
+      { href: '/admin/dojos', etiqueta: 'Dojos' },
+      { href: '/admin/formularios', etiqueta: 'Formularios' },
+      { href: '/admin/medios', etiqueta: 'Imágenes' },
+      { href: '/admin/ajustes', etiqueta: 'Ajustes del sitio' },
+    ],
+  },
+]
+
+/** Una ficha de dojo o de formulario deja encendida su seccion del menu. */
+const CON_FICHAS = ['/admin/dojos', '/admin/formularios']
+const activo = (href: string) =>
+  ruta === href || (CON_FICHAS.includes(href) && ruta.startsWith(`${href}/`))
 ---
 
 <!doctype html>
@@ -16,42 +50,117 @@ const { titulo, admin = null } = Astro.props
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex, nofollow, noarchive" />
+    <meta name="theme-color" content={admin ? '#211f1c' : '#f4f0e8'} />
     <title>{titulo} · Backoffice</title>
   </head>
   <body class="min-h-screen bg-[#f4f0e8] text-[#211f1c] antialiased">
-    <header class="border-b border-[#d7cec0] bg-[#fbf8f2]">
-      <div class="mx-auto flex max-w-4xl items-center justify-between px-6 py-4">
-        <a class="font-serif text-xl no-underline" href="/admin">Dojo da Luz · Backoffice</a>
-        {admin && (
-          <form method="post" action="/admin/salir" class="flex items-center gap-4">
-            <span class="text-sm text-[#625c55]">{admin.email}</span>
-            <button class="border border-[#d7cec0] bg-white px-3 py-1 text-sm" type="submit">
-              Salir
-            </button>
-          </form>
-        )}
-      </div>
-    </header>
+    {admin ? (
+      <div class="min-h-screen lg:grid lg:grid-cols-[17rem_minmax(0,1fr)]">
+        <header class="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-[#393631] bg-[#211f1c] px-4 text-white lg:hidden">
+          <a class="font-serif text-lg no-underline" href="/admin">Dojo da Luz</a>
+          <button
+            class="inline-flex min-h-11 items-center gap-2 rounded-md border border-white/25 px-3 text-sm font-semibold"
+            type="button"
+            aria-controls="admin-sidebar"
+            aria-expanded="false"
+            data-menu-abrir
+          >
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
+            Menú
+          </button>
+        </header>
 
-    {admin && (
-      <nav class="border-b border-[#d7cec0] bg-[#fbf8f2]" aria-label="Secciones">
-        <div class="mx-auto flex max-w-4xl gap-6 px-6 py-2 text-sm">
-          <a href="/admin/paginas/home">Home</a>
-          <a href="/admin/dojos">Dojos</a>
-          <a href="/admin/medios">Imágenes</a>
+        <div class="fixed inset-0 z-40 hidden bg-black/45 lg:hidden" data-menu-fondo></div>
+
+        <aside
+          id="admin-sidebar"
+          class="fixed inset-y-0 left-0 z-50 flex w-[min(19rem,88vw)] -translate-x-full flex-col bg-[#211f1c] text-white shadow-2xl transition-transform duration-200 lg:sticky lg:top-0 lg:z-20 lg:h-screen lg:w-auto lg:translate-x-0 lg:shadow-none"
+          aria-label="Navegación del administrador"
+          data-menu
+        >
+          <div class="flex min-h-20 items-center justify-between border-b border-white/10 px-5">
+            <a class="no-underline" href="/admin">
+              <span class="block font-serif text-xl leading-tight">Dojo da Luz</span>
+              <span class="mt-0.5 block text-[0.65rem] font-bold uppercase tracking-[0.18em] text-white/50">Administración</span>
+            </a>
+            <button class="-mr-2 inline-flex h-11 w-11 items-center justify-center rounded-md text-white/70 hover:bg-white/10 lg:hidden" type="button" aria-label="Cerrar menú" data-menu-cerrar>
+              <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg>
+            </button>
+          </div>
+
+          <nav class="min-h-0 flex-1 overflow-y-auto px-3 py-5">
+            <a
+              href="/admin"
+              class:list={['mb-6 flex min-h-11 items-center rounded-md px-3 text-sm font-semibold no-underline transition-colors', ruta === '/admin' ? 'bg-[#0099ff] text-white' : 'text-white/75 hover:bg-white/10 hover:text-white']}
+              aria-current={ruta === '/admin' ? 'page' : undefined}
+            >
+              Panel principal
+            </a>
+            {grupos.map((grupo) => (
+              <section class="mb-6" aria-labelledby={`nav-${grupo.titulo.toLowerCase()}`}>
+                <h2 id={`nav-${grupo.titulo.toLowerCase()}`} class="mb-2 px-3 text-[0.65rem] font-bold uppercase tracking-[0.16em] text-white/40">{grupo.titulo}</h2>
+                <ul class="space-y-0.5">
+                  {grupo.items.map((item) => (
+                    <li>
+                      <a
+                        href={item.href}
+                        class:list={['flex min-h-10 items-center rounded-md px-3 text-sm no-underline transition-colors', activo(item.href) ? 'bg-white/12 font-semibold text-white' : 'text-white/70 hover:bg-white/8 hover:text-white']}
+                        aria-current={activo(item.href) ? 'page' : undefined}
+                      >
+                        {item.etiqueta}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            ))}
+          </nav>
+
+          <div class="border-t border-white/10 p-4">
+            <p class="truncate px-1 text-xs text-white/50" title={admin.email}>{admin.email}</p>
+            <form method="post" action="/admin/salir" class="mt-3">
+              <button class="flex min-h-10 w-full items-center justify-center rounded-md border border-white/20 px-3 text-sm font-semibold text-white/80 hover:bg-white/10 hover:text-white" type="submit">Cerrar sesión</button>
+            </form>
+          </div>
+        </aside>
+
+        <main class="min-w-0 px-4 py-7 sm:px-7 sm:py-9 xl:px-12 xl:py-12">
+          <div class="mx-auto w-full max-w-5xl">
+            <slot />
+          </div>
+        </main>
+      </div>
+    ) : (
+      <main class="grid min-h-screen place-items-center px-4 py-8 sm:px-6">
+        <div class="w-full max-w-md">
+          <slot />
         </div>
-      </nav>
+      </main>
     )}
 
-    <main class="mx-auto max-w-4xl px-6 py-12">
-      <slot />
-    </main>
-
     <script>
-      /**
-       * Contador de caracteres vivo. El valor ya viene resuelto del servidor: esto solo lo
-       * mantiene al dia mientras se escribe, asi que sin JavaScript el campo sigue util.
-       */
+      const menu = document.querySelector<HTMLElement>('[data-menu]')
+      const fondo = document.querySelector<HTMLElement>('[data-menu-fondo]')
+      const abrir = document.querySelector<HTMLButtonElement>('[data-menu-abrir]')
+      const cerrar = document.querySelector<HTMLButtonElement>('[data-menu-cerrar]')
+
+      const cambiarMenu = (abierto: boolean) => {
+        if (!menu || !fondo || !abrir) return
+        menu.classList.toggle('-translate-x-full', !abierto)
+        fondo.classList.toggle('hidden', !abierto)
+        abrir.setAttribute('aria-expanded', String(abierto))
+        document.body.classList.toggle('overflow-hidden', abierto)
+        if (abierto) cerrar?.focus()
+        else abrir.focus()
+      }
+
+      abrir?.addEventListener('click', () => cambiarMenu(true))
+      cerrar?.addEventListener('click', () => cambiarMenu(false))
+      fondo?.addEventListener('click', () => cambiarMenu(false))
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && abrir?.getAttribute('aria-expanded') === 'true') cambiarMenu(false)
+      })
+
       document
         .querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('[data-contador]')
         .forEach((campo) => {

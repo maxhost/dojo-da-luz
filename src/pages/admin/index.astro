@@ -4,126 +4,48 @@ export const prerender = false
 import Admin from '../../layouts/Admin.astro'
 import { backend } from '../../lib/publish'
 
-// El middleware ya garantizo la sesion: aca nunca es null.
 const admin = Astro.locals.admin!
 const destino = backend()
 ---
 
 <Admin titulo="Panel" admin={admin}>
-  <h1 class="font-serif text-3xl">Panel</h1>
-  <p class="mt-4 text-[#625c55]">
-    Sesión iniciada como <strong>{admin.email}</strong>.
-  </p>
+  <header>
+    <p class="text-xs font-bold uppercase tracking-[0.16em] text-[#0077c7]">Panel principal</p>
+    <h1 class="mt-2 font-serif text-3xl leading-tight sm:text-4xl">Bienvenido al administrador</h1>
+    <p class="mt-3 max-w-2xl text-sm leading-6 text-[#625c55] sm:text-base">
+      Elegí una sección del menú para actualizar el contenido del sitio. En el teléfono,
+      abrí <strong>Menú</strong> en la parte superior para moverte entre secciones.
+    </p>
+  </header>
 
-  <ul class="mt-8">
-    <li class="border-t border-[#d7cec0] py-4">
-      <a class="font-serif text-xl" href="/admin/paginas/home">Home</a>
-      <p class="mt-1 text-sm text-[#625c55]">
-        Textos y SEO de la portada en portugués, español, francés e inglés.
+  <section class="mt-8 grid gap-4 sm:grid-cols-2" aria-label="Cómo está organizado el panel">
+    <article class="rounded-lg border border-[#d7cec0] bg-[#fbf8f2] p-5 sm:p-6">
+      <p class="text-xs font-bold uppercase tracking-[0.14em] text-[#0077c7]">Contenido</p>
+      <h2 class="mt-2 font-serif text-xl">Páginas del sitio</h2>
+      <p class="mt-2 text-sm leading-6 text-[#625c55]">
+        Editá los textos y contenidos de Home, Aulas, Aikido, Eventos y las demás páginas.
       </p>
-    </li>
-    <li class="border-t border-[#d7cec0] py-4">
-      <a class="font-serif text-xl" href="/admin/paginas/aulas">Aulas</a>
-      <p class="mt-1 text-sm text-[#625c55]">
-        Horarios, cuotas, crianças y preguntas frecuentes. Las listas se arman en portugués
-        y se traducen en las otras pestañas.
+    </article>
+    <article class="rounded-lg border border-[#d7cec0] bg-[#fbf8f2] p-5 sm:p-6">
+      <p class="text-xs font-bold uppercase tracking-[0.14em] text-[#0077c7]">Gestión</p>
+      <h2 class="mt-2 font-serif text-xl">Dojos, imágenes y ajustes</h2>
+      <p class="mt-2 text-sm leading-6 text-[#625c55]">
+        Administrá las sedes, los archivos compartidos y la identidad general del sitio.
       </p>
-    </li>
-    <li class="border-t border-[#d7cec0] py-4">
-      <a class="font-serif text-xl" href="/admin/paginas/adultos">Adultos</a>
-      <p class="mt-1 text-sm text-[#625c55]">
-        La página de Aikido para adultos: textos, la galería de fotos y vídeos, y las
-        preguntas frecuentes.
-      </p>
-    </li>
-    <li class="border-t border-[#d7cec0] py-4">
-      <a class="font-serif text-xl" href="/admin/paginas/criancas">Crianças</a>
-      <p class="mt-1 text-sm text-[#625c55]">
-        La página de Aikido para crianças e adolescentes. Misma forma que la de adultos, y
-        se publica por separado.
-      </p>
-    </li>
-    <li class="border-t border-[#d7cec0] py-4">
-      <a class="font-serif text-xl" href="/admin/paginas/aikido">Aikido</a>
-      <p class="mt-1 text-sm text-[#625c55]">
-        Qué es el Aikido: las secciones numeradas, el bloque de O-Sensei y el cierre.
-      </p>
-    </li>
-    <li class="border-t border-[#d7cec0] py-4">
-      <a class="font-serif text-xl" href="/admin/paginas/dojo">O dojo</a>
-      <p class="mt-1 text-sm text-[#625c55]">
-        El dojo y su equipo: el bloque del profesor principal, el listado de profesores y
-        las tres cajas de la transmisión.
-      </p>
-    </li>
-    <li class="border-t border-[#d7cec0] py-4">
-      <a class="font-serif text-xl" href="/admin/paginas/eventos">Eventos</a>
-      <p class="mt-1 text-sm text-[#625c55]">
-        La agenda: se crean y se quitan eventos sin límite. Si no queda ninguno, la página
-        lo dice.
-      </p>
-    </li>
-    <li class="border-t border-[#d7cec0] py-4">
-      <a class="font-serif text-xl" href="/admin/paginas/outras-artes">Outras artes</a>
-      <p class="mt-1 text-sm text-[#625c55]">
-        Shiatsu, Iaido y Tai Chi Chuan, cada una con su foto y sus textos, más la galería
-        de fotos y vídeos del final.
-      </p>
-    </li>
-    <li class="border-t border-[#d7cec0] py-4">
-      <a class="font-serif text-xl" href="/admin/paginas/escolas">Escolas</a>
-      <p class="mt-1 text-sm text-[#625c55]">
-        La comunidad y su galería de fotos y vídeos. Vacía la galería, esa franja no
-        aparece.
-      </p>
-    </li>
-    <li class="border-t border-[#d7cec0] py-4">
-      <a class="font-serif text-xl" href="/admin/paginas/professor">Professor</a>
-      <p class="mt-1 text-sm text-[#625c55]">
-        La página de Pablo Durán: sus textos, su foto y el percurso, que es un listado de
-        hitos sin límite.
-      </p>
-    </li>
-    <li class="border-t border-[#d7cec0] py-4">
-      <a class="font-serif text-xl" href="/admin/paginas/contactos">Contactos</a>
-      <p class="mt-1 text-sm text-[#625c55]">
-        Textos, etiquetas del formulario y cómo se llega a cada sede. Las sedes en sí
-        salen de Dojos.
-      </p>
-    </li>
-    <li class="border-t border-[#d7cec0] py-4">
-      <a class="font-serif text-xl" href="/admin/ajustes">Ajustes del sitio</a>
-      <p class="mt-1 text-sm text-[#625c55]">
-        Lo que es igual en todas las páginas: el logo, el ícono de la pestaña, el color de la
-        marca, el teléfono, el email, las redes y el pie.
-      </p>
-    </li>
-    <li class="border-t border-[#d7cec0] py-4">
-      <a class="font-serif text-xl" href="/admin/medios">Imágenes</a>
-      <p class="mt-1 text-sm text-[#625c55]">
-        Subir fotos al almacenamiento del sitio y copiar su dirección.
-      </p>
-    </li>
-    <li class="border-t border-[#d7cec0] py-4">
-      <a class="font-serif text-xl" href="/admin/dojos">Dojos</a>
-      <p class="mt-1 text-sm text-[#625c55]">
-        Sedes, direcciones y horarios. Se cargan una vez y salen traducidos en los cuatro
-        idiomas.
-      </p>
-    </li>
-  </ul>
+    </article>
+  </section>
 
-  <p class="mt-8 border border-[#d7cec0] bg-[#fbf8f2] px-4 py-3 text-sm text-[#625c55]">
+  <aside class="mt-6 rounded-lg border border-[#d7cec0] bg-white px-5 py-4 text-sm leading-6 text-[#625c55]">
     {destino === 'github' ? (
-      <>
-        Cada guardado es un commit en <code>main</code>: el sitio se reconstruye solo y
-        tarda 1 o 2 minutos en mostrar el cambio.
-      </>
+      <p>
+        <strong class="text-[#211f1c]">Publicación automática.</strong> Cada guardado se
+        publica y puede tardar 1 o 2 minutos en verse en el sitio.
+      </p>
     ) : (
-      <>
-        <strong>Modo desarrollo.</strong> Sin <code>GITHUB_TOKEN</code> los cambios se
-        escriben en los archivos locales, no en GitHub.
-      </>
+      <p>
+        <strong class="text-[#211f1c]">Modo desarrollo.</strong> Los cambios se escriben
+        en los archivos locales y no se publican en GitHub.
+      </p>
     )}
-  </p>
+  </aside>
 </Admin>

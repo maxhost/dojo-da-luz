@@ -88,7 +88,8 @@
       "is a beginning."
     ],
     "text": "No experience is required. Choose a location and we will explain everything you need for your first class.",
-    "ctaLabel": "Book a trial class"
+    "ctaLabel": "Book a trial class",
+    "formId": "aula-experimental-aikido"
   },
   "partnerships": {
     "label": "06 · Partnerships",

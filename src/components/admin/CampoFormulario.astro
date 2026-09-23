@@ -1,0 +1,68 @@
+---
+/**
+ * Elegir que formulario abre un botón (spec 0050). Se elige **por nombre** y se guarda el
+ * **id**: renombrar un formulario no rompe la página que lo usa (ADR-0046).
+ *
+ * Un formulario archivado no aparece en la lista, pero si es el que ya estaba asignado se
+ * muestra igual, marcado: archivar impide asignaciones nuevas, no rompe las existentes.
+ */
+
+interface Props {
+  nombre: string
+  etiqueta: string
+  valor: string
+  formularios: { id: string; nombre: string; estado: 'activo' | 'archivado' }[]
+  /** Fuera de portugués el valor viaja oculto: lo siembra la pestaña PT (ADR-0030). */
+  editable?: boolean
+  ayuda?: string
+  error?: string
+  idPrefijo?: string
+}
+
+const { nombre, etiqueta, valor, formularios, editable = true, ayuda, error, idPrefijo } = Astro.props
+
+const id = `${idPrefijo ? `${idPrefijo}-` : ''}${nombre.replace(/[^a-zA-Z0-9]+/g, '-')}`
+const asignado = formularios.find((f) => f.id === valor) ?? null
+const elegibles = formularios.filter((f) => f.estado === 'activo' || f.id === valor)
+
+const base =
+  'mt-2 min-h-11 w-full rounded-md border bg-white px-3.5 py-2.5 text-base leading-6 outline-none transition sm:text-sm ' +
+  (error
+    ? 'border-[#b3261e] ring-1 ring-[#b3261e]/15 focus:ring-2 focus:ring-[#b3261e]/20'
+    : 'border-[#c9c0b3] hover:border-[#9f968a] focus:border-[#0099ff] focus:ring-2 focus:ring-[#0099ff]/20')
+---
+
+<div class="mt-5 first:mt-0">
+  {editable ? (
+    <>
+      <label class="block text-sm font-semibold" for={id}>
+        {etiqueta}
+        <span class="ml-0.5 text-[#b3261e]" aria-hidden="true">*</span>
+      </label>
+      <select class={base} id={id} name={nombre}>
+        {elegibles.length === 0 && <option value="">No hay formularios creados todavía</option>}
+        {elegibles.map((formulario) => (
+          <option value={formulario.id} selected={formulario.id === valor}>
+            {formulario.nombre}
+            {formulario.estado === 'archivado' ? ' (archivado)' : ''}
+          </option>
+        ))}
+      </select>
+      <p class="mt-2 text-xs leading-5 text-[#625c55]">
+        {ayuda ?? 'Los formularios se crean y se traducen en'}{' '}
+        <a href="/admin/formularios">Formularios</a>.
+      </p>
+    </>
+  ) : (
+    <>
+      <p class="text-sm font-semibold">{etiqueta}</p>
+      <p class="mt-2 text-sm leading-6 text-[#625c55]">
+        {asignado?.nombre ?? valor}
+        <span class="block text-xs">Se elige en la pestaña <strong>Português</strong>.</span>
+      </p>
+      <input type="hidden" name={nombre} value={valor} />
+    </>
+  )}
+
+  {error && <p class="mt-2 text-sm font-semibold text-[#b3261e]">{error}</p>}
+</div>

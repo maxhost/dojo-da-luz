@@ -1,5 +1,6 @@
 ---
 import CampoImagen from './CampoImagen.astro'
+import CampoFormulario from './CampoFormulario.astro'
 import CampoTexto from './CampoTexto.astro'
 import { errorDe } from '../../lib/forms'
 import { LOCALE_NAME, type Locale } from '../../lib/i18n'
@@ -22,23 +23,51 @@ interface Props {
   valores: Record<string, string>
   errores: Record<string, string>
   sha: string
+  /** Los formularios publicados, para elegir cuál abre el botón (spec 0050). */
+  formularios: { id: string; nombre: string; estado: 'activo' | 'archivado' }[]
 }
 
-const { locale, valores, errores, sha, medios, shaMedia } = Astro.props
+const { locale, valores, errores, sha, medios, shaMedia, formularios = [] } = Astro.props
 
 const v = (ruta: string) => valores[ruta] ?? ''
 const e = (ruta: string) => errorDe(errores, ruta)
 
-const seccion = 'mt-8 border border-[#d7cec0] bg-[#fbf8f2] p-4'
+const seccion = 'scroll-mt-36 rounded-xl border border-[#d7cec0] bg-white p-4 shadow-[0_1px_2px_rgba(33,31,28,0.04)] sm:p-6 xl:col-start-2'
+
+const secciones = [
+  ['seo', 'SEO'],
+  ['resumen', 'Resumen citable'],
+  ['cabecera', 'Cabecera'],
+  ['portada', 'Portada'],
+  ['practica', '01 · La práctica'],
+  ['audiencias', '02 · Audiencias'],
+  ['lugares', '03 · Los lugares'],
+  ['dojo', '04 · El dojo'],
+  ['umbral', '05 · El umbral'],
+  ['parcerias', '06 · Parcerías'],
+] as const
 ---
 
-<form method="post">
+<form method="post" class="grid gap-4 xl:grid-cols-[12rem_minmax(0,1fr)] xl:items-start xl:gap-x-7" data-editor-home>
   <input type="hidden" name="idioma" value={locale} />
   <input type="hidden" name="sha" value={sha} />
   <input type="hidden" name="shaMedia" value={shaMedia} />
 
-  <fieldset class={seccion}>
-    <legend class="px-2 text-sm font-semibold">SEO</legend>
+  <nav class="rounded-lg border border-[#d7cec0] bg-[#fbf8f2] p-3 xl:sticky xl:top-5 xl:row-span-11" aria-label="Secciones de la Home">
+    <label class="block text-xs font-bold uppercase tracking-[0.12em] text-[#625c55]" for={`seccion-${locale}`}>Ir a una sección</label>
+    <select id={`seccion-${locale}`} class="mt-2 min-h-11 w-full rounded-md border border-[#c9c0b3] bg-white px-3 text-sm xl:hidden" data-ir-seccion>
+      <option value="">Elegir…</option>
+      {secciones.map(([id, etiqueta]) => <option value={`${locale}-${id}`}>{etiqueta}</option>)}
+    </select>
+    <ol class="hidden space-y-0.5 xl:mt-3 xl:block">
+      {secciones.map(([id, etiqueta]) => (
+        <li><a class="block rounded-md px-2.5 py-2 text-xs leading-4 text-[#625c55] no-underline hover:bg-[#eae4da] hover:text-[#211f1c]" href={`#${locale}-${id}`}>{etiqueta}</a></li>
+      ))}
+    </ol>
+  </nav>
+
+  <fieldset class={seccion} id={`${locale}-seo`}>
+    <legend class="px-2 font-serif text-xl">SEO</legend>
     <CampoTexto
       idPrefijo={locale}
       nombre="seo.title"
@@ -62,8 +91,8 @@ const seccion = 'mt-8 border border-[#d7cec0] bg-[#fbf8f2] p-4'
     />
   </fieldset>
 
-  <fieldset class={seccion}>
-    <legend class="px-2 text-sm font-semibold">Resumen citable</legend>
+  <fieldset class={seccion} id={`${locale}-resumen`}>
+    <legend class="px-2 font-serif text-xl">Resumen citable</legend>
     <p class="text-xs text-[#625c55]">
       De 2 a 4 frases completas, cada una con sujeto explícito: son las que ChatGPT o
       Google citan sin el resto de la página. Mínimo 40 caracteres por frase.
@@ -81,8 +110,8 @@ const seccion = 'mt-8 border border-[#d7cec0] bg-[#fbf8f2] p-4'
     />
   </fieldset>
 
-  <fieldset class={seccion}>
-    <legend class="px-2 text-sm font-semibold">Cabecera</legend>
+  <fieldset class={seccion} id={`${locale}-cabecera`}>
+    <legend class="px-2 font-serif text-xl">Cabecera</legend>
     <CampoTexto idPrefijo={locale} nombre="chrome.caption" etiqueta="Bajada del logo" valor={v('chrome.caption')} error={e('chrome.caption')} requerido />
     <CampoTexto idPrefijo={locale} nombre="chrome.menuLabel" etiqueta="Botón de menú" valor={v('chrome.menuLabel')} error={e('chrome.menuLabel')} requerido />
     <CampoTexto idPrefijo={locale} nombre="chrome.skipLink" etiqueta="Saltar al contenido" valor={v('chrome.skipLink')} error={e('chrome.skipLink')} requerido />
@@ -93,8 +122,8 @@ const seccion = 'mt-8 border border-[#d7cec0] bg-[#fbf8f2] p-4'
     </p>
   </fieldset>
 
-  <fieldset class={seccion}>
-    <legend class="px-2 text-sm font-semibold">Portada</legend>
+  <fieldset class={seccion} id={`${locale}-portada`}>
+    <legend class="px-2 font-serif text-xl">Portada</legend>
     <CampoTexto idPrefijo={locale} nombre="hero.eyebrowLines" etiqueta="Antetítulo (una línea por renglón)" valor={v('hero.eyebrowLines')} error={e('hero.eyebrowLines')} tipo="area" filas={2} requerido />
     <CampoTexto idPrefijo={locale} nombre="hero.titleLines" etiqueta="Titular (una línea por renglón)" valor={v('hero.titleLines')} error={e('hero.titleLines')} tipo="area" filas={2} requerido />
     <CampoTexto idPrefijo={locale} nombre="hero.titleHighlight" etiqueta="Última palabra destacada" valor={v('hero.titleHighlight')} error={e('hero.titleHighlight')} requerido />
@@ -102,15 +131,15 @@ const seccion = 'mt-8 border border-[#d7cec0] bg-[#fbf8f2] p-4'
     <CampoImagen idPrefijo={locale} nombre="media.heroPoster" etiqueta="Portada del vídeo" valor={medios.heroPoster} errores={errores} ayuda="Se ve mientras carga el vídeo, y en lugar del vídeo si no puede reproducirse. Es la misma en los cuatro idiomas." />
   </fieldset>
 
-  <fieldset class={seccion}>
-    <legend class="px-2 text-sm font-semibold">01 · La práctica</legend>
+  <fieldset class={seccion} id={`${locale}-practica`}>
+    <legend class="px-2 font-serif text-xl">01 · La práctica</legend>
     <CampoTexto idPrefijo={locale} nombre="practice.label" etiqueta="Rótulo" valor={v('practice.label')} error={e('practice.label')} requerido />
     <CampoTexto idPrefijo={locale} nombre="practice.titleLines" etiqueta="Título (una línea por renglón)" valor={v('practice.titleLines')} error={e('practice.titleLines')} tipo="area" filas={2} requerido />
     <CampoTexto idPrefijo={locale} nombre="practice.paragraphs" etiqueta="Párrafos (uno por línea)" valor={v('practice.paragraphs')} error={e('practice.paragraphs')} tipo="area" filas={4} requerido />
   </fieldset>
 
-  <fieldset class={seccion}>
-    <legend class="px-2 text-sm font-semibold">02 · Audiencias</legend>
+  <fieldset class={seccion} id={`${locale}-audiencias`}>
+    <legend class="px-2 font-serif text-xl">02 · Audiencias</legend>
     <CampoTexto idPrefijo={locale} nombre="audiences.label" etiqueta="Rótulo" valor={v('audiences.label')} error={e('audiences.label')} requerido />
     <CampoTexto idPrefijo={locale} nombre="audiences.title" etiqueta="Título" valor={v('audiences.title')} error={e('audiences.title')} requerido />
     <CampoTexto idPrefijo={locale} nombre="audiences.intro" etiqueta="Introducción" valor={v('audiences.intro')} error={e('audiences.intro')} tipo="area" requerido />
@@ -132,8 +161,8 @@ const seccion = 'mt-8 border border-[#d7cec0] bg-[#fbf8f2] p-4'
     ))}
   </fieldset>
 
-  <fieldset class={seccion}>
-    <legend class="px-2 text-sm font-semibold">03 · Los lugares</legend>
+  <fieldset class={seccion} id={`${locale}-lugares`}>
+    <legend class="px-2 font-serif text-xl">03 · Los lugares</legend>
     <p class="text-xs text-[#625c55]">
       Las sedes y sus horarios no se editan acá: son fichas de dojo.
     </p>
@@ -143,8 +172,8 @@ const seccion = 'mt-8 border border-[#d7cec0] bg-[#fbf8f2] p-4'
     <CampoTexto idPrefijo={locale} nombre="places.ctaLabel" etiqueta="Texto del botón" valor={v('places.ctaLabel')} error={e('places.ctaLabel')} requerido />
   </fieldset>
 
-  <fieldset class={seccion}>
-    <legend class="px-2 text-sm font-semibold">04 · El dojo</legend>
+  <fieldset class={seccion} id={`${locale}-dojo`}>
+    <legend class="px-2 font-serif text-xl">04 · El dojo</legend>
     <CampoTexto idPrefijo={locale} nombre="dojo.label" etiqueta="Rótulo" valor={v('dojo.label')} error={e('dojo.label')} requerido />
     <CampoTexto idPrefijo={locale} nombre="dojo.titleLines" etiqueta="Título (una línea por renglón)" valor={v('dojo.titleLines')} error={e('dojo.titleLines')} tipo="area" filas={2} requerido />
     <CampoImagen idPrefijo={locale} nombre="media.dojoPhoto" etiqueta="Foto de la sección" valor={medios.dojoPhoto} errores={errores} ayuda="Es la misma en los cuatro idiomas." />
@@ -157,21 +186,42 @@ const seccion = 'mt-8 border border-[#d7cec0] bg-[#fbf8f2] p-4'
     <CampoTexto idPrefijo={locale} nombre="dojo.teacher.photoAlt" etiqueta="Profesor · texto alternativo" valor={v('dojo.teacher.photoAlt')} error={e('dojo.teacher.photoAlt')} requerido />
   </fieldset>
 
-  <fieldset class={seccion}>
-    <legend class="px-2 text-sm font-semibold">05 · El umbral</legend>
+  <fieldset class={seccion} id={`${locale}-umbral`}>
+    <legend class="px-2 font-serif text-xl">05 · El umbral</legend>
     <CampoTexto idPrefijo={locale} nombre="threshold.label" etiqueta="Rótulo" valor={v('threshold.label')} error={e('threshold.label')} requerido />
     <CampoTexto idPrefijo={locale} nombre="threshold.titleLines" etiqueta="Título (una línea por renglón)" valor={v('threshold.titleLines')} error={e('threshold.titleLines')} tipo="area" filas={2} requerido />
     <CampoTexto idPrefijo={locale} nombre="threshold.text" etiqueta="Texto" valor={v('threshold.text')} error={e('threshold.text')} tipo="area" requerido />
     <CampoTexto idPrefijo={locale} nombre="threshold.ctaLabel" etiqueta="Texto del botón" valor={v('threshold.ctaLabel')} error={e('threshold.ctaLabel')} requerido />
+    <CampoFormulario
+      nombre="threshold.formId"
+      etiqueta="Formulario que abre el botón"
+      valor={v('threshold.formId')}
+      formularios={formularios}
+      error={e('threshold.formId')}
+      idPrefijo={locale}
+    />
   </fieldset>
 
-  <fieldset class={seccion}>
-    <legend class="px-2 text-sm font-semibold">06 · Parcerías</legend>
+  <fieldset class={seccion} id={`${locale}-parcerias`}>
+    <legend class="px-2 font-serif text-xl">06 · Parcerías</legend>
     <CampoTexto idPrefijo={locale} nombre="partnerships.label" etiqueta="Rótulo" valor={v('partnerships.label')} error={e('partnerships.label')} requerido />
     <CampoTexto idPrefijo={locale} nombre="partnerships.title" etiqueta="Título" valor={v('partnerships.title')} error={e('partnerships.title')} requerido />
   </fieldset>
 
-  <button class="mt-8 bg-[#0099ff] px-6 py-3 font-semibold text-white" type="submit">
-    Publicar {LOCALE_NAME[locale]}
-  </button>
+  <div class="sticky bottom-3 z-10 rounded-xl border border-[#d7cec0] bg-[#fbf8f2]/95 p-3 shadow-[0_8px_30px_rgba(33,31,28,0.16)] backdrop-blur xl:col-start-2 xl:flex xl:items-center xl:justify-between">
+    <p class="hidden text-xs text-[#625c55] xl:block">Los cambios afectan solamente a este idioma.</p>
+    <button class="min-h-12 w-full rounded-md bg-[#0099ff] px-6 font-semibold text-white transition hover:bg-[#0077c7] focus:outline-none focus:ring-2 focus:ring-[#0099ff] focus:ring-offset-2 xl:w-auto" type="submit">
+      Publicar {LOCALE_NAME[locale]}
+    </button>
+  </div>
 </form>
+
+<script>
+  document.querySelectorAll<HTMLSelectElement>('[data-ir-seccion]').forEach((selector) => {
+    selector.addEventListener('change', () => {
+      if (!selector.value) return
+      document.getElementById(selector.value)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      selector.value = ''
+    })
+  })
+</script>

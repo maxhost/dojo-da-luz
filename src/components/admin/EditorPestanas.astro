@@ -25,37 +25,37 @@ interface Props {
 const { formulario: Formulario, extra = {}, archivos, errores, shas, activo } = Astro.props
 
 const TABS = [
-  { locale: 'pt', peer: 'peer/pt', boton: 'peer-checked/pt:bg-[#0099ff] peer-checked/pt:text-white', panel: 'hidden peer-checked/pt:block' },
-  { locale: 'es', peer: 'peer/es', boton: 'peer-checked/es:bg-[#0099ff] peer-checked/es:text-white', panel: 'hidden peer-checked/es:block' },
-  { locale: 'fr', peer: 'peer/fr', boton: 'peer-checked/fr:bg-[#0099ff] peer-checked/fr:text-white', panel: 'hidden peer-checked/fr:block' },
-  { locale: 'en', peer: 'peer/en', boton: 'peer-checked/en:bg-[#0099ff] peer-checked/en:text-white', panel: 'hidden peer-checked/en:block' },
+  { locale: 'pt' },
+  { locale: 'es' },
+  { locale: 'fr' },
+  { locale: 'en' },
 ] as const
 ---
 
-<div class="mt-8">
-  {TABS.map((tab) => (
-    <input
-      class={`${tab.peer} sr-only`}
-      type="radio"
-      name="idioma-activo"
-      id={`tab-${tab.locale}`}
-      checked={activo === tab.locale}
-    />
-  ))}
-
-  {TABS.map((tab) => (
-    <label
-      class={`mr-2 inline-block cursor-pointer border border-[#d7cec0] bg-white px-4 py-2 text-sm ${tab.boton}`}
-      for={`tab-${tab.locale}`}
-    >
-      {LOCALE_NAME[tab.locale]}
-    </label>
-  ))}
+<div class="mt-7" data-pestanas-editor>
+  <div class="sticky top-16 z-20 grid grid-cols-4 gap-1 rounded-lg border border-[#d7cec0] bg-[#eee9e0]/95 p-1 shadow-sm backdrop-blur lg:top-0">
+    {TABS.map((tab) => (
+      <div>
+        <input class="sr-only" type="radio" name="idioma-activo" id={`tab-${tab.locale}`} value={tab.locale} checked={activo === tab.locale} />
+        <label
+          class:list={[
+            'flex min-h-11 cursor-pointer items-center justify-center rounded-md px-1 text-center text-xs font-semibold transition-colors sm:px-4 sm:text-sm',
+            activo === tab.locale ? 'bg-[#0099ff] text-white' : 'text-[#625c55] hover:bg-white/70',
+          ]}
+          for={`tab-${tab.locale}`}
+          data-etiqueta-editor={tab.locale}
+        >
+          <span class="sm:hidden">{tab.locale.toUpperCase()}</span>
+          <span class="hidden sm:inline">{LOCALE_NAME[tab.locale]}</span>
+        </label>
+      </div>
+    ))}
+  </div>
 
   {TABS.map((tab) => {
     const archivo = archivos.find((a) => a.locale === tab.locale)!
     return (
-      <section class={tab.panel}>
+      <section class="pt-5" hidden={activo !== tab.locale} data-panel-editor={tab.locale} aria-label={`Contenido en ${LOCALE_NAME[tab.locale]}`}>
         <Formulario
           locale={archivo.locale}
           datos={archivo.datos}
@@ -68,3 +68,23 @@ const TABS = [
     )
   })}
 </div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-pestanas-editor]').forEach((editor) => {
+    editor.querySelectorAll<HTMLInputElement>('input[name="idioma-activo"]').forEach((control) => {
+      control.addEventListener('change', () => {
+        if (!control.checked) return
+        editor.querySelectorAll<HTMLElement>('[data-panel-editor]').forEach((panel) => {
+          panel.hidden = panel.dataset.panelEditor !== control.value
+        })
+        editor.querySelectorAll<HTMLElement>('[data-etiqueta-editor]').forEach((etiqueta) => {
+          const seleccionada = etiqueta.dataset.etiquetaEditor === control.value
+          etiqueta.classList.toggle('bg-[#0099ff]', seleccionada)
+          etiqueta.classList.toggle('text-white', seleccionada)
+          etiqueta.classList.toggle('text-[#625c55]', !seleccionada)
+          etiqueta.classList.toggle('hover:bg-white/70', !seleccionada)
+        })
+      })
+    })
+  })
+</script>

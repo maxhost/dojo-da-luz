@@ -18,12 +18,11 @@ if (pantalla.estado) Astro.response.status = pantalla.estado
 ---
 
 <Admin titulo="Eventos" admin={admin}>
-  <h1 class="font-serif text-3xl">Eventos</h1>
-  <p class="mt-4 text-sm text-[#625c55]">
-    La agenda del dojo. Los eventos se crean y se quitan en la pestaña <strong>Português</strong>
-    y aparecen en los cuatro idiomas; en las otras tres se traducen. Si no queda ninguno, la
-    página lo dice con el texto del último bloque.
-  </p>
+  <header class="max-w-3xl">
+    <p class="text-xs font-bold uppercase tracking-[0.16em] text-[#0077c7]">Contenido del sitio</p>
+    <h1 class="mt-2 font-serif text-3xl leading-tight sm:text-4xl">Página Eventos</h1>
+    <p class="mt-3 text-sm leading-6 text-[#625c55] sm:text-base">Administrá la agenda del dojo y el mensaje que se muestra cuando no hay actividades. Los eventos y sus fotos se crean en portugués y se traducen en los demás idiomas.</p>
+  </header>
 
   {pantalla.aviso && <Aviso tipo={pantalla.aviso.tipo}>{pantalla.aviso.texto}</Aviso>}
   {pantalla.sinRepositorio && (

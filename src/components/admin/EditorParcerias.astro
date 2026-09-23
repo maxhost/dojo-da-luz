@@ -27,13 +27,13 @@ const err = (i: number, campo: string) => errorDe(errores, `${i}.${campo}`)
   <input type="hidden" name="formulario" value="parcerias" />
   <input type="hidden" name="sha" value={sha} />
 
-  <p class="text-sm text-[#625c55]">
+  <p class="mt-2 text-sm leading-6 text-[#625c55]">
     Los mismos en los cuatro idiomas. Se ven en la portada en este orden.
   </p>
 
-  <ol class="mt-4 grid list-none grid-cols-2 gap-4 p-0 md:grid-cols-3" data-lista-logos>
+  <ol class="mt-5 grid list-none gap-3 p-0 sm:grid-cols-2 lg:grid-cols-3" data-lista-logos>
     {partners.map((partner, i) => (
-      <li class="border border-[#d7cec0] bg-[#fbf8f2] p-4" data-logo>
+      <li class="rounded-lg border border-[#d7cec0] bg-[#fbf8f2] p-3" data-logo>
         <CampoImagen
           idPrefijo={`parceiro-${i}`}
           nombre={`parceiros[${i}].src`}
@@ -57,7 +57,7 @@ const err = (i: number, campo: string) => errorDe(errores, `${i}.${campo}`)
   </ol>
 
   <template data-plantilla-logo>
-    <li class="border border-[#d7cec0] bg-[#fbf8f2] p-4" data-logo>
+    <li class="rounded-lg border border-[#d7cec0] bg-[#fbf8f2] p-3" data-logo>
       <CampoImagen
         idPrefijo="parceiro-nuevo"
         nombre="parceiros[__indice__].src"
@@ -74,12 +74,12 @@ const err = (i: number, campo: string) => errorDe(errores, `${i}.${campo}`)
     </li>
   </template>
 
-  <button class="mt-5 border border-[#1f1b16] bg-white px-5 py-2 text-sm font-semibold" type="button" data-anadir-logo>
+  <button class="mt-5 min-h-11 rounded-md border border-[#1f1b16] bg-white px-5 py-2 text-sm font-semibold" type="button" data-anadir-logo>
     Añadir nuevo
   </button>
 
   <button
-    class="mt-6 border border-[#1f1b16] bg-[#1f1b16] px-5 py-2 text-sm font-semibold text-[#f6f1e8]"
+    class="mt-3 min-h-11 rounded-md border border-[#1f1b16] bg-[#1f1b16] px-5 py-2 text-sm font-semibold text-[#f6f1e8] sm:ml-2"
     type="submit"
   >
     Publicar parcerías

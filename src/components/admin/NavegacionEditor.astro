@@ -1,0 +1,36 @@
+---
+interface Props {
+  locale: string
+  prefijo: string
+  titulo: string
+  secciones: readonly (readonly [string, string])[]
+}
+
+const { locale, prefijo, titulo, secciones } = Astro.props
+const destino = (id: string) => `${locale}-${prefijo}-${id}`
+---
+
+<nav class="rounded-lg border border-[#d7cec0] bg-[#fbf8f2] p-3 xl:sticky xl:top-5" aria-label={titulo}>
+  <label class="block text-xs font-bold uppercase tracking-[0.12em] text-[#625c55]" for={`seccion-${prefijo}-${locale}`}>Ir a una sección</label>
+  <select id={`seccion-${prefijo}-${locale}`} class="mt-2 min-h-11 w-full rounded-md border border-[#c9c0b3] bg-white px-3 text-sm xl:hidden" data-ir-seccion>
+    <option value="">Elegir…</option>
+    {secciones.map(([id, etiqueta]) => <option value={destino(id)}>{etiqueta}</option>)}
+  </select>
+  <ol class="hidden space-y-0.5 xl:mt-3 xl:block">
+    {secciones.map(([id, etiqueta]) => (
+      <li><a class="block rounded-md px-2.5 py-2 text-xs leading-4 text-[#625c55] no-underline hover:bg-[#eae4da] hover:text-[#211f1c]" href={`#${destino(id)}`}>{etiqueta}</a></li>
+    ))}
+  </ol>
+</nav>
+
+<script>
+  document.querySelectorAll<HTMLSelectElement>('[data-ir-seccion]').forEach((selector) => {
+    if (selector.dataset.inicializado) return
+    selector.dataset.inicializado = 'si'
+    selector.addEventListener('change', () => {
+      if (!selector.value) return
+      document.getElementById(selector.value)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      selector.value = ''
+    })
+  })
+</script>

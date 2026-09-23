@@ -77,7 +77,7 @@
   "trialTitle": "Probar una clase",
   "trialText": "Reserva una clase de prueba para conocer al profesor, el espacio y la práctica.",
   "trialLabel": "Reservar clase infantil",
-  "formUrl": "https://docs.google.com/forms/d/e/1FAIpQLSfN-rw5gQ82gukAPdRKHsFkXvcjtogv7gWqgELtnek_6i2Biw/viewform",
+  "formId": "aula-experimental-aikido",
   "directLabel": "Abrir formulario en una ventana nueva",
   "closeLabel": "Cerrar",
   "qa": {

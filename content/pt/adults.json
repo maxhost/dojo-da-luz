@@ -77,7 +77,7 @@
   "trialTitle": "A tua primeira aula",
   "trialText": "A aula experimental custa 5 €, descontados na primeira mensalidade.",
   "trialLabel": "Marcar aula de adultos",
-  "formUrl": "https://www.aikido-duran.com/aula-experimental",
+  "formId": "aula-experimental-aikido",
   "directLabel": "Abrir formulário numa nova janela",
   "closeLabel": "Fechar",
   "qa": {

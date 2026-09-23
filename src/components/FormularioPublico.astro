@@ -1,0 +1,222 @@
+---
+import { ayudaDe, textoDe, type Campo, type Formulario } from '../lib/formularios'
+import { configDeCorreo } from '../lib/formularios-envio'
+import { FORM_UI, type Locale } from '../lib/i18n'
+
+/**
+ * El formulario que ve el visitante, pintado desde la definicion publicada (spec 0050).
+ * No hay markup por pagina: los campos, su orden, su tipo y sus opciones salen de
+ * `content/forms.json`, y el servidor valida contra ese mismo archivo (ADR-0046).
+ *
+ * El `name` de cada control es el **id** del campo. Es lo que viaja en `values` y lo que el
+ * endpoint busca en la definicion: un campo que el formulario no declara se rechaza.
+ */
+
+interface Props {
+  formulario: Formulario
+  locale: Locale
+  /** Prefijo de los `id` del DOM: en una pagina puede haber mas de un formulario. */
+  idPrefijo: string
+  /** De donde salio el envio. Viaja al correo para saber que boton se apreto. */
+  source?: string
+}
+
+const { formulario, locale, idPrefijo, source = Astro.url.pathname } = Astro.props
+const ui = FORM_UI[locale]
+
+// Sin las tres variables de correo el boton queda deshabilitado: un formulario que dice
+// "enviado" sin enviar es peor que uno que no existe.
+const hayEnvio = configDeCorreo() !== null
+
+const id = (campo: string) => `${idPrefijo}-${campo}`
+const control =
+  'mt-2 min-h-12 w-full rounded-md border border-[#bfb5a7] bg-white px-3.5 py-3 text-base text-[#211f1c] outline-none transition placeholder:text-[#8a8279] hover:border-[#968b7e] focus:border-acento focus:ring-2 focus:ring-acento/20'
+
+const tipoHtml: Record<string, 'text' | 'email' | 'tel' | 'number' | 'date'> = {
+  text: 'text',
+  email: 'email',
+  tel: 'tel',
+  number: 'number',
+  date: 'date',
+}
+
+const autocompletado = (campo: Campo): string | undefined => {
+  if (campo.type === 'email') return 'email'
+  if (campo.type === 'tel') return 'tel'
+  return undefined
+}
+---
+
+<form
+  class="grid gap-5"
+  data-formulario
+  data-form-id={formulario.id}
+  data-locale={locale}
+  data-source={source}
+  novalidate={!hayEnvio}
+>
+  {formulario.fields.map((campo) => {
+    const etiqueta = textoDe(campo.label, locale)
+    const ayuda = ayudaDe(campo.help, locale)
+    const descrito = ayuda ? id(`${campo.id}-ayuda`) : undefined
+
+    return (
+      <fieldset class="m-0 border-0 p-0" data-campo={campo.id}>
+        <legend class="text-sm font-semibold" data-etiqueta>
+          {etiqueta}
+          {!campo.required && <span class="ml-1 font-normal text-[#8a8279]">({ui.opcional})</span>}
+        </legend>
+        {ayuda && <p class="mt-1 text-sm leading-6 text-[#756e66]" id={descrito}>{ayuda}</p>}
+
+        {campo.type === 'textarea' && (
+          <textarea
+            class={`${control} min-h-36 resize-y`}
+            id={id(campo.id)}
+            name={campo.id}
+            rows="5"
+            required={campo.required}
+            aria-describedby={descrito}
+          />
+        )}
+
+        {campo.presentation === 'select' && (
+          <select class={control} id={id(campo.id)} name={campo.id} required={campo.required} aria-describedby={descrito}>
+            <option value="">{ui.elegir}</option>
+            {campo.options.map((opcion) => (
+              <option value={opcion.id}>{textoDe(opcion.label, locale)}</option>
+            ))}
+          </select>
+        )}
+
+        {campo.presentation === 'multiSelect' && (
+          <select class={`${control} min-h-36`} id={id(campo.id)} name={campo.id} multiple required={campo.required} aria-describedby={descrito}>
+            {campo.options.map((opcion) => (
+              <option value={opcion.id}>{textoDe(opcion.label, locale)}</option>
+            ))}
+          </select>
+        )}
+
+        {(campo.presentation === 'radio' || campo.presentation === 'checkbox') && (
+          <div class="mt-2 grid gap-1" role="group" aria-describedby={descrito}>
+            {campo.options.map((opcion, i) => (
+              <label class="flex min-h-11 cursor-pointer items-center gap-3 rounded-md border border-[#d7cec0] bg-white px-3.5 py-2 text-base has-[:checked]:border-acento has-[:checked]:bg-acento/5">
+                <input
+                  class="size-5 shrink-0 accent-[var(--color-acento)]"
+                  type={campo.presentation === 'radio' ? 'radio' : 'checkbox'}
+                  id={id(`${campo.id}-${i}`)}
+                  name={campo.id}
+                  value={opcion.id}
+                  required={campo.required && campo.presentation === 'radio'}
+                />
+                <span>{textoDe(opcion.label, locale)}</span>
+              </label>
+            ))}
+          </div>
+        )}
+
+        {campo.presentation === null && campo.type !== 'textarea' && (
+          <input
+            class={control}
+            id={id(campo.id)}
+            type={tipoHtml[campo.type] ?? 'text'}
+            name={campo.id}
+            required={campo.required}
+            autocomplete={autocompletado(campo)}
+            inputmode={campo.type === 'tel' ? 'tel' : campo.type === 'number' ? 'numeric' : undefined}
+            aria-describedby={descrito}
+          />
+        )}
+      </fieldset>
+    )
+  })}
+
+  <!-- Trampa: nadie la ve y ningun teclado la llena. Si llega con algo, no se envia. -->
+  <div class="absolute left-[-9999px] h-0 w-0 overflow-hidden" aria-hidden="true">
+    <label>
+      Website
+      <input type="text" name="website" tabindex="-1" autocomplete="off" />
+    </label>
+  </div>
+
+  <button
+    class="button w-full rounded-md bg-acento text-white disabled:cursor-not-allowed disabled:opacity-60"
+    type="submit"
+    disabled={!hayEnvio}
+    data-enviar
+    data-enviando={ui.enviando}
+    data-listo={textoDe(formulario.submitLabel, locale)}
+  >
+    {textoDe(formulario.submitLabel, locale)}
+  </button>
+
+  {!hayEnvio && <p class="text-sm leading-6 text-[#756e66]">{ui.indisponible}</p>}
+
+  <p class="hidden text-sm leading-6 font-semibold text-[#a3341f]" role="alert" data-error>{ui.error}</p>
+</form>
+
+<p class="hidden text-base leading-7" role="status" data-exito data-de={formulario.id}>
+  {textoDe(formulario.successMessage, locale)}
+</p>
+
+<script>
+  /**
+   * Un solo script para todos los formularios de la pagina. Recoge los valores por el
+   * `name` de cada control —que es el id del campo— y deja que el servidor decida: aca no
+   * se valida nada que el servidor no vuelva a validar.
+   */
+  document.querySelectorAll<HTMLFormElement>('[data-formulario]').forEach((formulario) => {
+    const boton = formulario.querySelector<HTMLButtonElement>('[data-enviar]')
+    const error = formulario.querySelector<HTMLElement>('[data-error]')
+    const exito = formulario.parentElement?.querySelector<HTMLElement>(
+      `[data-exito][data-de="${formulario.dataset.formId}"]`,
+    )
+    if (!boton) return
+
+    formulario.addEventListener('submit', async (evento) => {
+      evento.preventDefault()
+      if (!formulario.reportValidity()) return
+
+      const datos = new FormData(formulario)
+      const values: Record<string, string | string[]> = {}
+
+      for (const control of formulario.querySelectorAll<HTMLElement>('[name]')) {
+        const nombre = control.getAttribute('name')
+        if (!nombre || nombre === 'website') continue
+        const todos = datos.getAll(nombre).map(String)
+        const multiple =
+          control instanceof HTMLSelectElement
+            ? control.multiple
+            : control instanceof HTMLInputElement && control.type === 'checkbox'
+        values[nombre] = multiple ? todos : (todos[0] ?? '')
+      }
+
+      error?.classList.add('hidden')
+      boton.disabled = true
+      boton.textContent = boton.dataset.enviando ?? ''
+
+      try {
+        const respuesta = await fetch('/api/formularios/enviar', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({
+            formId: formulario.dataset.formId,
+            locale: formulario.dataset.locale,
+            source: formulario.dataset.source,
+            website: String(datos.get('website') ?? ''),
+            values,
+          }),
+        })
+
+        if (!respuesta.ok) throw new Error(String(respuesta.status))
+
+        formulario.hidden = true
+        exito?.classList.remove('hidden')
+        exito?.focus()
+      } catch {
+        error?.classList.remove('hidden')
+        boton.disabled = false
+        boton.textContent = boton.dataset.listo ?? ''
+      }
+    })
+  })
+</script>

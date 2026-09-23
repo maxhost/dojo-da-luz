@@ -88,7 +88,8 @@
       "es comenzar."
     ],
     "text": "No necesitas experiencia. Elige el lugar y te explicaremos todo lo necesario para la primera clase.",
-    "ctaLabel": "Reservar clase de prueba"
+    "ctaLabel": "Reservar clase de prueba",
+    "formId": "aula-experimental-aikido"
   },
   "partnerships": {
     "label": "06 · Colaboraciones",

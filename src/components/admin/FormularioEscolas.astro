@@ -1,6 +1,7 @@
 ---
 import CampoImagen from './CampoImagen.astro'
 import CampoTexto from './CampoTexto.astro'
+import NavegacionEditor from './NavegacionEditor.astro'
 import TablaFilas from './TablaFilas.astro'
 import TablaMedios from './TablaMedios.astro'
 import { errorDe } from '../../lib/forms'
@@ -36,7 +37,8 @@ const e = (ruta: string) => errorDe(errores, ruta)
 /** Las tablas de una columna guardan textos sueltos: la fila es `{ valor }`. */
 const textos = (ruta: string) => lista(ruta).map((valor: string) => ({ valor }))
 
-const seccion = 'mt-8 border border-[#d7cec0] bg-[#fbf8f2] p-4'
+const seccion = 'scroll-mt-36 rounded-xl border border-[#d7cec0] bg-white p-4 shadow-[0_1px_2px_rgba(33,31,28,0.04)] sm:p-6 xl:col-start-2'
+const navegacion = [['cabecera', 'Cabecera'], ['seo', 'SEO'], ['portada', '01 · Portada'], ['comunidad', '02 · La comunidad'], ['galeria', '03 · Galería']] as const
 
 const campo = (nombre: string, etiqueta: string, extra: Record<string, unknown> = {}) => ({
   idPrefijo: locale,
@@ -49,33 +51,32 @@ const campo = (nombre: string, etiqueta: string, extra: Record<string, unknown> 
 })
 ---
 
-<form method="post">
+<form method="post" class="grid gap-4 xl:grid-cols-[12rem_minmax(0,1fr)] xl:items-start xl:gap-x-7">
   <input type="hidden" name="idioma" value={locale} />
   {/* Los cuatro `sha`: publicar portugues toca los cuatro archivos y los verifica todos. */}
   {LOCALES.map((otro) => <input type="hidden" name={`sha.${otro}`} value={shas[otro]} />)}
 
   {!esPortugues && (
-    <p class="mt-6 border-l-4 border-[#0099ff] bg-[#eaf6ff] p-3 text-sm text-[#211f1c]">
+    <p class="rounded-lg border border-[#0099ff]/30 bg-[#eaf6ff] p-4 text-sm leading-6 text-[#211f1c] xl:col-span-2">
       Acá se traduce. Para cambiar una foto o tocar la galería, andá a la pestaña
       <strong>Português</strong>: lo que hagas ahí aparece en los cuatro idiomas.
     </p>
   )}
 
-  <fieldset class={seccion}>
-    <legend class="px-2 text-sm font-semibold">Cabecera</legend>
+  <div class="xl:sticky xl:top-5 xl:row-span-6"><NavegacionEditor locale={locale} prefijo="escolas" titulo="Secciones de Escolas" secciones={navegacion} /></div>
+
+  <fieldset class={seccion} id={`${locale}-escolas-cabecera`}><legend class="px-2 font-serif text-xl">Cabecera</legend>
     <CampoTexto {...campo('chrome.caption', 'Bajada del logo')} />
     <CampoTexto {...campo('chrome.menuLabel', 'Botón de menú')} />
     <CampoTexto {...campo('chrome.skipLink', 'Saltar al contenido')} />
   </fieldset>
 
-  <fieldset class={seccion}>
-    <legend class="px-2 text-sm font-semibold">SEO</legend>
+  <fieldset class={seccion} id={`${locale}-escolas-seo`}><legend class="px-2 font-serif text-xl">SEO</legend>
     <CampoTexto {...campo('seo.title', 'Título de la página', { recomendado: 60, ayuda: 'Lo que se lee como titular en Google y en la pestaña del navegador.' })} />
     <CampoTexto {...campo('seo.description', 'Descripción', { tipo: 'area', recomendado: 155, ayuda: 'El párrafo que Google muestra debajo del título.' })} />
   </fieldset>
 
-  <fieldset class={seccion}>
-    <legend class="px-2 text-sm font-semibold">01 · Portada</legend>
+  <fieldset class={seccion} id={`${locale}-escolas-portada`}><legend class="px-2 font-serif text-xl">01 · Portada</legend>
     <CampoTexto {...campo('eyebrow', 'Antetítulo')} />
     <CampoTexto {...campo('title', 'Titular')} />
     <CampoTexto {...campo('lead', 'Bajada', { tipo: 'area' })} />
@@ -90,8 +91,7 @@ const campo = (nombre: string, etiqueta: string, extra: Record<string, unknown> 
     />
   </fieldset>
 
-  <fieldset class={seccion}>
-    <legend class="px-2 text-sm font-semibold">02 · La comunidad</legend>
+  <fieldset class={seccion} id={`${locale}-escolas-comunidad`}><legend class="px-2 font-serif text-xl">02 · La comunidad</legend>
     <CampoTexto {...campo('introduction.eyebrow', 'Antetítulo')} />
     <CampoTexto {...campo('introduction.title', 'Título')} />
     <CampoTexto {...campo('introduction.subtitle', 'Subtítulo', { ayuda: 'La línea corta en azul, debajo del título.' })} />
@@ -119,8 +119,7 @@ const campo = (nombre: string, etiqueta: string, extra: Record<string, unknown> 
     <CampoTexto {...campo('introduction.photoAlt', 'Descripción de la foto', { ayuda: 'La leen los lectores de pantalla y Google.' })} />
   </fieldset>
 
-  <fieldset class={seccion}>
-    <legend class="px-2 text-sm font-semibold">03 · Galería</legend>
+  <fieldset class={seccion} id={`${locale}-escolas-galeria`}><legend class="px-2 font-serif text-xl">03 · Galería</legend>
     <p class="text-xs text-[#625c55]">
       La rejilla del final de la página. No lleva título: viene justo debajo del bloque de
       arriba. Mientras esté vacía, la sección entera no aparece.
@@ -136,13 +135,8 @@ const campo = (nombre: string, etiqueta: string, extra: Record<string, unknown> 
     />
   </fieldset>
 
-  <button class="mt-8 bg-[#0099ff] px-6 py-3 font-semibold text-white" type="submit">
-    Publicar Escolas en {LOCALE_NAME[locale]}
-  </button>
-  {esPortugues && (
-    <p class="mt-2 text-xs text-[#625c55]">
-      Publicar portugués también actualiza la estructura y las fotos de los otros tres
-      idiomas.
-    </p>
-  )}
+  <div class="sticky bottom-3 z-10 rounded-xl border border-[#d7cec0] bg-[#fbf8f2]/95 p-3 shadow-[0_8px_30px_rgba(33,31,28,0.16)] backdrop-blur xl:col-start-2 xl:flex xl:items-center xl:justify-between">
+    <p class="mb-2 text-xs text-[#625c55] xl:mb-0">{esPortugues ? 'También se actualizarán la estructura, las fotos y la galería compartida.' : 'Los cambios afectan solamente a este idioma.'}</p>
+    <button class="min-h-12 w-full rounded-md bg-[#0099ff] px-6 font-semibold text-white hover:bg-[#0077c7] xl:w-auto" type="submit">Publicar Escolas en {LOCALE_NAME[locale]}</button>
+  </div>
 </form>

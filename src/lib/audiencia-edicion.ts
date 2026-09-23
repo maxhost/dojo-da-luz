@@ -89,7 +89,7 @@ export function audienciaDesdeForm(form: FormData): unknown {
     trialTitle: t('trialTitle'),
     trialText: t('trialText'),
     trialLabel: t('trialLabel'),
-    formUrl: t('formUrl'),
+    formId: t('formId'),
     directLabel: t('directLabel'),
     closeLabel: t('closeLabel'),
     qa: {

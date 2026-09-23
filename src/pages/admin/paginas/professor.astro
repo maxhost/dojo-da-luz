@@ -18,11 +18,11 @@ if (pantalla.estado) Astro.response.status = pantalla.estado
 ---
 
 <Admin titulo="Professor" admin={admin}>
-  <h1 class="font-serif text-3xl">Professor</h1>
-  <p class="mt-4 text-sm text-[#625c55]">
-    La página de Pablo Durán, en los cuatro idiomas. <strong>El percurso es un listado</strong>:
-    los hitos se añaden y se quitan desde la pestaña Português.
-  </p>
+  <header class="max-w-3xl">
+    <p class="text-xs font-bold uppercase tracking-[0.16em] text-[#0077c7]">Contenido del sitio</p>
+    <h1 class="mt-2 font-serif text-3xl leading-tight sm:text-4xl">Página Professor</h1>
+    <p class="mt-3 text-sm leading-6 text-[#625c55] sm:text-base">Editá la biografía de Pablo Durán, su percurso, formación, enseñanza y línea de transmisión. Los hitos y la foto compartida se administran desde portugués.</p>
+  </header>
 
   {pantalla.aviso && <Aviso tipo={pantalla.aviso.tipo}>{pantalla.aviso.texto}</Aviso>}
   {pantalla.sinRepositorio && (

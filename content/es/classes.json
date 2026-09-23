@@ -107,7 +107,7 @@
     "text": "Puedes venir a realizar una clase de prueba. No necesitas experiencia previa.",
     "note": "La clase de prueba cuesta 5 €, que se descuentan de la primera mensualidad.",
     "ctaLabel": "Reservar clase de prueba",
-    "formUrl": "https://www.aikido-duran.com/aula-experimental",
+    "formId": "aula-experimental-aikido",
     "directLabel": "Abrir formulario en una ventana nueva",
     "closeLabel": "Cerrar"
   },

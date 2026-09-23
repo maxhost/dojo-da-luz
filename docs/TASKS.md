@@ -8,13 +8,14 @@ Si una sesion se cae, se cierra o se compacta, se vuelve aca — no al chat. Hay
 Regla: **marcar `hecho` solo con verificacion real** — tests que pasan, comando corrido,
 cosa vista en pantalla. No "deberia andar".
 
-Ultima actualizacion: 2026-09-22, cuarta sesion — desplegada y verificada en produccion — gate verde: `astro check` **0/0/0**
-(122 archivos), `npm test` **53/53**, `npm run build` 44 rutas + `sitemap.xml`.
+Ultima actualizacion: 2026-09-22, quinta sesion — spec 0050 **completa salvo las
+credenciales de Resend**, sin commit y sin desplegar — gate verde: `astro check` **0/0/0**
+(141 archivos), `npm test` **85/85**, `npm run build` 44 rutas + `sitemap.xml`.
 
-**Retomar con:** *"Leer docs/TASKS.md y docs/INDEX.md. Implementar la spec 0047, despues la
-0046."* Las dos comparten archivos entre si y van en ese orden. La 0049 necesita antes una
-decision del cliente (ver su seccion "Abierto"), y a la 0045 solo le falta el dominio, que
-depende del DNS del cliente (fila 10).
+**Retomar con:** *"Leer docs/TASKS.md y la spec 0050. Falta cargar `RESEND_API_KEY`,
+`FORM_FROM_EMAIL` y `FORM_TO_EMAIL` en Vercel, probar un envio real y desplegar."* La
+migracion `0003` ya esta aplicada en Neon. La 0049 quedó supersedida. A la 0045 solo le
+falta el dominio, que depende del DNS del cliente (fila 10).
 
 Esta sesion, nueve entregas y un plan — con las dos ultimas entregas **no queda ninguna
 pagina de contenido sin editor ni nada del borde sin pantalla**:
@@ -198,7 +199,78 @@ SEO actual, mejorar GEO.
 de editores esta cerrado, y con la spec 0044 tambien lo esta el borde: **Ajustes** cubre el
 logo, el favicon, el color, el contacto, las redes y el pie.
 
-### Lo que sigue: cinco specs planificadas, ninguna implementada
+### Spec 0050 — formularios reutilizables (corte del 2026-09-22, quinta sesion)
+
+Implementada entera menos la prueba de envio real, que espera las credenciales. **Sin
+commit y sin desplegar.**
+
+**La entidad y su edicion**
+
+- `content/forms.json` con *Aula experimental de Aikido*: 8 campos, 9 horarios, los cuatro
+  idiomas sembrados desde el portugues.
+- `src/lib/formularios.ts` — schema y lectura validada **en el build**; catalogo cerrado de
+  tipos y presentacion obligada a corresponder al tipo (ADR-0046).
+- `formularios-parse.ts` — `FormData` → formulario. Portugues manda la estructura; es/fr/en
+  solo traducen. Ids estables: reordenar no desalinea traducciones.
+- `formularios-edicion.ts` — alta, edicion, archivado, `sha`, commit y
+  `referenciasPorFormulario()` (una lectura de los cuatro `content/pt/*.json`, no cuatro por
+  fila del listado).
+- `formularios-envio.ts` y `formularios-correo.ts` — validacion de la respuesta contra la
+  definicion publicada, composicion del correo con los labels **del servidor**, freno por IP
+  hasheada y Resend (SDK `resend` 6.28.1).
+
+**Las pantallas**
+
+- `/admin/formularios` (listado con estado, nº de campos y en que paginas se usa),
+  `/nuevo`, `/[id]` con las cuatro pestañas de idioma y `/[id]/archivar`.
+- `EditorCamposFormulario.astro`: **el orden se cambia con flechas** —mueven la tarjeta y
+  reescriben el `orden`; se publica al guardar, una flecha no commitea— y se agrega
+  llenando la tarjeta vacia del final, sin JavaScript.
+- Entrada **Formularios** en el sidebar, bajo Gestión.
+- Selector por nombre (`CampoFormulario.astro`) en Home, Aulas, Adultos y Crianças; guarda
+  el id. En Aulas, Adultos y Crianças solo se elige en portugues y se siembra a los otros
+  tres; en Home va en las cuatro pestañas, porque Home no propaga nada.
+
+**El sitio publico**
+
+- `FormularioPublico.astro` pintado desde la definicion, con los cuatro estados; `FormModal`
+  lo usa y un `formId` inexistente **rompe el build**.
+- `formId` reemplaza a `formUrl` en los 16 archivos de Home/Aulas/Adultos/Crianças.
+- `POST /api/formularios/enviar` con honeypot, rate limit y 503 sin configuracion.
+
+**Verificado, no supuesto** — gate verde (`astro check` 0/0/0 en 141 archivos, `npm test`
+85/85, build 44 rutas) y, contra `astro dev` con una sesion temporal:
+
+- `/aulas` pinta el formulario propio con su `select` de 9 horarios y el honeypot, y **cero**
+  rastro de Google Forms; el endpoint sin las tres variables responde **503** y el boton
+  queda deshabilitado — no hay falso exito.
+- El editor: 4 paneles de idioma, 33 tarjetas de campo (8 + la vacia en PT, 8 en cada
+  traduccion), 16 flechas de campo y 22 de opcion **solo** en portugues, y 24 marcas «Sin
+  traducir» (8 campos × 3 idiomas).
+- Reordenar desde PT movio `idade` delante de `nome` en el archivo; la tarjeta vacia y la
+  opcion vacia **no** se publicaron (8 campos, 9 opciones).
+- Traducir en español cambio **solo** `label.es` de ese campo; pt/fr/en intactos.
+- Un POST forjado desde frances con un campo de mas y `estado=archivado` termino en **200
+  "no habia cambios"**: ni el campo ni el estado entraron.
+- Alta sin nombre ni campos → **422**; alta completa → **303** a `contacto-de-prueba`, con
+  ids generados y el español sembrado del portugues.
+- Archivado: `303` con `?ok=` (leido en el `Location`, no supuesto) y el selector de Aulas
+  quedo con **una** opcion, mientras es/fr/en siguen llevando el id en un campo oculto.
+- `db/migrations/0003_form_rate_limit.sql` **aplicada en Neon** con `npm run db:migrate`:
+  la tabla tiene sus cuatro columnas y sus tres indices, y 0 filas.
+
+**Falta:**
+
+1. Cargar `RESEND_API_KEY`, `FORM_FROM_EMAIL` (dominio verificado) y `FORM_TO_EMAIL` en
+   Vercel, y probar un envio real de punta a punta. Hasta entonces el boton se ve
+   deshabilitado tambien en produccion.
+2. Commit y deploy: el working tree trae ademas el rediseño mobile-first del admin.
+3. Decidido y **no** hecho: `/contactos` sigue con su formulario fijo y el boton
+   deshabilitado, fuera de la entidad.
+4. `trial.directLabel` y el `directLabel` de Adultos/Crianças quedaron **sin uso** —eran el
+   enlace para abrir el formulario externo aparte—. Se dejan para no ampliar el diff.
+
+### Plan histórico de la auditoría del 2026-09-21
 
 El recorrido de editores esta cerrado. Lo que queda salio de una **auditoria del sitio
 publico** hecha el 2026-09-21 en las dos direcciones —del codigo al HTML y del HTML al
@@ -215,10 +287,11 @@ estas specs, **todas cerradas menos la ultima, y ninguna implementada**:
 | **0046** | `og:image` e identidad del JSON-LD en Ajustes | no (con 0047) | — |
 | **0047** | Subida prefirmada a R2 + el video de la portada | no (con 0046) | — |
 | ~~**0048**~~ | Los dos `aria-label` traducidos y los acentos de los idiomas | si | **hecha** |
-| **0049** | El cierre de la Home al modal de contacto | si | **el formulario no envia**: hay que decidir |
+| ~~**0049**~~ | El cierre de la Home al modal de contacto | si | supersedida por 0050; la decisión ya está cerrada |
+| **0050** | Formularios reutilizables, traducibles y Resend | no | cerrada; credenciales solo bloquean la prueba real |
 
-**Orden recomendado:** ~~0048~~ → ~~0045~~ → **0047 → 0046 → 0049**. Las dos primeras estan
-hechas y verificadas (ver "Hecho"); quedan las tres ultimas.
+**Orden vigente:** consolidar el working tree actual → **0050**. La 0049 ya no debe
+implementarse como contrato independiente.
 
 **Tres hallazgos de la auditoria que hay que tener a mano:**
 
@@ -416,6 +489,7 @@ siguiente guardado del BO reordena el archivo: ruido de una vez, no perdida de d
 | 6v | Spec 0040 — editor de /outras-artes | 0040 | implementada, verificada en local y **en produccion** (`cbb9ac4`, deployment `dojo-da-fburjdlp9`; las 4 paginas publicas con la portada nueva y las anclas `arte-1..3`, y con sesion temporal `/admin/paginas/outras-artes` da 200 con sus siete bloques) | Cada arte es un bloque del formulario, no una fila de tabla: tiene once campos y tres listas adentro —parrafos, beneficios, horarios— que van como recuadro de texto, una entrada por renglon (ADR-0033). La portada gana foto de fondo y la pagina gana la galeria de Adultos, con los dos botones de alta. Verificado contra el BO corriendo: foto y video subidos desde portugues aparecieron en los cuatro, un POST forjado desde español con otra portada, otra foto de arte, otro `formUrl`, otra foto de galeria y un cuarto arte quedo en 3 artes, 2 medios y las cuatro cosas portuguesas, vaciar beneficios y borrar el profesor dejo de pintarlos, y con la galeria vacia la seccion entera desaparece. De las 44 paginas construidas cambiaron **exactamente las 4 de `/outras-artes`**, y comparadas etiqueta por etiqueta la unica diferencia es la portada nueva y el ancla por posicion: ni un texto cambio. |
 | 6w | Spec 0041 — editor de /escolas | 0041 | implementada, verificada en local y **en produccion** (`7af0457`, deployment `dojo-da-k2gbmyrzl`; las 4 paginas con sus 4 fotos y cero iframes, Adultos con 5 medios y `/outras-artes` con 0 —las dos intactas— y con sesion temporal `/admin/paginas/escolas` da 200 con sus cinco bloques) | El mas corto de los siete: portada, bloque de comunidad y galeria. Lo que tenia trabajo era la galeria, que era la unica del sitio que no admitia video y exigia entre 4 y 8 fotos (ADR-0037). Verificado contra el BO corriendo: un video de YouTube añadido en portugues aparecio en los cuatro, un POST forjado desde español con tres fotos distintas, un medio de mas y un parrafo de mas quedo en 5 medios, 2 parrafos y las tres fotos portuguesas, con cinco medios la rejilla destaca el primero y el video sale como enlace con miniatura (**cero `<iframe>`**), con uno pasa a columna unica centrada y con cero la franja desaparece. De las 44 paginas cambiaron **exactamente las 4 de `/escolas`** y solo en la rejilla; las de Adultos, Criancas y `/outras-artes` quedaron intactas pese al cambio de prop en `GaleriaMedios`. |
 | 6x | Spec 0042 — editor de /contactos | 0042 | implementada, verificada en local y **en produccion** (`08e21af`, deployment `dojo-da-6oahgvyay`) | La unica pagina sin una sola foto ni una lista de largo libre. Lo que tenia trabajo eran las sedes: `contact.venues` se borro y las tarjetas salen de `getDojos()` (ADR-0038), asi que **Encarnação dejo de publicarse**. Verificado contra el BO corriendo: archivar Lumiar desde el editor de Dojos dejo `/contactos` con una tarjeta y `/aulas` con una sede; publicar en ese estado **conservo sus lineas** (viajan en campos ocultos); reactivarlo devolvio todo. Dos defectos encontrados por verificar y no por leer: el endpoint de archivar **falla en silencio sin el `sha`** (303 con `?fallo=` en la query — la primera lectura de "dos tarjetas" no probaba nada), y el bloque `transport` se reescribia entero en cada diff porque el orden de claves salia del formulario; ahora se ordenan alfabeticamente. De las 44 paginas cambiaron **exactamente las 4 de `/contactos`**. |
+| 6y | Spec 0050 — formularios reutilizables y Resend | 0050 | **cerrada, lista para implementar** | ADR-0046. Formularios globales por `formId`, estructura creada en portugués y traducida por pestañas, campos de catálogo cerrado, opciones manuales sin límite ni vínculo con Dojos. Codex prepara la UI; Claude Code conecta entidad, CRUD, propagación, endpoint, rate limit y Resend. Requiere `RESEND_API_KEY`, `FORM_FROM_EMAIL` y `FORM_TO_EMAIL` para verificar envío real, no para desarrollar con mocks. |
 | 6q | Sacar Encarnação de los textos en prosa | — | pendiente | El dojo cerro. La estructura ya no lo nombra, la prosa si: en `classes.json` (descripcion SEO, pie, `children.facts[2]`, dos respuestas del Q&A) lo puede arreglar el cliente desde `/admin/paginas/aulas`. `adults.json` y `children.json` ya tienen editor (spec 0036): sus `facts` y su Q&A los puede arreglar el cliente. Queda `contact.json`, sin editor. |
 | 7 | Alumnos + emision de factura + PDF a R2 + envio Resend | — | pendiente | Necesita una factura de ejemplo real. Spec sin escribir: el numero 0004 del INDEX es otra cosa. |
 | 8 | Redirects 301 de las 38 URLs viejas | 0045 | **hecho** | 36 reglas en `src/lib/redirects.ts`, consumidas por `astro.config.mjs` y traducidas por el adapter a `301` de plataforma. Las 36 probadas por HTTP: `301` con `Location` exacto, un solo salto, destino `200`. `/no-existe` y `/videos` dan 404: sin comodines. 14 pruebas en `redirects.test.ts`. Falta el export de Search Console del cliente para cerrar el inventario. |

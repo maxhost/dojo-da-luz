@@ -77,7 +77,7 @@
   "trialTitle": "Your first class",
   "trialText": "The trial class costs €5, deducted from the first monthly payment.",
   "trialLabel": "Book an adult class",
-  "formUrl": "https://www.aikido-duran.com/aula-experimental",
+  "formId": "aula-experimental-aikido",
   "directLabel": "Open form in a new window",
   "closeLabel": "Close",
   "qa": {

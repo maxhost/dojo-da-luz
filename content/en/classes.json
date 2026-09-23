@@ -107,7 +107,7 @@
     "text": "Come along for a trial class. No previous experience is required.",
     "note": "The trial class costs €5, deducted from the first monthly payment.",
     "ctaLabel": "Book a trial class",
-    "formUrl": "https://www.aikido-duran.com/aula-experimental",
+    "formId": "aula-experimental-aikido",
     "directLabel": "Open form in a new window",
     "closeLabel": "Close"
   },

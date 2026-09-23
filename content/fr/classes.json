@@ -107,7 +107,7 @@
     "text": "Venez participer à un cours d'essai. Aucune expérience préalable n'est nécessaire.",
     "note": "Le cours d'essai coûte 5 €, déduits de la première mensualité.",
     "ctaLabel": "Réserver un cours d'essai",
-    "formUrl": "https://www.aikido-duran.com/aula-experimental",
+    "formId": "aula-experimental-aikido",
     "directLabel": "Ouvrir le formulaire dans une nouvelle fenêtre",
     "closeLabel": "Fermer"
   },

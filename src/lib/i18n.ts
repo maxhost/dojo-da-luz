@@ -115,6 +115,46 @@ export const VARIANTE_LABEL: Record<Locale, Record<Variante, string>> = {
   en: { almuerzo: 'midday', tarde: 'evening', armas: 'Buki Waza' },
 }
 
+/**
+ * Vocabulario de los formularios publicos (spec 0050). No es contenido editable: son los
+ * estados de un boton y el aviso de que algo fallo, que el visitante ve mientras el
+ * formulario habla con el servidor. El texto que **si** escribe el dojo —label del boton y
+ * mensaje de confirmacion— vive en la definicion del formulario.
+ */
+export const FORM_UI: Record<
+  Locale,
+  { enviando: string; error: string; indisponible: string; opcional: string; elegir: string }
+> = {
+  pt: {
+    enviando: 'A enviar…',
+    error: 'Não foi possível enviar. Tente novamente dentro de instantes.',
+    indisponible: 'O envio está temporariamente indisponível. Escreva-nos por e-mail.',
+    opcional: 'opcional',
+    elegir: 'Escolha uma opção',
+  },
+  es: {
+    enviando: 'Enviando…',
+    error: 'No se ha podido enviar. Vuelve a intentarlo en unos instantes.',
+    indisponible: 'El envío no está disponible ahora mismo. Escríbenos por email.',
+    opcional: 'opcional',
+    elegir: 'Elige una opción',
+  },
+  fr: {
+    enviando: 'Envoi en cours…',
+    error: "L'envoi a échoué. Réessayez dans quelques instants.",
+    indisponible: "L'envoi est momentanément indisponible. Écrivez-nous par e-mail.",
+    opcional: 'facultatif',
+    elegir: 'Choisissez une option',
+  },
+  en: {
+    enviando: 'Sending…',
+    error: 'The message could not be sent. Please try again in a moment.',
+    indisponible: 'Sending is temporarily unavailable. Please write to us by email.',
+    opcional: 'optional',
+    elegir: 'Choose an option',
+  },
+}
+
 export function isLocale(value: string): value is Locale {
   return (LOCALES as readonly string[]).includes(value)
 }

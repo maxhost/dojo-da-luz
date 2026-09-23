@@ -3,15 +3,20 @@ export const prerender = false
 
 import Admin from '../../../layouts/Admin.astro'
 import Aviso from '../../../components/admin/Aviso.astro'
+import EditorPestanas from '../../../components/admin/EditorPestanas.astro'
 import FormularioAulas from '../../../components/admin/FormularioAulas.astro'
 import { aulasDesdeForm, guardarAulas, ruta } from '../../../lib/aulas-edicion'
 import { LOCALES, LOCALE_NAME, isLocale, type Locale } from '../../../lib/i18n'
 import type { Media } from '../../../lib/media'
 import { leerMedia, publicarMedia } from '../../../lib/media-edicion'
+import { formulariosParaElegir } from '../../../lib/formularios-edicion'
 import { leerContenido } from '../../../lib/publish'
 import { LISTAS_AULAS, indicesSinTraducir } from '../../../lib/traduccion'
 
 const admin = Astro.locals.admin!
+
+// Los formularios del selector de la seccion del CTA (spec 0050).
+const formularios = await formulariosParaElegir()
 
 type Datos = Record<string, any>
 
@@ -107,62 +112,29 @@ try {
   sinRepositorio = error instanceof Error ? error.message : String(error)
 }
 
-/** Pestañas en CSS, como en el editor de Home: cambiar de idioma no pierde lo escrito. */
-const TABS = [
-  { locale: 'pt', peer: 'peer/pt', boton: 'peer-checked/pt:bg-[#0099ff] peer-checked/pt:text-white', panel: 'hidden peer-checked/pt:block' },
-  { locale: 'es', peer: 'peer/es', boton: 'peer-checked/es:bg-[#0099ff] peer-checked/es:text-white', panel: 'hidden peer-checked/es:block' },
-  { locale: 'fr', peer: 'peer/fr', boton: 'peer-checked/fr:bg-[#0099ff] peer-checked/fr:text-white', panel: 'hidden peer-checked/fr:block' },
-  { locale: 'en', peer: 'peer/en', boton: 'peer-checked/en:bg-[#0099ff] peer-checked/en:text-white', panel: 'hidden peer-checked/en:block' },
-] as const
 ---
 
 <Admin titulo="Aulas" admin={admin}>
-  <h1 class="font-serif text-3xl">Aulas</h1>
-  <p class="mt-4 text-sm text-[#625c55]">
-    El portugués manda: agregar o quitar una fila de cualquier lista se hace en su pestaña
-    y aparece en los cuatro idiomas. En las otras tres se traduce.
-  </p>
+  <header class="max-w-3xl">
+    <p class="text-xs font-bold uppercase tracking-[0.16em] text-[#0077c7]">Contenido del sitio</p>
+    <h1 class="mt-2 font-serif text-3xl leading-tight sm:text-4xl">Página Aulas</h1>
+    <p class="mt-3 text-sm leading-6 text-[#625c55] sm:text-base">
+      Editá horarios, cuotas, contenidos para crianças y preguntas frecuentes. La estructura
+      de las listas se administra en portugués y se traduce en los demás idiomas.
+    </p>
+  </header>
 
   {aviso && <Aviso tipo={aviso.tipo}>{aviso.texto}</Aviso>}
   {sinRepositorio && <Aviso tipo="error">No se puede abrir el editor: {sinRepositorio}</Aviso>}
 
   {sinRepositorio === null && (
-  <div class="mt-8">
-    {TABS.map((tab) => (
-      <input
-        class={`${tab.peer} sr-only`}
-        type="radio"
-        name="idioma-activo"
-        id={`tab-aulas-${tab.locale}`}
-        checked={activo === tab.locale}
-      />
-    ))}
-
-    {TABS.map((tab) => (
-      <label
-        class={`mr-2 inline-block cursor-pointer border border-[#d7cec0] bg-white px-4 py-2 text-sm ${tab.boton}`}
-        for={`tab-aulas-${tab.locale}`}
-      >
-        {LOCALE_NAME[tab.locale]}
-      </label>
-    ))}
-
-    {TABS.map((tab) => {
-      const archivo = archivos.find((a) => a.locale === tab.locale)!
-      return (
-        <section class={tab.panel}>
-          <FormularioAulas
-            locale={archivo.locale}
-            datos={archivo.datos}
-            errores={errores[archivo.locale] ?? {}}
-            shas={shas}
-            medios={medios!.media}
-            shaMedia={medios!.sha}
-            sinTraducir={archivo.sinTraducir}
-          />
-        </section>
-      )
-    })}
-  </div>
+    <EditorPestanas
+      formulario={FormularioAulas}
+      extra={{ medios: medios!.media, shaMedia: medios!.sha, formularios }}
+      archivos={archivos}
+      errores={errores}
+      shas={shas}
+      activo={activo}
+    />
   )}
 </Admin>

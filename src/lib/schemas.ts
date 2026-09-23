@@ -132,6 +132,8 @@ export const homeSchema = z.object({
     titleLines: linesSchema,
     text: z.string().min(1),
     ctaLabel: z.string().min(1),
+    /** Que formulario abre el boton de la portada (spec 0050). Se guarda el id, no el nombre. */
+    formId: z.string().min(1),
   }),
   partnerships: z.object({
     label: z.string().min(1),
@@ -179,10 +181,10 @@ export const classesSchema = z.object({
     text: z.string().min(1),
     note: z.string().min(1),
     ctaLabel: z.string().min(1),
-    // El boton abria `mailto:EMAIL-PENDENTE`. Ahora abre el mismo modal que Adultos y
-    // Crianças. `formUrl` no se edita desde el BO: un destino mal escrito deja el modal
-    // en blanco sin avisar, y el diseño de los formularios es otra spec.
-    formUrl: z.url(),
+    // El boton abre el formulario propio del dojo (spec 0050). Lo que se guarda es el
+    // **id** del formulario y no su nombre ni una URL: renombrarlo no rompe la pagina, y
+    // un destino externo mal escrito ya no puede dejar el modal en blanco (ADR-0046).
+    formId: z.string().min(1),
     directLabel: z.string().min(1),
     closeLabel: z.string().min(1),
   }),
@@ -199,7 +201,7 @@ export const audienceEntrySchema = z.object({
   photo: z.url(), photoAlt: z.string().min(1),
   gallery: gallerySchema,
   trialTitle: z.string().min(1), trialText: z.string().min(1), trialLabel: z.string().min(1),
-  formUrl: z.url(), directLabel: z.string().min(1), closeLabel: z.string().min(1),
+  formId: z.string().min(1), directLabel: z.string().min(1), closeLabel: z.string().min(1),
   qa: qaSchema,
 })
 

@@ -1,7 +1,7 @@
 import { classesSchema } from './schemas'
 import { erroresDe, filas, resumenDeErrores, texto } from './forms'
 import { LOCALES, type Locale } from './i18n'
-import { LISTAS_AULAS, propagarEstructura } from './traduccion'
+import { LISTAS_AULAS, SEMBRADOS_AULAS, propagarEstructura } from './traduccion'
 import { leerContenido, publicar, publicarVarios, serializar } from './publish'
 
 /**
@@ -79,7 +79,7 @@ export function aulasDesdeForm(form: FormData): unknown {
       text: t('trial.text'),
       note: t('trial.note'),
       ctaLabel: t('trial.ctaLabel'),
-      formUrl: t('trial.formUrl'),
+      formId: t('trial.formId'),
       directLabel: t('trial.directLabel'),
       closeLabel: t('trial.closeLabel'),
     },
@@ -128,7 +128,7 @@ async function guardarPortugues(datosPt: unknown, form: FormData): Promise<Guard
     const datos =
       locale === 'pt'
         ? datosPt
-        : propagarEstructura(datosPt, JSON.parse(actual.contenido), LISTAS_AULAS)
+        : propagarEstructura(datosPt, JSON.parse(actual.contenido), LISTAS_AULAS, SEMBRADOS_AULAS)
 
     const validado = classesSchema.safeParse(datos)
     if (!validado.success) return invalido(erroresDe(validado.error), `En ${locale}: `)
@@ -159,7 +159,7 @@ async function guardarTraduccion(locale: Locale, datos: unknown, form: FormData)
   // La estructura la manda el portugues: se alinea contra el publicado antes de validar,
   // asi que ni una fila de mas ni de menos puede entrar por esta puerta.
   const pt = JSON.parse((await leerContenido(ruta('pt'))).contenido)
-  const alineado = propagarEstructura(pt, datos, LISTAS_AULAS)
+  const alineado = propagarEstructura(pt, datos, LISTAS_AULAS, SEMBRADOS_AULAS)
 
   const validado = classesSchema.safeParse(alineado)
   if (!validado.success) return invalido(erroresDe(validado.error))

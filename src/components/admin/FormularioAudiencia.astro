@@ -1,4 +1,5 @@
 ---
+import CampoFormulario from './CampoFormulario.astro'
 import CampoImagen from './CampoImagen.astro'
 import CampoTexto from './CampoTexto.astro'
 import TablaFilas from './TablaFilas.astro'
@@ -27,9 +28,11 @@ interface Props {
   shas: Record<Locale, string>
   /** Ruta de lista → indices cuyo texto sigue siendo el portugues. */
   sinTraducir: Record<string, number[]>
+  /** Los formularios publicados, para elegir cuál abre el botón (spec 0050). */
+  formularios: { id: string; nombre: string; estado: 'activo' | 'archivado' }[]
 }
 
-const { pagina, locale, datos, errores, shas, sinTraducir } = Astro.props
+const { pagina, locale, datos, errores, shas, sinTraducir, formularios = [] } = Astro.props
 
 const esPortugues = locale === 'pt'
 
@@ -42,7 +45,18 @@ const e = (ruta: string) => errorDe(errores, ruta)
 /** Las tablas de una columna guardan textos sueltos: la fila es `{ valor }`. */
 const textos = (ruta: string) => lista(ruta).map((valor: string) => ({ valor }))
 
-const seccion = 'mt-8 border border-[#d7cec0] bg-[#fbf8f2] p-4'
+const seccion = 'scroll-mt-36 rounded-xl border border-[#d7cec0] bg-white p-4 shadow-[0_1px_2px_rgba(33,31,28,0.04)] sm:p-6 xl:col-start-2'
+
+const secciones = [
+  ['cabecera', 'Cabecera'],
+  ['seo', 'SEO'],
+  ['portada', '01 · Portada'],
+  ['contenido', '02 · Texto y objetivos'],
+  ['datos', '03 · Datos'],
+  ['galeria', '04 · Galería'],
+  ['preguntas', '05 · Preguntas frecuentes'],
+  ['experimental', '06 · Aula experimental'],
+] as const
 
 const campo = (nombre: string, etiqueta: string, extra: Record<string, unknown> = {}) => ({
   idPrefijo: locale,
@@ -55,36 +69,45 @@ const campo = (nombre: string, etiqueta: string, extra: Record<string, unknown> 
 })
 ---
 
-<form method="post">
+<form method="post" class="grid gap-4 xl:grid-cols-[12rem_minmax(0,1fr)] xl:items-start xl:gap-x-7" data-editor-secciones>
   <input type="hidden" name="idioma" value={locale} />
   {/* Los cuatro `sha`: publicar portugues toca los cuatro archivos y los verifica todos. */}
   {LOCALES.map((otro) => <input type="hidden" name={`sha.${otro}`} value={shas[otro]} />)}
-  {/* El destino del formulario no se edita desde el BO hasta que exista su spec. */}
-  <input type="hidden" name="formUrl" value={v('formUrl')} />
 
   {!esPortugues && (
-    <p class="mt-6 border-l-4 border-[#0099ff] bg-[#eaf6ff] p-3 text-sm text-[#211f1c]">
+    <p class="rounded-lg border border-[#0099ff]/30 bg-[#eaf6ff] p-4 text-sm leading-6 text-[#211f1c] xl:col-span-2">
       Acá se traduce. Para agregar o quitar una fila, cambiar una foto o cambiar un vídeo,
       andá a la pestaña <strong>Português</strong>: lo que hagas ahí aparece en los cuatro
       idiomas.
     </p>
   )}
 
-  <fieldset class={seccion}>
-    <legend class="px-2 text-sm font-semibold">Cabecera</legend>
+  <nav class="rounded-lg border border-[#d7cec0] bg-[#fbf8f2] p-3 xl:sticky xl:top-5 xl:row-span-9" aria-label={`Secciones de ${TITULO_AUDIENCIA[pagina]}`}>
+    <label class="block text-xs font-bold uppercase tracking-[0.12em] text-[#625c55]" for={`seccion-${pagina}-${locale}`}>Ir a una sección</label>
+    <select id={`seccion-${pagina}-${locale}`} class="mt-2 min-h-11 w-full rounded-md border border-[#c9c0b3] bg-white px-3 text-sm xl:hidden" data-ir-seccion>
+      <option value="">Elegir…</option>
+      {secciones.map(([id, etiqueta]) => <option value={`${locale}-${pagina}-${id}`}>{etiqueta}</option>)}
+    </select>
+    <ol class="hidden space-y-0.5 xl:mt-3 xl:block">
+      {secciones.map(([id, etiqueta]) => <li><a class="block rounded-md px-2.5 py-2 text-xs leading-4 text-[#625c55] no-underline hover:bg-[#eae4da] hover:text-[#211f1c]" href={`#${locale}-${pagina}-${id}`}>{etiqueta}</a></li>)}
+    </ol>
+  </nav>
+
+  <fieldset class={seccion} id={`${locale}-${pagina}-cabecera`}>
+    <legend class="px-2 font-serif text-xl">Cabecera</legend>
     <CampoTexto {...campo('chrome.caption', 'Bajada del logo')} />
     <CampoTexto {...campo('chrome.menuLabel', 'Botón de menú')} />
     <CampoTexto {...campo('chrome.skipLink', 'Saltar al contenido')} />
   </fieldset>
 
-  <fieldset class={seccion}>
-    <legend class="px-2 text-sm font-semibold">SEO</legend>
+  <fieldset class={seccion} id={`${locale}-${pagina}-seo`}>
+    <legend class="px-2 font-serif text-xl">SEO</legend>
     <CampoTexto {...campo('seo.title', 'Título de la página', { recomendado: 60, ayuda: 'Lo que se lee como titular en Google y en la pestaña del navegador.' })} />
     <CampoTexto {...campo('seo.description', 'Descripción', { tipo: 'area', recomendado: 155, ayuda: 'El párrafo que Google muestra debajo del título.' })} />
   </fieldset>
 
-  <fieldset class={seccion}>
-    <legend class="px-2 text-sm font-semibold">01 · Portada</legend>
+  <fieldset class={seccion} id={`${locale}-${pagina}-portada`}>
+    <legend class="px-2 font-serif text-xl">01 · Portada</legend>
     <CampoTexto {...campo('eyebrow', 'Antetítulo')} />
     <CampoTexto {...campo('title', 'Titular')} />
     <CampoTexto {...campo('lead', 'Bajada', { tipo: 'area' })} />
@@ -101,8 +124,8 @@ const campo = (nombre: string, etiqueta: string, extra: Record<string, unknown> 
     <CampoTexto {...campo('photoAlt', 'Descripción de la foto', { ayuda: 'La leen los lectores de pantalla y Google.' })} />
   </fieldset>
 
-  <fieldset class={seccion}>
-    <legend class="px-2 text-sm font-semibold">02 · Texto y lo que se trabaja</legend>
+  <fieldset class={seccion} id={`${locale}-${pagina}-contenido`}>
+    <legend class="px-2 font-serif text-xl">02 · Texto y lo que se trabaja</legend>
 
     <TablaFilas
       titulo="Párrafos"
@@ -129,8 +152,8 @@ const campo = (nombre: string, etiqueta: string, extra: Record<string, unknown> 
     />
   </fieldset>
 
-  <fieldset class={seccion}>
-    <legend class="px-2 text-sm font-semibold">03 · La franja oscura de datos</legend>
+  <fieldset class={seccion} id={`${locale}-${pagina}-datos`}>
+    <legend class="px-2 font-serif text-xl">03 · La franja oscura de datos</legend>
 
     <TablaFilas
       titulo="Datos"
@@ -148,8 +171,8 @@ const campo = (nombre: string, etiqueta: string, extra: Record<string, unknown> 
     />
   </fieldset>
 
-  <fieldset class={seccion}>
-    <legend class="px-2 text-sm font-semibold">04 · Galería</legend>
+  <fieldset class={seccion} id={`${locale}-${pagina}-galeria`}>
+    <legend class="px-2 font-serif text-xl">04 · Galería</legend>
     <CampoTexto {...campo('gallery.label', 'Rótulo')} />
     <CampoTexto {...campo('gallery.title', 'Título')} />
     <CampoTexto {...campo('gallery.intro', 'Introducción', { tipo: 'area' })} />
@@ -164,8 +187,8 @@ const campo = (nombre: string, etiqueta: string, extra: Record<string, unknown> 
     />
   </fieldset>
 
-  <fieldset class={seccion}>
-    <legend class="px-2 text-sm font-semibold">05 · Perguntas frequentes</legend>
+  <fieldset class={seccion} id={`${locale}-${pagina}-preguntas`}>
+    <legend class="px-2 font-serif text-xl">05 · Perguntas frequentes</legend>
     <CampoTexto {...campo('qa.label', 'Rótulo')} />
     <CampoTexto {...campo('qa.title', 'Título')} />
 
@@ -185,25 +208,42 @@ const campo = (nombre: string, etiqueta: string, extra: Record<string, unknown> 
     />
   </fieldset>
 
-  <fieldset class={seccion}>
-    <legend class="px-2 text-sm font-semibold">06 · Aula experimental</legend>
+  <fieldset class={seccion} id={`${locale}-${pagina}-experimental`}>
+    <legend class="px-2 font-serif text-xl">06 · Aula experimental</legend>
     <CampoTexto {...campo('trialTitle', 'Título')} />
     <CampoTexto {...campo('trialText', 'Texto', { tipo: 'area' })} />
+    <CampoFormulario
+      nombre="formId"
+      etiqueta="Formulario que abre el botón"
+      valor={v('formId')}
+      formularios={formularios}
+      editable={esPortugues}
+      error={e('formId')}
+      idPrefijo={locale}
+    />
     <CampoTexto {...campo('directLabel', 'Enlace para abrir el formulario aparte')} />
     <CampoTexto {...campo('closeLabel', 'Texto para cerrar')} />
     <p class="mt-4 text-xs text-[#625c55]">
-      El texto del botón está arriba, en <strong>01 · Portada</strong>. A dónde apunta el
-      formulario no se cambia desde acá todavía.
+      El texto del botón está arriba, en <strong>01 · Portada</strong>.
     </p>
   </fieldset>
 
-  <button class="mt-8 bg-[#0099ff] px-6 py-3 font-semibold text-white" type="submit">
-    Publicar {TITULO_AUDIENCIA[pagina]} en {LOCALE_NAME[locale]}
-  </button>
-  {esPortugues && (
-    <p class="mt-2 text-xs text-[#625c55]">
-      Publicar portugués también actualiza la estructura y las imágenes de los otros tres
-      idiomas.
+  <div class="sticky bottom-3 z-10 rounded-xl border border-[#d7cec0] bg-[#fbf8f2]/95 p-3 shadow-[0_8px_30px_rgba(33,31,28,0.16)] backdrop-blur xl:col-start-2 xl:flex xl:items-center xl:justify-between">
+    <p class="mb-2 text-xs text-[#625c55] xl:mb-0">
+      {esPortugues ? 'También se actualizarán la estructura y las imágenes compartidas.' : 'Los cambios afectan solamente a este idioma.'}
     </p>
-  )}
+    <button class="min-h-12 w-full rounded-md bg-[#0099ff] px-6 font-semibold text-white transition hover:bg-[#0077c7] focus:outline-none focus:ring-2 focus:ring-[#0099ff] focus:ring-offset-2 xl:w-auto" type="submit">Publicar {TITULO_AUDIENCIA[pagina]} en {LOCALE_NAME[locale]}</button>
+  </div>
 </form>
+
+<script>
+  document.querySelectorAll<HTMLSelectElement>('[data-ir-seccion]').forEach((selector) => {
+    if (selector.dataset.inicializado) return
+    selector.dataset.inicializado = 'si'
+    selector.addEventListener('change', () => {
+      if (!selector.value) return
+      document.getElementById(selector.value)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      selector.value = ''
+    })
+  })
+</script>

@@ -35,6 +35,9 @@ export const LISTAS_AUDIENCIA: readonly RutaLista[] = [
  */
 export const SEMBRADOS_AUDIENCIA: readonly string[] = [
   'photo',
+  // Que formulario abre el CTA no es una traduccion: es la misma entidad en los cuatro
+  // idiomas (ADR-0046). Sembrarlo es lo que impide que /adultos en frances apunte a otro.
+  'formId',
   'gallery.items[].type',
   'gallery.items[].src',
   'gallery.items[].url',
@@ -150,6 +153,9 @@ export const SEMBRADOS_PROFESSOR: readonly string[] = ['photo']
  */
 export const LISTAS_CONTACTOS: readonly RutaLista[] = []
 export const SEMBRADOS_CONTACTOS: readonly string[] = []
+
+/** El formulario del CTA de `/aulas`: la misma entidad en los cuatro idiomas (ADR-0046). */
+export const SEMBRADOS_AULAS: readonly string[] = ['trial.formId']
 
 /** Las cinco listas de `/aulas` cuyo largo lo decide el portugues (spec 0035). */
 export const LISTAS_AULAS: readonly RutaLista[] = [

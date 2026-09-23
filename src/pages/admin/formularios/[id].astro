@@ -1,0 +1,129 @@
+---
+export const prerender = false
+
+import Admin from '../../../layouts/Admin.astro'
+import Aviso from '../../../components/admin/Aviso.astro'
+import EditorPestanas from '../../../components/admin/EditorPestanas.astro'
+import FormularioFormulario from '../../../components/admin/FormularioFormulario.astro'
+import { guardarFormulario, leerFormularios, referenciasPorFormulario } from '../../../lib/formularios-edicion'
+import { formularioDesdeForm } from '../../../lib/formularios-parse'
+import type { Formulario } from '../../../lib/formularios'
+import { LOCALES, LOCALE_NAME, isLocale, type Locale } from '../../../lib/i18n'
+
+/**
+ * Edicion de un formulario (spec 0050). Las cuatro pestañas de idioma se pintan a la vez y
+ * editan **el mismo** archivo: `content/forms.json` no esta partido por idioma, asi que un
+ * campo nuevo nace en los cuatro a la vez y no hay forma de que uno quede corto.
+ */
+
+const admin = Astro.locals.admin!
+const id = Astro.params.id!
+
+let errores: Partial<Record<Locale, Record<string, string>>> = {}
+let enviado: Formulario | null = null
+let aviso: { tipo: 'ok' | 'error'; texto: string } | null = null
+let activo: Locale = isLocale(Astro.url.searchParams.get('idioma') ?? '')
+  ? (Astro.url.searchParams.get('idioma') as Locale)
+  : 'pt'
+
+if (Astro.url.searchParams.get('creado') === 'si') {
+  aviso = {
+    tipo: 'ok',
+    texto: 'Formulario creado. Ya podés traducirlo y elegirlo desde el botón de una página.',
+  }
+}
+
+const publicado = Astro.url.searchParams.get('publicado')
+if (publicado && isLocale(publicado)) {
+  activo = publicado
+  aviso = {
+    tipo: 'ok',
+    texto:
+      publicado === 'pt'
+        ? 'Formulario publicado en portugués, y la estructura de los otros tres idiomas al día. El sitio tarda 1 o 2 minutos en regenerarse.'
+        : `Formulario publicado en ${LOCALE_NAME[publicado]}. El sitio tarda 1 o 2 minutos en regenerarse.`,
+  }
+}
+
+// El cuerpo se lee una sola vez: despues de leerlo, la peticion ya no lo tiene.
+let formEnviado: FormData | null = null
+
+if (Astro.request.method === 'POST') {
+  const form = await Astro.request.formData()
+  formEnviado = form
+  const idioma = String(form.get('idioma') ?? '')
+
+  if (!isLocale(idioma)) {
+    Astro.response.status = 400
+    aviso = { tipo: 'error', texto: 'Idioma desconocido.' }
+  } else {
+    activo = idioma
+    const resultado = await guardarFormulario(form, id)
+
+    if (resultado.ok) return Astro.redirect(`/admin/formularios/${id}?publicado=${idioma}`, 303)
+
+    Astro.response.status = resultado.estado
+    errores = { [idioma]: resultado.errores }
+    aviso = { tipo: resultado.estado === 200 ? 'ok' : 'error', texto: resultado.aviso }
+  }
+}
+
+let forms: Formulario[] = []
+let sha = ''
+let usos: Record<string, string[]> = {}
+let sinRepositorio: string | null = null
+
+try {
+  ;({ forms, sha } = await leerFormularios())
+  usos = await referenciasPorFormulario()
+} catch (error) {
+  Astro.response.status = 503
+  sinRepositorio = error instanceof Error ? error.message : String(error)
+}
+
+const publicadoActual = forms.find((f) => f.id === id) ?? null
+
+// Con el POST rechazado se repinta lo que el cliente mando, no lo que hay en el repo.
+if (formEnviado && publicadoActual && errores[activo]) {
+  enviado = formularioDesdeForm(formEnviado, activo, publicadoActual, '') as Formulario
+}
+
+const formulario = enviado ?? publicadoActual
+
+if (!sinRepositorio && !formulario) Astro.response.status = 404
+
+const shas = Object.fromEntries(LOCALES.map((l) => [l, sha])) as Record<Locale, string>
+const archivos = formulario
+  ? LOCALES.map((locale) => ({ locale, datos: formulario as Record<string, any>, sinTraducir: {} }))
+  : []
+---
+
+<Admin titulo={formulario?.nombre ?? 'Formulario'} admin={admin}>
+  <header class="max-w-3xl">
+    <p class="text-xs font-bold uppercase tracking-[0.16em] text-[#0077c7]">Gestión</p>
+    <h1 class="mt-2 font-serif text-3xl leading-tight sm:text-4xl">{formulario?.nombre ?? 'Formulario'}</h1>
+    {formulario && (
+      <p class="mt-3 text-sm leading-6 text-[#625c55] sm:text-base">
+        {usos[id]?.length
+          ? <>Este formulario se abre desde <strong>{usos[id]!.join(', ')}</strong>.</>
+          : 'Todavía no lo usa ninguna página. Se elige desde el editor de la página, en la sección del botón.'}
+      </p>
+    )}
+    <p class="mt-3 text-sm"><a href="/admin/formularios">Volver al listado</a></p>
+  </header>
+
+  {aviso && <Aviso tipo={aviso.tipo}>{aviso.texto}</Aviso>}
+  {sinRepositorio && <Aviso tipo="error">No se puede abrir el editor: {sinRepositorio}</Aviso>}
+  {!sinRepositorio && !formulario && <Aviso tipo="error">Ese formulario no existe.</Aviso>}
+
+  {formulario && (
+    <EditorPestanas
+      formulario={FormularioFormulario}
+      extra={{ formulario, sha }}
+      archivos={archivos}
+      errores={errores}
+      shas={shas}
+      activo={activo}
+    />
+  )}
+</Admin>
