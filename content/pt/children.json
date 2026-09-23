@@ -32,10 +32,6 @@
       "value": "Segunda a sexta · 18h30–19h30"
     },
     {
-      "label": "Encarnação",
-      "value": "Terças e quintas · 17h30–18h30"
-    },
-    {
       "label": "Mensalidade",
       "value": "25 € (1 aula/semana) · 35 € (2 aulas/semana)"
     }
@@ -99,6 +95,10 @@
       {
         "pregunta": "As crianças competem nas aulas?",
         "respuesta": "As aulas de crianças do Dojo da Luz não têm competição: cada criança evolui ao seu ritmo, combinando técnica Aikikai, jogos e exercícios de concentração."
+      },
+      {
+        "pregunta": "O quê é preciso para fazer a aula experimental?",
+        "respuesta": "Para a realização da aula experimental é preciso apenas um fato confortável de treino e uns chinelos."
       }
     ]
   }

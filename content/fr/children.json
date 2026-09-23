@@ -34,10 +34,6 @@
     {
       "label": "Encarnação",
       "value": "Mardi et jeudi · 17h30–18h30"
-    },
-    {
-      "label": "Mensualité",
-      "value": "25 € (1 cours/semaine) · 35 € (2 cours/semaine)"
     }
   ],
   "photo": "https://static.wixstatic.com/media/ae7240_b0eea689c4ec4721939495f9088211ae~mv2.jpg/v1/fill/w_900,h_1200,al_c,q_85/crian%C3%A7as.jpg",
@@ -99,6 +95,10 @@
       {
         "pregunta": "Les enfants sont-ils mis en compétition ?",
         "respuesta": "Les cours pour enfants du Dojo da Luz se font sans compétition : chaque enfant progresse à son rythme, entre technique Aikikai, jeux et exercices de concentration."
+      },
+      {
+        "pregunta": "O quê é preciso para fazer a aula experimental?",
+        "respuesta": "Para a realização da aula experimental é preciso apenas um fato confortável de treino e uns chinelos."
       }
     ]
   }
