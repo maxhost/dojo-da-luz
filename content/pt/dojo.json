@@ -33,34 +33,34 @@
   },
   "teachers": [
     {
-      "name": "Inês Martins",
-      "credentials": "Instrutora · Dojo da Luz",
+      "name": "Javier Maidana",
+      "credentials": "Instrutor · Dojo da Luz",
       "paragraphs": [
         "A sua prática privilegia a precisão do gesto e uma aprendizagem atenta, acessível a pessoas de todas as idades.",
         "Acompanha os alunos nos primeiros passos no dojo, criando um ambiente de confiança e descoberta."
       ],
-      "photo": "https://static.wixstatic.com/media/ae7240_de66207c487b4e8086d18ed67c88ea93~mv2.jpg/v1/fill/w_700,h_520,fp_0.3_0.5,q_85/IMG_3502_JPG.jpg",
-      "photoAlt": "Inês Martins"
+      "photo": "https://pub-a3e739acf38449bf92d850dfa752a522.r2.dev/medios/f5b4f321380e/w1600.webp",
+      "photoAlt": "Javier Sensei"
     },
     {
-      "name": "Miguel Costa",
+      "name": "Vítor Marques",
       "credentials": "Instrutor · Dojo da Luz",
       "paragraphs": [
         "Interessa-se pela ligação entre movimento, respiração e presença no treino quotidiano.",
         "Nas aulas, convida cada praticante a encontrar o seu próprio ritmo, com rigor e espírito de cooperação."
       ],
-      "photo": "https://static.wixstatic.com/media/ae7240_b0eea689c4ec4721939495f9088211ae~mv2.jpg/v1/fill/w_700,h_520,fp_0.5_0.45,q_85/crian%C3%A7as.jpg",
-      "photoAlt": "Miguel Costa"
+      "photo": "https://pub-a3e739acf38449bf92d850dfa752a522.r2.dev/medios/473740078097/w1600.webp",
+      "photoAlt": "Vítoru Sensei"
     },
     {
-      "name": "Sofia Almeida",
+      "name": "Elisa Stern",
       "credentials": "Instrutora · Dojo da Luz",
       "paragraphs": [
         "Partilha uma abordagem serena e dinâmica, centrada na escuta do parceiro e no equilíbrio.",
         "Dedica especial atenção à transmissão dos fundamentos e à continuidade da prática."
       ],
-      "photo": "https://static.wixstatic.com/media/ae7240_de66207c487b4e8086d18ed67c88ea93~mv2.jpg/v1/fill/w_700,h_520,fp_0.72_0.5,q_85/IMG_3502_JPG.jpg",
-      "photoAlt": "Sofia Almeida"
+      "photo": "https://pub-a3e739acf38449bf92d850dfa752a522.r2.dev/medios/1e5d88734e1c/w1600.webp",
+      "photoAlt": "Elisa Sensei"
     }
   ],
   "lineageTitle": "Uma transmissão viva.",
