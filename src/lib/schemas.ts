@@ -314,7 +314,7 @@ export const otherArtsSchema = z.object({
     photo: z.url(), photoAlt: z.string().min(1),
     paragraphs: linesSchema, benefits: z.array(z.string().min(1)), schedule: z.array(z.string().min(1)),
     teacher: z.string().min(1).optional(),
-    trialLabel: z.string().min(1), formUrl: z.url().nullable(),
+    trialLabel: z.string().min(1), formId: z.string().min(1),
     directLabel: z.string().min(1), closeLabel: z.string().min(1),
   })).min(1),
   gallery: gallerySchema,

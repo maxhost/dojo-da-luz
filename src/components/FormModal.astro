@@ -27,15 +27,15 @@ if (formId && !formulario) {
 }
 ---
 <button class="button bg-white text-acento-oscuro" type="button" data-modal-open={id}>{trigger}</button>
-<dialog id={id} class="m-auto max-h-[92dvh] w-[min(94vw,40rem)] overflow-hidden rounded-xl border-0 bg-white p-0 text-[#211f1c] shadow-2xl backdrop:bg-black/70">
-  <div class="flex items-start justify-between gap-4 border-b border-[#d7cec0] px-5 py-4 sm:px-7 sm:py-5">
-    <div>
+<dialog id={id} aria-labelledby={`${id}-titulo`} class="m-auto max-h-[calc(100dvh-1rem)] w-[calc(100%-1rem)] max-w-[40rem] overflow-hidden rounded-lg border-0 bg-white p-0 text-left text-[#211f1c] shadow-2xl backdrop:bg-black/70 sm:max-h-[92dvh] sm:w-[min(94vw,40rem)] sm:rounded-xl">
+  <div class="flex items-start justify-between gap-3 border-b border-[#d7cec0] px-4 py-4 sm:gap-4 sm:px-7 sm:py-5">
+    <div class="min-w-0 text-left">
       <p class="text-xs font-bold uppercase tracking-[.14em] text-acento">Dojo da Luz</p>
-      <h2 class="mt-1 font-serif text-2xl leading-tight sm:text-3xl">{title}</h2>
+      <h2 id={`${id}-titulo`} class="mt-1 [overflow-wrap:anywhere] font-serif text-2xl leading-tight sm:text-3xl">{title}</h2>
     </div>
-    <button type="button" class="-mr-2 grid size-11 shrink-0 place-items-center rounded-full text-2xl font-normal text-[#625c55] hover:bg-[#f1ece4]" data-modal-close={id} aria-label={closeLabel}>×</button>
+    <button type="button" class="-mr-2 grid size-12 shrink-0 place-items-center rounded-full text-2xl font-normal text-[#625c55] transition hover:bg-[#f1ece4] focus:outline-none focus:ring-2 focus:ring-acento focus:ring-offset-2" data-modal-close={id} aria-label={closeLabel}>×</button>
   </div>
-  <div class="max-h-[calc(92dvh-6rem)] overflow-y-auto p-5 sm:p-7">
+  <div class="max-h-[calc(100dvh-6.5rem)] overscroll-contain overflow-x-hidden overflow-y-auto p-4 text-left sm:max-h-[calc(92dvh-6rem)] sm:p-7">
     {formulario && locale ? (
       <FormularioPublico formulario={formulario} locale={locale} idPrefijo={id} />
     ) : (

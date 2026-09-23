@@ -3,8 +3,8 @@
  * Elegir que formulario abre un botón (spec 0050). Se elige **por nombre** y se guarda el
  * **id**: renombrar un formulario no rompe la página que lo usa (ADR-0046).
  *
- * Un formulario archivado no aparece en la lista, pero si es el que ya estaba asignado se
- * muestra igual, marcado: archivar impide asignaciones nuevas, no rompe las existentes.
+ * Los formularios archivados no aparecen: el archivado se bloquea mientras haya una
+ * pagina que use el formulario, asi que una asignacion valida siempre apunta a uno activo.
  */
 
 interface Props {
@@ -22,8 +22,8 @@ interface Props {
 const { nombre, etiqueta, valor, formularios, editable = true, ayuda, error, idPrefijo } = Astro.props
 
 const id = `${idPrefijo ? `${idPrefijo}-` : ''}${nombre.replace(/[^a-zA-Z0-9]+/g, '-')}`
-const asignado = formularios.find((f) => f.id === valor) ?? null
-const elegibles = formularios.filter((f) => f.estado === 'activo' || f.id === valor)
+const asignado = formularios.find((f) => f.id === valor && f.estado === 'activo') ?? null
+const elegibles = formularios.filter((f) => f.estado === 'activo')
 
 const base =
   'mt-2 min-h-11 w-full rounded-md border bg-white px-3.5 py-2.5 text-base leading-6 outline-none transition sm:text-sm ' +
@@ -44,7 +44,6 @@ const base =
         {elegibles.map((formulario) => (
           <option value={formulario.id} selected={formulario.id === valor}>
             {formulario.nombre}
-            {formulario.estado === 'archivado' ? ' (archivado)' : ''}
           </option>
         ))}
       </select>
@@ -57,7 +56,7 @@ const base =
     <>
       <p class="text-sm font-semibold">{etiqueta}</p>
       <p class="mt-2 text-sm leading-6 text-[#625c55]">
-        {asignado?.nombre ?? valor}
+        {asignado?.nombre ?? 'Sin formulario activo'}
         <span class="block text-xs">Se elige en la pestaña <strong>Português</strong>.</span>
       </p>
       <input type="hidden" name={nombre} value={valor} />

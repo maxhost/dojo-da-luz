@@ -7,11 +7,13 @@ import EditorPestanas from '../../../components/admin/EditorPestanas.astro'
 import FormularioOutrasArtes from '../../../components/admin/FormularioOutrasArtes.astro'
 import { paginaOutrasArtes } from '../../../lib/outras-artes-edicion'
 import { pantallaEditor } from '../../../lib/editor-pantalla'
+import { formulariosParaElegir } from '../../../lib/formularios-edicion'
 
 /** Editor de `/outras-artes` (spec 0040). */
 
 const admin = Astro.locals.admin!
 const pantalla = await pantallaEditor(paginaOutrasArtes, Astro.request, Astro.url)
+const formularios = await formulariosParaElegir()
 
 if (pantalla.redirigir) return Astro.redirect(pantalla.redirigir, 303)
 if (pantalla.estado) Astro.response.status = pantalla.estado
@@ -36,6 +38,7 @@ if (pantalla.estado) Astro.response.status = pantalla.estado
       errores={pantalla.errores}
       shas={pantalla.shas}
       activo={pantalla.activo}
+      extra={{ formularios }}
     />
   )}
 </Admin>

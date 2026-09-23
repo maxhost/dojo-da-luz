@@ -8,15 +8,23 @@ Si una sesion se cae, se cierra o se compacta, se vuelve aca — no al chat. Hay
 Regla: **marcar `hecho` solo con verificacion real** — tests que pasan, comando corrido,
 cosa vista en pantalla. No "deberia andar".
 
-Ultima actualizacion: 2026-09-22, quinta sesion — spec 0050 **desplegada y verificada en
-produccion**, salvo las credenciales de Resend — gate verde: `astro check` **0/0/0**
-(141 archivos), `npm test` **85/85**, `npm run build` 44 rutas + `sitemap.xml`.
+Ultima actualizacion: 2026-09-22, sexta sesion — spec **0051** commiteada: `/outras-artes`
+deja los Google Forms externos y pasa a `formId`, el archivado de un formulario en uso se
+bloquea (ADR-0047) y el modal publico se ajusta a movil. Gate verde: `astro check` **0/0/0**
+(142 archivos), `npm test` **85/85**, `npm run build` 44 rutas. **La 0051 no esta verificada
+contra el backoffice corriendo** — fila 13.
 
-**Retomar con:** *"Leer docs/TASKS.md y la spec 0050. Falta cargar `RESEND_API_KEY`,
-`FORM_FROM_EMAIL` y `FORM_TO_EMAIL` en Vercel y probar un envio real de punta a punta."*
-La migracion `0003` ya esta aplicada en Neon y el codigo esta en `main` (`dcfc62a`). La
-0049 quedó supersedida. A la 0045 solo le falta el dominio, que depende del DNS del
-cliente (fila 10).
+**Retomar con:** *"Leer docs/TASKS.md y la spec 0051. Falta (a) verificar la 0051 contra el
+BO corriendo —archivado bloqueado, propagacion del formId de la Home en un commit, POST
+forjado desde español— y (b) cargar `RESEND_API_KEY`, `FORM_FROM_EMAIL` y `FORM_TO_EMAIL`
+en Vercel para probar un envio real de punta a punta."* La migracion `0003` ya esta aplicada
+en Neon. La 0049 quedó supersedida. A la 0045 solo le falta el dominio, que depende del DNS
+del cliente (fila 10).
+
+**Ojo con el contenido:** los tres botones de `/outras-artes` abren hoy el **unico**
+formulario que existe, «Aula experimental de Aikido», aunque digan «Aula experimental de Tai
+Chi». Y Shiatsu, que antes llevaba a `/contactos`, ahora abre ese mismo modal. Es una
+decision de contenido del cliente, no un defecto del codigo — fila 14.
 
 Esta sesion, nueve entregas y un plan — con las dos ultimas entregas **no queda ninguna
 pagina de contenido sin editor ni nada del borde sin pantalla**:
@@ -505,6 +513,9 @@ siguiente guardado del BO reordena el archivo: ruido de una vez, no perdida de d
 | 10 | Apuntar `aikido-duran.com` a Vercel | 0045 | pendiente | **Lo unico que falta de la 0045.** Los 301 ya estan desplegables, asi que el orden del ADR-0043 se cumple. `vercel domains ls` (2026-09-21): el dominio **no esta** en la cuenta; agregarlo es un cambio en la cuenta del cliente y no se hizo sin pedirlo. Despues del DNS: repetir las 36 reglas contra `www.aikido-duran.com`, comprobar apex→www y http→https, y enviar el sitemap a Search Console. |
 | 11 | Retratos reales de Ines Martins, Miguel Costa y Sofia Almeida | 0027 | bloqueada | Necesita fotos del cliente. Hoy las tres fichas de `/dojo` muestran escenas de practica de wixstatic, no a la persona que nombran: se sustituye el array `teacherPhotos` sin tocar la composicion. |
 | 12 | Logos reales de los parceiros, con transparencia | 0028 | bloqueada | Necesita los originales del cliente. Los 8 de hoy traen fondo blanco incrustado y 3 son fotografias, no marcas. `mix-blend-multiply` tapa el blanco puro pero no las 2 casi blancas. |
+| 13 | Verificar la spec 0051 contra el backoffice corriendo | 0051 | **proximo** | Lo unico que le falta a la 0051; el gate esta verde pero ninguna pantalla se vio. Comprobar: (a) «Archivar» deshabilitado en el formulario en uso y **409** —no `303` a `?ok=`— en el POST forjado, con el archivo intacto en disco; (b) cambiar el formulario de la Home en portugues deja los cuatro `home.json` con el mismo `formId` en **un** commit; (c) un POST forjado desde español no cambia el `formId` de Home ni de Outras artes; (d) los tres botones de `/outras-artes` abren el modal en el idioma de la pagina. |
+| 14 | Que formulario abre cada arte de `/outras-artes` | 0051 | bloqueada | Necesita la decision del cliente. Hoy Shiatsu, Iaido y Tai Chi apuntan los tres a «Aula experimental de Aikido» porque es el unico formulario que existe. Si Shiatsu debe volver a llevar a `/contactos`, hace falta `formId` opcional. |
+| 15 | Borrar `directLabel` y la rama `<iframe>` de `FormModal` | — | pendiente | Andamiaje sin uso desde la 0050/0051: ninguna pagina pasa ya `url`, y `directLabel` sigue en el schema y en cuatro editores del BO sin que nadie lo pinte —un campo que el cliente escribe y no hace nada—. Toca `schemas.ts`, `FormModal.astro` y `content/*/{classes,adults,children,other-arts}.json`. Verificar comparando el HTML construido contra `HEAD` (neutralizar el hash del CSS). |
 
 ## Hallazgos del sitio actual
 

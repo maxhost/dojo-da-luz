@@ -94,14 +94,12 @@ export const LISTAS_OUTRAS_ARTES: readonly RutaLista[] = ['activities', 'gallery
 
 /**
  * Lo que siempre viene del portugues en `/outras-artes`. Ademas de las fotos va
- * **`formUrl`**: es el destino del formulario de cada arte, no se edita desde el BO
- * (spec 0035) y viaja oculto — sembrarlo es lo que impide que entre otro por la puerta de
- * una traduccion.
+ * El `formId` de cada arte es una asignacion compartida y solo se elige en portugues.
  */
 export const SEMBRADOS_OUTRAS_ARTES: readonly string[] = [
   'heroPhoto',
   'activities[].photo',
-  'activities[].formUrl',
+  'activities[].formId',
   'gallery.items[].type',
   'gallery.items[].src',
   'gallery.items[].url',

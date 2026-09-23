@@ -19,6 +19,9 @@ export const PAGINAS_CON_FORMULARIO = [
   { archivo: 'classes', titulo: 'Aulas', campo: 'trial.formId' },
   { archivo: 'adults', titulo: 'Adultos', campo: 'formId' },
   { archivo: 'children', titulo: 'Crianças', campo: 'formId' },
+  { archivo: 'other-arts', titulo: 'Outras artes · Shiatsu', campo: 'activities.0.formId' },
+  { archivo: 'other-arts', titulo: 'Outras artes · Iaido', campo: 'activities.1.formId' },
+  { archivo: 'other-arts', titulo: 'Outras artes · Tai Chi Chuan', campo: 'activities.2.formId' },
 ] as const
 
 export type Guardado =
@@ -190,6 +193,18 @@ export async function cambiarEstado(
       return { ok: false, estado: 404, aviso: 'Ese formulario ya no existe.', errores: {} }
     }
 
+    if (estado === 'archivado') {
+      const usos = (await referenciasPorFormulario(true))[id] ?? []
+      if (usos.length > 0) {
+        return {
+          ok: false,
+          estado: 409,
+          aviso: `No se puede archivar: primero asigná otro formulario en ${usos.join(', ')}.`,
+          errores: {},
+        }
+      }
+    }
+
     const lista = forms.map((f) => (f.id === id ? { ...f, estado } : f))
     const verbo = estado === 'archivado' ? 'archiva' : 'reactiva'
 
@@ -218,21 +233,27 @@ function leerRuta(datos: unknown, ruta: string): unknown {
  * Que paginas apuntan hoy a cada formulario. Se lee el **portugues**: el `formId` se siembra
  * desde ahi a los otros tres idiomas, asi que las cuatro copias dicen lo mismo.
  *
- * Es lo que el backoffice muestra antes de archivar: archivar no rompe una asignacion
- * existente (ADR-0046), pero quien archiva tiene que ver a quien le cambia la pantalla.
+ * Tambien protege el archivado: un formulario asignado no se puede archivar.
  *
  * Se leen los cuatro archivos **una vez** y se indexa al reves. Preguntar por formulario
  * seria cuatro lecturas del repositorio por cada fila del listado.
  */
-export async function referenciasPorFormulario(): Promise<Record<string, string[]>> {
+export async function referenciasPorFormulario(estricto = false): Promise<Record<string, string[]>> {
   const mapa: Record<string, string[]> = {}
+  const contenidos = new Map<string, unknown>()
 
   for (const pagina of PAGINAS_CON_FORMULARIO) {
     try {
-      const archivo = await leerContenido(`content/pt/${pagina.archivo}.json`)
-      const id = leerRuta(JSON.parse(archivo.contenido), pagina.campo)
+      let datos = contenidos.get(pagina.archivo)
+      if (!datos) {
+        const archivo = await leerContenido(`content/pt/${pagina.archivo}.json`)
+        datos = JSON.parse(archivo.contenido)
+        contenidos.set(pagina.archivo, datos)
+      }
+      const id = leerRuta(datos, pagina.campo)
       if (typeof id === 'string' && id) (mapa[id] ??= []).push(pagina.titulo)
-    } catch {
+    } catch (error) {
+      if (estricto) throw error
       // Un archivo ilegible no puede impedir que se vea el listado: se omite.
     }
   }

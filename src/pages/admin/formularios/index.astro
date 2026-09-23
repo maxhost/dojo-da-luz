@@ -74,7 +74,12 @@ const fallo = params.get('fallo')
           <form class="ml-auto" method="post" action={`/admin/formularios/${formulario.id}/archivar`}>
             <input type="hidden" name="sha" value={sha} />
             <input type="hidden" name="estado" value={formulario.estado === 'activo' ? 'archivado' : 'activo'} />
-            <button class="min-h-11 rounded-md border border-[#c9c0b3] bg-white px-4 text-sm font-semibold hover:bg-[#f1ece4]" type="submit">
+            <button
+              class="min-h-11 rounded-md border border-[#c9c0b3] bg-white px-4 text-sm font-semibold hover:bg-[#f1ece4] disabled:cursor-not-allowed disabled:opacity-45 disabled:hover:bg-white"
+              type="submit"
+              disabled={formulario.estado === 'activo' && Boolean(usos[formulario.id]?.length)}
+              title={formulario.estado === 'activo' && usos[formulario.id]?.length ? 'Asigná otro formulario antes de archivarlo.' : undefined}
+            >
               {formulario.estado === 'activo' ? 'Archivar' : 'Reactivar'}
             </button>
           </form>

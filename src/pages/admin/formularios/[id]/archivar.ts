@@ -7,7 +7,7 @@ export const prerender = false
  * Archivar y reactivar un formulario (spec 0050). Es un POST propio y no un campo del
  * editor porque se dispara desde el listado, sobre un formulario que no se esta editando.
  *
- * Archivar no rompe la pagina que ya lo usa (ADR-0046): impide elegirlo en una nueva.
+ * El servicio rechaza el archivado si alguna pagina todavia usa el formulario.
  */
 export const POST: APIRoute = async ({ params, request, redirect }) => {
   const id = params.id!

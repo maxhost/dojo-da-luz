@@ -1,5 +1,6 @@
 ---
 import CampoImagen from './CampoImagen.astro'
+import CampoFormulario from './CampoFormulario.astro'
 import CampoTexto from './CampoTexto.astro'
 import NavegacionEditor from './NavegacionEditor.astro'
 import TablaMedios from './TablaMedios.astro'
@@ -25,9 +26,10 @@ interface Props {
   shas: Record<Locale, string>
   /** Ruta de lista → indices cuyo texto sigue siendo el portugues. */
   sinTraducir: Record<string, number[]>
+  formularios: { id: string; nombre: string; estado: 'activo' | 'archivado' }[]
 }
 
-const { locale, datos, errores, shas, sinTraducir } = Astro.props
+const { locale, datos, errores, shas, sinTraducir, formularios = [] } = Astro.props
 
 const esPortugues = locale === 'pt'
 
@@ -130,10 +132,6 @@ const navegacion = [
     <fieldset class={seccion} id={`${locale}-artes-arte-${i}`}>
       <legend class="px-2 font-serif text-xl">{numero(i + 2)} · {arte.name}</legend>
 
-      {/* El destino del formulario no se edita: un enlace mal escrito deja el modal en
-          blanco sin avisar. Viaja oculto para no perderse al guardar. */}
-      <input type="hidden" name={`activities[${i}].formUrl`} value={arte.formUrl ?? ''} />
-
       <CampoTexto {...campoArte(i, 'name', 'Nombre')} />
       <CampoTexto {...campoArte(i, 'subtitle', 'Subtítulo')} />
 
@@ -154,14 +152,17 @@ const navegacion = [
       <CampoTexto {...campoArte(i, 'teacher', 'Profesor', { requerido: false, ayuda: 'Opcional. Solo se muestra si hay horarios.' })} />
 
       <CampoTexto {...campoArte(i, 'trialLabel', 'Texto del botón')} />
+      <CampoFormulario
+        nombre={`activities[${i}].formId`}
+        etiqueta="Formulario que abre el botón"
+        valor={arte.formId ?? ''}
+        formularios={formularios}
+        editable={esPortugues}
+        error={errorDe(errores, `activities.${i}.formId`)}
+        idPrefijo={locale}
+      />
       <CampoTexto {...campoArte(i, 'directLabel', 'Enlace para abrir el formulario aparte')} />
       <CampoTexto {...campoArte(i, 'closeLabel', 'Texto para cerrar')} />
-
-      {arte.formUrl === null && (
-        <p class="mt-4 text-xs text-[#625c55]">
-          Esta arte no tiene formulario propio: su botón lleva a la página de contacto.
-        </p>
-      )}
     </fieldset>
   ))}
 

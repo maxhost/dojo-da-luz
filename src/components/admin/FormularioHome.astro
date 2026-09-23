@@ -28,6 +28,7 @@ interface Props {
 }
 
 const { locale, valores, errores, sha, medios, shaMedia, formularios = [] } = Astro.props
+const esPortugues = locale === 'pt'
 
 const v = (ruta: string) => valores[ruta] ?? ''
 const e = (ruta: string) => errorDe(errores, ruta)
@@ -197,6 +198,7 @@ const secciones = [
       etiqueta="Formulario que abre el botón"
       valor={v('threshold.formId')}
       formularios={formularios}
+      editable={esPortugues}
       error={e('threshold.formId')}
       idPrefijo={locale}
     />

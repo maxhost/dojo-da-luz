@@ -12,7 +12,7 @@ import { LOCALES, LOCALE_NAME, isLocale, type Locale } from '../../../lib/i18n'
 import type { Media } from '../../../lib/media'
 import { leerMedia, publicarMedia } from '../../../lib/media-edicion'
 import { guardarPartners, leerPartners } from '../../../lib/partners-edicion'
-import { leerContenido, publicar, serializar } from '../../../lib/publish'
+import { leerContenido, publicar, publicarVarios, serializar } from '../../../lib/publish'
 
 const admin = Astro.locals.admin!
 
@@ -103,26 +103,54 @@ if (Astro.request.method === 'POST') {
           tipo: 'error',
           texto: 'Alguien editó este archivo mientras tanto. No se pisó nada: recargá la página y volvé a aplicar tu cambio.',
         }
-      } else if (actual.contenido === contenido) {
-        if (imagenes.cambio) return Astro.redirect(`/admin/paginas/home?publicado=${idioma}`, 303)
-        aviso = { tipo: 'ok', texto: 'No había cambios: no se publicó nada.' }
       } else {
-        const resultado = await publicar({
-          ruta: ruta(idioma),
-          contenido,
-          mensaje: `contenido: Home en ${LOCALE_NAME[idioma]} desde el backoffice`,
-          sha: actual.sha,
-        })
+        let resultado: Awaited<ReturnType<typeof publicar>> | null = null
 
-        if (resultado.ok) return Astro.redirect(`/admin/paginas/home?publicado=${idioma}`, 303)
+        if (idioma === 'pt') {
+          const cambios = actual.contenido === contenido ? [] : [{ ruta: ruta('pt'), contenido }]
 
-        Astro.response.status = resultado.motivo === 'conflicto' ? 409 : 502
-        aviso = {
-          tipo: 'error',
-          texto:
-            resultado.motivo === 'conflicto'
-              ? 'Alguien editó este archivo mientras tanto. No se pisó nada.'
-              : `No se pudo publicar: ${resultado.detalle}`,
+          for (const locale of LOCALES.filter((locale) => locale !== 'pt')) {
+            const otro = await leerContenido(ruta(locale))
+            const datosOtro = JSON.parse(otro.contenido)
+            datosOtro.threshold.formId = validado.data.threshold.formId
+            const validadoOtro = homeSchema.safeParse(datosOtro)
+            if (!validadoOtro.success) throw new Error(`La Home en ${locale} no es válida.`)
+            const contenidoOtro = serializar(validadoOtro.data)
+            if (contenidoOtro !== otro.contenido) cambios.push({ ruta: ruta(locale), contenido: contenidoOtro })
+          }
+
+          if (cambios.length === 0) {
+            if (imagenes.cambio) return Astro.redirect('/admin/paginas/home?publicado=pt', 303)
+            aviso = { tipo: 'ok', texto: 'No había cambios: no se publicó nada.' }
+          } else {
+            resultado = await publicarVarios({
+              archivos: cambios,
+              mensaje: `contenido: Home desde el backoffice (${cambios.length} archivos)`,
+            })
+          }
+        } else if (actual.contenido === contenido) {
+          if (imagenes.cambio) return Astro.redirect(`/admin/paginas/home?publicado=${idioma}`, 303)
+          aviso = { tipo: 'ok', texto: 'No había cambios: no se publicó nada.' }
+        } else {
+          resultado = await publicar({
+            ruta: ruta(idioma),
+            contenido,
+            mensaje: `contenido: Home en ${LOCALE_NAME[idioma]} desde el backoffice`,
+            sha: actual.sha,
+          })
+        }
+
+        if (resultado?.ok) return Astro.redirect(`/admin/paginas/home?publicado=${idioma}`, 303)
+
+        if (resultado) {
+          Astro.response.status = resultado.motivo === 'conflicto' ? 409 : 502
+          aviso = {
+            tipo: 'error',
+            texto:
+              resultado.motivo === 'conflicto'
+                ? 'Alguien editó este archivo mientras tanto. No se pisó nada.'
+                : `No se pudo publicar: ${resultado.detalle}`,
+          }
         }
       }
       } catch (error) {

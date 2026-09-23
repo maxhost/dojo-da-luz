@@ -12,8 +12,7 @@ import type { Pagina } from './editor-pagina'
  *
  * - **Cada arte trae tres listas adentro** —parrafos, beneficios, horarios— y las tres
  *   llegan en un solo campo, una entrada por renglon (ADR-0033).
- * - **`formUrl` no se edita** (spec 0035): viaja en un `hidden` para no perderse al
- *   guardar, y ademas se siembra desde portugues.
+ * - El `formId` de cada arte se elige en portugues y se siembra a los otros idiomas.
  */
 
 export const TITULO = 'Outras artes'
@@ -65,7 +64,7 @@ export function outrasArtesDesdeForm(form: FormData): unknown {
         schedule: renglones(f.uno('schedule')),
         ...(profesor ? { teacher: profesor } : {}),
         trialLabel: f.uno('trialLabel'),
-        formUrl: f.uno('formUrl') || null,
+        formId: f.uno('formId'),
         directLabel: f.uno('directLabel'),
         closeLabel: f.uno('closeLabel'),
       }

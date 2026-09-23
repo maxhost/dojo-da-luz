@@ -30,7 +30,7 @@ const hayEnvio = configDeCorreo() !== null
 
 const id = (campo: string) => `${idPrefijo}-${campo}`
 const control =
-  'mt-2 min-h-12 w-full rounded-md border border-[#bfb5a7] bg-white px-3.5 py-3 text-base text-[#211f1c] outline-none transition placeholder:text-[#8a8279] hover:border-[#968b7e] focus:border-acento focus:ring-2 focus:ring-acento/20'
+  'mt-2 min-h-12 w-full min-w-0 max-w-full rounded-md border border-[#bfb5a7] bg-white px-3.5 py-3 text-left text-base leading-6 text-[#211f1c] outline-none transition placeholder:text-[#8a8279] hover:border-[#968b7e] focus:border-acento focus:ring-2 focus:ring-acento/20'
 
 const tipoHtml: Record<string, 'text' | 'email' | 'tel' | 'number' | 'date'> = {
   text: 'text',
@@ -48,7 +48,7 @@ const autocompletado = (campo: Campo): string | undefined => {
 ---
 
 <form
-  class="grid gap-5"
+  class="grid min-w-0 gap-5 text-left"
   data-formulario
   data-form-id={formulario.id}
   data-locale={locale}
@@ -61,12 +61,12 @@ const autocompletado = (campo: Campo): string | undefined => {
     const descrito = ayuda ? id(`${campo.id}-ayuda`) : undefined
 
     return (
-      <fieldset class="m-0 border-0 p-0" data-campo={campo.id}>
-        <legend class="text-sm font-semibold" data-etiqueta>
+      <fieldset class="m-0 min-w-0 border-0 p-0 text-left" data-campo={campo.id}>
+        <legend class="w-full [overflow-wrap:anywhere] p-0 text-left text-sm font-semibold leading-5" data-etiqueta>
           {etiqueta}
           {!campo.required && <span class="ml-1 font-normal text-[#8a8279]">({ui.opcional})</span>}
         </legend>
-        {ayuda && <p class="mt-1 text-sm leading-6 text-[#756e66]" id={descrito}>{ayuda}</p>}
+        {ayuda && <p class="mt-1 [overflow-wrap:anywhere] text-left text-sm leading-6 text-[#756e66]" id={descrito}>{ayuda}</p>}
 
         {campo.type === 'textarea' && (
           <textarea
@@ -97,18 +97,18 @@ const autocompletado = (campo: Campo): string | undefined => {
         )}
 
         {(campo.presentation === 'radio' || campo.presentation === 'checkbox') && (
-          <div class="mt-2 grid gap-1" role="group" aria-describedby={descrito}>
+          <div class="mt-2 grid min-w-0 gap-2" role="group" aria-describedby={descrito}>
             {campo.options.map((opcion, i) => (
-              <label class="flex min-h-11 cursor-pointer items-center gap-3 rounded-md border border-[#d7cec0] bg-white px-3.5 py-2 text-base has-[:checked]:border-acento has-[:checked]:bg-acento/5">
+              <label class="flex min-h-12 min-w-0 cursor-pointer items-start gap-3 rounded-md border border-[#d7cec0] bg-white px-3.5 py-3 text-left text-base leading-6 transition hover:border-[#968b7e] has-[:checked]:border-acento has-[:checked]:bg-acento/5">
                 <input
-                  class="size-5 shrink-0 accent-[var(--color-acento)]"
+                  class="mt-0.5 size-5 shrink-0 accent-[var(--color-acento)]"
                   type={campo.presentation === 'radio' ? 'radio' : 'checkbox'}
                   id={id(`${campo.id}-${i}`)}
                   name={campo.id}
                   value={opcion.id}
                   required={campo.required && campo.presentation === 'radio'}
                 />
-                <span>{textoDe(opcion.label, locale)}</span>
+                <span class="min-w-0 [overflow-wrap:anywhere]">{textoDe(opcion.label, locale)}</span>
               </label>
             ))}
           </div>
@@ -139,7 +139,7 @@ const autocompletado = (campo: Campo): string | undefined => {
   </div>
 
   <button
-    class="button w-full rounded-md bg-acento text-white disabled:cursor-not-allowed disabled:opacity-60"
+    class="button w-full rounded-md bg-acento px-5 py-3 text-center text-sm text-white disabled:cursor-not-allowed disabled:opacity-60"
     type="submit"
     disabled={!hayEnvio}
     data-enviar
@@ -149,12 +149,12 @@ const autocompletado = (campo: Campo): string | undefined => {
     {textoDe(formulario.submitLabel, locale)}
   </button>
 
-  {!hayEnvio && <p class="text-sm leading-6 text-[#756e66]">{ui.indisponible}</p>}
+  {!hayEnvio && <p class="text-left text-sm leading-6 text-[#756e66]">{ui.indisponible}</p>}
 
-  <p class="hidden text-sm leading-6 font-semibold text-[#a3341f]" role="alert" data-error>{ui.error}</p>
+  <p class="hidden text-left text-sm leading-6 font-semibold text-[#a3341f]" role="alert" data-error>{ui.error}</p>
 </form>
 
-<p class="hidden text-base leading-7" role="status" data-exito data-de={formulario.id}>
+<p class="hidden text-left text-base leading-7" role="status" tabindex="-1" data-exito data-de={formulario.id}>
   {textoDe(formulario.successMessage, locale)}
 </p>
 

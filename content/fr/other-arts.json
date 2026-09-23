@@ -31,7 +31,7 @@
       ],
       "schedule": [],
       "trialLabel": "Demander des informations",
-      "formUrl": null,
+      "formId": "aula-experimental-aikido",
       "directLabel": "Aller au Contact",
       "closeLabel": "Fermer"
     },
@@ -50,7 +50,7 @@
       ],
       "teacher": "Sensei Pedro Girão",
       "trialLabel": "Cours d'essai de Iaido",
-      "formUrl": "https://forms.gle/jbVZnR31896h7p826",
+      "formId": "aula-experimental-aikido",
       "directLabel": "Ouvrir le formulaire dans une nouvelle fenêtre",
       "closeLabel": "Fermer"
     },
@@ -71,7 +71,7 @@
         "Week-end · horaire flexible sur rendez-vous"
       ],
       "trialLabel": "Cours d'essai de Tai Chi",
-      "formUrl": "https://docs.google.com/forms/d/e/1FAIpQLSclYRerVbnP0yIJ70o7NUgfporjBYQLuuxb2zhBhGb-BwDTbg/viewform",
+      "formId": "aula-experimental-aikido",
       "directLabel": "Ouvrir le formulaire dans une nouvelle fenêtre",
       "closeLabel": "Fermer"
     }

@@ -55,7 +55,8 @@ desactualizado es peor que no tenerlo.
 | [0043](adr/0043-host-canonico-y-orden-de-lanzamiento.md) | 2026-09-21 | `www.aikido-duran.com` es el host canonico (medido contra el sitio actual) y los 301 se despliegan **antes** de mover el DNS | aceptada | `docs/adr/0043-host-canonico-y-orden-de-lanzamiento.md` |
 | [0044](adr/0044-subida-prefirmada.md) | 2026-09-21 | Los archivos de mas de 4 MB suben prefirmados del navegador a R2 porque Vercel corta el cuerpo en 4,5 MB; revierte el descarte de CORS de la spec 0030 | aceptada | `docs/adr/0044-subida-prefirmada.md` |
 | [0045](adr/0045-sitemap-propio-y-destinos-sin-barra.md) | 2026-09-21 | El `sitemap.xml` se genera de `PAGES × LOCALES` con `hreflang` reciproco y sin `lastmod`, sus 44 `loc` son identicos a los `canonical`, y los destinos de los 301 van sin barra final | aceptada | `docs/adr/0045-sitemap-propio-y-destinos-sin-barra.md` |
-| [0046](adr/0046-formularios-como-entidad.md) | 2026-09-22 | Los formularios son una entidad global reutilizable relacionada por formId; portugués manda la estructura, los otros idiomas traducen y las opciones son texto independiente | aceptada | `docs/adr/0046-formularios-como-entidad.md` |
+| [0046](adr/0046-formularios-como-entidad.md) | 2026-09-22 | Los formularios son una entidad global reutilizable relacionada por formId; portugués manda la estructura, los otros idiomas traducen y las opciones son texto independiente | aceptada · su regla de archivado la supersede la [0047](adr/0047-archivar-solo-sin-uso.md) | `docs/adr/0046-formularios-como-entidad.md` |
+| [0047](adr/0047-archivar-solo-sin-uso.md) | 2026-09-22 | Un formulario asignado no se puede archivar —boton deshabilitado y 409 en el POST—, asi que una asignacion apunta siempre a uno activo; supersede el archivado permisivo del 0046 | aceptada | `docs/adr/0047-archivar-solo-sin-uso.md` |
 
 ## Specs — que se construye
 
@@ -111,6 +112,7 @@ desactualizado es peor que no tenerlo.
 | [0048](specs/0048-accesibilidad-e-idioma.md) | 2026-09-21 | Los dos `aria-label` del navbar traducidos y los nombres de idioma con acentos | implementada | si | `src/lib/i18n.ts`, `src/layouts/Base.astro` |
 | [0049](specs/0049-contacto-en-modal.md) | 2026-09-21 | El cierre de la Home deja el `mailto:EMAIL-PENDENTE` y abre el formulario de contacto en un modal movil | supersedida por 0050 | si | `src/components/{FormularioContacto,ModalContacto,HomeView,ContactView}.astro` |
 | [0050](specs/0050-formularios-reutilizables-resend.md) | 2026-09-22 | Constructor acotado de formularios reutilizables y traducibles, asignación por formId y envío validado mediante Resend | **cerrada** | no | `content/forms.json`, `src/lib/formularios*.ts`, `src/pages/admin/formularios/**`, `src/pages/api/formularios/**`, `src/components/**` |
+| [0051](specs/0051-outras-artes-al-formid.md) | 2026-09-22 | Outras artes deja los Google Forms externos y pasa a `formId`, el archivado se bloquea mientras haya una pagina que lo use, la asignacion se elige solo en portugues y el modal publico se ajusta a movil | implementada | no | `content/*/other-arts.json`, `src/lib/{schemas,traduccion,outras-artes-edicion,formularios-edicion}.ts`, `src/pages/admin/**`, `src/components/{FormModal,FormularioPublico,OtherArtsView}.astro` |
 
 **"Disjunta?"** = si el trabajo no comparte archivos con otra spec abierta. Es lo que
 habilita paralelizar. Lo decide la spec, no el orquestador en runtime.
