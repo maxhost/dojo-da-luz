@@ -11,8 +11,11 @@ cosa vista en pantalla. No "deberia andar".
 Ultima actualizacion: 2026-09-22, sexta sesion — spec **0051** commiteada: `/outras-artes`
 deja los Google Forms externos y pasa a `formId`, el archivado de un formulario en uso se
 bloquea (ADR-0047) y el modal publico se ajusta a movil. Gate verde: `astro check` **0/0/0**
-(142 archivos), `npm test` **85/85**, `npm run build` 44 rutas. **La 0051 no esta verificada
-contra el backoffice corriendo** — fila 13.
+(142 archivos), `npm test` **85/85**, `npm run build` 44 rutas. Desplegada en `cf140e9`
+(deployment `dojo-da-9nlbvzj2f` ● Ready en 15 s) y comprobada en produccion: `/outras-artes`
+en **200** con los **tres** botones de modal y los tres formularios propios pintados
+(`name="nome"` × 3), sin ningun `<iframe>`. **La parte del backoffice —el 409 del archivado
+y la propagacion del `formId`— no esta verificada contra el BO corriendo** — fila 13.
 
 **Retomar con:** *"Leer docs/TASKS.md y la spec 0051. Falta (a) verificar la 0051 contra el
 BO corriendo —archivado bloqueado, propagacion del formId de la Home en un commit, POST
