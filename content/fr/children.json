@@ -71,6 +71,11 @@
         "type": "image",
         "src": "https://static.wixstatic.com/media/ae7240_de66207c487b4e8086d18ed67c88ea93~mv2.jpg/v1/fill/w_800,h_800,al_c,q_85/IMG_3502_JPG.jpg",
         "alt": "Tatami du Dojo da Luz prêt pour le cours"
+      },
+      {
+        "type": "youtube",
+        "url": "https://www.youtube.com/watch?v=hBSaxhwJJYE",
+        "alt": "Treino criança Dojo da Luz"
       }
     ]
   },
