@@ -33,11 +33,10 @@
   },
   "teachers": [
     {
-      "name": "Javier Maidana",
+      "name": "Javier Maidana | 3.º Dan Aikikai",
       "credentials": "Instrutor · Dojo da Luz",
       "paragraphs": [
-        "A sua prática privilegia a precisão do gesto e uma aprendizagem atenta, acessível a pessoas de todas as idades.",
-        "Acompanha os alunos nos primeiros passos no dojo, criando um ambiente de confiança e descoberta."
+        "Iniciou a sua prática de Aikido em Florianópolis, Santa Catarina, Brasil, sob a orientação de Pádua Sensei. Em 2017, mudou-se para Portugal, onde deu continuidade à sua prática e ao seu desenvolvimento no Aikido no Dojo da Luz, em Lisboa. Com mais de 20 anos de prática, mantém-se dedicado ao estudo contínuo do Aikido, à prática e à transmissão dos seus princípios, valorizando o desenvolvimento pessoal e coletivo através do treino."
       ],
       "photo": "https://pub-a3e739acf38449bf92d850dfa752a522.r2.dev/medios/bbe8142c0861/w1600.webp",
       "photoAlt": "Javier Sensei"
@@ -46,6 +45,8 @@
       "name": "Vítor Marques",
       "credentials": "Instrutor · Dojo da Luz",
       "paragraphs": [
+        "A sua prática privilegia a precisão do gesto e uma aprendizagem atenta, acessível a pessoas de todas as idades.",
+        "Acompanha os alunos nos primeiros passos no dojo, criando um ambiente de confiança e descoberta.",
         "Interessa-se pela ligação entre movimento, respiração e presença no treino quotidiano.",
         "Nas aulas, convida cada praticante a encontrar o seu próprio ritmo, com rigor e espírito de cooperação."
       ],
