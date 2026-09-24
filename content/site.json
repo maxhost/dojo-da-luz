@@ -1,8 +1,8 @@
 {
   "marca": {
-    "logo": "https://pub-a3e739acf38449bf92d850dfa752a522.r2.dev/medios/6dea91b1ae40/w256.webp",
-    "favicon": null,
-    "acento": "#d6a583"
+    "logo": "https://pub-a3e739acf38449bf92d850dfa752a522.r2.dev/medios/2c54259d326a/w256.webp",
+    "favicon": "https://pub-a3e739acf38449bf92d850dfa752a522.r2.dev/medios/2c54259d326a/w256.webp",
+    "acento": "#4a26fd"
   },
   "contacto": {
     "telefono": "(+351) 913 624 103",
@@ -15,21 +15,9 @@
     "instagram": "https://www.instagram.com/dojodaluz/"
   },
   "pie": {
-    "pt": [
-      "Benfica · Lumiar · Encarnação",
-      "Associação sem fins lucrativos"
-    ],
-    "es": [
-      "Benfica · Lumiar · Encarnação",
-      "Asociación sin fines de lucro"
-    ],
-    "fr": [
-      "Benfica · Lumiar · Encarnação",
-      "Association à but non lucratif"
-    ],
-    "en": [
-      "Benfica · Lumiar · Encarnação",
-      "Non-profit association"
-    ]
+    "pt": [],
+    "es": [],
+    "fr": [],
+    "en": []
   }
 }
