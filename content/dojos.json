@@ -125,6 +125,54 @@
           "hasta": "18:30"
         }
       ]
+    },
+    {
+      "slug": "1-",
+      "estado": "activo",
+      "orden": 1,
+      "nombre": "Benfica",
+      "dojo": "Dojo da Luz",
+      "instalacion": null,
+      "direccion": {
+        "calle": "Rua Claudio Nunes, 59A",
+        "codigoPostal": "1500-175",
+        "localidad": "Lisboa",
+        "pais": "PT"
+      },
+      "geo": null,
+      "telefono": "913624103",
+      "horarios": [
+        {
+          "audiencia": "adultos",
+          "variante": null,
+          "dias": [
+            "mar",
+            "jue"
+          ],
+          "desde": "07:00",
+          "hasta": "08:00"
+        },
+        {
+          "audiencia": "adultos",
+          "variante": "almuerzo",
+          "dias": [
+            "mie",
+            "vie"
+          ],
+          "desde": "12:30",
+          "hasta": "13:45"
+        },
+        {
+          "audiencia": "adultos",
+          "variante": "tarde",
+          "dias": [
+            "mar",
+            "jue"
+          ],
+          "desde": "19:45",
+          "hasta": "21:00"
+        }
+      ]
     }
   ]
 }
