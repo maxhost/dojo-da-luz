@@ -36,8 +36,10 @@ es un fix uniforme**:
   `585a41b36921` (Franck Noël, Valencia) **rompe uno que hoy esta bien**: el recorte
   centrado muestra su retrato completo, y arriba solo queda el titulo en blanco. Un CSS
   no puede acertar los dos a la vez porque cada flyer pone la foto en un lugar distinto
-  del diseño. **Pendiente:** o el cliente re-sube `5238ffe4bf0a` mejor encuadrado, o se
-  construye un selector de foco por imagen en el editor (funcionalidad nueva, no un fix).
+  del diseño. **Bajado a spec**: ADR-0048 (decision: punto focal, no recorte real) y
+  spec **0052** (`docs/specs/0052-foco-de-imagen-en-eventos.md`), cerrada, **sin
+  implementar todavia**. Acotada a las fotos de `/eventos` a proposito — el resto del
+  sitio ya se audito y no lo necesita.
 
 **Cuarto hallazgo — las fotos de `/dojo` (portada, Pablo Durán y las 5 fichas del equipo)
 cortaban la cara.** Diagnosticado bajando las fotos reales y simulando el recorte con
