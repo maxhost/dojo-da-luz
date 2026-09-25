@@ -13,7 +13,9 @@ const REGION = 'auto'
 const SERVICIO = 's3'
 
 function env(nombre: string): string {
-  return process.env[nombre] ?? (import.meta.env[nombre] as string | undefined) ?? ''
+  // `import.meta.env` no existe fuera de Vite/Astro: `node --test` (medios.test.ts) llama
+  // configR2() directo, sin bundler en el medio.
+  return process.env[nombre] ?? (import.meta.env?.[nombre] as string | undefined) ?? ''
 }
 
 export type ConfigR2 = {
@@ -139,6 +141,72 @@ export function firmar(args: {
 export function endpoint(cfg: ConfigR2): string {
   const j = cfg.jurisdiccion ? `${cfg.jurisdiccion}.` : ''
   return `${cfg.accountId}.${j}r2.cloudflarestorage.com`
+}
+
+/**
+ * URL `PUT` prefirmada (spec 0047, ADR-0044): el navegador sube directo a R2, sin pasar
+ * por la funcion, que es lo que permite subir un video sin chocar con el corte de 4,5 MB
+ * de Vercel. Es la variante "query string" de SigV4 —la firma viaja en la URL, no en una
+ * cabecera `Authorization`— porque no hay pedido servidor a servidor que la lleve.
+ *
+ * `content-type` va entre las cabeceras firmadas: el navegador tiene que mandar exactamente
+ * ese valor en el `PUT` o R2 rechaza la firma, asi que un archivo no puede subirse
+ * declarando otro tipo del que se autorizo.
+ *
+ * No hay un vector de prueba publico para esta variante como el de `firmar()` (spec 0030):
+ * se verifica con propiedades (mismo input → misma firma, otro secreto → otra firma) y,
+ * como toda esta pieza, contra R2 en produccion.
+ */
+export function presignarPut(args: {
+  host: string
+  ruta: string
+  contentType: string
+  accessKeyId: string
+  secretAccessKey: string
+  fecha: Date
+  vencimientoSegundos: number
+  region?: string
+  servicio?: string
+}): string {
+  const region = args.region ?? REGION
+  const servicio = args.servicio ?? SERVICIO
+
+  const amzDate = args.fecha.toISOString().replace(/[:-]|\.\d{3}/g, '')
+  const dia = amzDate.slice(0, 8)
+  const scope = `${dia}/${region}/${servicio}/aws4_request`
+
+  const query: Record<string, string> = {
+    'X-Amz-Algorithm': 'AWS4-HMAC-SHA256',
+    'X-Amz-Credential': `${args.accessKeyId}/${scope}`,
+    'X-Amz-Date': amzDate,
+    'X-Amz-Expires': String(args.vencimientoSegundos),
+    'X-Amz-SignedHeaders': 'content-type;host',
+  }
+
+  const canonicalQuery = Object.entries(query)
+    .map(([k, v]) => [encodeURIComponent(k), encodeURIComponent(v)] as const)
+    .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
+    .map(([k, v]) => `${k}=${v}`)
+    .join('&')
+
+  // Sin cuerpo a mano todavia: el payload va "UNSIGNED-PAYLOAD", que es lo que documenta
+  // AWS para una URL prefirmada — los bytes los manda el navegador despues, no esta funcion.
+  const canonicalRequest = [
+    'PUT',
+    codificarRuta(args.ruta),
+    canonicalQuery,
+    `content-type:${args.contentType}\nhost:${args.host}\n`,
+    'content-type;host',
+    'UNSIGNED-PAYLOAD',
+  ].join('\n')
+
+  const stringToSign = ['AWS4-HMAC-SHA256', amzDate, scope, sha256(canonicalRequest)].join('\n')
+
+  let clave = hmac(Buffer.from(`AWS4${args.secretAccessKey}`, 'utf8'), dia)
+  for (const parte of [region, servicio, 'aws4_request']) clave = hmac(clave, parte)
+  const firma = createHmac('sha256', clave).update(stringToSign).digest('hex')
+
+  return `https://${args.host}${codificarRuta(args.ruta)}?${canonicalQuery}&X-Amz-Signature=${firma}`
 }
 
 async function pedir(

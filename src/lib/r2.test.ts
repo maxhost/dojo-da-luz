@@ -1,7 +1,7 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
-import { endpoint, firmar } from './r2.ts'
+import { endpoint, firmar, presignarPut } from './r2.ts'
 
 /**
  * La firma SigV4 es la pieza que no se puede verificar contra R2 sin credenciales, y las
@@ -128,4 +128,48 @@ test('sin jurisdiccion el host es el generico', () => {
 test('con jurisdiccion el host la lleva entre la cuenta y el dominio', () => {
   assert.equal(endpoint(cfg('eu')), 'cuenta.eu.r2.cloudflarestorage.com')
   assert.equal(endpoint(cfg('fedramp')), 'cuenta.fedramp.r2.cloudflarestorage.com')
+})
+
+/**
+ * `presignarPut` (spec 0047) firma por query string, no por cabecera: no hay vector
+ * publico para esa variante como el de `firmar()`. Se prueban las propiedades que un
+ * vector probaria —determinismo, sensibilidad a cada input— y la forma de la URL; la firma
+ * misma solo la valida R2 en produccion (igual que `firmar()`, spec 0030).
+ */
+const argsPresign = {
+  host: 'cuenta.r2.cloudflarestorage.com',
+  ruta: '/bucket/medios/abc123/video.mp4',
+  contentType: 'video/mp4',
+  accessKeyId: CLAVE,
+  secretAccessKey: SECRETO,
+  fecha: FECHA,
+  vencimientoSegundos: 300,
+} as const
+
+test('presignarPut: mismo input, misma firma', () => {
+  assert.equal(presignarPut(argsPresign), presignarPut(argsPresign))
+})
+
+test('presignarPut: otro secreto firma distinto', () => {
+  assert.notEqual(
+    presignarPut(argsPresign),
+    presignarPut({ ...argsPresign, secretAccessKey: 'otro-secreto' }),
+  )
+})
+
+test('presignarPut: otro content-type firma distinto — R2 rechaza un PUT que declare otro tipo', () => {
+  assert.notEqual(
+    presignarPut(argsPresign),
+    presignarPut({ ...argsPresign, contentType: 'application/octet-stream' }),
+  )
+})
+
+test('presignarPut: la URL lleva el algoritmo, el scope, el vencimiento y las cabeceras firmadas', () => {
+  const url = presignarPut(argsPresign)
+  assert.match(url, /^https:\/\/cuenta\.r2\.cloudflarestorage\.com\/bucket\/medios\/abc123\/video\.mp4\?/)
+  assert.match(url, /X-Amz-Algorithm=AWS4-HMAC-SHA256/)
+  assert.match(url, /X-Amz-Credential=AKIDEXAMPLE%2F20150830%2Fauto%2Fs3%2Faws4_request/)
+  assert.match(url, /X-Amz-Expires=300/)
+  assert.match(url, /X-Amz-SignedHeaders=content-type%3Bhost/)
+  assert.match(url, /X-Amz-Signature=[0-9a-f]{64}/)
 })

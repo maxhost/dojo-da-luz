@@ -12,6 +12,7 @@ import { CLAVES_MEDIA, mediaSchema } from './media.ts'
 
 const URLS = {
   heroPoster: 'https://ejemplo.test/portada.webp',
+  heroVideo: 'https://ejemplo.test/portada.mp4',
   adultsPhoto: 'https://ejemplo.test/adultos.webp',
   childrenPhoto: 'https://ejemplo.test/criancas.webp',
   dojoPhoto: 'https://ejemplo.test/dojo.webp',
@@ -42,6 +43,17 @@ test('algo que no es una direccion falla en su campo', () => {
   const validado = mediaSchema.safeParse(mediaDesdeForm(form({ ...URLS, heroPoster: 'foto.jpg' })))
   assert.equal(validado.success, false)
   assert.equal(validado.error!.issues[0]!.path.join('.'), 'heroPoster')
+})
+
+test('el video de la portada vacio es valido: la portada se ve solo con el poster', () => {
+  const validado = mediaSchema.safeParse(mediaDesdeForm(form({ ...URLS, heroVideo: '' })))
+  assert.equal(validado.success, true)
+})
+
+test('el video de la portada con algo que no es una direccion falla en su campo', () => {
+  const validado = mediaSchema.safeParse(mediaDesdeForm(form({ ...URLS, heroVideo: 'video.mp4' })))
+  assert.equal(validado.success, false)
+  assert.equal(validado.error!.issues[0]!.path.join('.'), 'heroVideo')
 })
 
 test('el archivo que el build lee hoy es valido', async () => {

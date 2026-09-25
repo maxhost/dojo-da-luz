@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto'
 import sharp, { type Metadata } from 'sharp'
-import { configR2, existe, listar, subir, urlPublica } from './r2'
+import { configR2, endpoint, existe, presignarPut, urlPublica, listar, subir } from './r2.ts'
 
 /**
  * Subida de imagenes al bucket (spec 0030). De cada archivo quedan dos objetos:
@@ -116,6 +116,66 @@ export async function subirImagen(archivo: File, variante: Variante = 'foto'): P
   } catch (error) {
     return { ok: false, motivo: `No se pudo subir a R2: ${mensaje(error)}` }
   }
+}
+
+const BYTES_MAXIMOS_VIDEO = 32 * 1024 * 1024
+const VENCIMIENTO_FIRMA_SEGUNDOS = 300
+const CONTENT_TYPE_VIDEO = 'video/mp4'
+/** sha256 en hex: 64 caracteres. Lo calcula el navegador con `crypto.subtle`. */
+const HASH_HEX = /^[0-9a-f]{64}$/
+
+export type Firma =
+  | { ok: true; requierePut: boolean; url: string | null; urlPublica: string }
+  | { ok: false; motivo: string }
+
+/**
+ * Firma un `PUT` prefirmado para subir el video de la portada directo a R2 (spec 0047).
+ * No toca los bytes: valida lo que se puede validar sin ellos —tamaño, tipo declarado y que
+ * el hash tenga forma de hash— y firma. `sharp` no entra en este camino: no hay forma de
+ * validar que un `.mp4` sea un video real sin decodificarlo, y eso no cabe en la funcion.
+ */
+export async function firmarVideo(args: {
+  contentType: string
+  tamano: number
+  hash: string
+}): Promise<Firma> {
+  if (args.contentType !== CONTENT_TYPE_VIDEO) {
+    return { ok: false, motivo: 'Tiene que ser un archivo .mp4 (video/mp4).' }
+  }
+  if (!Number.isFinite(args.tamano) || args.tamano <= 0) {
+    return { ok: false, motivo: 'El archivo está vacío.' }
+  }
+  if (args.tamano > BYTES_MAXIMOS_VIDEO) {
+    const mb = (args.tamano / 1024 / 1024).toFixed(1)
+    return { ok: false, motivo: `El archivo pesa ${mb} MB y el máximo son 32 MB.` }
+  }
+  if (!HASH_HEX.test(args.hash)) {
+    return { ok: false, motivo: 'El hash del archivo no es válido.' }
+  }
+
+  const cfg = configR2()
+  if ('falta' in cfg) return { ok: false, motivo: `Falta configurar R2: ${cfg.falta.join(', ')}` }
+
+  // La clave sale del hash del contenido, igual que las imagenes: subir el mismo video dos
+  // veces no duplica nada y el objeto se puede cachear para siempre.
+  const clave = `${PREFIJO}${args.hash}/video.mp4`
+
+  if (await existe(cfg, clave)) {
+    return { ok: true, requierePut: false, url: null, urlPublica: urlPublica(cfg, clave) }
+  }
+
+  const host = endpoint(cfg)
+  const url = presignarPut({
+    host,
+    ruta: `/${cfg.bucket}/${clave}`,
+    contentType: CONTENT_TYPE_VIDEO,
+    accessKeyId: cfg.accessKeyId,
+    secretAccessKey: cfg.secretAccessKey,
+    fecha: new Date(),
+    vencimientoSegundos: VENCIMIENTO_FIRMA_SEGUNDOS,
+  })
+
+  return { ok: true, requierePut: true, url, urlPublica: urlPublica(cfg, clave) }
 }
 
 /** Solo las servibles: el original no se ofrece para elegir porque no se sirve. */

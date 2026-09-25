@@ -8,7 +8,97 @@ Si una sesion se cae, se cierra o se compacta, se vuelve aca — no al chat. Hay
 Regla: **marcar `hecho` solo con verificacion real** — tests que pasan, comando corrido,
 cosa vista en pantalla. No "deberia andar".
 
-Ultima actualizacion: 2026-09-22, sexta sesion — spec **0051** commiteada: `/outras-artes`
+Ultima actualizacion: 2026-09-25, septima sesion — **codigo listo y gate verde, sin
+commitear todavia**: subida de `.mp4` a R2 para el video de la portada de Home (spec 0047),
+pedida por el cliente al ver un **422** en "Subir vídeo" del editor.
+
+**El working tree vive en `/Volumes/NAS/...` (SMB a `unraid.ogas.ar`) y el mount se cayo a
+mitad de sesion** — `ls` y hasta `git status` tiraban `Operation timed out`. Se siguio
+trabajando en la copia local `~/Documents/claude-workspace/dojo-da-luz` (mismo repo, mismo
+`origin/main`, sincronizada). **Ojo la proxima sesion: hay que decidir cual de las dos
+carpetas es la real** — probablemente conviene dejar de usar el mount de red para este
+proyecto, o entender por que existen las dos.
+
+**Diagnostico primero (lo que se le contesto al cliente antes de tocar codigo):** el 422 no
+era un bug puntual. La spec 0047 estaba `cerrada` en el INDEX pero **nada de su alcance
+estaba implementado** — sin `CampoVideo.astro`, sin `firmar.ts`, sin ningun campo de video
+en ningun schema. El unico control de portada era `media.heroPoster`, una imagen, y
+`subirImagen()` (que usa `sharp`) rechazaba cualquier `.mp4` con "No es una imagen que se
+pueda leer." — un 422 correcto para el campo que existia, no el campo que el cliente
+buscaba.
+
+**Implementado en esta sesion:**
+
+- `src/lib/r2.ts` → `presignarPut()`: SigV4 firmado por query string (URL prefirmada), no
+  por cabecera. No hay vector publico de AWS para esta variante — se probo por propiedad
+  (mismo input → misma firma; otro secreto o `content-type` → firma distinta), siguiendo la
+  regla del proyecto de no inventar un vector de test.
+- `src/lib/medios.ts` → `firmarVideo()`: valida `content-type` exacto (`video/mp4`), tamaño
+  (32 MB), forma del hash (sha256 hex); si el objeto ya existe en R2 (mismo hash = mismo
+  archivo) no reemite PUT, solo la URL.
+- `src/pages/admin/medios/firmar.ts` — endpoint nuevo: solo metadatos en el cuerpo, nunca
+  el archivo; protegido por el guard de sesion del middleware existente, sin tocarlo.
+- `src/components/admin/CampoVideo.astro` — nuevo: hashea el archivo con `crypto.subtle` en
+  el navegador, pide la firma, sube con `XMLHttpRequest` (progreso real), y tiene "Quitar
+  vídeo" porque vacio es un estado valido (la portada se ve solo con el poster).
+- **Desvio deliberado de la spec escrita**: la 0047 preveia `hero.video` en
+  `content/*/home.json` (por idioma). Se implemento como `heroVideo` en `content/media.json`
+  (compartido, `mediaSchema`) al lado de `heroPoster` en su lugar — es donde ya vive la
+  imagen que lo acompaña (ADR-0028) y evita el estado "cambiado en 3 de 4 idiomas" que un
+  video no deberia poder tener, igual que una foto. `mediaDesdeForm` y el passthrough de
+  `FormularioAulas` no se tocaron: son genericos sobre `CLAVES_MEDIA`. **Esto no tiene su
+  propio ADR todavia** — queda para el handoff.
+- `content/media.json`: `heroVideo` migrado con la URL de Pexels que hoy esta hardcodeada
+  en `HomeView.astro` — cero cambio visual hasta que el cliente suba la suya.
+- `HomeView.astro`: la constante `HERO_VIDEO` se borro; con `heroVideo` vacio la portada
+  pinta el poster como `<img>`, nunca un `<video>` sin fuente.
+- Tests nuevos/editados: `r2.test.ts` (propiedades de `presignarPut`), `medios.test.ts`
+  (la validacion de `firmarVideo` que corre sin credenciales — igual criterio que
+  `subirImagen`), `media.test.ts` (`heroVideo` vacio es valido, invalido si no es URL).
+- `scripts/configurar-cors-r2.mjs` + `npm run r2:cors` — nuevo. **Sin CORS en el bucket el
+  `PUT` del navegador no puede pasar**, es el paso que ADR-0044 dejo anotado como pendiente.
+  **No se corrio**: pide credenciales reales de R2 de produccion, que esta sesion no tiene
+  y no deberia usar sin que el cliente lo confirme.
+
+**Gate corrido en la copia local (disco, no NAS) — verificacion real, no supuesta:**
+
+- `npm test`: **96/96** verde (subieron de 85: 4 de `presignarPut`, 5 de `firmarVideo`, 2 de
+  `heroVideo` en `media.test.ts`). En el camino aparecio y se arreglo un bug latente
+  preexistente: `r2.ts` leia `import.meta.env` sin `?.`, y eso revienta con `TypeError`
+  fuera de Vite — nunca se habia notado porque ningun test anterior llamaba `configR2()`
+  directo. `medios.test.ts` fue el primero. Arreglado con un optional chaining, una linea.
+- `npm run build`: **44 rutas**, sin errores. La Home construida trae el mismo video de
+  Pexels que antes (`urlPublica` = `content/media.json.heroVideo` migrado) — cero cambio
+  visual, confirmado leyendo el HTML generado.
+- **Comparacion contra `HEAD`** (`git stash` + build viejo vs. build nuevo, hash del CSS
+  neutralizado con `sed`): **44 paginas, 0 diferencias.**
+- `astro check` (`npm run typecheck`) **no corre en esta maquina**: revienta con
+  `FATAL ERROR: Reached heap limit` (hasta con 8 GB de heap). **Se confirmo que es
+  preexistente y no lo causo este trabajo**: revierte con `git stash` + mueve los archivos
+  nuevos afuera → mismo OOM contra el codigo de `HEAD` sin tocar. Es un problema de esta
+  maquina/entorno, no del codigo. Queda pendiente correrlo en un entorno sano (o en CI)
+  antes de confiar en el typecheck.
+
+**Falta, en orden:**
+
+1. Correr `npm run r2:cors` (o pegar el JSON a mano en el dashboard de Cloudflare) contra
+   R2 de produccion — lo tiene que hacer el cliente, esta sesion no tiene esas credenciales.
+2. Contra el BO corriendo (`scripts/sesion-temporal.mjs`): subir un `.mp4` real; repetir el
+   mismo archivo y confirmar `requierePut:false` (dedupe por hash); un archivo que no es
+   `.mp4` rechazado antes de la red; uno de mas de 32 MB rechazado con el tamaño en el
+   mensaje; "Quitar vídeo" deja la portada solo con el poster tras publicar.
+3. Desplegar y comprobar la Home publica con el video nuevo reproduciendo.
+4. Escribir el ADR del desvio (media.json compartido en vez de home.json por idioma) y la
+   fila en el INDEX. La fila de la spec 0047 en el INDEX sigue en `cerrada`: no pasa a
+   `implementada` hasta que el paso 2 este comprobado contra el BO corriendo.
+5. Correr `astro check` en un entorno que no reviente por memoria, para tener esa señal.
+
+**Commiteado sin push** (el usuario pidio saltar la verificacion completa por velocidad;
+el gate de arriba se corrio de todos modos porque ya estaba en curso cuando lo pidio).
+
+---
+
+Ultima actualizacion anterior: 2026-09-22, sexta sesion — spec **0051** commiteada: `/outras-artes`
 deja los Google Forms externos y pasa a `formId`, el archivado de un formulario en uso se
 bloquea (ADR-0047) y el modal publico se ajusta a movil. Gate verde: `astro check` **0/0/0**
 (142 archivos), `npm test` **85/85**, `npm run build` 44 rutas. Desplegada en `cf140e9`

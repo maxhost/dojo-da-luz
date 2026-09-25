@@ -16,6 +16,11 @@ import datos from '../../content/media.json' with { type: 'json' }
 
 export const mediaSchema = z.object({
   heroPoster: z.url(),
+  /**
+   * El video de fondo del titular (spec 0047). Vacio es un estado valido —la portada se ve
+   * solo con el poster de arriba— y no un error, asi que no es `z.url()` a secas.
+   */
+  heroVideo: z.union([z.literal(''), z.url()]),
   adultsPhoto: z.url(),
   childrenPhoto: z.url(),
   dojoPhoto: z.url(),
@@ -28,6 +33,7 @@ export type Media = z.infer<typeof mediaSchema>
 /** El orden en que se ven en el editor y en la portada. */
 export const CLAVES_MEDIA = [
   'heroPoster',
+  'heroVideo',
   'adultsPhoto',
   'childrenPhoto',
   'dojoPhoto',
@@ -37,6 +43,7 @@ export const CLAVES_MEDIA = [
 
 export const ETIQUETA_MEDIA: Record<keyof Media, string> = {
   heroPoster: 'Portada del vídeo',
+  heroVideo: 'Vídeo de la portada',
   adultsPhoto: 'Foto de la tarjeta de Adultos',
   childrenPhoto: 'Foto de la tarjeta de Crianças',
   dojoPhoto: 'Foto de la sección del dojo',

@@ -2,6 +2,7 @@
 import CampoImagen from './CampoImagen.astro'
 import CampoFormulario from './CampoFormulario.astro'
 import CampoTexto from './CampoTexto.astro'
+import CampoVideo from './CampoVideo.astro'
 import { errorDe } from '../../lib/forms'
 import { LOCALE_NAME, type Locale } from '../../lib/i18n'
 import type { Media } from '../../lib/media'
@@ -130,6 +131,7 @@ const secciones = [
     <CampoTexto idPrefijo={locale} nombre="hero.titleHighlight" etiqueta="Última palabra destacada" valor={v('hero.titleHighlight')} error={e('hero.titleHighlight')} requerido />
     <CampoTexto idPrefijo={locale} nombre="hero.tagline" etiqueta="Bajada" valor={v('hero.tagline')} error={e('hero.tagline')} tipo="area" requerido />
     <CampoImagen idPrefijo={locale} nombre="media.heroPoster" etiqueta="Portada del vídeo" valor={medios.heroPoster} errores={errores} ayuda="Se ve mientras carga el vídeo, y en lugar del vídeo si no puede reproducirse. Es la misma en los cuatro idiomas." />
+    <CampoVideo idPrefijo={locale} nombre="media.heroVideo" etiqueta="Vídeo de la portada" valor={medios.heroVideo} errores={errores} ayuda="El vídeo de fondo del titular. MP4, hasta 32 MB. Sin vídeo, se ve sólo el póster. Es el mismo en los cuatro idiomas." />
   </fieldset>
 
   <fieldset class={seccion} id={`${locale}-practica`}>

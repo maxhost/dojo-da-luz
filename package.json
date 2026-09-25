@@ -10,7 +10,8 @@
     "typecheck": "astro check",
     "test": "node --test src/lib/*.test.ts",
     "admin:seed": "node --env-file=.env scripts/admin-seed.mjs",
-    "db:migrate": "node --env-file=.env scripts/migrar.mjs"
+    "db:migrate": "node --env-file=.env scripts/migrar.mjs",
+    "r2:cors": "node --env-file=.env scripts/configurar-cors-r2.mjs"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.10",
