@@ -78,3 +78,31 @@ test('el ciclo no cambia el archivo cuando no se toco nada', async () => {
 
   assert.equal(texto, enDisco)
 })
+
+/**
+ * El 2026-09-25 publicar Home rompia con "classesHero: Invalid URL": la spec 0035 agrego
+ * esa clave a `mediaSchema` pero `FormularioHome.astro` nunca la llevo, ni editable ni
+ * oculta, y `media.json` se publica entero — 4 dias rota sin que nadie publicara Home.
+ *
+ * Esto no lo puede atrapar un test de `mediaDesdeForm` (ese ya prueba que lee bien lo que
+ * el formulario manda): el bug era que el formulario no mandaba el campo. Se prueba leyendo
+ * el `.astro` como texto — lo unico que puede fallar aca es que el nombre del campo no
+ * aparezca, no que el layout cambie.
+ *
+ * Solo cubre `FormularioHome.astro`, que enumera cada campo a mano. `FormularioAulas.astro`
+ * usa un loop sobre `CLAVES_MEDIA` para las que no le pertenecen (`media.${clave}`, no un
+ * literal por clave) mas `media.classesHero` aparte para la suya: una clave nueva entra sola
+ * por construccion, no hay nada que olvidar ahi.
+ */
+test('cada clave de CLAVES_MEDIA viaja en FormularioHome.astro', async () => {
+  const fs = await import('node:fs/promises')
+  const home = await fs.readFile(
+    new URL('../components/admin/FormularioHome.astro', import.meta.url),
+    'utf8',
+  )
+
+  for (const clave of CLAVES_MEDIA) {
+    const nombre = `media.${clave}`
+    assert.ok(home.includes(nombre), `"${nombre}" no aparece en FormularioHome.astro`)
+  }
+})

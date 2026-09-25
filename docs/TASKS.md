@@ -8,8 +8,23 @@ Si una sesion se cae, se cierra o se compacta, se vuelve aca — no al chat. Hay
 Regla: **marcar `hecho` solo con verificacion real** — tests que pasan, comando corrido,
 cosa vista en pantalla. No "deberia andar".
 
-Ultima actualizacion: 2026-09-25, septima sesion — **codigo listo y gate verde, sin
-commitear todavia**: subida de `.mp4` a R2 para el video de la portada de Home (spec 0047),
+Ultima actualizacion: 2026-09-25, septima sesion, dos commits pusheados a `main`
+(`7afd06b`, `6e0fccc`) — video de la portada (spec 0047) mas un bug preexistente que salio
+a la luz al probarlo.
+
+**Segundo hallazgo de la sesion — bug preexistente, no causado por la 0047:** publicar
+cualquier idioma de Home rompia con `media.classesHero: Invalid URL`. La spec 0035
+(2026-09-21) agrego `classesHero` a `mediaSchema` como obligatorio, pero `FormularioHome.astro`
+nunca lo llevo como campo — ni editable ni oculto —, a diferencia de `FormularioAulas.astro`
+que si pasa los otros cinco campos que no le pertenecen. Como `media.json` se publica
+entero y el schema exige las seis claves, Home viene rompiendo su propio publish hace
+**4 dias** sin que nadie lo notara, porque nadie habia intentado publicar Home hasta hoy
+—se probo tratando de guardar el video nuevo—. Arreglado agregando el hidden que faltaba
+(`6e0fccc`). **Mistake→rule pendiente:** cuando `CLAVES_MEDIA` gana una clave, falta un
+chequeo que la exija en *todos* los formularios que publican `media.json`, no solo en el
+que la agrego — hoy nada avisa si un editor se queda atras.
+
+**Primer hallazgo/entrega — subida de `.mp4` a R2 para el video de la portada (spec 0047)**,
 pedida por el cliente al ver un **422** en "Subir vídeo" del editor.
 
 **El working tree vive en `/Volumes/NAS/...` (SMB a `unraid.ogas.ar`) y el mount se cayo a
@@ -83,18 +98,26 @@ buscaba.
 
 1. Correr `npm run r2:cors` (o pegar el JSON a mano en el dashboard de Cloudflare) contra
    R2 de produccion — lo tiene que hacer el cliente, esta sesion no tiene esas credenciales.
-2. Contra el BO corriendo (`scripts/sesion-temporal.mjs`): subir un `.mp4` real; repetir el
-   mismo archivo y confirmar `requierePut:false` (dedupe por hash); un archivo que no es
-   `.mp4` rechazado antes de la red; uno de mas de 32 MB rechazado con el tamaño en el
-   mensaje; "Quitar vídeo" deja la portada solo con el poster tras publicar.
-3. Desplegar y comprobar la Home publica con el video nuevo reproduciendo.
-4. Escribir el ADR del desvio (media.json compartido en vez de home.json por idioma) y la
-   fila en el INDEX. La fila de la spec 0047 en el INDEX sigue en `cerrada`: no pasa a
-   `implementada` hasta que el paso 2 este comprobado contra el BO corriendo.
-5. Correr `astro check` en un entorno que no reviente por memoria, para tener esa señal.
+2. Confirmar que publicar Home (cualquier idioma) ya no rompe con `classesHero` — probarlo
+   en produccion con `6e0fccc` desplegado. Este era el bloqueante inmediato que corto la
+   prueba del video.
+3. Contra el BO corriendo (`scripts/sesion-temporal.mjs`, o produccion): subir un `.mp4`
+   real; repetir el mismo archivo y confirmar `requierePut:false` (dedupe por hash); un
+   archivo que no es `.mp4` rechazado antes de la red; uno de mas de 32 MB rechazado con el
+   tamaño en el mensaje; "Quitar vídeo" deja la portada solo con el poster tras publicar.
+4. Desplegar y comprobar la Home publica con el video nuevo reproduciendo.
+5. Escribir el ADR del desvio de la 0047 (media.json compartido en vez de home.json por
+   idioma) y la fila en el INDEX. La fila de la spec 0047 en el INDEX sigue en `cerrada`: no
+   pasa a `implementada` hasta que el paso 3 este comprobado contra el BO corriendo.
+6. Correr `astro check` en un entorno que no reviente por memoria, para tener esa señal.
+7. El mistake→rule del hallazgo de `classesHero` (nota arriba): decidir si conviene un
+   chequeo automatico (test o hook) que revise que todo campo de `CLAVES_MEDIA` viaje en
+   todos los formularios que publican `media.json`, no solo confiar en leer el codigo.
 
-**Commiteado sin push** (el usuario pidio saltar la verificacion completa por velocidad;
-el gate de arriba se corrio de todos modos porque ya estaba en curso cuando lo pidio).
+**Commiteado y pusheado**: `7afd06b` en `main` (`git fetch` antes del push confirmo que
+`origin/main` seguia en `10fe13c`, sin nada nuevo del BO — push directo, sin rebase). El
+usuario pidio saltar la verificacion completa por velocidad; el gate de arriba se corrio
+igual porque ya estaba en curso cuando lo pidio, asi que el push no fue a ciegas.
 
 ---
 
