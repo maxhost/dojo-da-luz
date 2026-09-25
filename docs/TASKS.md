@@ -8,24 +8,44 @@ Si una sesion se cae, se cierra o se compacta, se vuelve aca — no al chat. Hay
 Regla: **marcar `hecho` solo con verificacion real** — tests que pasan, comando corrido,
 cosa vista en pantalla. No "deberia andar".
 
-Ultima actualizacion: 2026-09-25, septima sesion, dos commits pusheados a `main`
-(`7afd06b`, `6e0fccc`) — video de la portada (spec 0047) mas un bug preexistente que salio
-a la luz al probarlo.
+Ultima actualizacion: 2026-09-25, septima sesion, tres commits pusheados a `main`
+(`7afd06b`, `6e0fccc`, mas uno pendiente de este fix) — video de la portada (spec 0047) y
+dos bugs preexistentes que salieron a la luz al probarlo, uno atras del otro.
 
-**Segundo hallazgo de la sesion — bug preexistente, no causado por la 0047:** publicar
-cualquier idioma de Home rompia con `media.classesHero: Invalid URL`. La spec 0035
-(2026-09-21) agrego `classesHero` a `mediaSchema` como obligatorio, pero `FormularioHome.astro`
-nunca lo llevo como campo — ni editable ni oculto —, a diferencia de `FormularioAulas.astro`
-que si pasa los otros cinco campos que no le pertenecen. Como `media.json` se publica
-entero y el schema exige las seis claves, Home viene rompiendo su propio publish hace
-**4 dias** sin que nadie lo notara, porque nadie habia intentado publicar Home hasta hoy
-—se probo tratando de guardar el video nuevo—. Arreglado agregando el hidden que faltaba
-(`6e0fccc`). **Mistake→rule pendiente:** cuando `CLAVES_MEDIA` gana una clave, falta un
-chequeo que la exija en *todos* los formularios que publican `media.json`, no solo en el
-que la agrego — hoy nada avisa si un editor se queda atras.
+**Tercer hallazgo — "Unexpected token" al cambiar una imagen grande en cualquier galeria
+(ej. `/admin/paginas/criancas`), bug preexistente documentado en ADR-0044 y nunca
+arreglado.** `CampoImagen.astro` hace `res.json()` sobre la respuesta de
+`/admin/medios/subir`; Vercel corta el cuerpo de la funcion en 4,5 MB y devuelve el `413`
+**en texto plano**, asi que `JSON.parse` revienta con "Unexpected token" y eso es lo unico
+que veia el cliente — nunca "el archivo es muy grande". Pasaba con "algunas imagenes" (las
+de mas de ~4,5 MB, tipico de una foto de movil) y no con todas. Arreglado con el mismo
+mecanismo que ya existia para el video: `firmarImagen()` en `medios.ts` (mismo `firmar()`
+prefirmado, sin `sharp` — el archivo se sirve tal cual, sin resize a WebP, que es el
+trade-off que el ADR-0044 ya habia aceptado), `CampoImagen.astro` sube prefirmado cuando el
+archivo pasa los 4 MB, y las dos respuestas (`subir` y `firmar`) se leen con
+`leerJsonSeguro()` (nuevo, en `src/lib/subida-navegador.ts`) que nunca deja pasar la
+excepcion de un cuerpo no-JSON. `CampoVideo.astro` se paso al mismo modulo compartido, sin
+cambio de comportamiento.
+
+**Segundo hallazgo — bug preexistente, no causado por la 0047:** publicar cualquier idioma
+de Home rompia con `media.classesHero: Invalid URL`. La spec 0035 (2026-09-21) agrego
+`classesHero` a `mediaSchema` como obligatorio, pero `FormularioHome.astro` nunca lo llevo
+como campo — ni editable ni oculto —, a diferencia de `FormularioAulas.astro` que si pasa
+los otros cinco campos que no le pertenecen. Como `media.json` se publica entero y el
+schema exige las seis claves, Home venia rompiendo su propio publish hace **4 dias** sin
+que nadie lo notara, porque nadie habia intentado publicar Home hasta hoy —se probo
+tratando de guardar el video nuevo—. Arreglado agregando el hidden que faltaba (`6e0fccc`),
+con un test de regresion que lee `FormularioHome.astro` como texto y exige cada clave de
+`CLAVES_MEDIA`.
 
 **Primer hallazgo/entrega — subida de `.mp4` a R2 para el video de la portada (spec 0047)**,
 pedida por el cliente al ver un **422** en "Subir vídeo" del editor.
+
+**Patron que se repite en los tres hallazgos:** ninguno lo encontro leyendo codigo, los
+tres salieron de probar el editor de verdad. La sesion entera fue reactiva —arreglar lo que
+el cliente pisaba— y eso esta bien, pero **falta la pasada proactiva**: grepear
+`CLAVES_MEDIA`/`mediaSchema` contra cada `Formulario*.astro` para ver si hay un cuarto gap
+sin que alguien lo pise primero.
 
 **El working tree vive en `/Volumes/NAS/...` (SMB a `unraid.ogas.ar`) y el mount se cayo a
 mitad de sesion** — `ls` y hasta `git status` tiraban `Operation timed out`. Se siguio

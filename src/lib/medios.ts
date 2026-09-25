@@ -178,6 +178,73 @@ export async function firmarVideo(args: {
   return { ok: true, requierePut: true, url, urlPublica: urlPublica(cfg, clave) }
 }
 
+const BYTES_MAXIMOS_IMAGEN_GRANDE = 20 * 1024 * 1024
+
+/** A diferencia de `FORMATOS` (que lee lo que `sharp` detecto en los bytes), esto lee el
+ * `content-type` que declaro el navegador: aca no hay bytes que leer todavia. */
+const FORMATOS_IMAGEN: Record<string, string> = {
+  'image/jpeg': 'jpg',
+  'image/png': 'png',
+  'image/webp': 'webp',
+  'image/avif': 'avif',
+}
+
+/**
+ * Firma un `PUT` prefirmado para una imagen de mas de 4 MB (spec 0047): el mismo camino que
+ * `firmarVideo`, pero para el caso que motivo el ADR-0044 —una foto de movil no entra en el
+ * corte de 4,5 MB de Vercel—. `CampoImagen` decide del lado del navegador cuando usar este
+ * camino en vez de `/admin/medios/subir`.
+ *
+ * Se pierde lo que da `sharp` en el camino chico: no hay resize a WebP ni validacion de que
+ * los bytes sean una imagen real. El archivo se sirve tal cual llega, bajo `original.<ext>`
+ * — es el trade-off que el ADR ya acepto, no un descuido.
+ */
+export async function firmarImagen(args: {
+  contentType: string
+  tamano: number
+  hash: string
+}): Promise<Firma> {
+  const extension = FORMATOS_IMAGEN[args.contentType]
+  if (!extension) {
+    return {
+      ok: false,
+      motivo: `Formato no admitido (${args.contentType}). Se aceptan JPG, PNG, WebP y AVIF.`,
+    }
+  }
+  if (!Number.isFinite(args.tamano) || args.tamano <= 0) {
+    return { ok: false, motivo: 'El archivo está vacío.' }
+  }
+  if (args.tamano > BYTES_MAXIMOS_IMAGEN_GRANDE) {
+    const mb = (args.tamano / 1024 / 1024).toFixed(1)
+    return { ok: false, motivo: `El archivo pesa ${mb} MB y el máximo son 20 MB.` }
+  }
+  if (!HASH_HEX.test(args.hash)) {
+    return { ok: false, motivo: 'El hash del archivo no es válido.' }
+  }
+
+  const cfg = configR2()
+  if ('falta' in cfg) return { ok: false, motivo: `Falta configurar R2: ${cfg.falta.join(', ')}` }
+
+  const clave = `${PREFIJO}${args.hash}/original.${extension}`
+
+  if (await existe(cfg, clave)) {
+    return { ok: true, requierePut: false, url: null, urlPublica: urlPublica(cfg, clave) }
+  }
+
+  const host = endpoint(cfg)
+  const url = presignarPut({
+    host,
+    ruta: `/${cfg.bucket}/${clave}`,
+    contentType: args.contentType,
+    accessKeyId: cfg.accessKeyId,
+    secretAccessKey: cfg.secretAccessKey,
+    fecha: new Date(),
+    vencimientoSegundos: VENCIMIENTO_FIRMA_SEGUNDOS,
+  })
+
+  return { ok: true, requierePut: true, url, urlPublica: urlPublica(cfg, clave) }
+}
+
 /** Solo las servibles: el original no se ofrece para elegir porque no se sirve. */
 export async function listarMedios(): Promise<Medio[]> {
   const cfg = configR2()

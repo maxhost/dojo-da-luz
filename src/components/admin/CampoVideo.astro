@@ -63,29 +63,10 @@ const error = errorDe(errores, nombre)
 </div>
 
 <script>
+  import { hashDe, leerJsonSeguro, subirConProgreso } from '../../lib/subida-navegador'
+
   const BYTES_MAXIMOS = 32 * 1024 * 1024
   const CONTENT_TYPE = 'video/mp4'
-
-  const hashDe = async (archivo: File): Promise<string> => {
-    const bytes = await crypto.subtle.digest('SHA-256', await archivo.arrayBuffer())
-    return [...new Uint8Array(bytes)].map((b) => b.toString(16).padStart(2, '0')).join('')
-  }
-
-  const subirConProgreso = (url: string, archivo: File, onProgreso: (pct: number) => void): Promise<void> =>
-    new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest()
-      xhr.open('PUT', url)
-      xhr.setRequestHeader('content-type', CONTENT_TYPE)
-      xhr.upload.addEventListener('progress', (evento) => {
-        if (evento.lengthComputable) onProgreso(Math.round((evento.loaded / evento.total) * 100))
-      })
-      xhr.addEventListener('load', () => {
-        if (xhr.status >= 200 && xhr.status < 300) resolve()
-        else reject(new Error(`R2 respondió ${xhr.status}`))
-      })
-      xhr.addEventListener('error', () => reject(new Error('No se pudo conectar con R2.')))
-      xhr.send(archivo)
-    })
 
   const inicializarCampoVideo = (campo: HTMLElement) => {
     if (campo.dataset.inicializado === 'si') return
@@ -148,12 +129,7 @@ const error = errorDe(errores, nombre)
           headers: { 'content-type': 'application/json' },
           body: JSON.stringify({ contentType: elegido.type, tamano: elegido.size, hash }),
         })
-        const firma = (await resFirma.json()) as {
-          url?: string | null
-          urlPublica?: string
-          requierePut?: boolean
-          motivo?: string
-        }
+        const firma = await leerJsonSeguro(resFirma)
 
         if (!resFirma.ok || !firma.urlPublica) {
           estado.textContent = firma.motivo ?? `Error ${resFirma.status}`
@@ -163,7 +139,7 @@ const error = errorDe(errores, nombre)
 
         if (firma.requierePut && firma.url) {
           estado.textContent = 'Subiendo… 0%'
-          await subirConProgreso(firma.url, elegido, (pct) => {
+          await subirConProgreso(firma.url, elegido, CONTENT_TYPE, (pct) => {
             estado.textContent = `Subiendo… ${pct}%`
           })
         }

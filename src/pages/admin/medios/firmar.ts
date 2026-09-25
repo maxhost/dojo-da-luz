@@ -1,12 +1,15 @@
 import type { APIRoute } from 'astro'
-import { firmarVideo } from '../../../lib/medios'
+import { firmarImagen, firmarVideo } from '../../../lib/medios'
 
 export const prerender = false
 
 /**
- * Firma de subida prefirmada (spec 0047). Recibe solo metadatos —nunca el archivo, que es
- * justo lo que evita el corte de 4,5 MB de Vercel— y devuelve una URL `PUT` para que el
- * navegador suba directo a R2.
+ * Firma de subida prefirmada (spec 0047, mas imagenes grandes contra el bug del ADR-0044).
+ * Recibe solo metadatos —nunca el archivo, que es justo lo que evita el corte de 4,5 MB de
+ * Vercel— y devuelve una URL `PUT` para que el navegador suba directo a R2.
+ *
+ * El `content-type` decide el camino: `video/mp4` es el video de la portada, cualquier otro
+ * se intenta como imagen y `firmarImagen` es quien rechaza un formato que no reconoce.
  *
  * El guard de sesion es el del middleware: sin cookie esto ni se ejecuta.
  */
@@ -29,7 +32,10 @@ export const POST: APIRoute = async ({ request }) => {
     return json({ motivo: 'Faltan metadatos del archivo.' }, 400)
   }
 
-  const resultado = await firmarVideo({ contentType, tamano, hash })
+  const resultado =
+    contentType === 'video/mp4'
+      ? await firmarVideo({ contentType, tamano, hash })
+      : await firmarImagen({ contentType, tamano, hash })
   if (!resultado.ok) return json({ motivo: resultado.motivo }, 422)
 
   return json(

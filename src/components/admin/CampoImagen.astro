@@ -101,6 +101,13 @@ const error = errorDe(errores, nombre)
 </div>
 
 <script>
+  import { hashDe, leerJsonSeguro, subirConProgreso } from '../../lib/subida-navegador'
+
+  // Por encima de esto va prefirmado a R2, sin pasar por la funcion de Vercel que corta en
+  // 4,5 MB (ADR-0044, spec 0047). Por debajo, sigue el camino de siempre: la funcion valida
+  // con sharp, redimensiona y convierte a WebP — eso se pierde arriba del umbral.
+  const UMBRAL_PREFIRMADO = 4 * 1024 * 1024
+
   const inicializarCampoImagen = (campo: HTMLElement) => {
     if (campo.dataset.inicializado === 'si') return
     const url = campo.querySelector<HTMLInputElement>('[data-url]')
@@ -133,11 +140,42 @@ const error = errorDe(errores, nombre)
       estado.textContent = 'Subiendo…'
 
       try {
+        if (elegido.size > UMBRAL_PREFIRMADO) {
+          const hash = await hashDe(elegido)
+          estado.textContent = 'Firmando…'
+
+          const resFirma = await fetch('/admin/medios/firmar', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ contentType: elegido.type, tamano: elegido.size, hash }),
+          })
+          const firma = await leerJsonSeguro(resFirma)
+
+          if (!resFirma.ok || !firma.urlPublica) {
+            estado.textContent = firma.motivo ?? `Error ${resFirma.status}`
+            mostrar(url.value)
+            return
+          }
+
+          if (firma.requierePut && firma.url) {
+            estado.textContent = 'Subiendo… 0%'
+            await subirConProgreso(firma.url, elegido, elegido.type, (pct) => {
+              estado.textContent = `Subiendo… ${pct}%`
+            })
+          }
+
+          url.value = firma.urlPublica
+          mostrar(firma.urlPublica)
+          estado.textContent = 'Lista. No se publica hasta que guardes esta página.'
+          archivo.value = ''
+          return
+        }
+
         const cuerpo = new FormData()
         cuerpo.append('archivo', elegido)
         cuerpo.append('variante', campo.dataset.variante ?? 'foto')
         const res = await fetch('/admin/medios/subir', { method: 'POST', body: cuerpo })
-        const datos = (await res.json()) as { url?: string; motivo?: string; reusado?: boolean }
+        const datos = await leerJsonSeguro(res)
 
         if (!res.ok || !datos.url) {
           estado.textContent = datos.motivo ?? `Error ${res.status}`
