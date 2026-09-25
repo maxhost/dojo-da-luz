@@ -12,13 +12,13 @@ const leadTeacher = { ...c.teacher, id: 'pablo-duran', href: pathFor('teacher', 
 const anclaDe = (nombre: string) => nombre.toLowerCase().replace(' ', '-')
 ---
 <Base page="dojo" locale={locale} title={c.seo.title} description={c.seo.description} skipLink={chrome.skipLink} nav={siteNav(locale)} menuLabel={chrome.menuLabel} caption={chrome.caption}>
-<section class="section-pad bg-[#f6f1e8]"><div class="site-shell grid gap-12 md:grid-cols-2 md:items-center md:gap-20"><div><p class="section-kicker">{c.eyebrow}</p><h1 class="section-title mt-4 text-5xl md:text-7xl">{c.title}</h1><p class="mt-6 text-xl leading-9 text-[#625c55]">{c.lead}</p></div><img src={c.heroPhoto} alt={c.heroPhotoAlt} class="aspect-[4/3] w-full object-cover" /></div></section>
+<section class="section-pad bg-[#f6f1e8]"><div class="site-shell grid gap-12 md:grid-cols-2 md:items-center md:gap-20"><div><p class="section-kicker">{c.eyebrow}</p><h1 class="section-title mt-4 text-5xl md:text-7xl">{c.title}</h1><p class="mt-6 text-xl leading-9 text-[#625c55]">{c.lead}</p></div><img src={c.heroPhoto} alt={c.heroPhotoAlt} class="aspect-[4/3] w-full object-cover object-top" /></div></section>
 <section class="section-pad bg-white"><div class="site-shell grid gap-10 md:grid-cols-[.7fr_1.3fr] md:gap-20"><h2 class="section-title">{c.spaceTitle}</h2><div>{c.spaceParagraphs.map(p=><p class="mt-5 text-lg leading-8 text-[#4c4741] first:mt-0">{p}</p>)}</div></div></section>
 <section class="bg-[#27231f] text-white" aria-labelledby="teaching-team-title">
   <div id={leadTeacher.id} class="site-shell grid gap-10 py-20 md:grid-cols-[.8fr_1fr] md:items-center md:gap-20 md:py-28">
     <figure class="relative m-0">
       <div class="absolute -bottom-3 -left-3 h-full w-full border border-acento/45" aria-hidden="true"></div>
-      <img src={leadTeacher.photo} alt={leadTeacher.photoAlt} class="relative aspect-[4/5] max-h-[42rem] w-full object-cover" />
+      <img src={leadTeacher.photo} alt={leadTeacher.photoAlt} class="relative aspect-[4/5] max-h-[42rem] w-full object-cover object-top" />
     </figure>
     <div class="md:py-8">
       <p class="section-kicker text-acento-claro">{leadTeacher.label}</p>
@@ -38,7 +38,7 @@ const anclaDe = (nombre: string) => nombre.toLowerCase().replace(' ', '-')
       <div class="grid gap-10 md:grid-cols-3 md:gap-0">
         {c.teachers.map((teacher) => (
           <article id={anclaDe(teacher.name)} class="border-b border-white/15 pb-10 md:border-b-0 md:border-r md:px-8 md:pb-0 md:first:pl-0 md:last:border-r-0 md:last:pr-0">
-            <img src={teacher.photo} alt={teacher.photoAlt} class="aspect-[4/3] w-full object-cover" loading="lazy" />
+            <img src={teacher.photo} alt={teacher.photoAlt} class="aspect-[4/3] w-full object-cover object-top" loading="lazy" />
             <h3 class="mt-7 font-serif text-3xl leading-tight">{teacher.name}</h3>
             <p class="mt-3 text-xs font-bold uppercase tracking-[.12em] text-acento-claro">{teacher.credentials}</p>
             {teacher.paragraphs.map((p, i) => <p class={i === 0 ? 'mt-6 leading-7 text-white/65' : 'mt-4 leading-7 text-white/65'}>{p}</p>)}
