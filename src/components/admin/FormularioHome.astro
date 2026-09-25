@@ -54,6 +54,10 @@ const secciones = [
   <input type="hidden" name="idioma" value={locale} />
   <input type="hidden" name="sha" value={sha} />
   <input type="hidden" name="shaMedia" value={shaMedia} />
+  {/* classesHero es la portada de /aulas (spec 0035): Home no la edita, pero media.json se
+      guarda entero y mediaSchema la exige, asi que tiene que viajar igual o el publish
+      de Home rompe con "classesHero: Invalid URL" — bug preexistente desde esa spec. */}
+  <input type="hidden" name="media.classesHero" value={medios.classesHero} />
 
   <nav class="rounded-lg border border-[#d7cec0] bg-[#fbf8f2] p-3 xl:sticky xl:top-5 xl:row-span-11" aria-label="Secciones de la Home">
     <label class="block text-xs font-bold uppercase tracking-[0.12em] text-[#625c55]" for={`seccion-${locale}`}>Ir a una sección</label>
