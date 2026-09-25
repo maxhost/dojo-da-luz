@@ -8,11 +8,36 @@ Si una sesion se cae, se cierra o se compacta, se vuelve aca — no al chat. Hay
 Regla: **marcar `hecho` solo con verificacion real** — tests que pasan, comando corrido,
 cosa vista en pantalla. No "deberia andar".
 
-Ultima actualizacion: 2026-09-25, septima sesion, cinco commits pusheados a `main`
-(`7afd06b`, `6e0fccc`, `50a36fc`, `a85ce85`, `4c5fc6e`) — video de la portada (spec 0047) y
-tres bugs preexistentes que salieron a la luz al probarlo, uno atras del otro. El BO tambien
-publico solo (`942e45f`): el cliente ya subio un video real de produccion y confirmo el
-camino entero funcionando.
+Ultima actualizacion: 2026-09-25, septima sesion, seis commits pusheados a `main`
+(`7afd06b`, `6e0fccc`, `50a36fc`, `a85ce85`, `4c5fc6e`, mas uno pendiente de la auditoria
+de recortes) — video de la portada (spec 0047) y tres bugs preexistentes que salieron a la
+luz al probarlo, uno atras del otro. El BO tambien publico solo (`942e45f`): el cliente ya
+subio un video real de produccion y confirmo el camino entero funcionando.
+
+**Quinto hallazgo — auditoria de recorte de imagenes en todo el sitio, a pedido del
+cliente ("toca todos para asegurarte de que las imagenes siempre se vean bien").** Se bajo
+y se simulo el recorte real (`sips`, no solo CSS) de cada foto en riesgo. Resultado, **no
+es un fix uniforme**:
+
+- **`TeacherView.astro` (Pablo Durán, `/professor-pablo-duran`) arreglado** con
+  `object-top`: mismo archivo que `leadTeacher.photo` en `/dojo`, mismo problema. Las 44
+  paginas comparadas: exactamente las 4 de `/professor-pablo-duran` cambian.
+- **`AudienceView.astro` (Adultos/Crianças), `OtherArtsView.astro`, `SchoolsView.astro`,
+  `HomeView.astro` — revisadas y NO tocadas.** Las fotos de Home y Escolas ya vienen
+  precortadas por Wix con una relacion de aspecto que coincide con su caja (ej.
+  `teacherPhoto` es `w_900,h_1200` = 3:4, exacto contra `aspect-[3/4]`); la de Crianças,
+  simulada, ya muestra la cara completa con el recorte centrado actual. Tocarlas no
+  arregla nada que este roto.
+- **`EventsView.astro` (las tarjetas de eventos) — NO tocado, y esto es lo importante:**
+  las fotos no son retratos, son **flyers promocionales diseñados** con texto y logos en
+  cualquier posicion del cuadro. Se simularon los 4 recortes reales: el de
+  `5238ffe4bf0a` (Franck Noël, Praga) **esta roto hoy** —el recorte centrado deja solo el
+  cuello, sin cara— y `object-top` lo arregla. Pero el mismo `object-top` en
+  `585a41b36921` (Franck Noël, Valencia) **rompe uno que hoy esta bien**: el recorte
+  centrado muestra su retrato completo, y arriba solo queda el titulo en blanco. Un CSS
+  no puede acertar los dos a la vez porque cada flyer pone la foto en un lugar distinto
+  del diseño. **Pendiente:** o el cliente re-sube `5238ffe4bf0a` mejor encuadrado, o se
+  construye un selector de foco por imagen en el editor (funcionalidad nueva, no un fix).
 
 **Cuarto hallazgo — las fotos de `/dojo` (portada, Pablo Durán y las 5 fichas del equipo)
 cortaban la cara.** Diagnosticado bajando las fotos reales y simulando el recorte con
@@ -21,9 +46,7 @@ cortaban la cara.** Diagnosticado bajando las fotos reales y simulando el recort
 `object-position` — eso deja visible solo el 50% central del alto, y la cara, que en un
 retrato esta arriba, queda afuera. Arreglado con `object-top` en las tres imagenes
 (`4c5fc6e`). Las 44 paginas comparadas contra `HEAD`: **exactamente las 4 de `/dojo`
-cambian**, 7 apariciones de `object-top` cada una, ninguna otra se mueve. **Mismo patron
-probablemente en otras fotos de personas del sitio** (Adultos/Crianças, Outras Artes,
-profesor, Home) — no tocado, el cliente solo reporto `/dojo`.
+cambian**, 7 apariciones de `object-top` cada una, ninguna otra se mueve.
 
 **Tercer hallazgo — "Unexpected token" al cambiar una imagen grande en cualquier galeria
 (ej. `/admin/paginas/criancas`), bug preexistente documentado en ADR-0044 y nunca
