@@ -8,9 +8,22 @@ Si una sesion se cae, se cierra o se compacta, se vuelve aca — no al chat. Hay
 Regla: **marcar `hecho` solo con verificacion real** — tests que pasan, comando corrido,
 cosa vista en pantalla. No "deberia andar".
 
-Ultima actualizacion: 2026-09-25, septima sesion, tres commits pusheados a `main`
-(`7afd06b`, `6e0fccc`, mas uno pendiente de este fix) — video de la portada (spec 0047) y
-dos bugs preexistentes que salieron a la luz al probarlo, uno atras del otro.
+Ultima actualizacion: 2026-09-25, septima sesion, cinco commits pusheados a `main`
+(`7afd06b`, `6e0fccc`, `50a36fc`, `a85ce85`, `4c5fc6e`) — video de la portada (spec 0047) y
+tres bugs preexistentes que salieron a la luz al probarlo, uno atras del otro. El BO tambien
+publico solo (`942e45f`): el cliente ya subio un video real de produccion y confirmo el
+camino entero funcionando.
+
+**Cuarto hallazgo — las fotos de `/dojo` (portada, Pablo Durán y las 5 fichas del equipo)
+cortaban la cara.** Diagnosticado bajando las fotos reales y simulando el recorte con
+`sips` (no solo leyendo el CSS): son archivos verticales subidos por el BO
+(996×1235 tipico) metidos en cajas horizontales (`aspect-[4/3]`) con `object-cover` sin
+`object-position` — eso deja visible solo el 50% central del alto, y la cara, que en un
+retrato esta arriba, queda afuera. Arreglado con `object-top` en las tres imagenes
+(`4c5fc6e`). Las 44 paginas comparadas contra `HEAD`: **exactamente las 4 de `/dojo`
+cambian**, 7 apariciones de `object-top` cada una, ninguna otra se mueve. **Mismo patron
+probablemente en otras fotos de personas del sitio** (Adultos/Crianças, Outras Artes,
+profesor, Home) — no tocado, el cliente solo reporto `/dojo`.
 
 **Tercer hallazgo — "Unexpected token" al cambiar una imagen grande en cualquier galeria
 (ej. `/admin/paginas/criancas`), bug preexistente documentado en ADR-0044 y nunca
