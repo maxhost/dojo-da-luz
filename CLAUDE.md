@@ -169,6 +169,17 @@ donde habia 44—. Comparar contra el de las 20:24 habria atribuido a la spec de
 cambios de la sesion anterior. Lo delato el conteo, y lo confirmo `stat -f '%Sm'`. Antes de
 leer un diff, comproba la **fecha** del baseline, no solo que el directorio exista.
 
+**Un mount de red que se cae a mitad de sesion no es un error de codigo, es infraestructura
+ajena — y se nota rapido con un comando barato.** El 2026-09-25
+`/Volumes/NAS/claude-workspace/dojo-da-luz` (SMB a `unraid.ogas.ar`) dejo de responder:
+`ls` y `git status` tiraban `Operation timed out`, y un `npm install` que deberia tardar
+segundos llevaba mas de 40 minutos sin terminar. No era el codigo ni las dependencias: era
+el mount. La sesion se movio a `~/Documents/claude-workspace/dojo-da-luz` (mismo repo,
+sincronizado por git) y ahi paso el resto del trabajo real. Si algo tarda sospechosamente
+—un install, un `ls`, un `git status`— probalo con un comando barato antes de asumir que el
+problema es la app; y si el mount esta lento, muda el trabajo a una copia local en vez de
+insistir contra el.
+
 **Las reglas verificables van en hooks, no aca.** Los hooks corren fuera del contexto,
 cuestan cero tokens y son deterministas; este archivo es advisory. Si una regla se puede
 chequear con un comando, es un hook — no la escribas aca tambien.

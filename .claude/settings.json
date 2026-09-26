@@ -24,6 +24,10 @@
           {
             "type": "command",
             "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/acento-escrito.sh\""
+          },
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/import-extension.sh\""
           }
         ],
         "matcher": "Write|Edit"

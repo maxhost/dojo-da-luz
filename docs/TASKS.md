@@ -8,12 +8,103 @@ Si una sesion se cae, se cierra o se compacta, se vuelve aca — no al chat. Hay
 Regla: **marcar `hecho` solo con verificacion real** — tests que pasan, comando corrido,
 cosa vista en pantalla. No "deberia andar".
 
-Ultima actualizacion: 2026-09-25, septima sesion, diez commits pusheados a `main`
-(`7afd06b`, `6e0fccc`, `50a36fc`, `a85ce85`, `4c5fc6e`, `3590289`, `c6c14e8`, `11a844b`,
-`9b64517`, mas uno pendiente de la 0054) — video de la portada (spec 0047), tres bugs
-preexistentes que salieron a la luz al probarlo, y el punto focal (0052/0053) que termino
-**revertido para `/eventos`** (ADR-0049, spec 0054) porque no resolvia lo que el cliente
-pedia. El BO publico tres veces solo (`942e45f`, `ddf4df1`, `ba5fdce`).
+## Handoff — cierre de la septima sesion (2026-09-25)
+
+**Once commits pusheados a `main`:** `7afd06b`, `6e0fccc`, `50a36fc`, `a85ce85`,
+`4c5fc6e`, `3590289`, `c6c14e8`, `11a844b`, `9b64517`, `2f1929f` (del BO), `939220a`.
+El BO tambien publico por su cuenta tres veces (`942e45f`, `ddf4df1`, `ba5fdce`) sin que
+nada se pisara — dos rebases limpios durante la sesion.
+
+**Que se pidio y que se entrego, en orden:**
+
+1. **422 al subir video en Home** → diagnosticado como spec 0047 nunca implementada (no
+   "un bug", una feature fantasma) → implementada entera: subida prefirmada a R2 para el
+   video (`CampoVideo.astro`, `firmarVideo()`), CORS configurado por el cliente. **Verificado
+   en produccion**: el cliente subio un video real y publico (`942e45f`).
+2. **Publicar Home rompia con `classesHero: Invalid URL`** → bug preexistente de 4 dias
+   (spec 0035 nunca actualizo `FormularioHome.astro`) → arreglado con el hidden que
+   faltaba. **Verificado**: el cliente confirmo que publicar Home ya no rompe.
+3. **"Unexpected token" al subir una imagen grande en cualquier galeria** → mismo defecto
+   documentado en ADR-0044 y nunca arreglado → subida prefirmada tambien para imagenes
+   >4 MB (`firmarImagen()`), y toda respuesta se lee con `leerJsonSeguro()` (nunca deja
+   pasar una excepcion de parseo). **Verificado por el cliente**: "funcionando".
+4. **Fotos de `/dojo` y `/professor-pablo-duran` cortaban la cara** → diagnosticado
+   bajando las fotos reales y simulando el recorte con `sips` (no adivinado por CSS):
+   portrait forzado en caja horizontal, recorte centrado deja afuera la mitad superior →
+   `object-top` en las tres imagenes de `/dojo` y en `/professor`. **Verificado por el
+   cliente**: "funcionando".
+5. **"Toca todos" (auditoria completa)** → se revisaron Adultos/Crianças/Home/Escolas
+   /Outras Artes y **no estaban rotas** (ya venian precortadas o el recorte actual ya
+   mostraba la cara completa) — no se tocaron a proposito.
+6. **`/eventos` con el mismo problema, pero son flyers, no retratos** → un punto focal
+   (spec 0052, luego extendido en 0053) elige que se pierde, no evita perder algo → el
+   cliente probo el mecanismo en produccion igual (foco de Praga `"37% 4%"` propagado a
+   los 4 idiomas) y confirmo que funciona **como mecanismo**, pero pidio una garantia mas
+   fuerte: **"necesito una solucion real... si se recortan queda informacion fuera del
+   recorte."** Solucion final (ADR-0049, spec 0054): `/eventos` **no recorta nunca** — la
+   imagen se muestra a su tamaño natural (`class="w-full"`, sin caja fija, sin
+   `object-cover`). `photoFoco` se saco entero del camino de eventos.
+7. **"Otros profesores" de `/dojo` tambien pidio el punto focal** (spec 0053, a diferencia
+   de eventos: aca **si** hay un sujeto recortable, y `object-top` sigue siendo el default,
+   el foco es la excepcion) → implementado, y **verificado en produccion por el cliente y
+   por el propio BO**: los 5 profesores con foco elegido, propagado igual en los 4 idiomas
+   (`2f1929f`). El cliente lo confirmo textual: *"el foco en dojo quedo perfecto."*
+8. **Consulta sobre alternativas a Resend** (sin implementar, solo para decidir): se
+   evaluo `nodemailer`+Gmail SMTP y `FormSubmit.co`. Este ultimo se descarto tras
+   verificar con busqueda real —no de memoria— que **multiples proveedores de seguridad
+   independientes lo marcan como phishing/malicioso** y hay reportes de soporte
+   inexistente. El cliente decidio **quedarse con Resend**, que ya esta construido
+   (spec 0050).
+9. **Mistake→rule de esta sesion**: el mismo bug —un import relativo en `src/lib/*.ts`
+   sin `.ts`, que rompe bajo `node --test` pero no bajo Vite/Astro— aparecio **tres veces**
+   (`r2.ts`, `eventos-edicion.ts`, `pagina-dojo-edicion.ts`), cada vez recien al agregar el
+   primer test que importaba ese archivo directo. Convertido en hook nuevo,
+   `.claude/hooks/import-extension.sh` (PostToolUse sobre `src/lib/*.ts` y
+   `src/pages/*.ts`): falla al escribir el import, no sesiones despues.
+
+**Gate final de la sesion**: `npm test` **103/103**, `npm run build` **44 rutas**,
+comparaciones contra `HEAD` con hash del CSS neutralizado en cada cambio visual —
+siempre exactamente las paginas esperadas, ninguna de mas. `astro check` **sigue sin
+correr en esta maquina** (OOM preexistente, confirmado que no lo causa nada de esta
+sesion — ver "Gotcha del entorno" abajo).
+
+**Falta, sin verificar (esta sesion no tuvo acceso a Neon/BO/Vercel directo):**
+
+1. Mirar las 4 tarjetas de `/eventos` en produccion con la imagen completa (punto 6):
+   confirmar que se ven bien con alturas distintas entre si — la mas vertical
+   (1080×1920, Costa de Caparica) va a ser la fila mas alta — y que el texto de cada fila
+   sigue centrado contra su imagen. Cuando este confirmado, spec 0054 pasa de `cerrada` a
+   `implementada` en el INDEX.
+2. Confirmar si `RESEND_API_KEY`, `FORM_FROM_EMAIL` y `FORM_TO_EMAIL` ya estan cargadas en
+   Vercel (quedo preguntado, sin respuesta al cierre de la sesion) — si no, es lo unico
+   que falta para que `/admin/formularios` mande correos de verdad.
+
+**Gotcha del entorno — leer antes de tocar nada:**
+
+- **Esta sesion se movio de `/Volumes/NAS/claude-workspace/dojo-da-luz` a
+  `~/Documents/claude-workspace/dojo-da-luz`** a mitad de camino: el mount SMB al NAS
+  (`unraid.ogas.ar`) se cayo, con `ls` y `git status` tirando `Operation timed out`. Todo
+  el trabajo real de esta sesion —instalar dependencias, correr tests, buildear, comparar
+  HTML— paso en la copia local. **El path de NAS quedo con cambios sin commitear
+  vencidos** (versiones viejas de `media.json`, `TASKS.md`, `package.json`,
+  `HomeView.astro`, `FormularioHome.astro` — todas superadas por lo que ya esta en
+  `origin/main`) y con `node_modules` roto a medias. **No se toco**, por el riesgo de un
+  `git reset --hard` sobre un mount que seguia respondiendo lento al cierre de la sesion.
+  Antes de trabajar ahi de nuevo: confirmar que el mount responde normal, y sincronizarlo
+  con `git fetch && git reset --hard origin/main` (los cambios locales ahi son
+  descartables) o seguir usando la copia local directamente.
+- `npm run typecheck` (`astro check`) revienta con `FATAL ERROR: Reached heap limit` en
+  esta maquina, con o sin `--max-old-space-size=8192`. Confirmado con `git stash` +
+  build viejo que **no lo causa ningun cambio de esta sesion** — es preexistente. Sigue
+  pendiente correrlo en un entorno sano.
+
+**Retomar con:** *"Leer docs/TASKS.md. Falta (a) confirmar visualmente las 4 tarjetas de
+`/eventos` en produccion y pasar la spec 0054 a implementada, y (b) confirmar si las
+credenciales de Resend ya estan en Vercel."*
+
+---
+
+### Detalle completo de la sesion (por si hace falta el por que exacto de cada decision)
 
 **Octavo — el punto focal no alcanzaba para `/eventos`, y se saco: la foto se ve entera,
 sin recortar nunca (ADR-0049, spec 0054).** El cliente probo la spec 0053 (caja
