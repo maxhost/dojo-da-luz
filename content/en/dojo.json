@@ -41,7 +41,7 @@
       ],
       "photo": "https://pub-a3e739acf38449bf92d850dfa752a522.r2.dev/medios/bbe8142c0861/w1600.webp",
       "photoAlt": "Inês Martins",
-      "photoFoco": "48% 9%"
+      "photoFoco": ""
     },
     {
       "name": "Miguel Costa",
@@ -52,7 +52,7 @@
       ],
       "photo": "https://pub-a3e739acf38449bf92d850dfa752a522.r2.dev/medios/473740078097/w1600.webp",
       "photoAlt": "Miguel Costa",
-      "photoFoco": "51% 13%"
+      "photoFoco": ""
     },
     {
       "name": "Sofia Almeida",
@@ -63,7 +63,7 @@
       ],
       "photo": "https://pub-a3e739acf38449bf92d850dfa752a522.r2.dev/medios/4b0d488cfa49/w1600.webp",
       "photoAlt": "Sofia Almeida",
-      "photoFoco": "49% 0%"
+      "photoFoco": ""
     },
     {
       "name": "Sérgio Baptista",
@@ -74,7 +74,7 @@
       ],
       "photo": "https://pub-a3e739acf38449bf92d850dfa752a522.r2.dev/medios/5052f6b2ad95/w1600.webp",
       "photoAlt": "Sérgio Sensei",
-      "photoFoco": "53% 4%"
+      "photoFoco": ""
     },
     {
       "name": "Luciana Quaresma",
@@ -85,7 +85,7 @@
       ],
       "photo": "https://pub-a3e739acf38449bf92d850dfa752a522.r2.dev/medios/060b5e89f4c0/w1600.webp",
       "photoAlt": "Lú Sensei",
-      "photoFoco": "48% 52%"
+      "photoFoco": ""
     }
   ],
   "lineageTitle": "A living transmission.",
