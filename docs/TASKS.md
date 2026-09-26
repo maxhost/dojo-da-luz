@@ -8,11 +8,41 @@ Si una sesion se cae, se cierra o se compacta, se vuelve aca — no al chat. Hay
 Regla: **marcar `hecho` solo con verificacion real** — tests que pasan, comando corrido,
 cosa vista en pantalla. No "deberia andar".
 
-Ultima actualizacion: 2026-09-25, septima sesion, seis commits pusheados a `main`
-(`7afd06b`, `6e0fccc`, `50a36fc`, `a85ce85`, `4c5fc6e`, mas uno pendiente de la auditoria
-de recortes) — video de la portada (spec 0047) y tres bugs preexistentes que salieron a la
-luz al probarlo, uno atras del otro. El BO tambien publico solo (`942e45f`): el cliente ya
-subio un video real de produccion y confirmo el camino entero funcionando.
+Ultima actualizacion: 2026-09-25, septima sesion, ocho commits pusheados a `main`
+(`7afd06b`, `6e0fccc`, `50a36fc`, `a85ce85`, `4c5fc6e`, `3590289`, `c6c14e8`, `11a844b`) —
+video de la portada (spec 0047), tres bugs preexistentes que salieron a la luz al probarlo,
+y la spec 0052 (punto focal en `/eventos`) ya implementada. El BO tambien publico dos veces
+solo (`942e45f`, `ddf4df1`): el cliente subio un video real y sigue usando el BO en
+paralelo sin que nada se pisara (rebase limpio las dos veces).
+
+**Sexto — spec 0052 implementada: punto focal por evento en `/eventos`.** `photoFoco`
+opcional en cada item de `events.json`, `CampoFoco.astro` nuevo (clic sobre la foto
+completa, vista previa a `aspect-[4/3]`, boton "Centrar"), tipo de columna `'foco'` en
+`TablaFilas.astro` (reusable, sin ser el motivo de esta spec). Los 4 eventos existentes
+migraron con `photoFoco: ""` — **0 diferencias contra `HEAD`** en las 44 paginas, cero
+cambio visual hasta que alguien elija un foco. Gate: `npm test` **106/106** (5 nuevos:
+vacio valido, `"X% Y%"` aceptado, forma invalida y >100% rechazados),
+`npm run build` 44 rutas.
+
+En el camino aparecio, otra vez, el mismo bug latente que ya se vio en `r2.ts`/`medios.ts`:
+`eventos-edicion.ts` importaba sus vecinos sin `.ts`, y `node --test` no lo resuelve sin
+bundler — recien salio a la luz con el primer test que importa el archivo directo. Arreglado
+igual que la vez anterior. **Van tres veces.** Vale la pena un chequeo (test o hook) que
+recorra `src/lib/*.ts` y falle si algun import relativo no lleva `.ts`, en vez de esperar a
+que el proximo archivo sin test lo revele.
+
+**Falta, antes de decir que la 0052 esta terminada (no verificado todavia, sin acceso a
+Neon/BO desde esta sesion):**
+
+1. Contra el BO corriendo o en produccion: abrir el evento de Praga (`5238ffe4bf0a`), clic
+   arriba de la cara, confirmar que la vista previa y despues `/eventos` publicado muestran
+   la cara.
+2. Confirmar que el foco elegido en portugues se propaga a es/fr/en tras publicar.
+3. Cuando este verificado, pasar la fila de la spec 0052 en el INDEX de `cerrada` a
+   `implementada`.
+
+**Hallazgos previos de esta sesion, resumen** (detalle completo mas abajo en este mismo
+bloque, sin tocar):
 
 **Quinto hallazgo — auditoria de recorte de imagenes en todo el sitio, a pedido del
 cliente ("toca todos para asegurarte de que las imagenes siempre se vean bien").** Se bajo
