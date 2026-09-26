@@ -122,8 +122,8 @@ const seccion = 'mt-8 border border-[#d7cec0] bg-[#fbf8f2] p-4'
   <fieldset class={seccion}>
     <legend class="px-2 text-sm font-semibold">03 · Redes</legend>
     <p class="text-xs text-[#625c55]">
-      Los dos íconos de la cabecera y del pie. <strong>Sin dirección no hay ícono</strong>:
-      así se saca una red del sitio sin dejar un enlace a ninguna parte.
+      Los íconos de la cabecera y del pie. <strong>Sin dato no hay ícono</strong>: así se
+      saca una red del sitio sin dejar un enlace a ninguna parte.
     </p>
 
     <CampoTexto
@@ -139,6 +139,13 @@ const seccion = 'mt-8 border border-[#d7cec0] bg-[#fbf8f2] p-4'
       valor={ajustes.redes.instagram ?? ''}
       error={e('redes.instagram')}
       ayuda="La dirección completa del perfil, empezando con https://"
+    />
+    <CampoTexto
+      nombre="redes.whatsapp"
+      etiqueta="WhatsApp"
+      valor={ajustes.redes.whatsapp ?? ''}
+      error={e('redes.whatsapp')}
+      ayuda="El número con código de país, como se marca: +351 912 345 678. El ícono abre WhatsApp Web con ese número, en una pestaña nueva."
     />
   </fieldset>
 

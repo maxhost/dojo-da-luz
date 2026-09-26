@@ -94,6 +94,24 @@ cada editor. Nada de contenido publico se toco.
 
 Gate: `npm test` 103/103, `npm run build` 44 rutas.
 
+### Cuarta entrega de la octava sesion — icono de WhatsApp
+
+Se agrega WhatsApp a `SocialLinks.astro` (header desktop, menu movil y pie — es un solo
+componente reusado, mismo criterio que ADR-0014: **sin dato no hay icono**). A diferencia de
+Facebook/Instagram, el campo nuevo (`redes.whatsapp` en `/admin/ajustes`) guarda un numero,
+no una URL: el componente le sacan los digitos (`replace(/\D/g, '')`) y arma
+`https://wa.me/<digitos>`, que abre WhatsApp Web en pestaña nueva con ese numero. El campo
+se deja vacio a proposito — no se inventa el numero del cliente, lo carga el mismo desde el
+BO cuando lo tenga.
+
+Probado con un numero de prueba (`+351 913 624 103`, el mismo que ya esta en «Contacto» pero
+en un campo aparte): el `wa.me/351913624103` aparecio en las 3 apariciones del componente.
+Revertido a `null` antes de commitear. Con el campo vacio, comparacion character-level
+contra el build de `HEAD`: **44 paginas, 0 diferencias** — el icono no aparece hasta que
+alguien cargue el numero real.
+
+Gate: `npm test` 103/103, `npm run build` 44 rutas.
+
 ---
 
 ## Handoff — cierre de la septima sesion (2026-09-25)

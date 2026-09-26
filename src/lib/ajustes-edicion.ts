@@ -59,6 +59,7 @@ export function ajustesDesdeForm(form: FormData): unknown {
     redes: {
       facebook: opcional(form, 'redes.facebook'),
       instagram: opcional(form, 'redes.instagram'),
+      whatsapp: opcional(form, 'redes.whatsapp'),
     },
     pie: Object.fromEntries(LOCALES.map((locale) => [locale, lineas(form, `pie.${locale}`)])),
   }

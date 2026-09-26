@@ -62,6 +62,8 @@ export const ajustesSchema = z.object({
   redes: z.object({
     facebook: urlOpcional,
     instagram: urlOpcional,
+    /** Un numero, no una URL: `SocialLinks.astro` arma el enlace de wa.me a partir de esto. */
+    whatsapp: textoOpcional,
   }),
   pie: z.object({
     pt: lineasPie,
