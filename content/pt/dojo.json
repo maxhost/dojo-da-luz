@@ -39,7 +39,8 @@
         "Iniciou a sua prática de Aikido em Florianópolis, Santa Catarina, Brasil, sob a orientação de Pádua Sensei. Em 2017, mudou-se para Portugal, onde deu continuidade à sua prática e ao seu desenvolvimento no Aikido no Dojo da Luz, em Lisboa. Com mais de 20 anos de prática, mantém-se dedicado ao estudo contínuo do Aikido, à prática e à transmissão dos seus princípios, valorizando o desenvolvimento pessoal e coletivo através do treino."
       ],
       "photo": "https://pub-a3e739acf38449bf92d850dfa752a522.r2.dev/medios/bbe8142c0861/w1600.webp",
-      "photoAlt": "Javier Sensei"
+      "photoAlt": "Javier Sensei",
+      "photoFoco": ""
     },
     {
       "name": "Vítor Marques | 2º Dan Aikikai de Tóquio",
@@ -51,7 +52,8 @@
         "Nas aulas, convida cada praticante a encontrar o seu próprio ritmo, com rigor e espírito de cooperação."
       ],
       "photo": "https://pub-a3e739acf38449bf92d850dfa752a522.r2.dev/medios/473740078097/w1600.webp",
-      "photoAlt": "Vítoru Sensei"
+      "photoAlt": "Vítoru Sensei",
+      "photoFoco": ""
     },
     {
       "name": "Elisa Stern | 1º Dan Aikikai de Tóquio",
@@ -61,7 +63,8 @@
         "Dedica especial atenção à transmissão dos fundamentos e à continuidade da prática."
       ],
       "photo": "https://pub-a3e739acf38449bf92d850dfa752a522.r2.dev/medios/4b0d488cfa49/w1600.webp",
-      "photoAlt": "Elisa Sensei"
+      "photoAlt": "Elisa Sensei",
+      "photoFoco": ""
     },
     {
       "name": "Sérgio Baptista | 1º Dan Aikikai de Tóquio",
@@ -71,7 +74,8 @@
         "Começou a praticar Aikidô desde criança. Entrou no Dojo da Luz no 2017 dedicando-se ao estudo do Aikidô intensamente com dois treinos diarios pir semana."
       ],
       "photo": "https://pub-a3e739acf38449bf92d850dfa752a522.r2.dev/medios/5052f6b2ad95/w1600.webp",
-      "photoAlt": "Sérgio Sensei"
+      "photoAlt": "Sérgio Sensei",
+      "photoFoco": ""
     },
     {
       "name": "Luciana Quaresma | 1º Dan Aikikai de Tóquio",
@@ -81,7 +85,8 @@
         "A minha paixão por esta arte faz-me sentir mais viva. Hoje, continuo a treinar, a aprender e a descobrir novas possibilidades no meu corpo e em mim mesma."
       ],
       "photo": "https://pub-a3e739acf38449bf92d850dfa752a522.r2.dev/medios/060b5e89f4c0/w1600.webp",
-      "photoAlt": "Lú Sensei"
+      "photoAlt": "Lú Sensei",
+      "photoFoco": ""
     }
   ],
   "lineageTitle": "Uma transmissão viva.",

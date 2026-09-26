@@ -14,6 +14,16 @@ export const seoSchema = z.object({
 export const linesSchema = z.array(z.string().min(1)).min(1)
 
 /**
+ * `object-position` de dos porcentajes enteros (spec 0052, ADR-0048): lo arma `CampoFoco`
+ * a partir de un clic, nunca se escribe a mano. Vacio es valido — sin foco, el recorte
+ * queda centrado, que es el comportamiento de siempre.
+ */
+export const focoSchema = z.union([
+  z.literal(''),
+  z.string().regex(/^(100|[1-9]?\d)% (100|[1-9]?\d)%$/, 'no tiene forma de "X% Y%"'),
+])
+
+/**
  * Los tres textos del **encabezado**: bajada del logo, boton de menu y salto al contenido.
  *
  * Eran cinco: las dos lineas del pie se fueron a `content/site.json` (ADR-0042). Estaban
@@ -255,6 +265,7 @@ export const dojoSchema = z.object({
     name: z.string().min(1), credentials: z.string().min(1),
     paragraphs: linesSchema,
     photo: z.url(), photoAlt: z.string().min(1),
+    photoFoco: focoSchema,
   })),
   lineageTitle: z.string().min(1),
   lineage: z.array(z.object({ name: z.string().min(1), role: z.string().min(1), text: z.string().min(1) })).length(3),
@@ -319,16 +330,6 @@ export const otherArtsSchema = z.object({
   })).min(1),
   gallery: gallerySchema,
 })
-
-/**
- * `object-position` de dos porcentajes enteros (spec 0052, ADR-0048): lo arma `CampoFoco`
- * a partir de un clic, nunca se escribe a mano. Vacio es valido — sin foco, el recorte
- * queda centrado, que es el comportamiento de siempre.
- */
-const focoSchema = z.union([
-  z.literal(''),
-  z.string().regex(/^(100|[1-9]?\d)% (100|[1-9]?\d)%$/, 'no tiene forma de "X% Y%"'),
-])
 
 export const eventsSchema = z.object({
   seo: seoSchema,

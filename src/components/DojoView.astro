@@ -38,7 +38,7 @@ const anclaDe = (nombre: string) => nombre.toLowerCase().replace(' ', '-')
       <div class="grid gap-10 md:grid-cols-3 md:gap-0">
         {c.teachers.map((teacher) => (
           <article id={anclaDe(teacher.name)} class="border-b border-white/15 pb-10 md:border-b-0 md:border-r md:px-8 md:pb-0 md:first:pl-0 md:last:border-r-0 md:last:pr-0">
-            <img src={teacher.photo} alt={teacher.photoAlt} class="aspect-[4/3] w-full object-cover object-top" loading="lazy" />
+            <img src={teacher.photo} alt={teacher.photoAlt} class="aspect-[4/3] w-full object-cover object-top" style={teacher.photoFoco ? `object-position:${teacher.photoFoco}` : undefined} loading="lazy" />
             <h3 class="mt-7 font-serif text-3xl leading-tight">{teacher.name}</h3>
             <p class="mt-3 text-xs font-bold uppercase tracking-[.12em] text-acento-claro">{teacher.credentials}</p>
             {teacher.paragraphs.map((p, i) => <p class={i === 0 ? 'mt-6 leading-7 text-white/65' : 'mt-4 leading-7 text-white/65'}>{p}</p>)}

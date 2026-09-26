@@ -159,6 +159,7 @@ const campo = (nombre: string, etiqueta: string, extra: Record<string, unknown> 
       prefijo="teachers"
       columnas={[
         { campo: 'photo', etiqueta: 'Foto', tipo: 'imagen' },
+        { campo: 'photoFoco', etiqueta: 'Encuadre de la foto', tipo: 'foco', campoImagen: 'photo' },
         { campo: 'name', etiqueta: 'Nombre' },
         { campo: 'credentials', etiqueta: 'Título' },
         { campo: 'paragraphs', etiqueta: 'Párrafos (uno por línea)', tipo: 'area' },
@@ -169,7 +170,7 @@ const campo = (nombre: string, etiqueta: string, extra: Record<string, unknown> 
       idPrefijo={locale}
       editable={esPortugues}
       sinTraducir={sinTraducir['teachers'] ?? []}
-      ayuda="Sin límite: los que haya se acomodan solos en la página, de a tres por fila. Si no hay ninguno, esa franja no se pinta."
+      ayuda="Sin límite: los que haya se acomodan solos en la página, de a tres por fila. Si no hay ninguno, esa franja no se pinta. Si la foto se corta mal, tocá «Encuadre de la foto» y marcá qué parte tiene que quedar visible."
     />
   </fieldset>
 

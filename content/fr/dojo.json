@@ -40,7 +40,8 @@
         "Elle accompagne les élèves dans leurs premiers pas au dojo, dans un climat de confiance et de découverte."
       ],
       "photo": "https://pub-a3e739acf38449bf92d850dfa752a522.r2.dev/medios/bbe8142c0861/w1600.webp",
-      "photoAlt": "Inês Martins"
+      "photoAlt": "Inês Martins",
+      "photoFoco": ""
     },
     {
       "name": "Miguel Costa",
@@ -50,7 +51,8 @@
         "En cours, il invite chaque pratiquant à trouver son propre rythme, avec rigueur et esprit de coopération."
       ],
       "photo": "https://pub-a3e739acf38449bf92d850dfa752a522.r2.dev/medios/473740078097/w1600.webp",
-      "photoAlt": "Miguel Costa"
+      "photoAlt": "Miguel Costa",
+      "photoFoco": ""
     },
     {
       "name": "Sofia Almeida",
@@ -60,7 +62,8 @@
         "Elle porte une attention particulière à la transmission des fondamentaux et à la continuité de la pratique."
       ],
       "photo": "https://pub-a3e739acf38449bf92d850dfa752a522.r2.dev/medios/4b0d488cfa49/w1600.webp",
-      "photoAlt": "Sofia Almeida"
+      "photoAlt": "Sofia Almeida",
+      "photoFoco": ""
     },
     {
       "name": "Sérgio Baptista",
@@ -70,7 +73,8 @@
         "Começou a praticar Aikidô desde criança. Entrou no Dojo da Luz no 2017 dedicando-se ao estudo do Aikidô intensamente com dois treinos diarios pir semana."
       ],
       "photo": "https://pub-a3e739acf38449bf92d850dfa752a522.r2.dev/medios/5052f6b2ad95/w1600.webp",
-      "photoAlt": "Sérgio Sensei"
+      "photoAlt": "Sérgio Sensei",
+      "photoFoco": ""
     },
     {
       "name": "Luciana Quaresma",
@@ -80,7 +84,8 @@
         "A minha paixão por esta arte faz-me sentir mais viva. Hoje, continuo a treinar, a aprender e a descobrir novas possibilidades no meu corpo e em mim mesma."
       ],
       "photo": "https://pub-a3e739acf38449bf92d850dfa752a522.r2.dev/medios/060b5e89f4c0/w1600.webp",
-      "photoAlt": "Lú Sensei"
+      "photoAlt": "Lú Sensei",
+      "photoFoco": ""
     }
   ],
   "lineageTitle": "Une transmission vivante.",

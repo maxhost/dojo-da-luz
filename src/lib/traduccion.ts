@@ -68,11 +68,15 @@ export const LISTAS_DOJO: readonly RutaLista[] = [
   'lineage',
 ]
 
-/** Las fotos de `/dojo`: la de la portada, la de Pablo y la de cada ficha (ADR-0032). */
+/**
+ * Las fotos de `/dojo`: la de la portada, la de Pablo y la de cada ficha, con su encuadre
+ * (ADR-0032, spec 0052) — el foco es parte de la foto, no del idioma.
+ */
 export const SEMBRADOS_DOJO: readonly string[] = [
   'heroPhoto',
   'teacher.photo',
   'teachers[].photo',
+  'teachers[].photoFoco',
 ]
 
 /**

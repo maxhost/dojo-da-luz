@@ -23,6 +23,8 @@ interface Columna {
   tipo?: 'texto' | 'area' | 'imagen' | 'foco'
   /** Solo para `tipo: 'foco'` (spec 0052): que columna trae la imagen a encuadrar. */
   campoImagen?: string
+  /** Solo para `tipo: 'foco'`: la proporcion real de la caja publica. Default `CampoFoco`. */
+  aspecto?: '4/3' | '4/5'
 }
 
 interface Props {
@@ -82,6 +84,7 @@ const campoClase =
               imagenSrc={fila[columna.campoImagen ?? ''] ?? ''}
               errores={errores}
               soloLectura={!editable}
+              aspecto={columna.aspecto}
             />
           ) : (
             <label class="block text-xs font-semibold text-[#625c55]" for={id(i, columna.campo)}>

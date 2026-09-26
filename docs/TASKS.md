@@ -8,37 +8,56 @@ Si una sesion se cae, se cierra o se compacta, se vuelve aca — no al chat. Hay
 Regla: **marcar `hecho` solo con verificacion real** — tests que pasan, comando corrido,
 cosa vista en pantalla. No "deberia andar".
 
-Ultima actualizacion: 2026-09-25, septima sesion, ocho commits pusheados a `main`
-(`7afd06b`, `6e0fccc`, `50a36fc`, `a85ce85`, `4c5fc6e`, `3590289`, `c6c14e8`, `11a844b`) —
-video de la portada (spec 0047), tres bugs preexistentes que salieron a la luz al probarlo,
-y la spec 0052 (punto focal en `/eventos`) ya implementada. El BO tambien publico dos veces
-solo (`942e45f`, `ddf4df1`): el cliente subio un video real y sigue usando el BO en
-paralelo sin que nada se pisara (rebase limpio las dos veces).
+Ultima actualizacion: 2026-09-25, septima sesion, nueve commits pusheados a `main`
+(`7afd06b`, `6e0fccc`, `50a36fc`, `a85ce85`, `4c5fc6e`, `3590289`, `c6c14e8`, `11a844b`, mas
+uno pendiente de la 0053) — video de la portada (spec 0047), tres bugs preexistentes que
+salieron a la luz al probarlo, y las specs 0052 y 0053 (punto focal) implementadas. El BO
+publico tres veces solo (`942e45f`, `ddf4df1`, `ba5fdce`): el cliente subio un video real,
+sigue editando contenido en paralelo, y **probo el foco de la spec 0052 el mismo — funciono
+de punta a punta**.
 
-**Sexto — spec 0052 implementada: punto focal por evento en `/eventos`.** `photoFoco`
-opcional en cada item de `events.json`, `CampoFoco.astro` nuevo (clic sobre la foto
-completa, vista previa a `aspect-[4/3]`, boton "Centrar"), tipo de columna `'foco'` en
-`TablaFilas.astro` (reusable, sin ser el motivo de esta spec). Los 4 eventos existentes
-migraron con `photoFoco: ""` — **0 diferencias contra `HEAD`** en las 44 paginas, cero
-cambio visual hasta que alguien elija un foco. Gate: `npm test` **106/106** (5 nuevos:
-vacio valido, `"X% Y%"` aceptado, forma invalida y >100% rechazados),
-`npm run build` 44 rutas.
+**Septimo — spec 0052 verificada en produccion por el cliente, y spec 0053: el foco se
+extiende a "Otros profesores" de `/dojo`, y `/eventos` cambia de proporcion.**
 
-En el camino aparecio, otra vez, el mismo bug latente que ya se vio en `r2.ts`/`medios.ts`:
-`eventos-edicion.ts` importaba sus vecinos sin `.ts`, y `node --test` no lo resuelve sin
-bundler — recien salio a la luz con el primer test que importa el archivo directo. Arreglado
-igual que la vez anterior. **Van tres veces.** Vale la pena un chequeo (test o hook) que
-recorra `src/lib/*.ts` y falle si algun import relativo no lleva `.ts`, en vez de esperar a
-que el proximo archivo sin test lo revele.
+El cliente eligio el foco de la foto rota de Praga (`5238ffe4bf0a`) el mismo, en
+produccion: `content/*/events.json` llego con `photoFoco: "37% 4%"` **propagado
+identico en los cuatro idiomas** (commit `ba5fdce`, del BO). Es la primera confirmacion
+real, no de esta sesion, de que la spec 0052 funciona de punta a punta. **La spec 0052 pasa
+de `cerrada` a `implementada` en el INDEX.**
 
-**Falta, antes de decir que la 0052 esta terminada (no verificado todavia, sin acceso a
-Neon/BO desde esta sesion):**
+De ahi el cliente pidio dos cosas mas, bajadas como spec **0053** (implementada en el
+momento, sin esperar a que se escribiera antes — el codigo salio primero por la velocidad
+que pidio la sesion, la spec quedo como registro):
 
-1. Contra el BO corriendo o en produccion: abrir el evento de Praga (`5238ffe4bf0a`), clic
-   arriba de la cara, confirmar que la vista previa y despues `/eventos` publicado muestran
-   la cara.
-2. Confirmar que el foco elegido en portugues se propaga a es/fr/en tras publicar.
-3. Cuando este verificado, pasar la fila de la spec 0052 en el INDEX de `cerrada` a
+1. **El foco tambien en "04 · Otros profesores" de `/dojo`.** A diferencia de `/eventos`,
+   aca vacio **no** significa centrado: `DojoView.astro` mantiene `object-top` como base
+   (el default que ya funciona para retratos) y el `style` con `photoFoco` solo lo
+   sobreescribe cuando alguien elige uno. Los 5 profesores migraron con `photoFoco: ""` —
+   **0 paginas de `/dojo` cambiaron** en la comparacion contra `HEAD`.
+2. **`/eventos` pasa de `aspect-[4/3]` a `aspect-[4/5]`.** Medido: las fotos de eventos son
+   verticales (0,56 a 0,75 de relacion) y la caja horizontal descartaba 44-47 % del alto
+   **antes** de que el foco eligiera que mostrar. Simulado con `sips` contra la foto real
+   de Praga con su foco ya puesto (`37% 4%`): con la caja nueva se ve el titulo, la cara
+   completa **y** los logos del pie — ninguno entraba con la caja vieja. Las 4 paginas de
+   `/eventos` cambiaron en la comparacion (esperado, es el cambio); `/dojo` no se movio.
+
+`CampoFoco.astro` gano un prop `aspecto?: '4/3' | '4/5'` (clases literales por Tailwind,
+nunca un template dinamico) para que la vista previa del editor no mienta la proporcion.
+
+En el camino aparecio, **por tercera vez**, el mismo bug latente de `r2.ts`/`medios.ts`:
+`pagina-dojo-edicion.ts` importaba sus vecinos sin `.ts`. Arreglado igual que las dos
+veces anteriores. Sigue pendiente el chequeo automatico que lo agarre solo.
+
+Gate: `npm test` **108/108**, `npm run build` 44 rutas, comparacion contra `HEAD` con el
+hash del CSS neutralizado: exactamente las 4 paginas de `/eventos` cambian, 0 de `/dojo`.
+
+**Falta, no verificado todavia (sin acceso a Neon/BO desde esta sesion):**
+
+1. Contra el BO corriendo o en produccion: en "04 · Otros profesores" de `/dojo`, elegir
+   un foco para algun profesor, publicar, confirmar que se ve en los cuatro idiomas.
+2. Mirar las 4 tarjetas de `/eventos` con la caja nueva en produccion — solo se midio la
+   de Praga con `sips`, las otras tres no se vieron con la proporcion nueva.
+3. Cuando este verificado, pasar la fila de la spec 0053 en el INDEX de `cerrada` a
    `implementada`.
 
 **Hallazgos previos de esta sesion, resumen** (detalle completo mas abajo en este mismo

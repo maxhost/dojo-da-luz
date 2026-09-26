@@ -22,13 +22,29 @@ interface Props {
   idPrefijo?: string
   /** El foco lo elige solo la pestaña portuguesa (ADR-0030), igual que la foto misma. */
   soloLectura?: boolean
+  /**
+   * La proporcion real de la caja donde se ve la foto recortada — tiene que coincidir con
+   * la del sitio publico o la vista previa miente. Los valores son clases literales (no un
+   * template dinamico) porque Tailwind solo genera CSS de lo que encuentra escrito tal
+   * cual en el archivo.
+   */
+  aspecto?: '4/3' | '4/5'
 }
 
-const { nombre, etiqueta, valor, imagenSrc, errores = {}, idPrefijo, soloLectura = false } =
-  Astro.props
+const {
+  nombre,
+  etiqueta,
+  valor,
+  imagenSrc,
+  errores = {},
+  idPrefijo,
+  soloLectura = false,
+  aspecto = '4/3',
+} = Astro.props
 
 const id = `${idPrefijo ? `${idPrefijo}-` : ''}${nombre.replace(/[^a-zA-Z0-9]+/g, '-')}`
 const error = errorDe(errores, nombre)
+const claseAspecto = aspecto === '4/5' ? 'aspect-[4/5]' : 'aspect-[4/3]'
 
 const [xInicial, yInicial] = valor
   ? valor.split(' ').map((n) => parseInt(n, 10) || 50)
@@ -42,7 +58,7 @@ const [xInicial, yInicial] = valor
   {soloLectura ? (
     <>
       <img
-        class="mt-1.5 aspect-[4/3] w-full max-w-64 rounded-md border border-[#d7cec0] object-cover"
+        class:list={['mt-1.5 w-full max-w-64 rounded-md border border-[#d7cec0] object-cover', claseAspecto]}
         src={imagenSrc}
         alt=""
         style={`object-position:${valor || '50% 50%'}`}
@@ -54,7 +70,7 @@ const [xInicial, yInicial] = valor
       <p class="mt-1 text-xs text-[#625c55]">Tocá la imagen donde tiene que quedar el foco.</p>
       <div class="mt-1.5 grid gap-3 sm:grid-cols-2">
         <button
-          class="relative block aspect-[4/3] w-full cursor-crosshair overflow-hidden rounded-md border border-[#c9c0b3] bg-[#f6f1e8] p-0"
+          class:list={['relative block w-full cursor-crosshair overflow-hidden rounded-md border border-[#c9c0b3] bg-[#f6f1e8] p-0', claseAspecto]}
           type="button"
           aria-label={`Elegir el foco de: ${etiqueta}`}
           data-lienzo
@@ -70,7 +86,7 @@ const [xInicial, yInicial] = valor
         <div>
           <p class="text-xs text-[#625c55]">Vista previa de la tarjeta</p>
           <img
-            class="mt-1.5 aspect-[4/3] w-full rounded-md border border-[#d7cec0] object-cover"
+            class:list={['mt-1.5 w-full rounded-md border border-[#d7cec0] object-cover', claseAspecto]}
             src={imagenSrc}
             alt=""
             style={`object-position:${valor || '50% 50%'}`}

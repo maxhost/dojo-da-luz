@@ -33,7 +33,7 @@ const numero = (index: number) => String(index + 1).padStart(2, '0')
     <div class="site-shell divide-y divide-[#d7cec0]">
       {c.items.map((event, index) => (
         <article class="grid gap-8 py-12 md:grid-cols-2 md:gap-20 md:py-20">
-          <img src={event.photo} alt={event.photoAlt} class:list={['aspect-[4/3] w-full object-cover', index % 2 === 1 && 'md:order-2']} style={event.photoFoco ? `object-position:${event.photoFoco}` : undefined} loading="lazy" />
+          <img src={event.photo} alt={event.photoAlt} class:list={['aspect-[4/5] w-full object-cover', index % 2 === 1 && 'md:order-2']} style={event.photoFoco ? `object-position:${event.photoFoco}` : undefined} loading="lazy" />
           <div class="self-center"><p class="section-kicker">{numero(index)} · {event.location}</p><h2 class="mt-4 font-serif text-4xl leading-tight md:text-5xl">{event.title}</h2><p class="mt-5 font-oxanium text-sm font-medium tracking-[.05em] text-acento">{event.date}</p><p class="mt-6 text-lg leading-8 text-[#4c4741]">{event.description}</p></div>
         </article>
       ))}

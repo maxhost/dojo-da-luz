@@ -1,8 +1,8 @@
-import { dojoSchema } from './schemas'
-import { filas, renglones, texto } from './forms'
-import type { Locale } from './i18n'
-import { LISTAS_DOJO, SEMBRADOS_DOJO } from './traduccion'
-import type { Pagina } from './editor-pagina'
+import { dojoSchema } from './schemas.ts'
+import { filas, renglones, texto } from './forms.ts'
+import type { Locale } from './i18n.ts'
+import { LISTAS_DOJO, SEMBRADOS_DOJO } from './traduccion.ts'
+import type { Pagina } from './editor-pagina.ts'
 
 /**
  * La pagina `/dojo` como descriptor (spec 0038). La publicacion es generica y vive en
@@ -75,6 +75,7 @@ export function dojoDesdeForm(form: FormData): unknown {
       paragraphs: renglones(f.uno('paragraphs')),
       photo: f.uno('photo'),
       photoAlt: f.uno('photoAlt'),
+      photoFoco: f.uno('photoFoco'),
     })),
     lineageTitle: t('lineageTitle'),
     lineage: filas(form, 'lineage').map((f) => ({
