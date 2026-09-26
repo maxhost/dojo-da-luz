@@ -57,7 +57,6 @@ export function eventosDesdeForm(form: FormData): unknown {
       description: f.uno('description'),
       photo: f.uno('photo'),
       photoAlt: f.uno('photoAlt'),
-      photoFoco: f.uno('photoFoco'),
     })),
     emptyText: t('emptyText'),
   }

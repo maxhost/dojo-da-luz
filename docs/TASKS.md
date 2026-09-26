@@ -8,13 +8,49 @@ Si una sesion se cae, se cierra o se compacta, se vuelve aca — no al chat. Hay
 Regla: **marcar `hecho` solo con verificacion real** — tests que pasan, comando corrido,
 cosa vista en pantalla. No "deberia andar".
 
-Ultima actualizacion: 2026-09-25, septima sesion, nueve commits pusheados a `main`
-(`7afd06b`, `6e0fccc`, `50a36fc`, `a85ce85`, `4c5fc6e`, `3590289`, `c6c14e8`, `11a844b`, mas
-uno pendiente de la 0053) — video de la portada (spec 0047), tres bugs preexistentes que
-salieron a la luz al probarlo, y las specs 0052 y 0053 (punto focal) implementadas. El BO
-publico tres veces solo (`942e45f`, `ddf4df1`, `ba5fdce`): el cliente subio un video real,
-sigue editando contenido en paralelo, y **probo el foco de la spec 0052 el mismo — funciono
-de punta a punta**.
+Ultima actualizacion: 2026-09-25, septima sesion, diez commits pusheados a `main`
+(`7afd06b`, `6e0fccc`, `50a36fc`, `a85ce85`, `4c5fc6e`, `3590289`, `c6c14e8`, `11a844b`,
+`9b64517`, mas uno pendiente de la 0054) — video de la portada (spec 0047), tres bugs
+preexistentes que salieron a la luz al probarlo, y el punto focal (0052/0053) que termino
+**revertido para `/eventos`** (ADR-0049, spec 0054) porque no resolvia lo que el cliente
+pedia. El BO publico tres veces solo (`942e45f`, `ddf4df1`, `ba5fdce`).
+
+**Octavo — el punto focal no alcanzaba para `/eventos`, y se saco: la foto se ve entera,
+sin recortar nunca (ADR-0049, spec 0054).** El cliente probo la spec 0053 (caja
+`aspect-[4/5]`, menos recorte) y pidio algo mas fuerte: *"necesito una solucion real...
+si se recortan queda informacion fuera del recorte"*. Tenia razon — un punto focal elige
+**que** se pierde, no evita perder algo, y un flyer con titulo arriba y logos abajo no
+tiene un solo rectangulo que los contenga a los dos. La solucion: `EventsView.astro`
+pierde la caja fija y `object-cover` — el `<img>` queda en `class="w-full"`, se muestra a
+su tamaño natural, nunca se recorta. `photoFoco` se saco de **todo** el camino de eventos
+(schema, edicion, traduccion, editor, los 4 `content/*/events.json` — incluido el
+`"37% 4%"` que el cliente ya habia elegido para Praga, que ya no tenia sentido) y se borro
+`eventos-edicion.test.ts`, que probaba exactamente ese campo.
+
+**`/dojo` no se toco: el foco de "Otros profesores" queda exactamente como en la spec
+0053** — ahi si hay un sujeto (una cara) con un default razonable (`object-top`), y el
+cliente ya confirmo que "quedo perfecto". La diferencia entre las dos paginas es de
+contenido, no tecnica: ADR-0049 lo deja escrito para la proxima vez que alguien dude por
+que una pagina usa foco y la otra no.
+
+Gate: `npm test` **103/103** (108 menos los 5 de `photoFoco` en eventos, borrados con el
+campo), `npm run build` 44 rutas, comparacion contra `HEAD`: exactamente las 4 paginas de
+`/eventos` cambian, ninguna otra se mueve.
+
+**Falta, no verificado todavia (sin acceso a Neon/BO desde esta sesion):**
+
+1. Mirar las 4 tarjetas de `/eventos` en produccion con la imagen completa: confirmar que
+   se ven bien con alturas distintas entre si (la mas vertical, 1080×1920, va a ser la
+   fila mas alta) y que el texto de cada fila sigue centrado contra su imagen.
+2. En "04 · Otros profesores" de `/dojo` (spec 0053, todavia sin verificar en el BO): elegir
+   un foco para algun profesor, publicar, confirmar que se ve en los cuatro idiomas.
+3. Cuando esto este verificado, pasar las filas de las specs 0053 y 0054 en el INDEX de
+   `cerrada` a `implementada`.
+
+---
+
+**Bloque anterior de esta sesion (0052/0053), sin tocar — el detalle de que se cambio y
+por que sigue siendo valido para `/dojo`:**
 
 **Septimo — spec 0052 verificada en produccion por el cliente, y spec 0053: el foco se
 extiende a "Otros profesores" de `/dojo`, y `/eventos` cambia de proporcion.**
@@ -51,14 +87,8 @@ veces anteriores. Sigue pendiente el chequeo automatico que lo agarre solo.
 Gate: `npm test` **108/108**, `npm run build` 44 rutas, comparacion contra `HEAD` con el
 hash del CSS neutralizado: exactamente las 4 paginas de `/eventos` cambian, 0 de `/dojo`.
 
-**Falta, no verificado todavia (sin acceso a Neon/BO desde esta sesion):**
-
-1. Contra el BO corriendo o en produccion: en "04 · Otros profesores" de `/dojo`, elegir
-   un foco para algun profesor, publicar, confirmar que se ve en los cuatro idiomas.
-2. Mirar las 4 tarjetas de `/eventos` con la caja nueva en produccion — solo se midio la
-   de Praga con `sips`, las otras tres no se vieron con la proporcion nueva.
-3. Cuando este verificado, pasar la fila de la spec 0053 en el INDEX de `cerrada` a
-   `implementada`.
+*(El punto 2 de este parrafo —la caja `aspect-[4/5]`— quedo superado por el bloque de
+arriba: `/eventos` ya no recorta en absoluto. El "Falta" vigente es el de arriba.)*
 
 **Hallazgos previos de esta sesion, resumen** (detalle completo mas abajo en este mismo
 bloque, sin tocar):

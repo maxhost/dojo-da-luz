@@ -339,7 +339,6 @@ export const eventsSchema = z.object({
   items: z.array(z.object({
     title: z.string().min(1), date: z.string().min(1), location: z.string().min(1),
     description: z.string().min(1), photo: z.url(), photoAlt: z.string().min(1),
-    photoFoco: focoSchema,
   })),
   emptyText: z.string().min(1),
 })

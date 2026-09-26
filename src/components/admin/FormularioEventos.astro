@@ -96,7 +96,6 @@ const campo = (nombre: string, etiqueta: string, extra: Record<string, unknown> 
       prefijo="items"
       columnas={[
         { campo: 'photo', etiqueta: 'Foto', tipo: 'imagen' },
-        { campo: 'photoFoco', etiqueta: 'Encuadre de la foto', tipo: 'foco', campoImagen: 'photo', aspecto: '4/5' },
         { campo: 'title', etiqueta: 'Título' },
         { campo: 'date', etiqueta: 'Fecha' },
         { campo: 'location', etiqueta: 'Lugar' },
@@ -108,7 +107,7 @@ const campo = (nombre: string, etiqueta: string, extra: Record<string, unknown> 
       idPrefijo={locale}
       editable={esPortugues}
       sinTraducir={sinTraducir['items'] ?? []}
-      ayuda="Sin límite. El número (01, 02…) y el lado de la foto los pone la página sola, por orden: el primero va a la izquierda, el segundo a la derecha. La fecha es texto libre: podés escribir «14 de março» o «Data a confirmar». Si la foto se corta mal, tocá «Encuadre de la foto» y marcá qué parte tiene que quedar visible."
+      ayuda="Sin límite. El número (01, 02…) y el lado de la foto los pone la página sola, por orden: el primero va a la izquierda, el segundo a la derecha. La fecha es texto libre: podés escribir «14 de março» o «Data a confirmar». La foto se ve entera, sin recortar: subila ya con el encuadre que querés mostrar."
     />
   </fieldset>
 

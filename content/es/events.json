@@ -19,8 +19,7 @@
       "location": "Dojo da Luz · Lisboa",
       "description": "Una sesión abierta para conocer el ritmo de la práctica, compartir el tatami y conversar con la comunidad del dojo.",
       "photo": "https://pub-a3e739acf38449bf92d850dfa752a522.r2.dev/medios/585a41b36921/w1600.webp",
-      "photoAlt": "Práctica de Aikido en el Dojo da Luz",
-      "photoFoco": ""
+      "photoAlt": "Práctica de Aikido en el Dojo da Luz"
     },
     {
       "title": "Seminario de técnica y relación",
@@ -28,8 +27,7 @@
       "location": "Lisboa",
       "description": "Un encuentro de estudio dedicado a los principios de centro, escucha y continuidad que atraviesan la práctica del Aikido.",
       "photo": "https://pub-a3e739acf38449bf92d850dfa752a522.r2.dev/medios/668fb239ff0f/w1600.webp",
-      "photoAlt": "Profesor durante una práctica de Aikido",
-      "photoFoco": ""
+      "photoAlt": "Profesor durante una práctica de Aikido"
     },
     {
       "title": "Jornada para familias",
@@ -37,8 +35,7 @@
       "location": "Dojo da Luz · Lisboa",
       "description": "Una mañana de movimiento y descubrimiento pensada para que niños, adolescentes y familias se acerquen al Aikido.",
       "photo": "https://pub-a3e739acf38449bf92d850dfa752a522.r2.dev/medios/24564997db05/w1600.webp",
-      "photoAlt": "Archivo histórico del Aikido",
-      "photoFoco": ""
+      "photoAlt": "Archivo histórico del Aikido"
     },
     {
       "title": "Práctica de armas: Buki Waza",
@@ -46,8 +43,7 @@
       "location": "Lisboa",
       "description": "Una sesión de estudio de bokken y jo para profundizar en distancia, dirección y coordinación dentro de la práctica.",
       "photo": "https://pub-a3e739acf38449bf92d850dfa752a522.r2.dev/medios/5238ffe4bf0a/w1600.webp",
-      "photoAlt": "Práctica con armas japonesas",
-      "photoFoco": "37% 4%"
+      "photoAlt": "Práctica con armas japonesas"
     }
   ],
   "emptyText": "No hay eventos próximos."
