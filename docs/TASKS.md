@@ -81,6 +81,19 @@ lo bajo a 345 al borrar `chromeSchema` pero no lo suficiente). Pendiente dividir
 hizo en esta sesion porque no era parte de lo pedido y tocar de mas un archivo que once specs
 distintas siguen extendiendo es mas riesgo que beneficio a mitad de una tarea.
 
+### Tercera entrega de la octava sesion — "Imágenes" sale del menu del BO
+
+El cliente pregunto para que servia `/admin/medios` y, al confirmar que es una galeria
+generica de respaldo (los editores de pagina ya suben la imagen donde se ve, ADR-0029, sin
+pasar por esta pantalla) y que no la estaba usando, pidio ocultarla del menu.
+
+**Se saco solo la fila del menu** (`src/layouts/Admin.astro`, grupo "Gestión"). La pagina
+sigue existiendo en `/admin/medios` y los endpoints `/admin/medios/subir` y `/firmar` siguen
+activos sin cambios — los sigue usando `CampoImagen.astro`/`CampoVideo.astro` por debajo en
+cada editor. Nada de contenido publico se toco.
+
+Gate: `npm test` 103/103, `npm run build` 44 rutas.
+
 ---
 
 ## Handoff — cierre de la septima sesion (2026-09-25)
