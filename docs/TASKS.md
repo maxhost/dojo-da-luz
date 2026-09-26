@@ -8,6 +8,28 @@ Si una sesion se cae, se cierra o se compacta, se vuelve aca — no al chat. Hay
 Regla: **marcar `hecho` solo con verificacion real** — tests que pasan, comando corrido,
 cosa vista en pantalla. No "deberia andar".
 
+## Novena sesion (2026-09-26) — variante "Mañana" en Horarios (spec 0056)
+
+**Pedido**: en `/admin/dojos/benfica`, seccion Horarios → Variantes, faltaba "Mañana" (solo
+habia mediodia, tarde y Buki Waza).
+
+**Hallazgo**: `variante` es un enum cerrado (`VARIANTES` en `src/lib/i18n.ts:101`), no texto
+libre — lo validan `z.enum(VARIANTES)` en `src/lib/dojos.ts:27` y el `<select>` de
+`EditorHorarios.astro` que itera `VARIANTES`/`VARIANTE_LABEL`. Como ambos consumen la
+constante por iteracion, agregar el valor alcanzo sin tocar el editor ni el schema.
+
+**Fix**: `src/lib/i18n.ts` — se agrego `'manana'` a `VARIANTES` (primero en el array, orden
+cronologico del dia) y su traduccion en las cuatro locales de `VARIANTE_LABEL`
+(pt `manhã`, es `mañana`, fr `matin`, en `morning`).
+
+**Gate**: `npm test` 103/103, `npm run build` 44 rutas sin error, y `npx tsx` imprimiendo
+`VARIANTES`/`VARIANTE_LABEL` confirmo las cuatro traducciones cargadas. No se pudo ver la
+pantalla del editor (login del BO requerido, no se probo autenticar en esta sesion) — la
+verificacion visual queda pendiente para cuando el cliente entre al BO.
+
+**Falta**: nada de codigo. El horario real de manana de Benfica (dias/horas) no se cargo —
+no fue parte del pedido, lo agrega el cliente desde el editor con la opcion ya disponible.
+
 ## Octava sesion (2026-09-26) — boton "Editar" en /admin/dojos
 
 **Pedido:** "podemos crear y archivar dojos, pero no podemos editarlos". El formulario de

@@ -98,7 +98,7 @@ export type Dia = (typeof DIAS)[number]
 export const AUDIENCIAS = ['adultos', 'criancas'] as const
 export type Audiencia = (typeof AUDIENCIAS)[number]
 
-export const VARIANTES = ['almuerzo', 'tarde', 'armas'] as const
+export const VARIANTES = ['manana', 'almuerzo', 'tarde', 'armas'] as const
 export type Variante = (typeof VARIANTES)[number]
 
 /** Plural: "Tercas e quintas", no "Terca e quinta". Asi lo dice el sitio actual. */
@@ -128,10 +128,10 @@ export const AUDIENCIA_LABEL: Record<Locale, Record<Audiencia, string>> = {
 
 /** "Buki Waza" no se traduce: es el nombre de la practica con armas. */
 export const VARIANTE_LABEL: Record<Locale, Record<Variante, string>> = {
-  pt: { almuerzo: 'almoço', tarde: 'tarde', armas: 'Buki Waza' },
-  es: { almuerzo: 'mediodía', tarde: 'tarde', armas: 'Buki Waza' },
-  fr: { almuerzo: 'midi', tarde: 'soir', armas: 'Buki Waza' },
-  en: { almuerzo: 'midday', tarde: 'evening', armas: 'Buki Waza' },
+  pt: { manana: 'manhã', almuerzo: 'almoço', tarde: 'tarde', armas: 'Buki Waza' },
+  es: { manana: 'mañana', almuerzo: 'mediodía', tarde: 'tarde', armas: 'Buki Waza' },
+  fr: { manana: 'matin', almuerzo: 'midi', tarde: 'soir', armas: 'Buki Waza' },
+  en: { manana: 'morning', almuerzo: 'midday', tarde: 'evening', armas: 'Buki Waza' },
 }
 
 /**
