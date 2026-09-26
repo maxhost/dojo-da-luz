@@ -44,6 +44,43 @@ falta ningun cambio.
 archivado, los datos reales estan ahi (direccion, telefono, horario de Benfica) para volcarlos
 a mano o a pedido.
 
+### Segunda entrega de la octava sesion — "Cabecera" sale de los editores (ADR-0050, spec 0055)
+
+**Pedido**: el cliente pregunto que editaba la seccion "Cabecera" (presente en los once
+editores de pagina) y, al ver que solo tocaba tres textos de accesibilidad/marca que nunca
+cambiaban entre paginas, pidio quitarla de todos los editores y mudar la bajada del logo a
+`/admin/ajustes`, debajo de donde se cargan el logo y el favicon.
+
+**Verificado antes de tocar codigo**: comparando los 44 `content/*.json`, `menuLabel` y
+`skipLink` eran identicos en las once paginas de cada idioma —nunca editados, viajaban
+repetidos sin motivo, mismo patron que ya resolvio el pie de pagina (ADR-0042)—. `caption`
+casi tambien, salvo un typo real: `home.json` en portugues decia "Aikikai · Lisboa" en vez
+de "Aikido · Lisboa" como las otras diez paginas.
+
+**Implementado**: `menuLabel` y `skipLink` pasan a constantes por idioma en `i18n.ts`
+(`MENU_LABEL`, `SKIP_LINK`, mismo criterio que `NAV_ARIA`) — ya no son campos, `Base.astro`
+los calcula solo de `locale`. `caption` pasa a `content/site.json` (`marca.caption`, un
+campo por idioma, mismo patron que `marca.pie`) y se edita en `/admin/ajustes` bajo el
+favicon. `chromeSchema` se borra de `schemas.ts`, el campo `chrome` sale de los 44
+`content/*.json`, y la seccion "Cabecera" (fieldset + entrada de navegacion) se borra de los
+once `Formulario*.astro`. El typo de Home se resuelve al valor mayoritario, "Aikido".
+
+**Gate**: `npm test` 103/103, `npm run build` 44 rutas. Comparacion character-level
+(`difflib`) del HTML contra el build de antes de este cambio: **una sola diferencia en las
+44 paginas**, `kai` → `do` en la Home portuguesa (el fix del typo) — las otras 43, byte a
+byte iguales.
+
+**Falta**: verificar contra el BO corriendo que `/admin/ajustes` muestra los 4 campos nuevos
+bajo el favicon y que ningun editor de pagina muestra mas "Cabecera" — esta sesion no tuvo
+`.env` local ni acceso a Neon para levantar `scripts/sesion-temporal.mjs`. Spec 0055 queda
+`cerrada`, no `implementada`, hasta que alguien lo confirme viendo la pantalla.
+
+**Nota aparte, no de esta tarea**: `src/lib/schemas.ts` tiene 345 lineas, por encima del
+limite de 300 que enforcea el hook `file-size` (ya estaba en 364 antes de esta sesion, que
+lo bajo a 345 al borrar `chromeSchema` pero no lo suficiente). Pendiente dividirlo — no se
+hizo en esta sesion porque no era parte de lo pedido y tocar de mas un archivo que once specs
+distintas siguen extendiendo es mas riesgo que beneficio a mitad de una tarea.
+
 ---
 
 ## Handoff — cierre de la septima sesion (2026-09-25)

@@ -8,14 +8,13 @@ interface Props { locale: Locale } const { locale }=Astro.props; const c=getCont
  *
  * Los cinco textos del borde tambien estaban escritos aca adentro (spec 0042).
  */
-const chrome = c.chrome
 const dojos = getDojos()
 const comoLlegar = (slug: string): string[] => c.transport[slug] ?? []
 
 /** `01`, `02`… y `10` con dos digitos, no `010`. */
 const numero = (index: number) => String(index + 1).padStart(2, '0')
 ---
-<Base page="contact" locale={locale} title={c.seo.title} description={c.seo.description} skipLink={chrome.skipLink} nav={siteNav(locale)} menuLabel={chrome.menuLabel} caption={chrome.caption}>
+<Base page="contact" locale={locale} title={c.seo.title} description={c.seo.description} nav={siteNav(locale)}>
 <section class="section-pad bg-acento text-center text-white"><div class="site-shell"><p class="section-kicker text-acento-tenue">{c.eyebrow}</p><h1 class="mx-auto mt-4 max-w-3xl font-serif text-5xl md:text-7xl">{c.title}</h1><p class="mx-auto mt-6 max-w-2xl text-xl leading-9 text-white/80">{c.lead}</p></div></section>
 <section class="section-pad bg-[#f6f1e8]"><div class="site-shell grid gap-6 md:grid-cols-3">{dojos.map((dojo,index)=><article class="border border-[#d7cec0] bg-white p-7"><p class="section-kicker">{numero(index)} · {dojo.nombre}</p><h2 class="mt-4 font-serif text-2xl">{dojo.dojo}</h2>{comoLlegar(dojo.slug).length>0&&<ul class="mt-6 space-y-3 border-t border-[#d7cec0] pt-5 text-[#625c55]">{comoLlegar(dojo.slug).map(item=><li>{item}</li>)}</ul>}</article>)}</div></section>
 <section class="section-pad bg-white"><div class="site-shell grid gap-12 md:grid-cols-[.75fr_1.25fr] md:gap-20"><div><h2 class="section-title">{c.privateTitle}</h2><p class="mt-5 text-lg leading-8 text-[#625c55]">{c.privateText}</p></div><div class="rounded-xl border border-[#d7cec0] bg-[#fbf8f2] p-5 sm:p-7"><ContactForm locale={locale} idPrefijo={`contact-${locale}`} /></div></div></section></Base>

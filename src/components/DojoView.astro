@@ -6,12 +6,11 @@ interface Props { locale: Locale } const { locale }=Astro.props; const c=getCont
  * escritos aca adentro (spec 0038): un array `ui` por idioma, dos constantes de Wix y un
  * objeto `additionalTeachers` con los cuatro idiomas a mano. Ahora todo sale del contenido.
  */
-const chrome = c.chrome
 const leadTeacher = { ...c.teacher, id: 'pablo-duran', href: pathFor('teacher', locale) }
 /** El ancla de cada ficha: el nombre en minuscula, como antes. */
 const anclaDe = (nombre: string) => nombre.toLowerCase().replace(' ', '-')
 ---
-<Base page="dojo" locale={locale} title={c.seo.title} description={c.seo.description} skipLink={chrome.skipLink} nav={siteNav(locale)} menuLabel={chrome.menuLabel} caption={chrome.caption}>
+<Base page="dojo" locale={locale} title={c.seo.title} description={c.seo.description} nav={siteNav(locale)}>
 <section class="section-pad bg-[#f6f1e8]"><div class="site-shell grid gap-12 md:grid-cols-2 md:items-center md:gap-20"><div><p class="section-kicker">{c.eyebrow}</p><h1 class="section-title mt-4 text-5xl md:text-7xl">{c.title}</h1><p class="mt-6 text-xl leading-9 text-[#625c55]">{c.lead}</p></div><img src={c.heroPhoto} alt={c.heroPhotoAlt} class="aspect-[4/3] w-full object-cover object-top" /></div></section>
 <section class="section-pad bg-white"><div class="site-shell grid gap-10 md:grid-cols-[.7fr_1.3fr] md:gap-20"><h2 class="section-title">{c.spaceTitle}</h2><div>{c.spaceParagraphs.map(p=><p class="mt-5 text-lg leading-8 text-[#4c4741] first:mt-0">{p}</p>)}</div></div></section>
 <section class="bg-[#27231f] text-white" aria-labelledby="teaching-team-title">

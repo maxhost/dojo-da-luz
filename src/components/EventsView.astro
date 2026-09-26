@@ -10,13 +10,12 @@ const c = getContent('events', locale)
  * La foto de portada y los cinco textos del borde estaban escritos aca adentro
  * (spec 0039): no habia nada que editar aunque hubiera editor. Ahora salen del contenido.
  */
-const chrome = c.chrome
 
 /** `01`, `02`… y `10` con dos digitos, no `010`. */
 const numero = (index: number) => String(index + 1).padStart(2, '0')
 ---
 
-<Base page="events" locale={locale} title={c.seo.title} description={c.seo.description} skipLink={chrome.skipLink} nav={siteNav(locale)} menuLabel={chrome.menuLabel} caption={chrome.caption}>
+<Base page="events" locale={locale} title={c.seo.title} description={c.seo.description} nav={siteNav(locale)}>
   <section class="relative isolate flex min-h-[31rem] items-end overflow-hidden bg-[#292522] text-center text-white md:min-h-[36rem]">
     <img src={c.heroPhoto} alt="" class="absolute inset-0 -z-20 h-full w-full object-cover" fetchpriority="high" />
     <div aria-hidden="true" class="absolute inset-0 -z-10 bg-black/65"></div>

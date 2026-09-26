@@ -19,6 +19,14 @@ import datos from '../../content/site.json' with { type: 'json' }
 const textoOpcional = z.string().min(1).nullable()
 const urlOpcional = z.url().nullable()
 
+/** Un texto por idioma, requerido en los cuatro: no hay "sin bajada de logo". */
+const textoPorIdioma = z.object({
+  pt: z.string().min(1),
+  es: z.string().min(1),
+  fr: z.string().min(1),
+  en: z.string().min(1),
+})
+
 /**
  * Las lineas del pie de un idioma. Puede quedar vacia: el pie se pinta sin nota.
  * Es texto libre de un renglon por linea (ADR-0033).
@@ -30,6 +38,11 @@ export const ajustesSchema = z.object({
     /** Reemplaza **solo el circulo** del navbar; el texto "Dojo da Luz" se queda (ADR-0042). */
     logo: urlOpcional,
     favicon: urlOpcional,
+    /**
+     * El texto chico bajo "Dojo da Luz" en la cabecera de las 44 paginas (antes vivia
+     * repetido en cada `content/*.json`, seccion "Cabecera" de cada editor — ver ADR-0050).
+     */
+    caption: textoPorIdioma,
     /**
      * El color de la marca. Los tonos claro y oscuro se calculan de este por CSS
      * (ADR-0041): no son campos.

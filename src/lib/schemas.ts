@@ -24,19 +24,6 @@ export const focoSchema = z.union([
 ])
 
 /**
- * Los tres textos del **encabezado**: bajada del logo, boton de menu y salto al contenido.
- *
- * Eran cinco: las dos lineas del pie se fueron a `content/site.json` (ADR-0042). Estaban
- * escritas 44 veces —once archivos por cuatro idiomas— y para cambiar una palabra habia que
- * abrir diez editores. Ahora el pie se escribe una vez en `/admin/ajustes`.
- */
-export const chromeSchema = z.object({
-  caption: z.string().min(1),
-  menuLabel: z.string().min(1),
-  skipLink: z.string().min(1),
-})
-
-/**
  * Capa GEO (ADR-0018). Los minimos no son decorativos: una respuesta de cinco palabras no
  * se puede citar sin el parrafo que la rodea, y ese es el modo de falla previsible cuando
  * alguien completa el formulario apurado. El build lo frena antes de publicar.
@@ -92,7 +79,6 @@ export const homeSchema = z.object({
   seo: seoSchema,
   /** Frases autocontenidas, con sujeto explicito: lo que un motor generativo puede citar. */
   resumen: z.array(z.string().min(40)).min(2).max(4),
-  chrome: chromeSchema,
   hero: z.object({
     eyebrowLines: linesSchema,
     titleLines: linesSchema,
@@ -153,7 +139,6 @@ export const homeSchema = z.object({
 
 export const classesSchema = z.object({
   seo: seoSchema,
-  chrome: chromeSchema,
   hero: z.object({
     eyebrow: z.string().min(1),
     title: z.string().min(1),
@@ -203,7 +188,6 @@ export const classesSchema = z.object({
 
 export const audienceEntrySchema = z.object({
   seo: seoSchema,
-  chrome: chromeSchema,
   eyebrow: z.string().min(1), title: z.string().min(1), lead: z.string().min(1),
   paragraphs: z.array(z.string().min(1)).min(1),
   goalsTitle: z.string().min(1), goals: z.array(z.string().min(1)).min(1),
@@ -226,7 +210,6 @@ export const audienceEntrySchema = z.object({
  */
 export const aikidoSchema = z.object({
   seo: seoSchema,
-  chrome: chromeSchema,
   eyebrow: z.string().min(1), title: z.string().min(1), lead: z.string().min(1),
   heroPhoto: z.url(),
   sections: z.array(z.object({ title: z.string().min(1), paragraphs: linesSchema })).min(1),
@@ -251,7 +234,7 @@ export const aikidoSchema = z.object({
  * es lo que frena una cuarta metida por un POST forjado.
  */
 export const dojoSchema = z.object({
-  seo: seoSchema, chrome: chromeSchema,
+  seo: seoSchema,
   eyebrow: z.string().min(1), title: z.string().min(1), lead: z.string().min(1),
   heroPhoto: z.url(), heroPhotoAlt: z.string().min(1),
   spaceTitle: z.string().min(1), spaceParagraphs: z.array(z.string().min(1)).min(1),
@@ -272,8 +255,7 @@ export const dojoSchema = z.object({
 })
 
 /**
- * `/professor-pablo-duran` (spec 0043). La ultima pagina que entro al molde: `chrome` es
- * de esta spec, y antes eran cinco textos escritos dentro de `TeacherView.astro`.
+ * `/professor-pablo-duran` (spec 0043). La ultima pagina que entro al molde.
  *
  * Las cinco listas son de largo libre (ADR-0039). `milestones` es el Percurso, y su `year`
  * es texto y no un numero a proposito: hoy conviven `2002` y `2009-2015`.
@@ -282,7 +264,7 @@ export const dojoSchema = z.object({
  * adaptativa y acomoda sola las cajas que haya.
  */
 export const teacherSchema = z.object({
-  seo:seoSchema, chrome:chromeSchema,
+  seo:seoSchema,
   eyebrow:z.string().min(1), title:z.string().min(1), lead:z.string().min(1), credentials:z.string().min(1),
   photo:z.url(), photoAlt:z.string().min(1),
   biographyTitle:z.string().min(1), biography:z.array(z.string().min(1)).min(1),
@@ -306,7 +288,7 @@ export const teacherSchema = z.object({
  * —de un dojo borrado— se ignora en vez de romper el build.
  */
 export const contactSchema = z.object({
-  seo: seoSchema, chrome: chromeSchema,
+  seo: seoSchema,
   eyebrow: z.string().min(1), title: z.string().min(1), lead: z.string().min(1),
   transport: z.record(z.string(), z.array(z.string().min(1))),
   privateTitle: z.string().min(1), privateText: z.string().min(1), formTitle: z.string().min(1),
@@ -317,7 +299,7 @@ export const contactSchema = z.object({
 })
 
 export const otherArtsSchema = z.object({
-  seo: seoSchema, chrome: chromeSchema,
+  seo: seoSchema,
   eyebrow: z.string().min(1), title: z.string().min(1), lead: z.string().min(1),
   heroPhoto: z.url(),
   activities: z.array(z.object({
@@ -333,7 +315,6 @@ export const otherArtsSchema = z.object({
 
 export const eventsSchema = z.object({
   seo: seoSchema,
-  chrome: chromeSchema,
   eyebrow: z.string().min(1), title: z.string().min(1), lead: z.string().min(1),
   heroPhoto: z.url(),
   items: z.array(z.object({
@@ -352,7 +333,7 @@ export const eventsSchema = z.object({
  * trae antetitulo, titulo y subtitulo.
  */
 export const schoolsSchema = z.object({
-  seo: seoSchema, chrome: chromeSchema,
+  seo: seoSchema,
   eyebrow: z.string().min(1), title: z.string().min(1), lead: z.string().min(1),
   heroPhoto: z.url(),
   introduction: z.object({

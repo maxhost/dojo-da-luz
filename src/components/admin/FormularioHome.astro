@@ -39,7 +39,6 @@ const seccion = 'scroll-mt-36 rounded-xl border border-[#d7cec0] bg-white p-4 sh
 const secciones = [
   ['seo', 'SEO'],
   ['resumen', 'Resumen citable'],
-  ['cabecera', 'Cabecera'],
   ['portada', 'Portada'],
   ['practica', '01 · La práctica'],
   ['audiencias', '02 · Audiencias'],
@@ -114,18 +113,6 @@ const secciones = [
       requerido
       minimo={40}
     />
-  </fieldset>
-
-  <fieldset class={seccion} id={`${locale}-cabecera`}>
-    <legend class="px-2 font-serif text-xl">Cabecera</legend>
-    <CampoTexto idPrefijo={locale} nombre="chrome.caption" etiqueta="Bajada del logo" valor={v('chrome.caption')} error={e('chrome.caption')} requerido />
-    <CampoTexto idPrefijo={locale} nombre="chrome.menuLabel" etiqueta="Botón de menú" valor={v('chrome.menuLabel')} error={e('chrome.menuLabel')} requerido />
-    <CampoTexto idPrefijo={locale} nombre="chrome.skipLink" etiqueta="Saltar al contenido" valor={v('chrome.skipLink')} error={e('chrome.skipLink')} requerido />
-
-    <p class="mt-6 text-xs text-[#625c55]">
-      El menú de la página no se edita desde acá: sus cuatro enlaces apuntan a secciones de
-      esta misma página y un destino mal escrito rompe la navegación sin que nada lo avise.
-    </p>
   </fieldset>
 
   <fieldset class={seccion} id={`${locale}-portada`}>

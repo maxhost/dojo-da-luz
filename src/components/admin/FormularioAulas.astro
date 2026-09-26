@@ -46,7 +46,6 @@ const seccion = 'scroll-mt-36 rounded-xl border border-[#d7cec0] bg-white p-4 sh
 
 const secciones = [
   ['seo', 'SEO'],
-  ['cabecera', 'Cabecera'],
   ['portada', 'Portada'],
   ['horarios', '01 · Horários'],
   ['cuotas', '02 · Quotas'],
@@ -99,13 +98,6 @@ const campo = (nombre: string, etiqueta: string, extra: Record<string, unknown> 
     <legend class="px-2 font-serif text-xl">SEO</legend>
     <CampoTexto {...campo('seo.title', 'Título de la página', { recomendado: 60, ayuda: 'Lo que se lee como titular en Google y en la pestaña del navegador.' })} />
     <CampoTexto {...campo('seo.description', 'Descripción', { tipo: 'area', recomendado: 155, ayuda: 'El párrafo que Google muestra debajo del título.' })} />
-  </fieldset>
-
-  <fieldset class={seccion} id={`${locale}-aulas-cabecera`}>
-    <legend class="px-2 font-serif text-xl">Cabecera</legend>
-    <CampoTexto {...campo('chrome.caption', 'Bajada del logo')} />
-    <CampoTexto {...campo('chrome.menuLabel', 'Botón de menú')} />
-    <CampoTexto {...campo('chrome.skipLink', 'Saltar al contenido')} />
   </fieldset>
 
   <fieldset class={seccion} id={`${locale}-aulas-portada`}>

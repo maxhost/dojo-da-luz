@@ -3,11 +3,6 @@
     "title": "Contactos e locais | Dojo da Luz Lisboa",
     "description": "Locais, transportes e contacto do Dojo da Luz em Benfica, Lumiar e Encarnação."
   },
-  "chrome": {
-    "caption": "Aikido · Lisboa",
-    "menuLabel": "Menu",
-    "skipLink": "Saltar para o conteúdo"
-  },
   "eyebrow": "Contactos",
   "title": "Encontra o teu dojo.",
   "lead": "Escolhe o local mais próximo ou envia-nos uma mensagem sobre aulas regulares e particulares.",

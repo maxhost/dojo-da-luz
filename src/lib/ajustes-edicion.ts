@@ -46,6 +46,7 @@ export function ajustesDesdeForm(form: FormData): unknown {
     marca: {
       logo: opcional(form, 'marca.logo'),
       favicon: opcional(form, 'marca.favicon'),
+      caption: Object.fromEntries(LOCALES.map((locale) => [locale, texto(form, `marca.caption.${locale}`)])),
       // En minusculas: `#0099FF` y `#0099ff` son el mismo color y dos diffs distintos.
       acento: texto(form, 'marca.acento').toLowerCase(),
     },

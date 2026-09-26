@@ -52,6 +52,22 @@ const seccion = 'mt-8 border border-[#d7cec0] bg-[#fbf8f2] p-4'
       ayuda="El ícono chico de la pestaña del navegador. Cuadrado y simple: se ve a 32 píxeles."
     />
 
+    <p class="mt-4 text-xs text-[#625c55]">
+      El texto chico que va bajo «Dojo da Luz» en la cabecera de las 44 páginas, uno por
+      idioma. Antes estaba repetido en cada editor de página; ahora se escribe una sola vez.
+    </p>
+    <div class="mt-2 grid gap-4 md:grid-cols-2">
+      {LOCALES.map((locale) => (
+        <CampoTexto
+          nombre={`marca.caption.${locale}`}
+          etiqueta={`Bajada del logo (${LOCALE_NAME[locale]})`}
+          valor={ajustes.marca.caption[locale]}
+          error={e(`marca.caption.${locale}`)}
+          requerido
+        />
+      ))}
+    </div>
+
     <CampoColor
       nombre="marca.acento"
       etiqueta="Color de acento"

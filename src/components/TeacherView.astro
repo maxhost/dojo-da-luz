@@ -8,7 +8,6 @@ const { locale } = Astro.props
 const c = getContent('teacher', locale)
 // Los cinco textos del borde estaban escritos aca adentro, cuatro idiomas a mano, y el pie
 // era una linea literal: no habia nada que editar aunque hubiera editor (spec 0043).
-const chrome = c.chrome
 const personSchema = {
   '@context': 'https://schema.org',
   '@type': 'Person',
@@ -26,7 +25,7 @@ const personSchema = {
 }
 ---
 
-<Base page="teacher" locale={locale} title={c.seo.title} description={c.seo.description} skipLink={chrome.skipLink} nav={siteNav(locale)} menuLabel={chrome.menuLabel} caption={chrome.caption}>
+<Base page="teacher" locale={locale} title={c.seo.title} description={c.seo.description} nav={siteNav(locale)}>
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(personSchema)} />
 
   <section class="section-pad bg-[#f6f1e8]">

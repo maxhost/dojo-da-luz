@@ -69,6 +69,25 @@ export const NAV_ARIA: Record<Locale, { principal: string; idioma: string }> = {
 }
 
 /**
+ * Boton de menu movil y link de salto al contenido: vocabulario de interfaz, igual que
+ * NAV_ARIA, que nunca cambio entre paginas. Viajaba repetido en los 44 archivos de
+ * contenido sin motivo — ninguna traduccion distinta por pagina, nunca editado.
+ */
+export const MENU_LABEL: Record<Locale, string> = {
+  pt: 'Menu',
+  es: 'Menú',
+  fr: 'Menu',
+  en: 'Menu',
+}
+
+export const SKIP_LINK: Record<Locale, string> = {
+  pt: 'Saltar para o conteúdo',
+  es: 'Saltar al contenido',
+  fr: 'Aller au contenu',
+  en: 'Skip to content',
+}
+
+/**
  * Etiquetas de los horarios de dojo (spec 0020). Los datos duros —dias, horas— viven en
  * `content/dojos.json` sin traducir; aca se traduce como se leen.
  */

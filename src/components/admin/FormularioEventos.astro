@@ -36,7 +36,7 @@ const e = (ruta: string) => errorDe(errores, ruta)
 const eventos = lista('items')
 
 const seccion = 'scroll-mt-36 rounded-xl border border-[#d7cec0] bg-white p-4 shadow-[0_1px_2px_rgba(33,31,28,0.04)] sm:p-6 xl:col-start-2'
-const navegacion = [['cabecera', 'Cabecera'], ['seo', 'SEO'], ['portada', '01 · Portada'], ['eventos', '02 · Los eventos'], ['vacio', '03 · Sin eventos']] as const
+const navegacion = [['seo', 'SEO'], ['portada', '01 · Portada'], ['eventos', '02 · Los eventos'], ['vacio', '03 · Sin eventos']] as const
 
 const campo = (nombre: string, etiqueta: string, extra: Record<string, unknown> = {}) => ({
   idPrefijo: locale,
@@ -62,12 +62,6 @@ const campo = (nombre: string, etiqueta: string, extra: Record<string, unknown> 
   )}
 
   <div class="xl:sticky xl:top-5 xl:row-span-6"><NavegacionEditor locale={locale} prefijo="eventos" titulo="Secciones de Eventos" secciones={navegacion} /></div>
-
-  <fieldset class={seccion} id={`${locale}-eventos-cabecera`}><legend class="px-2 font-serif text-xl">Cabecera</legend>
-    <CampoTexto {...campo('chrome.caption', 'Bajada del logo')} />
-    <CampoTexto {...campo('chrome.menuLabel', 'Botón de menú')} />
-    <CampoTexto {...campo('chrome.skipLink', 'Saltar al contenido')} />
-  </fieldset>
 
   <fieldset class={seccion} id={`${locale}-eventos-seo`}><legend class="px-2 font-serif text-xl">SEO</legend>
     <CampoTexto {...campo('seo.title', 'Título de la página', { recomendado: 60, ayuda: 'Lo que se lee como titular en Google y en la pestaña del navegador.' })} />

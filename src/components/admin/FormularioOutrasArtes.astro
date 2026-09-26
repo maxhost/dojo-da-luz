@@ -80,7 +80,6 @@ const renglones = (i: number, clave: string) => (artes[i]?.[clave] ?? []).join('
  */
 const numero = (i: number) => String(i).padStart(2, '0')
 const navegacion = [
-  ['cabecera', 'Cabecera'],
   ['seo', 'SEO'],
   ['portada', '01 · Portada'],
   ...artes.map((arte: any, i: number) => [`arte-${i}`, `${numero(i + 2)} · ${arte.name}`] as const),
@@ -101,12 +100,6 @@ const navegacion = [
   )}
 
   <div class="xl:sticky xl:top-5 xl:row-span-8"><NavegacionEditor locale={locale} prefijo="artes" titulo="Secciones de Outras artes" secciones={navegacion} /></div>
-
-  <fieldset class={seccion} id={`${locale}-artes-cabecera`}><legend class="px-2 font-serif text-xl">Cabecera</legend>
-    <CampoTexto {...campo('chrome.caption', 'Bajada del logo')} />
-    <CampoTexto {...campo('chrome.menuLabel', 'Botón de menú')} />
-    <CampoTexto {...campo('chrome.skipLink', 'Saltar al contenido')} />
-  </fieldset>
 
   <fieldset class={seccion} id={`${locale}-artes-seo`}><legend class="px-2 font-serif text-xl">SEO</legend>
     <CampoTexto {...campo('seo.title', 'Título de la página', { recomendado: 60, ayuda: 'Lo que se lee como titular en Google y en la pestaña del navegador.' })} />

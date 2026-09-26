@@ -34,11 +34,6 @@ export function aulasDesdeForm(form: FormData): unknown {
 
   return {
     seo: { title: t('seo.title'), description: t('seo.description') },
-    chrome: {
-      caption: t('chrome.caption'),
-      menuLabel: t('chrome.menuLabel'),
-      skipLink: t('chrome.skipLink'),
-    },
     hero: {
       eyebrow: t('hero.eyebrow'),
       title: t('hero.title'),

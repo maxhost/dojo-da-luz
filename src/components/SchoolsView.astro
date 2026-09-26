@@ -11,10 +11,9 @@ const c = getContent('schools', locale)
  * Los cinco textos del borde estaban escritos aca adentro (spec 0041). La rejilla propia de
  * la galeria tambien: ahora es la compartida, que ademas admite video (ADR-0037).
  */
-const chrome = c.chrome
 ---
 
-<Base page="schools" locale={locale} title={c.seo.title} description={c.seo.description} skipLink={chrome.skipLink} nav={siteNav(locale)} menuLabel={chrome.menuLabel} caption={chrome.caption}>
+<Base page="schools" locale={locale} title={c.seo.title} description={c.seo.description} nav={siteNav(locale)}>
   <section class="relative isolate flex min-h-[31rem] items-end overflow-hidden bg-[#292522] text-center text-white md:min-h-[36rem]">
     <img src={c.heroPhoto} alt="" class="absolute inset-0 -z-20 h-full w-full object-cover" fetchpriority="high" />
     <div aria-hidden="true" class="absolute inset-0 -z-10 bg-black/65"></div>

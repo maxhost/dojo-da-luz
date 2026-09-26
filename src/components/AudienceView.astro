@@ -15,9 +15,8 @@ const idModal = `form-${page}`
 // Los cinco textos del borde de la pagina salian de un objeto escrito aca adentro, asi que
 // no habia nada que editar aunque hubiera editor (spec 0036). Ahora viven en el contenido,
 // con la misma forma que en `/aulas`.
-const chrome = c.chrome
 ---
-<Base page={page} locale={locale} title={c.seo.title} description={c.seo.description} skipLink={chrome.skipLink} nav={siteNav(locale)} menuLabel={chrome.menuLabel} caption={chrome.caption}>
+<Base page={page} locale={locale} title={c.seo.title} description={c.seo.description} nav={siteNav(locale)}>
   <section class="section-pad bg-[#f6f1e8]"><div class="site-shell grid gap-12 md:grid-cols-[1.05fr_.95fr] md:items-center md:gap-20">
     <div><p class="section-kicker">{c.eyebrow}</p><h1 class="section-title mt-4 text-5xl md:text-7xl">{c.title}</h1><p class="mt-6 text-xl leading-9 text-[#625c55]">{c.lead}</p><button class="button mt-8 bg-acento text-white" type="button" data-modal-open={idModal}>{c.trialLabel}</button></div>
     <img src={c.photo} alt={c.photoAlt} class="max-h-[38rem] w-full object-cover" fetchpriority="high" />

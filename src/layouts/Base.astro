@@ -2,7 +2,7 @@
 import Seo from '../components/Seo.astro'
 import SocialLinks from '../components/SocialLinks.astro'
 import { getAjustes } from '../lib/ajustes'
-import { LOCALES, LOCALE_ICON, LOCALE_NAME, HREFLANG, NAV_ARIA, pathFor, type Locale, type PageKey } from '../lib/i18n'
+import { LOCALES, LOCALE_ICON, LOCALE_NAME, HREFLANG, NAV_ARIA, MENU_LABEL, SKIP_LINK, pathFor, type Locale, type PageKey } from '../lib/i18n'
 import '../styles/global.css'
 
 interface Props {
@@ -10,18 +10,21 @@ interface Props {
   locale: Locale
   title: string
   description: string
-  skipLink?: string
   nav?: { label: string; href: string }[]
-  menuLabel?: string
-  caption?: string
 }
 
-const { page, locale, title, description, skipLink = 'Saltar para o conteúdo', nav = [], menuLabel = 'Menu', caption = 'Aikido · Lisboa' } = Astro.props
+const { page, locale, title, description, nav = [] } = Astro.props
 const year = new Date().getFullYear()
 
 // El logo, el favicon, el acento, el contacto, las redes y el pie son de las 44 paginas,
 // no de una (ADR-0042): salen de content/site.json y se editan en /admin/ajustes.
+// La bajada del logo tambien (ADR-0050); el boton de menu y el skip link ni eso: nunca
+// cambiaron entre paginas, asi que son vocabulario de interfaz (MENU_LABEL, SKIP_LINK),
+// no contenido editable.
 const { marca, contacto, pie } = getAjustes()
+const caption = marca.caption[locale]
+const menuLabel = MENU_LABEL[locale]
+const skipLink = SKIP_LINK[locale]
 
 // Los nombres de los dos <nav>, en el idioma de la pagina (spec 0048).
 const navAria = NAV_ARIA[locale]

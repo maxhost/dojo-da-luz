@@ -62,11 +62,6 @@ export function audienciaDesdeForm(form: FormData): unknown {
 
   return {
     seo: { title: t('seo.title'), description: t('seo.description') },
-    chrome: {
-      caption: t('chrome.caption'),
-      menuLabel: t('chrome.menuLabel'),
-      skipLink: t('chrome.skipLink'),
-    },
     eyebrow: t('eyebrow'),
     title: t('title'),
     lead: t('lead'),

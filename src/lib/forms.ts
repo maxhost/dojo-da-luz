@@ -123,11 +123,6 @@ export function homeDesdeForm(form: FormData): unknown {
 
   return {
     seo: { title: texto(form, 'seo.title'), description: texto(form, 'seo.description') },
-    chrome: {
-      caption: texto(form, 'chrome.caption'),
-      menuLabel: texto(form, 'chrome.menuLabel'),
-      skipLink: texto(form, 'chrome.skipLink'),
-    },
     hero: {
       eyebrowLines: lineas(form, 'hero.eyebrowLines'),
       titleLines: lineas(form, 'hero.titleLines'),

@@ -46,7 +46,7 @@ const secciones = lista('sections').map((seccion: any) => ({
 }))
 
 const seccion = 'scroll-mt-36 rounded-xl border border-[#d7cec0] bg-white p-4 shadow-[0_1px_2px_rgba(33,31,28,0.04)] sm:p-6 xl:col-start-2'
-const navegacion = [['cabecera', 'Cabecera'], ['seo', 'SEO'], ['portada', '01 · Portada'], ['secciones', '02 · Secciones numeradas'], ['fundador', '03 · O-Sensei'], ['cierre', '04 · Cierre']] as const
+const navegacion = [['seo', 'SEO'], ['portada', '01 · Portada'], ['secciones', '02 · Secciones numeradas'], ['fundador', '03 · O-Sensei'], ['cierre', '04 · Cierre']] as const
 
 const campo = (nombre: string, etiqueta: string, extra: Record<string, unknown> = {}) => ({
   idPrefijo: locale,
@@ -73,12 +73,6 @@ const campo = (nombre: string, etiqueta: string, extra: Record<string, unknown> 
 
   <div class="xl:sticky xl:top-5 xl:row-span-7"><NavegacionEditor locale={locale} prefijo="aikido" titulo="Secciones de Aikido" secciones={navegacion} /></div>
 
-  <fieldset class={seccion} id={`${locale}-aikido-cabecera`}>
-    <legend class="px-2 font-serif text-xl">Cabecera</legend>
-    <CampoTexto {...campo('chrome.caption', 'Bajada del logo')} />
-    <CampoTexto {...campo('chrome.menuLabel', 'Botón de menú')} />
-    <CampoTexto {...campo('chrome.skipLink', 'Saltar al contenido')} />
-  </fieldset>
 
   <fieldset class={seccion} id={`${locale}-aikido-seo`}>
     <legend class="px-2 font-serif text-xl">SEO</legend>
