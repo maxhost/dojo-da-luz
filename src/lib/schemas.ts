@@ -320,6 +320,16 @@ export const otherArtsSchema = z.object({
   gallery: gallerySchema,
 })
 
+/**
+ * `object-position` de dos porcentajes enteros (spec 0052, ADR-0048): lo arma `CampoFoco`
+ * a partir de un clic, nunca se escribe a mano. Vacio es valido — sin foco, el recorte
+ * queda centrado, que es el comportamiento de siempre.
+ */
+const focoSchema = z.union([
+  z.literal(''),
+  z.string().regex(/^(100|[1-9]?\d)% (100|[1-9]?\d)%$/, 'no tiene forma de "X% Y%"'),
+])
+
 export const eventsSchema = z.object({
   seo: seoSchema,
   chrome: chromeSchema,
@@ -328,6 +338,7 @@ export const eventsSchema = z.object({
   items: z.array(z.object({
     title: z.string().min(1), date: z.string().min(1), location: z.string().min(1),
     description: z.string().min(1), photo: z.url(), photoAlt: z.string().min(1),
+    photoFoco: focoSchema,
   })),
   emptyText: z.string().min(1),
 })

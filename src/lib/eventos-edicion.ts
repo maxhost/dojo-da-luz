@@ -1,8 +1,8 @@
-import { eventsSchema } from './schemas'
-import { filas, texto } from './forms'
-import type { Locale } from './i18n'
-import { LISTAS_EVENTOS, SEMBRADOS_EVENTOS } from './traduccion'
-import type { Pagina } from './editor-pagina'
+import { eventsSchema } from './schemas.ts'
+import { filas, texto } from './forms.ts'
+import type { Locale } from './i18n.ts'
+import { LISTAS_EVENTOS, SEMBRADOS_EVENTOS } from './traduccion.ts'
+import type { Pagina } from './editor-pagina.ts'
 
 /**
  * `/eventos` como descriptor (spec 0039). La publicacion es generica y vive en
@@ -57,6 +57,7 @@ export function eventosDesdeForm(form: FormData): unknown {
       description: f.uno('description'),
       photo: f.uno('photo'),
       photoAlt: f.uno('photoAlt'),
+      photoFoco: f.uno('photoFoco'),
     })),
     emptyText: t('emptyText'),
   }

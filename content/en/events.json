@@ -19,7 +19,8 @@
       "location": "Dojo da Luz · Lisbon",
       "description": "An open session to experience the rhythm of practice, share the tatami and meet the dojo community.",
       "photo": "https://pub-a3e739acf38449bf92d850dfa752a522.r2.dev/medios/585a41b36921/w1600.webp",
-      "photoAlt": "Aikido practice at Dojo da Luz"
+      "photoAlt": "Aikido practice at Dojo da Luz",
+      "photoFoco": ""
     },
     {
       "title": "Technique and relationship seminar",
@@ -27,7 +28,8 @@
       "location": "Lisbon",
       "description": "A study meeting devoted to the principles of centre, listening and continuity in Aikido practice.",
       "photo": "https://pub-a3e739acf38449bf92d850dfa752a522.r2.dev/medios/668fb239ff0f/w1600.webp",
-      "photoAlt": "Teacher during Aikido practice"
+      "photoAlt": "Teacher during Aikido practice",
+      "photoFoco": ""
     },
     {
       "title": "Family practice day",
@@ -35,7 +37,8 @@
       "location": "Dojo da Luz · Lisbon",
       "description": "A morning of movement and discovery for children, teenagers and families to explore Aikido.",
       "photo": "https://pub-a3e739acf38449bf92d850dfa752a522.r2.dev/medios/24564997db05/w1600.webp",
-      "photoAlt": "Historic Aikido archive"
+      "photoAlt": "Historic Aikido archive",
+      "photoFoco": ""
     },
     {
       "title": "Weapons practice: Buki Waza",
@@ -43,7 +46,8 @@
       "location": "Lisbon",
       "description": "A bokken and jo study session to deepen distance, direction and coordination in practice.",
       "photo": "https://pub-a3e739acf38449bf92d850dfa752a522.r2.dev/medios/5238ffe4bf0a/w1600.webp",
-      "photoAlt": "Japanese weapons practice"
+      "photoAlt": "Japanese weapons practice",
+      "photoFoco": ""
     }
   ],
   "emptyText": "There are no upcoming events."

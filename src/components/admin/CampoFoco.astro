@@ -1,0 +1,139 @@
+---
+import { errorDe } from '../../lib/forms'
+
+/**
+ * Punto focal de una imagen (spec 0052, ADR-0048): un clic sobre la foto completa, sin
+ * recortar, marca que parte tiene que seguir visible cuando otra caja la recorte con
+ * `object-cover`. No sube nada ni toca pixeles — es un campo de texto oculto con
+ * `"X% Y%"`, listo para usarse como `object-position`.
+ *
+ * Vacio es un estado valido: sin foco elegido, el recorte sigue centrado (lo de hoy).
+ *
+ * Solo tiene sentido si la fila ya tiene foto (`imagenSrc`): sin imagen no hay nada que
+ * encuadrar, y el campo no se pinta.
+ */
+
+interface Props {
+  nombre: string
+  etiqueta: string
+  valor: string
+  imagenSrc: string
+  errores?: Record<string, string>
+  idPrefijo?: string
+  /** El foco lo elige solo la pestaña portuguesa (ADR-0030), igual que la foto misma. */
+  soloLectura?: boolean
+}
+
+const { nombre, etiqueta, valor, imagenSrc, errores = {}, idPrefijo, soloLectura = false } =
+  Astro.props
+
+const id = `${idPrefijo ? `${idPrefijo}-` : ''}${nombre.replace(/[^a-zA-Z0-9]+/g, '-')}`
+const error = errorDe(errores, nombre)
+
+const [xInicial, yInicial] = valor
+  ? valor.split(' ').map((n) => parseInt(n, 10) || 50)
+  : [50, 50]
+---
+
+{imagenSrc && (
+<div class="mt-3" data-campo-foco data-solo-lectura={soloLectura ? 'si' : 'no'}>
+  <p class="text-xs font-semibold text-[#625c55]">{etiqueta}</p>
+
+  {soloLectura ? (
+    <>
+      <img
+        class="mt-1.5 aspect-[4/3] w-full max-w-64 rounded-md border border-[#d7cec0] object-cover"
+        src={imagenSrc}
+        alt=""
+        style={`object-position:${valor || '50% 50%'}`}
+      />
+      <p class="mt-1 text-xs text-[#625c55]">Se cambia en la pestaña <strong>Português</strong>.</p>
+    </>
+  ) : (
+    <>
+      <p class="mt-1 text-xs text-[#625c55]">Tocá la imagen donde tiene que quedar el foco.</p>
+      <div class="mt-1.5 grid gap-3 sm:grid-cols-2">
+        <button
+          class="relative block aspect-[4/3] w-full cursor-crosshair overflow-hidden rounded-md border border-[#c9c0b3] bg-[#f6f1e8] p-0"
+          type="button"
+          aria-label={`Elegir el foco de: ${etiqueta}`}
+          data-lienzo
+        >
+          <img class="block h-full w-full object-contain" src={imagenSrc} alt="" data-imagen-completa />
+          <span
+            class="pointer-events-none absolute h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white bg-[#0099ff] shadow"
+            style={`left:${xInicial}%;top:${yInicial}%`}
+            data-punto
+            aria-hidden="true"
+          ></span>
+        </button>
+        <div>
+          <p class="text-xs text-[#625c55]">Vista previa de la tarjeta</p>
+          <img
+            class="mt-1.5 aspect-[4/3] w-full rounded-md border border-[#d7cec0] object-cover"
+            src={imagenSrc}
+            alt=""
+            style={`object-position:${valor || '50% 50%'}`}
+            data-previa
+          />
+          <button class="mt-2 text-xs font-semibold underline" type="button" data-centrar>
+            Centrar
+          </button>
+        </div>
+      </div>
+    </>
+  )}
+
+  <input id={id} name={nombre} type="hidden" value={valor} data-valor />
+
+  {error && (
+    <p class="mt-1 text-xs font-semibold text-[#b3261e]" id={`${id}-error`} role="alert">{error}</p>
+  )}
+</div>
+)}
+
+<script>
+  const inicializarCampoFoco = (campo: HTMLElement) => {
+    if (campo.dataset.inicializado === 'si') return
+    if (campo.dataset.soloLectura === 'si') return
+
+    const lienzo = campo.querySelector<HTMLButtonElement>('[data-lienzo]')
+    const punto = campo.querySelector<HTMLElement>('[data-punto]')
+    const valorInput = campo.querySelector<HTMLInputElement>('[data-valor]')
+    const previa = campo.querySelector<HTMLImageElement>('[data-previa]')
+    const centrar = campo.querySelector<HTMLButtonElement>('[data-centrar]')
+    if (!lienzo || !punto || !valorInput) return
+
+    campo.dataset.inicializado = 'si'
+
+    const aplicar = (x: number, y: number) => {
+      const valor = `${x}% ${y}%`
+      valorInput.value = valor
+      punto.style.left = `${x}%`
+      punto.style.top = `${y}%`
+      if (previa) previa.style.objectPosition = valor
+    }
+
+    lienzo.addEventListener('click', (evento) => {
+      const rect = lienzo.getBoundingClientRect()
+      const x = Math.round(((evento.clientX - rect.left) / rect.width) * 100)
+      const y = Math.round(((evento.clientY - rect.top) / rect.height) * 100)
+      aplicar(Math.min(100, Math.max(0, x)), Math.min(100, Math.max(0, y)))
+    })
+
+    centrar?.addEventListener('click', () => {
+      valorInput.value = ''
+      punto.style.left = '50%'
+      punto.style.top = '50%'
+      if (previa) previa.style.objectPosition = ''
+    })
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-campo-foco]').forEach(inicializarCampoFoco)
+  document.addEventListener('campo-foco:inicializar', (evento) => {
+    const campo = evento.target
+    if (campo instanceof HTMLElement && campo.matches('[data-campo-foco]')) {
+      inicializarCampoFoco(campo)
+    }
+  })
+</script>

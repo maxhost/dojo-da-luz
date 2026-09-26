@@ -1,4 +1,5 @@
 ---
+import CampoFoco from './CampoFoco.astro'
 import CampoImagen from './CampoImagen.astro'
 import { errorDe } from '../../lib/forms'
 
@@ -19,7 +20,9 @@ import { errorDe } from '../../lib/forms'
 interface Columna {
   campo: string
   etiqueta: string
-  tipo?: 'texto' | 'area' | 'imagen'
+  tipo?: 'texto' | 'area' | 'imagen' | 'foco'
+  /** Solo para `tipo: 'foco'` (spec 0052): que columna trae la imagen a encuadrar. */
+  campoImagen?: string
 }
 
 interface Props {
@@ -70,6 +73,16 @@ const campoClase =
               errores={errores}
               soloLectura={!editable}
             />
+          ) : columna.tipo === 'foco' ? (
+            <CampoFoco
+              idPrefijo={idPrefijo}
+              nombre={`${prefijo}[${i}].${columna.campo}`}
+              etiqueta={columna.etiqueta}
+              valor={fila[columna.campo] ?? ''}
+              imagenSrc={fila[columna.campoImagen ?? ''] ?? ''}
+              errores={errores}
+              soloLectura={!editable}
+            />
           ) : (
             <label class="block text-xs font-semibold text-[#625c55]" for={id(i, columna.campo)}>
               {columna.etiqueta}
@@ -117,6 +130,10 @@ const campoClase =
               valor=""
               errores={{}}
             />
+          ) : columna.tipo === 'foco' ? (
+            // Una fila nueva no tiene foto todavia: nada que encuadrar (CampoFoco no
+            // pinta nada sin `imagenSrc`). El foco aparece al guardar y volver a abrir.
+            null
           ) : (
             <label class="block text-xs font-semibold text-[#625c55]">
               {columna.etiqueta}

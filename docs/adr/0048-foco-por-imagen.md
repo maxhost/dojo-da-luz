@@ -21,7 +21,7 @@ cuatro:
 
 - La foto de Franck Noël en Praga **esta rota hoy**: el recorte centrado deja solo el
   cuello, sin cara. `object-top` la arregla.
-- La foto de Franck Noël en Valencia **esta bien hoy**: el recorte centrado muestra el
+- La foto de Franck Noël en Lisboa **esta bien hoy**: el recorte centrado muestra el
   retrato completo. El mismo `object-top` la rompe — arriba queda solo el titulo en
   blanco, la foto entera desaparece del recuadro.
 

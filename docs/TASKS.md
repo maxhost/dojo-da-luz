@@ -33,7 +33,7 @@ es un fix uniforme**:
   cualquier posicion del cuadro. Se simularon los 4 recortes reales: el de
   `5238ffe4bf0a` (Franck Noël, Praga) **esta roto hoy** —el recorte centrado deja solo el
   cuello, sin cara— y `object-top` lo arregla. Pero el mismo `object-top` en
-  `585a41b36921` (Franck Noël, Valencia) **rompe uno que hoy esta bien**: el recorte
+  `585a41b36921` (Franck Noël, Lisboa) **rompe uno que hoy esta bien**: el recorte
   centrado muestra su retrato completo, y arriba solo queda el titulo en blanco. Un CSS
   no puede acertar los dos a la vez porque cada flyer pone la foto en un lugar distinto
   del diseño. **Bajado a spec**: ADR-0048 (decision: punto focal, no recorte real) y

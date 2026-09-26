@@ -82,8 +82,16 @@ export const SEMBRADOS_DOJO: readonly string[] = [
  */
 export const LISTAS_EVENTOS: readonly RutaLista[] = ['items']
 
-/** La portada y la foto de cada evento: una foto no se traduce (ADR-0032). */
-export const SEMBRADOS_EVENTOS: readonly string[] = ['heroPhoto', 'items[].photo']
+/**
+ * La portada, la foto de cada evento y su foco (ADR-0032, spec 0052): una foto no se
+ * traduce, y el encuadre es parte de la foto, no del idioma — el mismo flyer no puede
+ * verse distinto en cada pestaña.
+ */
+export const SEMBRADOS_EVENTOS: readonly string[] = [
+  'heroPhoto',
+  'items[].photo',
+  'items[].photoFoco',
+]
 
 /**
  * Las listas de `/outras-artes` (spec 0040). `activities` son las tres artes —no se pueden

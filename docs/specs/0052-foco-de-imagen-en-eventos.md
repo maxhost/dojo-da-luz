@@ -20,7 +20,7 @@ real de las cuatro con `sips`):
 
 - La foto de Franck Noël en Praga (`5238ffe4bf0a`) **esta rota hoy**: el recorte centrado
   deja solo el cuello, sin cara.
-- La foto de Franck Noël en Valencia (`585a41b36921`) **esta bien hoy**: el recorte
+- La foto de Franck Noël en Lisboa (`585a41b36921`) **esta bien hoy**: el recorte
   centrado muestra el retrato completo.
 
 Un `object-position` fijo por CSS no puede acertar las dos a la vez: cada flyer pone la
@@ -120,8 +120,8 @@ arrancar si hay algo mas abierto en esos archivos.
       imagen completa, ver que la vista previa (`aspect-[4/3]`) ahora muestra la cara.
       Guardar, publicar, y comprobar en produccion que `/eventos` en portugues (y los
       otros tres idiomas) muestra la cara.
-- [ ] El evento de Valencia sin tocar: sigue con `photoFoco` vacio y el mismo recorte
-      centrado de hoy — no se rompe por la spec.
+- [ ] Los eventos de Lisboa y Valencia sin tocar: siguen con `photoFoco` vacio y el mismo
+      recorte centrado de hoy — no se rompen por la spec.
 - [ ] Un foco elegido en portugues aparece propagado (mismo valor) en es/fr/en tras
       publicar portugues, igual que `photo`.
 - [ ] Comparar el HTML construido contra `HEAD` con el hash del CSS neutralizado: solo

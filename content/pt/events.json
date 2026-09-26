@@ -19,7 +19,8 @@
       "location": "Dojo da Luz · Lisboa",
       "description": "Uma sessão aberta para conhecer o ritmo da prática, partilhar o tatami e conversar com a comunidade do dojo.",
       "photo": "https://pub-a3e739acf38449bf92d850dfa752a522.r2.dev/medios/585a41b36921/w1600.webp",
-      "photoAlt": "Prática de Aikido no Dojo da Luz"
+      "photoAlt": "Prática de Aikido no Dojo da Luz",
+      "photoFoco": ""
     },
     {
       "title": "Seminário de técnica e relação",
@@ -27,7 +28,8 @@
       "location": "Costa de Caparica",
       "description": "Um encontro de estudo dedicado aos princípios de centro, escuta e continuidade que atravessam a prática de Aikido.",
       "photo": "https://pub-a3e739acf38449bf92d850dfa752a522.r2.dev/medios/668fb239ff0f/w1600.webp",
-      "photoAlt": "Prática de Aikido com Léo Sensei"
+      "photoAlt": "Prática de Aikido com Léo Sensei",
+      "photoFoco": ""
     },
     {
       "title": "Estágio de Franck Noël - Sihan 8°dan Aikikai",
@@ -35,7 +37,8 @@
       "location": "Ginásio Esportiu Valencia (Espanha)",
       "description": "Uma manhã de movimento e descoberta para crianças, adolescentes e famílias se aproximarem do Aikido.",
       "photo": "https://pub-a3e739acf38449bf92d850dfa752a522.r2.dev/medios/24564997db05/w1600.webp",
-      "photoAlt": "Prática de Aikido com Franck Nöel Shihan (Dojo da Luz)"
+      "photoAlt": "Prática de Aikido com Franck Nöel Shihan (Dojo da Luz)",
+      "photoFoco": ""
     },
     {
       "title": "Estágio de Franck Noël - Sihan 8°dan Aikikai",
@@ -43,7 +46,8 @@
       "location": "Praga",
       "description": "Uma sessão de estudo de bokken e jo para aprofundar distância, direção e coordenação na prática.",
       "photo": "https://pub-a3e739acf38449bf92d850dfa752a522.r2.dev/medios/5238ffe4bf0a/w1600.webp",
-      "photoAlt": "Prática de Aikido com Franck Nöel Shihan (Dojo da Luz)"
+      "photoAlt": "Prática de Aikido com Franck Nöel Shihan (Dojo da Luz)",
+      "photoFoco": ""
     }
   ],
   "emptyText": "Não há eventos próximos."
