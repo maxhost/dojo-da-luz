@@ -8,6 +8,44 @@ Si una sesion se cae, se cierra o se compacta, se vuelve aca — no al chat. Hay
 Regla: **marcar `hecho` solo con verificacion real** — tests que pasan, comando corrido,
 cosa vista en pantalla. No "deberia andar".
 
+## Octava sesion (2026-09-26) — boton "Editar" en /admin/dojos
+
+**Pedido:** "podemos crear y archivar dojos, pero no podemos editarlos". El formulario de
+edicion **ya existia** desde la spec 0021 (`702f5c3`, 2026-09-21): `/admin/dojos/[slug].astro`
+reusa `FormularioDojo.astro` con `nuevo={false}` y funciona igual que el alta. El problema
+no era el codigo, era que **no habia ningun boton que lo dijera** — la unica forma de llegar
+era clickear el nombre del dojo en el listado, sin ningun afordance visual (mismo patron que
+`/admin/formularios`, que tiene el mismo gap).
+
+**Evidencia de que esto ya rompio algo real:** `git log -- content/dojos.json` muestra que el
+2026-09-24 16:48 se creo (alta, no edicion) un dojo con slug `1-`, direccion real de Benfica
+(Rua Claudio Nunes 59A), telefono y horario reales, y **2 minutos despues** (16:50) se archivo.
+Todo indica que alguien intento completar los datos de Benfica (que hoy tiene
+`direccion.calle: null`), no encontro como editar, creo un duplicado por error y lo archivo al
+darse cuenta. Esos datos reales quedan hoy archivados y sin usar en `content/dojos.json`
+(slug `1-`). **Se le preguntó al cliente si volcarlos a `benfica` y pidió dejarlo como esta**
+— no tocar contenido esta sesion.
+
+**Fix**: `src/pages/admin/dojos/index.astro` — boton "Editar" agregado junto a
+Archivar/Reactivar, mismo estilo que ya usa el resto del listado (`border border-[#d7cec0]
+bg-white px-3 py-1 text-sm`). No se toco `/admin/formularios`, que tiene el mismo gap — no fue
+lo que se pidio esta sesion.
+
+**Capitalizacion "O dojo"**: se pidio de nuevo revisar que diga "O dojo" (mayuscula) y no
+"o dojo". Verificado en el codigo (`src/lib/i18n.ts` `NAV_LABELS`, `src/layouts/Admin.astro`)
+**y en produccion** (`curl https://dojo-da-luz.vercel.app/dojo` devuelve
+`<a href="/dojo">O dojo</a>`): ya estaba bien en los dos menus antes de esta sesion, no hizo
+falta ningun cambio.
+
+**Gate**: `npm test` 103/103, `npm run build` 44 rutas, sin cambios en ninguna pagina publica
+(el unico archivo tocado es del BO).
+
+**Falta**: nada pendiente de esta sesion. Si en algun momento se decide limpiar el dojo `1-`
+archivado, los datos reales estan ahi (direccion, telefono, horario de Benfica) para volcarlos
+a mano o a pedido.
+
+---
+
 ## Handoff — cierre de la septima sesion (2026-09-25)
 
 **Once commits pusheados a `main`:** `7afd06b`, `6e0fccc`, `50a36fc`, `a85ce85`,

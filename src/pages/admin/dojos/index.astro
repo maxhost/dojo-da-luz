@@ -59,7 +59,14 @@ const fallo = params.get('fallo')
           </span>
           <span class="text-xs text-[#625c55]">orden {dojo.orden}</span>
 
-          <form class="ml-auto" method="post" action={`/admin/dojos/${dojo.slug}/archivar`}>
+          <a
+            class="ml-auto border border-[#d7cec0] bg-white px-3 py-1 text-sm no-underline"
+            href={`/admin/dojos/${dojo.slug}`}
+          >
+            Editar
+          </a>
+
+          <form method="post" action={`/admin/dojos/${dojo.slug}/archivar`}>
             <input type="hidden" name="sha" value={sha} />
             <input
               type="hidden"
