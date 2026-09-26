@@ -144,7 +144,7 @@
       "horarios": [
         {
           "audiencia": "adultos",
-          "variante": null,
+          "variante": "manana",
           "dias": [
             "mar",
             "jue"
