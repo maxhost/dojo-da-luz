@@ -2,7 +2,7 @@
   "forms": [
     {
       "id": "aula-experimental-aikido",
-      "nombre": "Aula experimental de Aikido",
+      "nombre": "Aula experimental Aikido",
       "estado": "activo",
       "submitLabel": {
         "pt": "Enviar",
@@ -266,25 +266,6 @@
             "es": null,
             "fr": null,
             "en": null
-          },
-          "presentation": null,
-          "options": []
-        },
-        {
-          "id": "c-751e6c2f",
-          "type": "text",
-          "required": true,
-          "label": {
-            "pt": "Modalidade",
-            "es": "Modalidade",
-            "fr": "Modalidade",
-            "en": "Modalidade"
-          },
-          "help": {
-            "pt": "nome da modalidade (Aikido, Tai-chi, Iaido...)",
-            "es": "nome da modalidade (Aikido, Tai-chi, Iaido...)",
-            "fr": "nome da modalidade (Aikido, Tai-chi, Iaido...)",
-            "en": "nome da modalidade (Aikido, Tai-chi, Iaido...)"
           },
           "presentation": null,
           "options": []
