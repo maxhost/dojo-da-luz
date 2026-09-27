@@ -59,8 +59,8 @@
       "dojo": "Pista Professor Moniz Pereira",
       "instalacion": "Pista de Atletismo Municipal Prof. Moniz Pereira",
       "direccion": {
-        "calle": null,
-        "codigoPostal": null,
+        "calle": "R. João Amaral",
+        "codigoPostal": "1750-423 Lisboa",
         "localidad": "Lisboa",
         "pais": "PT"
       },
