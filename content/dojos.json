@@ -2,7 +2,7 @@
   "dojos": [
     {
       "slug": "benfica",
-      "estado": "activo",
+      "estado": "archivado",
       "orden": 1,
       "nombre": "Benfica",
       "dojo": "Dojo da Luz",
