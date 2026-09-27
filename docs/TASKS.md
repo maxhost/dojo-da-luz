@@ -24,6 +24,16 @@ autor `Pablo Duran <pablo_pd@msn.com>`, que GitHub asocia a `pablo-duran2026` �
 vieja contesta `503 sin-configuracion` en `/api/formularios/enviar` (verificado con curl).
 Despues, `git remote set-url origin` al repo nuevo. Revocar el token que se pego en el chat.
 
+**Spec 0061 — logo +15%**: 62 → 71 px (`size-17.75`); la cabecera sube de 100 a 107 px. El logo
+mas ancho sumaba scroll horizontal a 1024 px (pt) y 1032 (es): compensado con `lg:max-xl:gap-3`
+en el menu. Barrido 360–1600 px en 4 idiomas contra produccion: nada empeora, y mejora (antes
+`/es` 1024 y `/fr` 1024–1072 con scroll; ahora solo `/fr` 1024–1048).
+**Pendiente, preexistente y sin spec**: la cabecera entre 1024 y ~1080 px se parte en varias
+lineas (161 px de alto) y `/fr` tiene scroll horizontal. Candidato: hamburguesa hasta `xl`.
+**Pendiente de la migracion**: el BO nuevo publica con 404 porque `GITHUB_REPO` no esta en el
+Vercel nuevo y cae al default `maxhost/dojo-da-luz` (publico: lee, pero el token de Pablo no
+puede escribir). Se le paso al cliente como cargar `GITHUB_REPO` + token con Contents RW.
+
 **Spec 0060 — logo del navbar +10%**: `src/layouts/Base.astro`, `size-14` (56 px) → `size-15.5`
 (62 px). Medido en Chromium contra produccion a 1440/1280/1024/390 px: logo 62×62 y cabecera con
 el mismo alto que antes en los cuatro anchos.

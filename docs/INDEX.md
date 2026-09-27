@@ -125,6 +125,7 @@ desactualizado es peor que no tenerlo.
 | [0058](specs/0058-menu-dojo-equipa.md) | 2026-09-27 | La entrada del menu de /dojo pasa a "O Dojo - Equipa" y sus traducciones (El Dojo - Equipo, Le Dojo - Équipe, The Dojo - Team) | **cerrada** | si | `src/lib/i18n.ts` |
 | [0059](specs/0059-copiar-formulario.md) | 2026-09-27 | Boton «Copiar» en /admin/formularios: publica un duplicado activo «<nombre> (copia)» con id nuevo y las cuatro traducciones, sin paginas asignadas, y abre su editor | **cerrada** | si | `src/lib/formularios-{copia,edicion}.ts`, `src/pages/admin/formularios/{index.astro,[id].astro,[id]/copiar.ts}` |
 | [0060](specs/0060-logo-navbar-10.md) | 2026-09-27 | El logo de la cabecera pasa de 56 a 62 px (+10%), sin cambiar el alto de la cabecera | **cerrada** | si | `src/layouts/Base.astro` |
+| [0061](specs/0061-logo-navbar-15.md) | 2026-09-27 | Logo de la cabecera 62 → 71 px (+15%); cabecera 100 → 107 px y menu apretado entre 1024 y 1279 px para no sumar scroll horizontal | **cerrada** | si | `src/layouts/Base.astro` |
 
 **"Disjunta?"** = si el trabajo no comparte archivos con otra spec abierta. Es lo que
 habilita paralelizar. Lo decide la spec, no el orquestador en runtime.
