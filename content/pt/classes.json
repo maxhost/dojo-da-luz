@@ -71,28 +71,24 @@
     ]
   },
   "children": {
-    "label": "Crianças e adolescentes",
-    "title": "Crescer com atenção, disciplina e alegria.",
+    "label": "Uma pratica para todos",
+    "title": "Trabalha o corpo, acalma a mente, melhora o espírito",
     "paragraphs": [
-      "Sem competição, cada criança evolui ao seu ritmo com o apoio do professor.",
-      "As aulas combinam técnica, jogos e exercícios para trabalhar o corpo, a concentração, a imaginação, a flexibilidade e os reflexos."
+      "O Aikido é uma arte marcial japonesa inclusiva e não competitiva, ideal para todas as idades, géneros e condições físicas.",
+      "Melhora o equilíbrio, a coordenação motora, a flexibilidade e a concentração. \r\nControlo mental: Ajuda a gerir o stress e fomenta a serenidade, a autoconfiança e o respeito mútuo"
     ],
     "facts": [
       {
         "label": "Idades 1",
-        "value": "Dos 5 aos 17 anos"
+        "value": "Dos 5 aos 99 anos"
       },
       {
-        "label": "Benfica",
-        "value": "Segunda a sexta · 18h30–19h30"
-      },
-      {
-        "label": "Encarnação",
-        "value": "Terças e quintas · 17h30–18h30"
+        "label": "Promoções",
+        "value": "Descontos para estudantes, desempregados e membros da mesma familia"
       },
       {
         "label": "Objetivo",
-        "value": "Técnica Aikikai, disciplina, diversão e partilha"
+        "value": "Técnica Aikikai, disciplina, auto-controle e harmonia"
       }
     ]
   },
