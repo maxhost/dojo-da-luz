@@ -49,15 +49,19 @@ export const qaSchema = z.object({
  *
  * Del video se guarda **el enlace, no el id**: es lo que el cliente pego y lo que el
  * editor le tiene que devolver. El id lo saca `idDeYoutube` al renderizar.
+ *
+ * El `alt` es **opcional** (spec 0064): exigirlo frenaba la publicacion de un video por no
+ * haberle escrito descripcion. Vacio, la foto se pinta como decorativa (`alt=""`) y el video
+ * se anuncia como «Vídeo» en su idioma (`GaleriaMedios`).
  */
 export const galleryItemSchema = z.discriminatedUnion('type', [
-  z.object({ type: z.literal('image'), src: z.url(), alt: z.string().min(1) }),
+  z.object({ type: z.literal('image'), src: z.url(), alt: z.string() }),
   z.object({
     type: z.literal('youtube'),
     url: z
       .url()
       .refine(esEnlaceDeYoutube, 'no es un enlace de YouTube: pega la direccion del video'),
-    alt: z.string().min(1),
+    alt: z.string(),
   }),
 ])
 

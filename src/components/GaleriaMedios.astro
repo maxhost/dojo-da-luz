@@ -1,6 +1,7 @@
 ---
 import { idDeYoutube, miniaturaDeYoutube, paginaDeYoutube } from '../lib/youtube'
 import type { ContentOf } from '../lib/content'
+import type { Locale } from '../lib/i18n'
 
 /**
  * La galeria de las paginas de audiencia (ADR-0031). De largo libre: el grid se arma segun
@@ -29,9 +30,13 @@ interface Props {
    * el padding de la franja.
    */
   margenSuperior?: boolean
+  locale: Locale
 }
 
-const { items: medios, margenSuperior = true } = Astro.props
+const { items: medios, margenSuperior = true, locale } = Astro.props
+
+/** El nombre de un video sin descripcion: un enlace sin nombre no se puede anunciar (spec 0064). */
+const VIDEO: Record<Locale, string> = { pt: 'Vídeo', es: 'Vídeo', fr: 'Vidéo', en: 'Video' }
 const cuantos = medios.length
 
 /**
@@ -73,7 +78,7 @@ const destacaElPrimero = cuantos >= 5
             data-youtube={idDeYoutube(item.url)}
             target="_blank"
             rel="noopener"
-            aria-label={item.alt}
+            aria-label={item.alt || VIDEO[locale]}
           >
             {/* `hqdefault` viene en 4:3 con franjas negras: el `scale` las saca del cuadro. */}
             <img

@@ -24,6 +24,14 @@ autor `Pablo Duran <pablo_pd@msn.com>`, que GitHub asocia a `pablo-duran2026` �
 vieja contesta `503 sin-configuracion` en `/api/formularios/enviar` (verificado con curl).
 Despues, `git remote set-url origin` al repo nuevo. Revocar el token que se pego en el chat.
 
+**Spec 0064 — descripcion de galeria opcional**: publicar un video sin «Descripción» en Escolas
+daba `gallery.4.alt: Too small`. `alt` sin minimo en `galleryItemSchema`; foto sin descripcion →
+`alt=""`, video → `aria-label` «Vídeo/Vidéo/Video» por idioma. Verificado con test (rojo sin el
+arreglo), publicando el video del cliente en una copia del editor de Escolas (modo disco, 4
+idiomas) y en el build. **Falta**: que el cliente vuelva a publicar su video en produccion.
+**Revision del camino formId (sin cambios de codigo)**: selector → publicar → 4 idiomas → build
+verificado en los 6 editores; produccion coincide con el contenido en las 24 paginas.
+
 **Spec 0063 — /contactos envia por Resend**: el formulario de maqueta (`ContactForm.astro`, boton
 apagado) se reemplazo por la entidad `contacto` de `content/forms.json` pintada con
 `FormularioPublico`; `contact.json` cambia `fields` por `formId`; el editor de Contactos tiene el
