@@ -57,7 +57,7 @@
       "orden": 2,
       "nombre": "Lumiar",
       "dojo": "Pista Professor Moniz Pereira",
-      "instalacion": "Pista de Atletismo Municipal Prof. Moniz Pereira",
+      "instalacion": null,
       "direccion": {
         "calle": "R. João Amaral",
         "codigoPostal": "1750-423 Lisboa",
