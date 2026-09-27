@@ -24,6 +24,20 @@ autor `Pablo Duran <pablo_pd@msn.com>`, que GitHub asocia a `pablo-duran2026` �
 vieja contesta `503 sin-configuracion` en `/api/formularios/enviar` (verificado con curl).
 Despues, `git remote set-url origin` al repo nuevo. Revocar el token que se pego en el chat.
 
+**Spec 0059 — «Copiar» formulario**: layout aprobado por el cliente (copia activa, nombre
+«<nombre> (copia)»). `copiaDe` + `copiarFormulario` en `src/lib/formularios-copia.ts` (aparte por
+el hook de 300 lineas; `publicarLista`/`sinRepositorio` exportados desde `formularios-edicion.ts`),
+endpoint `src/pages/admin/formularios/[id]/copiar.ts`, boton en el listado y aviso `?copiado=si`.
+`/code-review high` encontro 9 puntos: arreglados el doble clic (boton se apaga al enviar,
+`pageshow` lo prende) y el id con guion final en nombres largos (`idDesdeNombre` recorta antes de
+limpiar; afecta tambien al alta). No tocados, con motivo en el chat: lectura inmediata tras
+commit (mismo patron que el alta desde la 0050), «(copia) (copia)», y el sha comparado tarde /
+duplicacion con `cambiarEstado` (eficiencia, no correccion). **Verificado**: `npm test` 110/110,
+build ok, endpoint en modo disco sobre worktree (copia 2→3 con 4 idiomas identicos, original
+intacto; doble clic y id inexistente no escriben), doble clic en Chromium → 1 POST. Auth por
+middleware, CSRF por `checkOrigin` (default true, Astro 7) + cookie `SameSite=Lax`.
+**Falta**: que el cliente lo pruebe en el BO real (login).
+
 **Spec 0058 — menu "O Dojo - Equipa"**: `NAV_LABELS.dojo` en `src/lib/i18n.ts` (es "El Dojo -
 Equipo", fr "Le Dojo - Équipe", en "The Dojo - Team"). Build: 44/44 paginas con la etiqueta
 nueva, 0 con la vieja. Cabecera medida con Playwright a 1440/1280/1024/390 px: identica a

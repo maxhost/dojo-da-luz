@@ -28,7 +28,7 @@ export type Guardado =
   | { ok: true; id: string }
   | { ok: false; estado: number; aviso: string; errores: Record<string, string> }
 
-function sinRepositorio(error: unknown): Guardado {
+export function sinRepositorio(error: unknown): Guardado {
   const detalle = error instanceof Error ? error.message : String(error)
   return { ok: false, estado: 503, aviso: `No se pudo publicar: ${detalle}`, errores: {} }
 }
@@ -77,14 +77,15 @@ export function idDesdeNombre(nombre: string, existentes: string[]): string {
       .replace(/[̀-ͯ]/g, '')
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-|-$/g, '')
-      .slice(0, 48) || 'formulario'
+      // Recortar antes de limpiar: al reves, el corte puede dejar un guion al final.
+      .slice(0, 48)
+      .replace(/^-+|-+$/g, '') || 'formulario'
 
   return existentes.includes(base) ? nuevoId(base) : base
 }
 
 /** Escribe la lista entera: valida el archivo completo, no solo el formulario tocado. */
-async function publicarLista(
+export async function publicarLista(
   forms: Formulario[],
   sha: string,
   mensaje: string,

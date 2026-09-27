@@ -33,6 +33,10 @@ if (Astro.url.searchParams.get('creado') === 'si') {
   }
 }
 
+if (Astro.url.searchParams.get('copiado') === 'si') {
+  aviso = { tipo: 'ok', texto: 'Copia creada. Estás editando la copia: el original no cambió.' }
+}
+
 const publicado = Astro.url.searchParams.get('publicado')
 if (publicado && isLocale(publicado)) {
   activo = publicado

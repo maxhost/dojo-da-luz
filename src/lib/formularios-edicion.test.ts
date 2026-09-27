@@ -214,3 +214,10 @@ test('el id sale del nombre y solo lleva sufijo si ya existe', () => {
   assert.equal(idDesdeNombre('Contacto geral', ['outro']), 'contacto-geral')
   assert.match(idDesdeNombre('Contacto geral', ['contacto-geral']), /^contacto-geral-[0-9a-f]{8}$/)
 })
+
+test('un nombre largo no deja el id terminado en guion', () => {
+  const id = idDesdeNombre(`${'a'.repeat(47)} (copia)`, [])
+
+  assert.equal(id, 'a'.repeat(47))
+  assert.doesNotMatch(idDesdeNombre(`${'b'.repeat(46)} - x`, []), /-$/)
+})

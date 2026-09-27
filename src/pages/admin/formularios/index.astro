@@ -71,7 +71,19 @@ const fallo = params.get('fallo')
             {formulario.fields.length} {formulario.fields.length === 1 ? 'campo' : 'campos'}
           </span>
 
-          <form class="ml-auto" method="post" action={`/admin/formularios/${formulario.id}/archivar`}>
+          <form class="ml-auto" method="post" action={`/admin/formularios/${formulario.id}/copiar`} data-una-vez>
+            <input type="hidden" name="sha" value={sha} />
+            <button
+              class="min-h-11 rounded-md border border-[#c9c0b3] bg-white px-4 text-sm font-semibold hover:bg-[#f1ece4] disabled:cursor-wait disabled:opacity-45"
+              type="submit"
+              data-enviando="Copiando…"
+              title="Crea «(copia)» con los mismos campos y traducciones, y abre su editor."
+            >
+              Copiar
+            </button>
+          </form>
+
+          <form method="post" action={`/admin/formularios/${formulario.id}/archivar`}>
             <input type="hidden" name="sha" value={sha} />
             <input type="hidden" name="estado" value={formulario.estado === 'activo' ? 'archivado' : 'activo'} />
             <button
@@ -93,4 +105,27 @@ const fallo = params.get('fallo')
       </li>
     ))}
   </ul>
+
+  <script>
+    /**
+     * Un segundo clic en «Copiar» llegaria con el `sha` viejo y daria conflicto, y el
+     * navegador mostraria esa respuesta y no la del primero: el cliente veria un error
+     * sobre una copia que si se creo, y volveria a copiar (spec 0059). El boton se apaga al
+     * enviar; `pageshow` lo prende si se vuelve con «Atras» desde la cache del navegador.
+     */
+    const formularios = document.querySelectorAll<HTMLFormElement>('form[data-una-vez]')
+
+    formularios.forEach((form) => {
+      const boton = form.querySelector<HTMLButtonElement>('button[type="submit"]')!
+      const texto = boton.textContent
+      form.addEventListener('submit', () => {
+        boton.disabled = true
+        boton.textContent = boton.dataset.enviando ?? texto
+      })
+      window.addEventListener('pageshow', () => {
+        boton.disabled = false
+        boton.textContent = texto
+      })
+    })
+  </script>
 </Admin>
