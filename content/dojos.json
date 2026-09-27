@@ -93,11 +93,11 @@
       "estado": "activo",
       "orden": 3,
       "nombre": "Encarnação",
-      "dojo": "Dojo da Luz",
+      "dojo": "Associação Desportiva e Cultural da Encarnação e Olivais (ADCEO)",
       "instalacion": null,
       "direccion": {
-        "calle": null,
-        "codigoPostal": null,
+        "calle": "R. da Q.ta de Santa Maria 17",
+        "codigoPostal": "1800-325 Lisboa",
         "localidad": "Lisboa",
         "pais": "PT"
       },
