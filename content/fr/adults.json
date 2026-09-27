@@ -64,8 +64,13 @@
       },
       {
         "type": "image",
-        "src": "https://pub-a3e739acf38449bf92d850dfa752a522.r2.dev/medios/6df091671744/w1600.webp",
+        "src": "https://pub-a3e739acf38449bf92d850dfa752a522.r2.dev/medios/6278fd70ecc6/w1600.webp",
         "alt": "Cours d'Aïkido pour adultes sur le tatami"
+      },
+      {
+        "type": "image",
+        "src": "https://pub-a3e739acf38449bf92d850dfa752a522.r2.dev/medios/0f40f6cc491a/w1600.webp",
+        "alt": "Estágio Endo Shihan Granada"
       }
     ]
   },
