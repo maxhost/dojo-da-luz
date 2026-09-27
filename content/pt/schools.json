@@ -43,6 +43,11 @@
       "type": "image",
       "src": "https://pub-a3e739acf38449bf92d850dfa752a522.r2.dev/medios/96fbc037d431/w1600.webp",
       "alt": "Aikido nas escolas Dojo da Luz - Escola amarela"
+    },
+    {
+      "type": "youtube",
+      "url": "https://www.youtube.com/watch?v=605V86CSZac",
+      "alt": "Aikido escolas Dojo da Luz-Aikido Lisboa"
     }
   ]
 }
