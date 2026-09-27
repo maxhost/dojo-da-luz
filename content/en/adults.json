@@ -90,6 +90,10 @@
       {
         "pregunta": "How much is the monthly fee for adults?",
         "respuesta": "The standard adult fee at Dojo da Luz is €35 per month, with up to three classes a week. The trial class costs €5, deducted from the first monthly fee."
+      },
+      {
+        "pregunta": "Não tenho boa forma física, poderia iniciar-me na arte marcial do Aikido?",
+        "respuesta": "Sim, cada praticante evolui ao seu ritmo, sem pressas, desfrutando de cada aula e progredindo progressivamente."
       }
     ]
   }
