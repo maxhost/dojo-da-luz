@@ -122,6 +122,7 @@ desactualizado es peor que no tenerlo.
 | [0055](specs/0055-cabecera-al-ajustes.md) | 2026-09-26 | Se borra "Cabecera" de los once editores de pagina; la bajada del logo pasa a /admin/ajustes por idioma y el boton de menu / skip link se hardcodean en i18n.ts | **cerrada** | si | `content/**/*.json`, `content/site.json`, `src/lib/{i18n,ajustes,ajustes-edicion,schemas,forms,*-edicion}.ts`, `src/layouts/Base.astro`, `src/components/**` |
 | [0056](specs/0056-variante-manana.md) | 2026-09-26 | Se agrega "Mañana" como cuarta variante de horario (enum cerrado), con su traduccion en las cuatro locales | **cerrada** | si | `src/lib/i18n.ts` |
 | [0057](specs/0057-formularios-filas-sin-recargar.md) | 2026-09-27 | El editor de formularios agrega una tarjeta «Nuevo» y una opción vacía más en el navegador al escribir en la última, sin publicar para ver la siguiente | **cerrada** | si | `src/components/admin/EditorCamposFormulario.astro` |
+| [0058](specs/0058-menu-dojo-equipa.md) | 2026-09-27 | La entrada del menu de /dojo pasa a "O Dojo - Equipa" y sus traducciones (El Dojo - Equipo, Le Dojo - Équipe, The Dojo - Team) | **cerrada** | si | `src/lib/i18n.ts` |
 
 **"Disjunta?"** = si el trabajo no comparte archivos con otra spec abierta. Es lo que
 habilita paralelizar. Lo decide la spec, no el orquestador en runtime.

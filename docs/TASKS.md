@@ -24,6 +24,16 @@ autor `Pablo Duran <pablo_pd@msn.com>`, que GitHub asocia a `pablo-duran2026` �
 vieja contesta `503 sin-configuracion` en `/api/formularios/enviar` (verificado con curl).
 Despues, `git remote set-url origin` al repo nuevo. Revocar el token que se pego en el chat.
 
+**Spec 0058 — menu "O Dojo - Equipa"**: `NAV_LABELS.dojo` en `src/lib/i18n.ts` (es "El Dojo -
+Equipo", fr "Le Dojo - Équipe", en "The Dojo - Team"). Build: 44/44 paginas con la etiqueta
+nueva, 0 con la vieja. Cabecera medida con Playwright a 1440/1280/1024/390 px: identica a
+produccion antes del cambio. **Preexistente, no tocado**: a 1024 px la cabecera sube a 161 px
+(pt) y en `/fr` hay scroll horizontal — ya pasaba con "O dojo".
+
+**Parqueado**: el cliente vio el modal de confirmacion de un formulario sin el mensaje. No se
+reprodujo en Chromium ni WebKit (movil y escritorio, 13 modales, endpoint simulado con 200):
+el mensaje aparece siempre. Se le pidio URL, navegador y captura.
+
 **Spec 0057 — editor de formularios**: solo habia una tarjeta «Nuevo» y una opcion vacia
 pintadas por el servidor; la siguiente aparecia recien al publicar. Fix en
 `EditorCamposFormulario.astro`: escribir en la ultima vacia agrega otra (clon de una copia

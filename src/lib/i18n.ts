@@ -49,10 +49,10 @@ export const ROUTES: Record<PageKey, Record<Locale, string>> = {
 export const PAGES = Object.keys(ROUTES) as PageKey[]
 
 const NAV_LABELS: Record<Locale, Record<'home' | 'classes' | 'aikido' | 'dojo' | 'events' | 'schools' | 'otherArts' | 'contact', string>> = {
-  pt: { home: 'Início', classes: 'Aulas', aikido: 'A prática', dojo: 'O dojo', events: 'Eventos', schools: 'Escolas', otherArts: 'Outras artes', contact: 'Contacto' },
-  es: { home: 'Inicio', classes: 'Clases', aikido: 'La práctica', dojo: 'El dojo', events: 'Eventos', schools: 'Escuelas', otherArts: 'Otras artes', contact: 'Contacto' },
-  fr: { home: 'Accueil', classes: 'Cours', aikido: 'La pratique', dojo: 'Le dojo', events: 'Événements', schools: 'Écoles', otherArts: 'Autres arts', contact: 'Contact' },
-  en: { home: 'Home', classes: 'Classes', aikido: 'The practice', dojo: 'The dojo', events: 'Events', schools: 'Schools', otherArts: 'Other arts', contact: 'Contact' },
+  pt: { home: 'Início', classes: 'Aulas', aikido: 'A prática', dojo: 'O Dojo - Equipa', events: 'Eventos', schools: 'Escolas', otherArts: 'Outras artes', contact: 'Contacto' },
+  es: { home: 'Inicio', classes: 'Clases', aikido: 'La práctica', dojo: 'El Dojo - Equipo', events: 'Eventos', schools: 'Escuelas', otherArts: 'Otras artes', contact: 'Contacto' },
+  fr: { home: 'Accueil', classes: 'Cours', aikido: 'La pratique', dojo: 'Le Dojo - Équipe', events: 'Événements', schools: 'Écoles', otherArts: 'Autres arts', contact: 'Contact' },
+  en: { home: 'Home', classes: 'Classes', aikido: 'The practice', dojo: 'The Dojo - Team', events: 'Events', schools: 'Schools', otherArts: 'Other arts', contact: 'Contact' },
 }
 
 /**
