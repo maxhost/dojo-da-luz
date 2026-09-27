@@ -24,6 +24,17 @@ autor `Pablo Duran <pablo_pd@msn.com>`, que GitHub asocia a `pablo-duran2026` �
 vieja contesta `503 sin-configuracion` en `/api/formularios/enviar` (verificado con curl).
 Despues, `git remote set-url origin` al repo nuevo. Revocar el token que se pego en el chat.
 
+**Incidente 2026-09-27 — se siguio publicando en el BO viejo**: entre 13:13 y 14:25 hubo 10
+commits de contenido en `maxhost/dojo-da-luz` (BO de `dojo-da-luz.vercel.app/admin`): formularios
+«Aula experimental Aikido crianças» y «Tai chi», y cambios en Home, Crianças, Outras artes, Escolas,
+Adultos y Professor. No llegaban a `www.aikido-duran.com` (Vercel nuevo, repo de Pablo): explica el
+«elegi un formulario y no aparece». Con OK del cliente se combinaron en el repo nuevo; Escolas
+chocaba (los dos BO agregaron el mismo video) y quedo la version del BO viejo (foto + video una
+vez). Verificado: build combinado = HTML del Vercel viejo en 44/44 paginas.
+**Pendiente importante**: apagar el BO viejo (sacar `GITHUB_TOKEN` del Vercel viejo o pausar ese
+proyecto) para que no vuelva a pasar. Mientras exista, cada push del agente tiene que traer
+`origin/main` y el repo nuevo antes de subir.
+
 **Spec 0064 — descripcion de galeria opcional**: publicar un video sin «Descripción» en Escolas
 daba `gallery.4.alt: Too small`. `alt` sin minimo en `galleryItemSchema`; foto sin descripcion →
 `alt=""`, video → `aria-label` «Vídeo/Vidéo/Video» por idioma. Verificado con test (rojo sin el
