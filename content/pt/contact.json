@@ -7,6 +7,10 @@
   "title": "Encontra o teu dojo.",
   "lead": "Escolhe o local mais próximo ou envia-nos uma mensagem sobre aulas regulares e particulares.",
   "transport": {
+    "1-": [
+      "A paragem Igreja de Benfica (na Estrada de Benfica) é servida pelas carreiras de autocarro da Carris 716, 729, 746, 758 e 1701 (Carris Metropolitana).",
+      "Comboio paragem Benfica"
+    ],
     "benfica": [
       "Igreja de Benfica",
       "Autocarros 716, 729, 746 e 758"
