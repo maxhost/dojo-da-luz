@@ -294,7 +294,7 @@
           "type": "singleChoice",
           "required": true,
           "label": {
-            "pt": "Que dojo te interesa?",
+            "pt": "Mi dojo favorito",
             "es": "Que dojo te interesa?",
             "fr": "Que dojo te interesa?",
             "en": "Que dojo te interesa?"
