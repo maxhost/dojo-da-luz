@@ -1,22 +1,22 @@
 ---
-import { PRESENTACIONES, TIPOS, esSeleccion, type Campo, type Tipo } from '../../lib/formularios'
-import { errorDe } from '../../lib/forms'
+import FilaOpcion from './FilaOpcion.astro'
+import TarjetaCampo from './TarjetaCampo.astro'
+import type { Campo } from '../../lib/formularios'
 import type { Locale } from '../../lib/i18n'
+import { AGREGAR } from '../../lib/editor-campos-estilos'
 
 /**
- * La lista de campos de un formulario (spec 0050).
+ * La lista de campos de un formulario (spec 0050, 0062).
  *
  * En portugues se crea, se ordena y se borra; en los otros tres idiomas la estructura se ve
  * pero no se toca, y solo se traducen los textos (ADR-0046). La diferencia es una sola
  * variable, `editable`, porque los dos lados tienen que mostrar **lo mismo**: si el orden o
  * el tipo no se vieran al traducir, traducir seria a ciegas.
  *
- * El orden se cambia con flechas: mueven la tarjeta en la pantalla y reescriben el `orden`
- * de todas. Se publica al guardar, como cualquier otro cambio — una flecha no commitea.
- *
- * Para agregar no hace falta JavaScript: al final siempre hay una tarjeta vacia de mas, y
- * se agrega llenandola. Una vacia que nadie toco no se publica. Con JavaScript, escribir en
- * la ultima vacia agrega otra debajo, para no tener que publicar entre alta y alta (spec 0057).
+ * Agregar es explicito: «+ Agregar campo» y «+ Agregar opción» instancian las dos
+ * plantillas de abajo. Antes habia una tarjeta vacia siempre al final (spec 0057) y el
+ * cliente no la encontraba: con nueve campos quedaba a 6000 px, parecia un campo mas y la
+ * opcion vacia caia debajo de la barra de publicar.
  */
 
 interface Props {
@@ -28,27 +28,6 @@ interface Props {
 
 const { campos, locale, errores, editable } = Astro.props
 
-const ETIQUETA_TIPO: Record<Tipo, string> = {
-  text: 'Texto corto',
-  textarea: 'Texto largo',
-  email: 'E-mail',
-  tel: 'Teléfono',
-  number: 'Número',
-  date: 'Fecha',
-  singleChoice: 'Elegir una opción',
-  multipleChoice: 'Elegir varias opciones',
-}
-
-const ETIQUETA_PRESENTACION: Record<string, string> = {
-  radio: 'Botones (se ven todas)',
-  select: 'Lista desplegable',
-  checkbox: 'Casillas (se ven todas)',
-  multiSelect: 'Lista desplegable múltiple',
-}
-
-const PRESENTACIONES_TODAS = [...PRESENTACIONES.singleChoice, ...PRESENTACIONES.multipleChoice]
-
-/** La tarjeta vacia del final: existe solo en portugues, que es quien crea campos. */
 const vacio: Campo = {
   id: '',
   type: 'text',
@@ -58,284 +37,43 @@ const vacio: Campo = {
   presentation: null,
   options: [],
 }
-
-const filas = editable ? [...campos, vacio] : campos
-const e = (ruta: string) => errorDe(errores, ruta)
-const control =
-  'mt-2 min-h-11 w-full rounded-md border border-[#c9c0b3] bg-white px-3.5 py-2.5 text-base leading-6 outline-none transition hover:border-[#9f968a] focus:border-[#0099ff] focus:ring-2 focus:ring-[#0099ff]/20 sm:text-sm'
-const flecha =
-  'inline-flex h-11 w-11 items-center justify-center rounded-md border border-[#c9c0b3] bg-white text-lg leading-none text-[#625c55] hover:bg-[#f1ece4] disabled:opacity-35'
 ---
 
-<div class="mt-5 grid gap-4" data-lista-campos>
-  {filas.map((campo, i) => {
-    const nuevo = campo.id === ''
-    const seleccion = esSeleccion(campo.type)
-    const sinTraducir = !editable && campo.label[locale] === campo.label.pt
+<div data-editor-campos>
+  {editable && (
+    <div class="mt-4">
+      <button class={AGREGAR} type="button" data-agregar-campo>+ Agregar campo</button>
+    </div>
+  )}
 
-    return (
-      <article
-        class="rounded-xl border border-[#d7cec0] bg-[#fbf8f2] p-4 sm:p-5"
-        data-campo-fila
-        data-indice={i}
-        data-vacia={nuevo || undefined}
-      >
-        <div class="flex flex-wrap items-center gap-2">
-          <span class="rounded-md bg-[#eee9df] px-2 py-1 text-xs font-bold text-[#625c55]" data-numero>
-            {nuevo ? 'Nuevo' : `Campo ${i + 1}`}
-          </span>
-          {!editable && (
-            <span class="text-xs text-[#625c55]">
-              {ETIQUETA_TIPO[campo.type]}
-              {campo.required ? ' · obligatorio' : ' · opcional'}
-            </span>
-          )}
-          {sinTraducir && (
-            <span class="rounded-md bg-[#fdf1d6] px-2 py-1 text-xs font-bold text-[#8a6100]">Sin traducir</span>
-          )}
+  <div class="mt-5 grid gap-4" data-lista-campos data-siguiente={campos.length}>
+    {campos.map((campo, i) => (
+      <TarjetaCampo campo={campo} i={i} locale={locale} errores={errores} editable={editable} />
+    ))}
+  </div>
 
-          {editable && !nuevo && (
-            <div class="ml-auto flex gap-1">
-              <button class={flecha} type="button" data-mover="arriba" aria-label={`Subir el campo ${i + 1}`}>↑</button>
-              <button class={flecha} type="button" data-mover="abajo" aria-label={`Bajar el campo ${i + 1}`}>↓</button>
-            </div>
-          )}
-        </div>
+  {editable && (
+    <>
+      <div class="mt-4">
+        <button class={AGREGAR} type="button" data-agregar-campo>+ Agregar campo</button>
+      </div>
 
-        <input type="hidden" name={`fields[${i}].id`} value={campo.id} />
-        <input type="hidden" name={`fields[${i}].orden`} value={i} data-orden />
+      <p class="mt-4 text-sm leading-6 text-[#625c55]">
+        Usá <strong>+ Agregar campo</strong> y <strong>+ Agregar opción</strong>. Para sacar algo ya
+        publicado, tildá «Quitar». Nada se publica hasta que aprietes Publicar.
+      </p>
 
-        <div class="mt-4 grid gap-4 sm:grid-cols-2">
-          <label class="block text-sm font-semibold sm:col-span-2">
-            Pregunta o etiqueta
-            <input
-              class={control}
-              name={`fields[${i}].label`}
-              value={campo.label[locale] ?? ''}
-              placeholder={nuevo ? 'Escribí acá para agregar un campo' : undefined}
-            />
-          </label>
-
-          <label class="block text-sm font-semibold sm:col-span-2">
-            Ayuda debajo del campo <span class="font-normal text-[#625c55]">(opcional)</span>
-            <input class={control} name={`fields[${i}].help`} value={campo.help[locale] ?? ''} />
-          </label>
-
-          {editable ? (
-            <>
-              <label class="block text-sm font-semibold">
-                Tipo de respuesta
-                <select class={control} name={`fields[${i}].type`} data-tipo>
-                  {TIPOS.map((tipo) => (
-                    <option value={tipo} selected={tipo === campo.type}>{ETIQUETA_TIPO[tipo]}</option>
-                  ))}
-                </select>
-              </label>
-
-              <div class="flex items-end gap-5 pb-1">
-                <label class="flex min-h-11 items-center gap-2 text-sm font-semibold">
-                  <input class="size-5" type="checkbox" name={`fields[${i}].required`} value="si" checked={campo.required} />
-                  Obligatorio
-                </label>
-                {!nuevo && (
-                  <label class="flex min-h-11 items-center gap-2 text-sm font-semibold text-[#b3261e]">
-                    <input class="size-5" type="checkbox" name={`fields[${i}].quitar`} value="si" />
-                    Quitar
-                  </label>
-                )}
-              </div>
-            </>
-          ) : (
-            <input type="hidden" name={`fields[${i}].type`} value={campo.type} />
-          )}
-        </div>
-
-        <div class="mt-4" data-opciones hidden={!seleccion}>
-          {editable && (
-            <label class="block text-sm font-semibold">
-              Cómo se ven las opciones
-              <select class={control} name={`fields[${i}].presentation`} data-presentacion>
-                {PRESENTACIONES_TODAS.map((p) => (
-                  <option
-                    value={p}
-                    selected={p === campo.presentation}
-                    data-para={PRESENTACIONES.singleChoice.includes(p) ? 'singleChoice' : 'multipleChoice'}
-                  >
-                    {ETIQUETA_PRESENTACION[p]}
-                  </option>
-                ))}
-              </select>
-            </label>
-          )}
-
-          <p class="mt-4 text-sm font-semibold">Opciones</p>
-          <div class="mt-2 grid gap-2" data-lista-opciones>
-            {[...campo.options, ...(editable ? [{ id: '', label: campo.label }] : [])].map((opcion, j) => {
-              const opcionNueva = opcion.id === ''
-              return (
-                <div class="flex items-center gap-2" data-opcion-fila data-vacia={opcionNueva || undefined}>
-                  <input type="hidden" name={`options[${i}][${j}].id`} value={opcion.id} />
-                  <input type="hidden" name={`options[${i}][${j}].orden`} value={j} data-orden />
-                  <input
-                    class={`${control} mt-0`}
-                    name={`options[${i}][${j}].label`}
-                    value={opcionNueva ? '' : (opcion.label[locale] ?? '')}
-                    placeholder={opcionNueva ? 'Escribí acá para agregar una opción' : undefined}
-                  />
-                  {editable && !opcionNueva && (
-                    <>
-                      <button class={flecha} type="button" data-mover-opcion="arriba" aria-label="Subir la opción">↑</button>
-                      <button class={flecha} type="button" data-mover-opcion="abajo" aria-label="Bajar la opción">↓</button>
-                      <label class="flex h-11 items-center gap-1 text-xs font-semibold text-[#b3261e]">
-                        <input class="size-5" type="checkbox" name={`options[${i}][${j}].quitar`} value="si" />
-                        Quitar
-                      </label>
-                    </>
-                  )}
-                </div>
-              )
-            })}
-          </div>
-        </div>
-
-        {(e(`fields.${i}`) || e(`fields.${i}.label`)) && (
-          <p class="mt-3 text-sm font-semibold text-[#b3261e]">{e(`fields.${i}.label`) ?? e(`fields.${i}`)}</p>
-        )}
-      </article>
-    )
-  })}
+      {/* Lo que instancia el navegador. Un <template> no se envia con el formulario. */}
+      <template data-plantilla-campo>
+        <TarjetaCampo campo={vacio} i="__I__" locale={locale} errores={{}} editable />
+      </template>
+      <template data-plantilla-opcion>
+        <FilaOpcion opcion={null} i="__I__" j="__J__" locale={locale} editable />
+      </template>
+    </>
+  )}
 </div>
 
-{editable && (
-  <p class="mt-4 text-sm leading-6 text-[#625c55]">
-    Para <strong>agregar</strong> un campo, escribí en la tarjeta «Nuevo» del final. Para
-    <strong> quitarlo</strong>, tildá «Quitar». Nada de esto se publica hasta que aprietes el
-    botón de publicar.
-  </p>
-)}
-
 <script>
-  /**
-   * Las flechas mueven la tarjeta y reescriben el `orden` de todas en el nuevo orden de la
-   * pantalla. El servidor ordena por ese campo, asi que lo que se ve es lo que se publica.
-   *
-   * El `name` de cada control **no** se renumera a proposito: lleva el id del campo y el
-   * indice con el que viajan sus opciones, y renumerarlo las despegaria de su campo.
-   */
-  const renumerar = (lista: Element) => {
-    lista.querySelectorAll<HTMLElement>(':scope > [data-campo-fila], :scope > [data-opcion-fila]').forEach(
-      (fila, i) => {
-        const orden = fila.querySelector<HTMLInputElement>('[data-orden]')
-        if (orden) orden.value = String(i)
-        const numero = fila.querySelector<HTMLElement>('[data-numero]')
-        if (numero && numero.textContent?.startsWith('Campo')) numero.textContent = `Campo ${i + 1}`
-      },
-    )
-  }
-
-  const mover = (fila: HTMLElement, hacia: string) => {
-    const hermano = hacia === 'arriba' ? fila.previousElementSibling : fila.nextElementSibling
-    if (!hermano) return
-    // La tarjeta vacia del final se queda al final: es el lugar para agregar.
-    if (hacia === 'abajo' && !hermano.querySelector('[data-mover], [data-mover-opcion]')) return
-
-    if (hacia === 'arriba') hermano.before(fila)
-    else hermano.after(fila)
-
-    if (fila.parentElement) renumerar(fila.parentElement)
-    fila.querySelector<HTMLElement>(`[data-mover="${hacia}"], [data-mover-opcion="${hacia}"]`)?.focus()
-  }
-
-  /** Cambia el indice de todos los `name` de una fila; el resto del nombre queda igual. */
-  const reindexar = (fila: HTMLElement, de: RegExp, a: string) => {
-    fila.querySelectorAll<HTMLElement>('[name]').forEach((control) => {
-      control.setAttribute('name', control.getAttribute('name')!.replace(de, a))
-    })
-  }
-
-  // Copias intactas de las vacias, tomadas antes de que nadie escriba: clonar la fila que se
-  // esta llenando arrastraria su texto y su tipo elegido.
-  const campoVacio = document.querySelector<HTMLElement>('[data-campo-fila][data-vacia]')?.cloneNode(true) as
-    | HTMLElement
-    | undefined
-  const opcionVacia = document.querySelector<HTMLElement>('[data-opcion-fila][data-vacia]')?.cloneNode(true) as
-    | HTMLElement
-    | undefined
-
-  /**
-   * Escribir en la ultima vacia la vuelve una fila mas y agrega otra vacia debajo. El indice
-   * nuevo es la cantidad de filas de la lista: el servidor pinta `0..n-1` y aca se suman en
-   * orden, asi que nunca repite uno. Una agregada que se vuelve a vaciar no se publica.
-   */
-  const agregarDebajo = (fila: HTMLElement) => {
-    const lista = fila.parentElement!
-    fila.removeAttribute('data-vacia')
-
-    if (fila.matches('[data-opcion-fila]')) {
-      if (!opcionVacia) return
-      const nueva = opcionVacia.cloneNode(true) as HTMLElement
-      const campo = /^options\[(\d+)\]/.exec(fila.querySelector('[name]')!.getAttribute('name')!)![1]
-      const j = lista.querySelectorAll(':scope > [data-opcion-fila]').length
-      reindexar(nueva, /^options\[\d+\]\[\d+\]/, `options[${campo}][${j}]`)
-      fila.after(nueva)
-    } else {
-      if (!campoVacio) return
-      const nueva = campoVacio.cloneNode(true) as HTMLElement
-      const i = lista.querySelectorAll(':scope > [data-campo-fila]').length
-      reindexar(nueva, /^fields\[\d+\]/, `fields[${i}]`)
-      reindexar(nueva, /^options\[\d+\]/, `options[${i}]`)
-      nueva.dataset.indice = String(i)
-      fila.after(nueva)
-    }
-
-    renumerar(lista)
-  }
-
-  // Todo por delegacion: las tarjetas agregadas despues de cargar tienen que responder igual.
-  document.querySelectorAll<HTMLElement>('[data-lista-campos]').forEach((lista) => {
-    lista.addEventListener('click', (evento) => {
-      const boton = (evento.target as HTMLElement).closest<HTMLElement>('[data-mover], [data-mover-opcion]')
-      if (!boton) return
-
-      const campo = boton.dataset.mover
-      if (campo) mover(boton.closest<HTMLElement>('[data-campo-fila]')!, campo)
-
-      const opcion = boton.dataset.moverOpcion
-      if (opcion) mover(boton.closest<HTMLElement>('[data-opcion-fila]')!, opcion)
-    })
-
-    lista.addEventListener('input', (evento) => {
-      const entrada = evento.target as HTMLInputElement
-      if (!entrada.name?.endsWith('.label') || entrada.value.trim() === '') return
-
-      const fila =
-        entrada.closest<HTMLElement>('[data-opcion-fila]') ?? entrada.closest<HTMLElement>('[data-campo-fila]')
-      if (fila?.hasAttribute('data-vacia')) agregarDebajo(fila)
-    })
-
-    // El bloque de opciones aparece y desaparece con el tipo, sin esperar a publicar.
-    lista.addEventListener('change', (evento) => {
-      const tipo = evento.target as HTMLSelectElement
-      if (!tipo.matches('[data-tipo]')) return
-
-      const fila = tipo.closest<HTMLElement>('[data-campo-fila]')!
-      const opciones = fila.querySelector<HTMLElement>('[data-opciones]')
-      const presentacion = fila.querySelector<HTMLSelectElement>('[data-presentacion]')
-
-      const seleccion = tipo.value === 'singleChoice' || tipo.value === 'multipleChoice'
-      if (opciones) opciones.hidden = !seleccion
-      if (!presentacion || !seleccion) return
-
-      // Solo las presentaciones que ese tipo admite: el servidor lo corrige igual, pero
-      // ofrecer una imposible es pedirle al cliente que adivine.
-      let primera: HTMLOptionElement | null = null
-      for (const opcion of presentacion.options) {
-        const sirve = opcion.dataset.para === tipo.value
-        opcion.hidden = !sirve
-        opcion.disabled = !sirve
-        if (sirve && !primera) primera = opcion
-      }
-      if (presentacion.selectedOptions[0]?.disabled && primera) primera.selected = true
-    })
-  })
+  import '../../lib/editor-campos-navegador.ts'
 </script>

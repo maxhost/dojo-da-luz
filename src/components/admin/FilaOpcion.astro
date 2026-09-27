@@ -1,0 +1,47 @@
+---
+import type { Locale } from '../../lib/i18n'
+import type { Opcion } from '../../lib/formularios'
+import { CONTROL, DESCARTAR, FLECHA } from '../../lib/editor-campos-estilos'
+
+/**
+ * Una opción de un campo de selección (spec 0062). `opcion` null es una fila nueva: la pinta
+ * la plantilla del editor con índices `__I__`/`__J__` que el navegador reemplaza.
+ */
+
+interface Props {
+  opcion: Opcion | null
+  i: number | string
+  j: number | string
+  locale: Locale
+  editable: boolean
+}
+
+const { opcion, i, j, locale, editable } = Astro.props
+const nombre = (campo: string) => `options[${i}][${j}].${campo}`
+---
+
+<div class="flex items-center gap-2" data-opcion-fila>
+  <input type="hidden" name={nombre('id')} value={opcion?.id ?? ''} />
+  <input type="hidden" name={nombre('orden')} value={j} data-orden />
+  <input
+    class={`${CONTROL} mt-0`}
+    name={nombre('label')}
+    value={opcion?.label[locale] ?? ''}
+    placeholder={opcion ? undefined : 'Nueva opción'}
+    aria-label="Texto de la opción"
+  />
+  {editable && (
+    <>
+      <button class={FLECHA} type="button" data-mover-opcion="arriba" aria-label="Subir la opción">↑</button>
+      <button class={FLECHA} type="button" data-mover-opcion="abajo" aria-label="Bajar la opción">↓</button>
+      {opcion ? (
+        <label class="flex h-11 items-center gap-1 text-xs font-semibold text-[#b3261e]">
+          <input class="size-5" type="checkbox" name={nombre('quitar')} value="si" />
+          Quitar
+        </label>
+      ) : (
+        <button class={DESCARTAR} type="button" data-descartar aria-label="Descartar la opción nueva">✕</button>
+      )}
+    </>
+  )}
+</div>

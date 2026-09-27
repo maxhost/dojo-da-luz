@@ -24,6 +24,19 @@ autor `Pablo Duran <pablo_pd@msn.com>`, que GitHub asocia a `pablo-duran2026` �
 vieja contesta `503 sin-configuracion` en `/api/formularios/enviar` (verificado con curl).
 Despues, `git remote set-url origin` al repo nuevo. Revocar el token que se pego en el chat.
 
+**Spec 0062 — botones «+ Agregar campo» / «+ Agregar opción»**: el cliente reporto que no habia
+como agregar. El mecanismo de la 0057 funcionaba (verificado de nuevo sobre una copia de la
+pantalla real) pero no se descubria: tarjeta «Nuevo» al fondo de ~6000 px y opcion vacia tapada
+por la barra de Publicar. Layout aprobado por el cliente. `EditorCamposFormulario.astro` partido
+en `TarjetaCampo.astro` + `FilaOpcion.astro` + `<template>`s; script en
+`src/lib/editor-campos-navegador.ts`. **Verificado** en Chromium sobre copias temporales de
+`/admin/formularios/[id]` y `/nuevo` (ya borradas): 13/13 chequeos (botones arriba/abajo, foco,
+✕, indices sin repetir tras descartar, tipo en tarjeta nueva, opcion no tapada por la barra,
+traduccion sin botones, alta vacia), sin errores de JS; FormData → `formularioDesdeForm` +
+schema da exactamente lo escrito sin lo descartado. `npm test` 110/110, build ok. **Falta**: que
+el cliente lo pruebe en el BO real — y el BO nuevo solo publica cuando tenga `GITHUB_REPO` +
+token con escritura (ver 0061).
+
 **Spec 0061 — logo +15%**: 62 → 71 px (`size-17.75`); la cabecera sube de 100 a 107 px. El logo
 mas ancho sumaba scroll horizontal a 1024 px (pt) y 1032 (es): compensado con `lg:max-xl:gap-3`
 en el menu. Barrido 360–1600 px en 4 idiomas contra produccion: nada empeora, y mejora (antes
