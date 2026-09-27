@@ -76,6 +76,11 @@
         "type": "image",
         "src": "https://pub-a3e739acf38449bf92d850dfa752a522.r2.dev/medios/6df091671744/w1600.webp",
         "alt": "Antes do keiko Dojo da Luz - Aikido Lisboa"
+      },
+      {
+        "type": "youtube",
+        "url": "https://www.youtube.com/watch?v=jF4yKwP58cI",
+        "alt": "Aikido Lisboa - Dojo da Luz"
       }
     ]
   },
