@@ -317,6 +317,25 @@
               }
             }
           ]
+        },
+        {
+          "id": "c-5b3fd4c6",
+          "type": "text",
+          "required": false,
+          "label": {
+            "pt": "Cual es tu nombre?",
+            "es": "Cual es tu nombre?",
+            "fr": "Cual es tu nombre?",
+            "en": "Cual es tu nombre?"
+          },
+          "help": {
+            "pt": null,
+            "es": null,
+            "fr": null,
+            "en": null
+          },
+          "presentation": null,
+          "options": []
         }
       ]
     }
