@@ -271,6 +271,54 @@
           "options": []
         }
       ]
+    },
+    {
+      "id": "contacto-prueba",
+      "nombre": "contacto-prueba",
+      "estado": "activo",
+      "submitLabel": {
+        "pt": "Enviar",
+        "es": "Enviar",
+        "fr": "Enviar",
+        "en": "Enviar"
+      },
+      "successMessage": {
+        "pt": "Muchas gracias te contactaremos pronto",
+        "es": "Muchas gracias te contactaremos pronto",
+        "fr": "Muchas gracias te contactaremos pronto",
+        "en": "Muchas gracias te contactaremos pronto"
+      },
+      "fields": [
+        {
+          "id": "c-f3e8afce",
+          "type": "singleChoice",
+          "required": true,
+          "label": {
+            "pt": "Que dojo te interesa?",
+            "es": "Que dojo te interesa?",
+            "fr": "Que dojo te interesa?",
+            "en": "Que dojo te interesa?"
+          },
+          "help": {
+            "pt": null,
+            "es": null,
+            "fr": null,
+            "en": null
+          },
+          "presentation": "select",
+          "options": [
+            {
+              "id": "o-ec61a3c2",
+              "label": {
+                "pt": "Dojo 1, Dojo 2, Dojo 3",
+                "es": "Dojo 1, Dojo 2, Dojo 3",
+                "fr": "Dojo 1, Dojo 2, Dojo 3",
+                "en": "Dojo 1, Dojo 2, Dojo 3"
+              }
+            }
+          ]
+        }
+      ]
     }
   ]
 }
