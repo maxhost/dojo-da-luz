@@ -24,6 +24,10 @@ autor `Pablo Duran <pablo_pd@msn.com>`, que GitHub asocia a `pablo-duran2026` �
 vieja contesta `503 sin-configuracion` en `/api/formularios/enviar` (verificado con curl).
 Despues, `git remote set-url origin` al repo nuevo. Revocar el token que se pego en el chat.
 
+**Spec 0060 — logo del navbar +10%**: `src/layouts/Base.astro`, `size-14` (56 px) → `size-15.5`
+(62 px). Medido en Chromium contra produccion a 1440/1280/1024/390 px: logo 62×62 y cabecera con
+el mismo alto que antes en los cuatro anchos.
+
 **Spec 0059 — «Copiar» formulario**: layout aprobado por el cliente (copia activa, nombre
 «<nombre> (copia)»). `copiaDe` + `copiarFormulario` en `src/lib/formularios-copia.ts` (aparte por
 el hook de 300 lineas; `publicarLista`/`sinRepositorio` exportados desde `formularios-edicion.ts`),
