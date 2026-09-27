@@ -292,10 +292,8 @@ export const contactSchema = z.object({
   eyebrow: z.string().min(1), title: z.string().min(1), lead: z.string().min(1),
   transport: z.record(z.string(), z.array(z.string().min(1))),
   privateTitle: z.string().min(1), privateText: z.string().min(1), formTitle: z.string().min(1),
-  fields: z.object({
-    name: z.string().min(1), email: z.string().min(1), subject: z.string().min(1),
-    message: z.string().min(1), submit: z.string().min(1), pending: z.string().min(1),
-  }),
+  // El formulario de la pagina es una entidad de `content/forms.json` (ADR-0046, spec 0063).
+  formId: z.string().min(1),
 })
 
 export const otherArtsSchema = z.object({

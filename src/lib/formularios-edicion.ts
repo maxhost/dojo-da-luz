@@ -13,7 +13,7 @@ import { leerContenido, publicar, serializar } from './publish.ts'
 
 export const RUTA_FORMS = 'content/forms.json'
 
-/** Las cuatro paginas cuyo CTA apunta a un formulario propio (ADR-0046). */
+/** Las paginas que usan un formulario propio (ADR-0046); Contactos lo pinta en la pagina (spec 0063). */
 export const PAGINAS_CON_FORMULARIO = [
   { archivo: 'home', titulo: 'Home', campo: 'threshold.formId' },
   { archivo: 'classes', titulo: 'Aulas', campo: 'trial.formId' },
@@ -22,6 +22,7 @@ export const PAGINAS_CON_FORMULARIO = [
   { archivo: 'other-arts', titulo: 'Outras artes · Shiatsu', campo: 'activities.0.formId' },
   { archivo: 'other-arts', titulo: 'Outras artes · Iaido', campo: 'activities.1.formId' },
   { archivo: 'other-arts', titulo: 'Outras artes · Tai Chi Chuan', campo: 'activities.2.formId' },
+  { archivo: 'contact', titulo: 'Contactos', campo: 'formId' },
 ] as const
 
 export type Guardado =

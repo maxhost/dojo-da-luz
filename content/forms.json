@@ -628,6 +628,101 @@
           "options": []
         }
       ]
+    },
+    {
+      "id": "contacto",
+      "nombre": "Contacto",
+      "estado": "activo",
+      "submitLabel": {
+        "pt": "Enviar mensagem",
+        "es": "Enviar mensaje",
+        "fr": "Envoyer le message",
+        "en": "Send message"
+      },
+      "successMessage": {
+        "pt": "Obrigado pela tua mensagem. Respondemos em breve.",
+        "es": "Gracias por tu mensaje. Te respondemos pronto.",
+        "fr": "Merci pour ton message. Nous te répondons bientôt.",
+        "en": "Thanks for your message. We'll get back to you soon."
+      },
+      "fields": [
+        {
+          "id": "c-nome",
+          "type": "text",
+          "required": true,
+          "label": {
+            "pt": "Nome",
+            "es": "Nombre",
+            "fr": "Nom",
+            "en": "Name"
+          },
+          "help": {
+            "pt": null,
+            "es": null,
+            "fr": null,
+            "en": null
+          },
+          "presentation": null,
+          "options": []
+        },
+        {
+          "id": "c-email",
+          "type": "email",
+          "required": true,
+          "label": {
+            "pt": "Email",
+            "es": "Email",
+            "fr": "Email",
+            "en": "Email"
+          },
+          "help": {
+            "pt": null,
+            "es": null,
+            "fr": null,
+            "en": null
+          },
+          "presentation": null,
+          "options": []
+        },
+        {
+          "id": "c-assunto",
+          "type": "text",
+          "required": true,
+          "label": {
+            "pt": "Assunto",
+            "es": "Asunto",
+            "fr": "Objet",
+            "en": "Subject"
+          },
+          "help": {
+            "pt": null,
+            "es": null,
+            "fr": null,
+            "en": null
+          },
+          "presentation": null,
+          "options": []
+        },
+        {
+          "id": "c-mensagem",
+          "type": "textarea",
+          "required": true,
+          "label": {
+            "pt": "Mensagem",
+            "es": "Mensaje",
+            "fr": "Message",
+            "en": "Message"
+          },
+          "help": {
+            "pt": null,
+            "es": null,
+            "fr": null,
+            "en": null
+          },
+          "presentation": null,
+          "options": []
+        }
+      ]
     }
   ]
 }

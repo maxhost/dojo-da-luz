@@ -157,7 +157,8 @@ export const SEMBRADOS_PROFESSOR: readonly string[] = ['photo']
  * escrito a proposito dice mas que una omision.
  */
 export const LISTAS_CONTACTOS: readonly RutaLista[] = []
-export const SEMBRADOS_CONTACTOS: readonly string[] = []
+/** El formulario de `/contactos`: la misma entidad en los cuatro idiomas (ADR-0046, spec 0063). */
+export const SEMBRADOS_CONTACTOS: readonly string[] = ['formId']
 
 /** El formulario del CTA de `/aulas`: la misma entidad en los cuatro idiomas (ADR-0046). */
 export const SEMBRADOS_AULAS: readonly string[] = ['trial.formId']

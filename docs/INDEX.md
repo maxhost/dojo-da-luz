@@ -127,6 +127,7 @@ desactualizado es peor que no tenerlo.
 | [0060](specs/0060-logo-navbar-10.md) | 2026-09-27 | El logo de la cabecera pasa de 56 a 62 px (+10%), sin cambiar el alto de la cabecera | **cerrada** | si | `src/layouts/Base.astro` |
 | [0061](specs/0061-logo-navbar-15.md) | 2026-09-27 | Logo de la cabecera 62 → 71 px (+15%); cabecera 100 → 107 px y menu apretado entre 1024 y 1279 px para no sumar scroll horizontal | **cerrada** | si | `src/layouts/Base.astro` |
 | [0062](specs/0062-botones-agregar-campo-opcion.md) | 2026-09-27 | Botones «+ Agregar campo» (arriba y abajo) y «+ Agregar opción» en el editor de formularios, con ✕ para descartar lo no publicado; supersede el mecanismo de la 0057 | **cerrada** | si | `src/components/admin/{EditorCamposFormulario,TarjetaCampo,FilaOpcion}.astro`, `src/lib/editor-campos-{navegador,estilos}.ts` |
+| [0063](specs/0063-contactos-formulario-resend.md) | 2026-09-27 | /contactos pinta la entidad «contacto» de forms.json y envia por el mismo endpoint y Resend que los modales; el editor de Contactos elige el formulario con un selector | **cerrada** | si | `content/forms.json`, `content/*/contact.json`, `src/lib/{schemas,contactos-edicion,traduccion,formularios-edicion}.ts`, `src/components/ContactView.astro`, `src/components/admin/FormularioContactos.astro`, `src/pages/admin/paginas/contactos.astro` |
 
 **"Disjunta?"** = si el trabajo no comparte archivos con otra spec abierta. Es lo que
 habilita paralelizar. Lo decide la spec, no el orquestador en runtime.

@@ -23,12 +23,5 @@
   "privateTitle": "Cours particuliers",
   "privateText": "Renseignez-vous sur les cours particuliers et les formats adaptés à vos disponibilités.",
   "formTitle": "Écrivez-nous",
-  "fields": {
-    "name": "Nom",
-    "email": "Email",
-    "subject": "Objet",
-    "message": "Message",
-    "submit": "Envoyer le message",
-    "pending": "Envoi en attente de la configuration de l'email du dojo."
-  }
+  "formId": "contacto"
 }

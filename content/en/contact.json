@@ -23,12 +23,5 @@
   "privateTitle": "Private classes",
   "privateText": "Ask about private classes and formats adapted to your availability.",
   "formTitle": "Write to us",
-  "fields": {
-    "name": "Name",
-    "email": "Email",
-    "subject": "Subject",
-    "message": "Message",
-    "submit": "Send message",
-    "pending": "Sending is pending configuration of the dojo email address."
-  }
+  "formId": "contacto"
 }

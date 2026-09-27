@@ -72,13 +72,6 @@ export function contactosDesdeForm(form: FormData): unknown {
     privateTitle: t('privateTitle'),
     privateText: t('privateText'),
     formTitle: t('formTitle'),
-    fields: {
-      name: t('fields.name'),
-      email: t('fields.email'),
-      subject: t('fields.subject'),
-      message: t('fields.message'),
-      submit: t('fields.submit'),
-      pending: t('fields.pending'),
-    },
+    formId: t('formId'),
   }
 }

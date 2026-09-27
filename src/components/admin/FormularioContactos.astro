@@ -1,4 +1,5 @@
 ---
+import CampoFormulario from './CampoFormulario.astro'
 import CampoTexto from './CampoTexto.astro'
 import NavegacionEditor from './NavegacionEditor.astro'
 import { errorDe } from '../../lib/forms'
@@ -21,9 +22,12 @@ interface Props {
   shas: Record<Locale, string>
   /** Ruta de lista → indices sin traducir. Esta pagina no tiene listas: llega vacio. */
   sinTraducir: Record<string, number[]>
+  /** Los formularios publicados, para elegir cuál pinta la página (spec 0063). */
+  formularios: { id: string; nombre: string; estado: 'activo' | 'archivado' }[]
 }
 
-const { locale, datos, errores, shas } = Astro.props
+const { locale, datos, errores, shas, formularios = [] } = Astro.props
+const esPortugues = locale === 'pt'
 
 const v = (ruta: string): string =>
   ruta.split('.').reduce<any>((actual, clave) => actual?.[clave], datos) ?? ''
@@ -116,12 +120,15 @@ const campo = (nombre: string, etiqueta: string, extra: Record<string, unknown> 
 
   <fieldset class={seccion} id={`${locale}-contactos-formulario`}><legend class="px-2 font-serif text-xl">04 · Formulario</legend>
     <CampoTexto {...campo('formTitle', 'Título')} />
-    <CampoTexto {...campo('fields.name', 'Etiqueta · nombre')} />
-    <CampoTexto {...campo('fields.email', 'Etiqueta · email')} />
-    <CampoTexto {...campo('fields.subject', 'Etiqueta · asunto')} />
-    <CampoTexto {...campo('fields.message', 'Etiqueta · mensaje')} />
-    <CampoTexto {...campo('fields.submit', 'Texto del botón')} />
-    <CampoTexto {...campo('fields.pending', 'Aviso debajo del botón', { tipo: 'area', ayuda: 'El formulario todavía no envía: falta configurar el email del dojo. Esta línea es lo que explica por qué el botón está apagado.' })} />
+    <CampoFormulario
+      nombre="formId"
+      etiqueta="Formulario de la página"
+      valor={v('formId')}
+      formularios={formularios}
+      editable={esPortugues}
+      error={e('formId')}
+      idPrefijo={locale}
+    />
   </fieldset>
 
   <div class="sticky bottom-3 z-10 rounded-xl border border-[#d7cec0] bg-[#fbf8f2]/95 p-3 shadow-[0_8px_30px_rgba(33,31,28,0.16)] backdrop-blur xl:col-start-2 xl:flex xl:items-center xl:justify-between">

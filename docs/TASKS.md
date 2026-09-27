@@ -24,6 +24,14 @@ autor `Pablo Duran <pablo_pd@msn.com>`, que GitHub asocia a `pablo-duran2026` �
 vieja contesta `503 sin-configuracion` en `/api/formularios/enviar` (verificado con curl).
 Despues, `git remote set-url origin` al repo nuevo. Revocar el token que se pego en el chat.
 
+**Spec 0063 — /contactos envia por Resend**: el formulario de maqueta (`ContactForm.astro`, boton
+apagado) se reemplazo por la entidad `contacto` de `content/forms.json` pintada con
+`FormularioPublico`; `contact.json` cambia `fields` por `formId`; el editor de Contactos tiene el
+selector; Contactos entra en `PAGINAS_CON_FORMULARIO`. **Verificado**: HTML contra `HEAD` →
+cambian solo las 4 paginas de contacto; servidor valida y arma el correo; Chromium envia y
+muestra la confirmacion en pt y es; el editor del BO republica los 4 archivos byte a byte.
+`npm test` 110/110, build ok. **Falta**: mensaje real desde produccion que llegue al Gmail.
+
 **Spec 0062 — botones «+ Agregar campo» / «+ Agregar opción»**: el cliente reporto que no habia
 como agregar. El mecanismo de la 0057 funcionaba (verificado de nuevo sobre una copia de la
 pantalla real) pero no se descubria: tarjeta «Nuevo» al fondo de ~6000 px y opcion vacia tapada

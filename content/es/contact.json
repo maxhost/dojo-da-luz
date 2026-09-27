@@ -23,12 +23,5 @@
   "privateTitle": "Clases particulares",
   "privateText": "Consulta las clases particulares y los formatos adaptados a tu disponibilidad.",
   "formTitle": "Escríbenos",
-  "fields": {
-    "name": "Nombre",
-    "email": "Email",
-    "subject": "Asunto",
-    "message": "Mensaje",
-    "submit": "Enviar mensaje",
-    "pending": "Envío pendiente de configurar el email del dojo."
-  }
+  "formId": "contacto"
 }

@@ -27,12 +27,5 @@
   "privateTitle": "Aulas particulares",
   "privateText": "Informa-te sobre aulas particulares e formatos adaptados à tua disponibilidade.",
   "formTitle": "Fala connosco",
-  "fields": {
-    "name": "Nome",
-    "email": "Email",
-    "subject": "Assunto",
-    "message": "Mensagem",
-    "submit": "Enviar mensagem",
-    "pending": "Envio pendente de configuração do email do dojo."
-  }
+  "formId": "contacto"
 }
