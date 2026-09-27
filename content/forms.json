@@ -669,6 +669,224 @@
           "options": []
         }
       ]
+    },
+    {
+      "id": "aula-experimental-aikido-criancas-copia",
+      "nombre": "Aula experimental Aikido crianças (copia)",
+      "estado": "activo",
+      "submitLabel": {
+        "pt": "Enviar",
+        "es": "Enviar",
+        "fr": "Enviar",
+        "en": "Enviar"
+      },
+      "successMessage": {
+        "pt": "Recebemos a sua inscrição. Entramos em contacto consigo para confirmar o dia e a hora. Arigato Gozaimashita!",
+        "es": "Recebemos a sua inscrição. Entramos em contacto consigo para confirmar o dia e a hora. Arigato Gozaimashita!",
+        "fr": "Recebemos a sua inscrição. Entramos em contacto consigo para confirmar o dia e a hora. Arigato Gozaimashita!",
+        "en": "Recebemos a sua inscrição. Entramos em contacto consigo para confirmar o dia e a hora. Arigato Gozaimashita!"
+      },
+      "fields": [
+        {
+          "id": "nome",
+          "type": "text",
+          "required": true,
+          "label": {
+            "pt": "Nome",
+            "es": "Nome",
+            "fr": "Nome",
+            "en": "Nome"
+          },
+          "help": {
+            "pt": null,
+            "es": null,
+            "fr": null,
+            "en": null
+          },
+          "presentation": null,
+          "options": []
+        },
+        {
+          "id": "idade",
+          "type": "number",
+          "required": true,
+          "label": {
+            "pt": "Idade",
+            "es": "Idade",
+            "fr": "Idade",
+            "en": "Idade"
+          },
+          "help": {
+            "pt": null,
+            "es": null,
+            "fr": null,
+            "en": null
+          },
+          "presentation": null,
+          "options": []
+        },
+        {
+          "id": "telefone",
+          "type": "tel",
+          "required": true,
+          "label": {
+            "pt": "Contacto telefónico",
+            "es": "Contacto telefónico",
+            "fr": "Contacto telefónico",
+            "en": "Contacto telefónico"
+          },
+          "help": {
+            "pt": null,
+            "es": null,
+            "fr": null,
+            "en": null
+          },
+          "presentation": null,
+          "options": []
+        },
+        {
+          "id": "email",
+          "type": "email",
+          "required": true,
+          "label": {
+            "pt": "E-mail",
+            "es": "E-mail",
+            "fr": "E-mail",
+            "en": "E-mail"
+          },
+          "help": {
+            "pt": null,
+            "es": null,
+            "fr": null,
+            "en": null
+          },
+          "presentation": null,
+          "options": []
+        },
+        {
+          "id": "praticou",
+          "type": "singleChoice",
+          "required": true,
+          "label": {
+            "pt": "Já praticou anteriormente?",
+            "es": "Já praticou Aikido anteriormente?",
+            "fr": "Já praticou Aikido anteriormente?",
+            "en": "Já praticou Aikido anteriormente?"
+          },
+          "help": {
+            "pt": null,
+            "es": null,
+            "fr": null,
+            "en": null
+          },
+          "presentation": "radio",
+          "options": [
+            {
+              "id": "sim",
+              "label": {
+                "pt": "Sim",
+                "es": "Sim",
+                "fr": "Sim",
+                "en": "Sim"
+              }
+            },
+            {
+              "id": "nao",
+              "label": {
+                "pt": "Não",
+                "es": "Não",
+                "fr": "Não",
+                "en": "Não"
+              }
+            }
+          ]
+        },
+        {
+          "id": "dia",
+          "type": "date",
+          "required": true,
+          "label": {
+            "pt": "Escolha o dia do mês a que pretendem vir fazer a sua aula",
+            "es": "Escolha o dia do mês a que pretendem vir fazer a sua aula",
+            "fr": "Escolha o dia do mês a que pretendem vir fazer a sua aula",
+            "en": "Escolha o dia do mês a que pretendem vir fazer a sua aula"
+          },
+          "help": {
+            "pt": null,
+            "es": null,
+            "fr": null,
+            "en": null
+          },
+          "presentation": null,
+          "options": []
+        },
+        {
+          "id": "horario",
+          "type": "singleChoice",
+          "required": true,
+          "label": {
+            "pt": "Escolha a hora e o dia da semana para fazer a aula experimental",
+            "es": "Escolha a hora e o dia da semana para fazer a aula experimental",
+            "fr": "Escolha a hora e o dia da semana para fazer a aula experimental",
+            "en": "Escolha a hora e o dia da semana para fazer a aula experimental"
+          },
+          "help": {
+            "pt": null,
+            "es": null,
+            "fr": null,
+            "en": null
+          },
+          "presentation": "select",
+          "options": [
+            {
+              "id": "ter-2000",
+              "label": {
+                "pt": "terça-feira 18h30-19h30 (Dojo da Luz - Benfica)",
+                "es": "terça-feira 20h00-21h15 (Dojo da Luz - Benfica)",
+                "fr": "terça-feira 20h00-21h15 (Dojo da Luz - Benfica)",
+                "en": "terça-feira 20h00-21h15 (Dojo da Luz - Benfica)"
+              }
+            },
+            {
+              "id": "qui-2000",
+              "label": {
+                "pt": "quarta-feira 18h30-19h30 (Dojo da Luz - Benfica)",
+                "es": "quinta-feira 20h00-21h15 (Dojo da Luz - Benfica)",
+                "fr": "quinta-feira 20h00-21h15 (Dojo da Luz - Benfica)",
+                "en": "quinta-feira 20h00-21h15 (Dojo da Luz - Benfica)"
+              }
+            },
+            {
+              "id": "ter-0700",
+              "label": {
+                "pt": "sexta-feira 18h30-19h30 (Dojo da Luz - Benfica)",
+                "es": "terça-feira 7h00-8h00 (Dojo da Luz - Benfica)",
+                "fr": "terça-feira 7h00-8h00 (Dojo da Luz - Benfica)",
+                "en": "terça-feira 7h00-8h00 (Dojo da Luz - Benfica)"
+              }
+            }
+          ]
+        },
+        {
+          "id": "observacoes",
+          "type": "textarea",
+          "required": false,
+          "label": {
+            "pt": "Observações (Caso tenha alguma questão de saúde, p.f. informe o professor de Aikido antes da aula começar)",
+            "es": "Observações (Caso tenha alguma questão de saúde, p.f. informe o professor de Aikido antes da aula começar)",
+            "fr": "Observações (Caso tenha alguma questão de saúde, p.f. informe o professor de Aikido antes da aula começar)",
+            "en": "Observações (Caso tenha alguma questão de saúde, p.f. informe o professor de Aikido antes da aula começar)"
+          },
+          "help": {
+            "pt": null,
+            "es": null,
+            "fr": null,
+            "en": null
+          },
+          "presentation": null,
+          "options": []
+        }
+      ]
     }
   ]
 }
