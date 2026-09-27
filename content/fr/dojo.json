@@ -6,7 +6,7 @@
   "eyebrow": "Dojo da Luz",
   "title": "Un lieu pour pratiquer la Voie.",
   "lead": "Plus qu'une salle d'entraînement, le Dojo est un espace d'apprentissage, d'attention et de convivialité.",
-  "heroPhoto": "https://pub-a3e739acf38449bf92d850dfa752a522.r2.dev/medios/ef7c7e63ba76/w1600.webp",
+  "heroPhoto": "https://pub-a3e739acf38449bf92d850dfa752a522.r2.dev/medios/22d39e2821d3/w1600.webp",
   "heroPhotoAlt": "Dojo da Luz",
   "spaceTitle": "Le lieu de la pratique.",
   "spaceParagraphs": [
@@ -47,7 +47,7 @@
       ],
       "photo": "https://pub-a3e739acf38449bf92d850dfa752a522.r2.dev/medios/51ad60b87431/w1600.webp",
       "photoAlt": "Miguel Costa",
-      "photoFoco": ""
+      "photoFoco": "52% 29%"
     },
     {
       "name": "Sofia Almeida",
@@ -80,7 +80,7 @@
       ],
       "photo": "https://pub-a3e739acf38449bf92d850dfa752a522.r2.dev/medios/060b5e89f4c0/w1600.webp",
       "photoAlt": "Lú Sensei",
-      "photoFoco": ""
+      "photoFoco": "49% 56%"
     }
   ],
   "lineageTitle": "Une transmission vivante.",
