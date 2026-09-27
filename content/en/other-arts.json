@@ -26,7 +26,7 @@
       ],
       "schedule": [],
       "trialLabel": "Request information",
-      "formId": "aula-experimental-aikido",
+      "formId": "contacto",
       "directLabel": "Go to Contact",
       "closeLabel": "Close"
     },
@@ -66,7 +66,7 @@
         "Weekends · flexible time by appointment"
       ],
       "trialLabel": "Book a Tai Chi trial",
-      "formId": "aula-experimental-aikido",
+      "formId": "aula-experimental-aikido-criancas-copia",
       "directLabel": "Open form in a new window",
       "closeLabel": "Close"
     }

@@ -26,7 +26,7 @@
       ],
       "schedule": [],
       "trialLabel": "Solicitar información",
-      "formId": "aula-experimental-aikido",
+      "formId": "contacto",
       "directLabel": "Ir a Contacto",
       "closeLabel": "Cerrar"
     },
@@ -66,7 +66,7 @@
         "Fin de semana · horario flexible con cita"
       ],
       "trialLabel": "Clase de prueba de Tai Chi",
-      "formId": "aula-experimental-aikido",
+      "formId": "aula-experimental-aikido-criancas-copia",
       "directLabel": "Abrir formulario en una ventana nueva",
       "closeLabel": "Cerrar"
     }
