@@ -275,7 +275,7 @@
     {
       "id": "contacto-prueba",
       "nombre": "contacto-prueba",
-      "estado": "activo",
+      "estado": "archivado",
       "submitLabel": {
         "pt": "Enviar",
         "es": "Enviar",
