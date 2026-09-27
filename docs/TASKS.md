@@ -8,6 +8,32 @@ Si una sesion se cae, se cierra o se compacta, se vuelve aca — no al chat. Hay
 Regla: **marcar `hecho` solo con verificacion real** — tests que pasan, comando corrido,
 cosa vista en pantalla. No "deberia andar".
 
+## Decima sesion (2026-09-27) — migracion de repo y editor de formularios (spec 0057)
+
+**Migracion a `pablo-duran2026/my-dojo-da-luz`**: el repo nuevo tiene `main` con todo el
+historial de `maxhost/dojo-da-luz` (incluidos los 59 commits del BO hasta `b8c6e16`) mas dos
+commits vacios para disparar el deploy (`cbbd822`, `66a2eb5`). Vercel bloqueaba el deploy por
+el autor `maxi@MacBookPro.lan` (esta maquina no tiene `user.email`): lo destrabo un commit con
+autor `Pablo Duran <pablo_pd@msn.com>`, que GitHub asocia a `pablo-duran2026` —
+`dojodaluz@gmail.com` **no** esta en esa cuenta—. El `origin` local sigue siendo el repo viejo.
+
+**Falta de la migracion**: en el Vercel nuevo `GITHUB_REPO=pablo-duran2026/my-dojo-da-luz` y un
+`GITHUB_TOKEN` de Pablo (sin eso el BO publica al repo viejo, default en `src/lib/publish.ts:65`),
+`DATABASE_URL`, R2 y las cuatro de Resend (`RESEND_API_KEY`, `FORM_FROM_EMAIL`, `FORM_TO_EMAIL`,
+`FORM_IP_SALT`) + redeploy (el boton del formulario publico se decide en build). Produccion
+vieja contesta `503 sin-configuracion` en `/api/formularios/enviar` (verificado con curl).
+Despues, `git remote set-url origin` al repo nuevo. Revocar el token que se pego en el chat.
+
+**Spec 0057 — editor de formularios**: solo habia una tarjeta «Nuevo» y una opcion vacia
+pintadas por el servidor; la siguiente aparecia recien al publicar. Fix en
+`EditorCamposFormulario.astro`: escribir en la ultima vacia agrega otra (clon de una copia
+intacta tomada al cargar, `name` reindexados) y el cambio de tipo pasa a delegacion para que
+ande en tarjetas agregadas. **Verificado** con Playwright sobre una pagina temporal que pinta
+el componente (ya borrada): 3→4→5 tarjetas, opciones agregadas en campos nuevos y existentes,
+sin errores de JS; el FormData capturado pasado por `formularioDesdeForm` + `formularioSchema`
+da los campos y opciones escritos. `npm test` 103/103, `npm run build` ok. **No visto en el BO
+real** (login): falta que el cliente lo pruebe tras el deploy.
+
 ## Novena sesion (2026-09-26) — variante "Mañana" en Horarios (spec 0056)
 
 **Pedido**: en `/admin/dojos/benfica`, seccion Horarios → Variantes, faltaba "Mañana" (solo

@@ -15,7 +15,8 @@ import type { Locale } from '../../lib/i18n'
  * de todas. Se publica al guardar, como cualquier otro cambio — una flecha no commitea.
  *
  * Para agregar no hace falta JavaScript: al final siempre hay una tarjeta vacia de mas, y
- * se agrega llenandola. Una vacia que nadie toco no se publica.
+ * se agrega llenandola. Una vacia que nadie toco no se publica. Con JavaScript, escribir en
+ * la ultima vacia agrega otra debajo, para no tener que publicar entre alta y alta (spec 0057).
  */
 
 interface Props {
@@ -77,6 +78,7 @@ const flecha =
         class="rounded-xl border border-[#d7cec0] bg-[#fbf8f2] p-4 sm:p-5"
         data-campo-fila
         data-indice={i}
+        data-vacia={nuevo || undefined}
       >
         <div class="flex flex-wrap items-center gap-2">
           <span class="rounded-md bg-[#eee9df] px-2 py-1 text-xs font-bold text-[#625c55]" data-numero>
@@ -171,7 +173,7 @@ const flecha =
             {[...campo.options, ...(editable ? [{ id: '', label: campo.label }] : [])].map((opcion, j) => {
               const opcionNueva = opcion.id === ''
               return (
-                <div class="flex items-center gap-2" data-opcion-fila>
+                <div class="flex items-center gap-2" data-opcion-fila data-vacia={opcionNueva || undefined}>
                   <input type="hidden" name={`options[${i}][${j}].id`} value={opcion.id} />
                   <input type="hidden" name={`options[${i}][${j}].orden`} value={j} data-orden />
                   <input
@@ -244,6 +246,52 @@ const flecha =
     fila.querySelector<HTMLElement>(`[data-mover="${hacia}"], [data-mover-opcion="${hacia}"]`)?.focus()
   }
 
+  /** Cambia el indice de todos los `name` de una fila; el resto del nombre queda igual. */
+  const reindexar = (fila: HTMLElement, de: RegExp, a: string) => {
+    fila.querySelectorAll<HTMLElement>('[name]').forEach((control) => {
+      control.setAttribute('name', control.getAttribute('name')!.replace(de, a))
+    })
+  }
+
+  // Copias intactas de las vacias, tomadas antes de que nadie escriba: clonar la fila que se
+  // esta llenando arrastraria su texto y su tipo elegido.
+  const campoVacio = document.querySelector<HTMLElement>('[data-campo-fila][data-vacia]')?.cloneNode(true) as
+    | HTMLElement
+    | undefined
+  const opcionVacia = document.querySelector<HTMLElement>('[data-opcion-fila][data-vacia]')?.cloneNode(true) as
+    | HTMLElement
+    | undefined
+
+  /**
+   * Escribir en la ultima vacia la vuelve una fila mas y agrega otra vacia debajo. El indice
+   * nuevo es la cantidad de filas de la lista: el servidor pinta `0..n-1` y aca se suman en
+   * orden, asi que nunca repite uno. Una agregada que se vuelve a vaciar no se publica.
+   */
+  const agregarDebajo = (fila: HTMLElement) => {
+    const lista = fila.parentElement!
+    fila.removeAttribute('data-vacia')
+
+    if (fila.matches('[data-opcion-fila]')) {
+      if (!opcionVacia) return
+      const nueva = opcionVacia.cloneNode(true) as HTMLElement
+      const campo = /^options\[(\d+)\]/.exec(fila.querySelector('[name]')!.getAttribute('name')!)![1]
+      const j = lista.querySelectorAll(':scope > [data-opcion-fila]').length
+      reindexar(nueva, /^options\[\d+\]\[\d+\]/, `options[${campo}][${j}]`)
+      fila.after(nueva)
+    } else {
+      if (!campoVacio) return
+      const nueva = campoVacio.cloneNode(true) as HTMLElement
+      const i = lista.querySelectorAll(':scope > [data-campo-fila]').length
+      reindexar(nueva, /^fields\[\d+\]/, `fields[${i}]`)
+      reindexar(nueva, /^options\[\d+\]/, `options[${i}]`)
+      nueva.dataset.indice = String(i)
+      fila.after(nueva)
+    }
+
+    renumerar(lista)
+  }
+
+  // Todo por delegacion: las tarjetas agregadas despues de cargar tienen que responder igual.
   document.querySelectorAll<HTMLElement>('[data-lista-campos]').forEach((lista) => {
     lista.addEventListener('click', (evento) => {
       const boton = (evento.target as HTMLElement).closest<HTMLElement>('[data-mover], [data-mover-opcion]')
@@ -256,28 +304,38 @@ const flecha =
       if (opcion) mover(boton.closest<HTMLElement>('[data-opcion-fila]')!, opcion)
     })
 
+    lista.addEventListener('input', (evento) => {
+      const entrada = evento.target as HTMLInputElement
+      if (!entrada.name?.endsWith('.label') || entrada.value.trim() === '') return
+
+      const fila =
+        entrada.closest<HTMLElement>('[data-opcion-fila]') ?? entrada.closest<HTMLElement>('[data-campo-fila]')
+      if (fila?.hasAttribute('data-vacia')) agregarDebajo(fila)
+    })
+
     // El bloque de opciones aparece y desaparece con el tipo, sin esperar a publicar.
-    lista.querySelectorAll<HTMLSelectElement>('[data-tipo]').forEach((tipo) => {
+    lista.addEventListener('change', (evento) => {
+      const tipo = evento.target as HTMLSelectElement
+      if (!tipo.matches('[data-tipo]')) return
+
       const fila = tipo.closest<HTMLElement>('[data-campo-fila]')!
       const opciones = fila.querySelector<HTMLElement>('[data-opciones]')
       const presentacion = fila.querySelector<HTMLSelectElement>('[data-presentacion]')
 
-      tipo.addEventListener('change', () => {
-        const seleccion = tipo.value === 'singleChoice' || tipo.value === 'multipleChoice'
-        if (opciones) opciones.hidden = !seleccion
-        if (!presentacion || !seleccion) return
+      const seleccion = tipo.value === 'singleChoice' || tipo.value === 'multipleChoice'
+      if (opciones) opciones.hidden = !seleccion
+      if (!presentacion || !seleccion) return
 
-        // Solo las presentaciones que ese tipo admite: el servidor lo corrige igual, pero
-        // ofrecer una imposible es pedirle al cliente que adivine.
-        let primera: HTMLOptionElement | null = null
-        for (const opcion of presentacion.options) {
-          const sirve = opcion.dataset.para === tipo.value
-          opcion.hidden = !sirve
-          opcion.disabled = !sirve
-          if (sirve && !primera) primera = opcion
-        }
-        if (presentacion.selectedOptions[0]?.disabled && primera) primera.selected = true
-      })
+      // Solo las presentaciones que ese tipo admite: el servidor lo corrige igual, pero
+      // ofrecer una imposible es pedirle al cliente que adivine.
+      let primera: HTMLOptionElement | null = null
+      for (const opcion of presentacion.options) {
+        const sirve = opcion.dataset.para === tipo.value
+        opcion.hidden = !sirve
+        opcion.disabled = !sirve
+        if (sirve && !primera) primera = opcion
+      }
+      if (presentacion.selectedOptions[0]?.disabled && primera) primera.selected = true
     })
   })
 </script>
