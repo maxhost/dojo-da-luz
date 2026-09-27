@@ -98,7 +98,7 @@
           "type": "singleChoice",
           "required": true,
           "label": {
-            "pt": "Já praticou Aikido anteriormente?",
+            "pt": "Já praticou anteriormente?",
             "es": "Já praticou Aikido anteriormente?",
             "fr": "Já praticou Aikido anteriormente?",
             "en": "Já praticou Aikido anteriormente?"
@@ -266,6 +266,25 @@
             "es": null,
             "fr": null,
             "en": null
+          },
+          "presentation": null,
+          "options": []
+        },
+        {
+          "id": "c-751e6c2f",
+          "type": "text",
+          "required": true,
+          "label": {
+            "pt": "Modalidade",
+            "es": "Modalidade",
+            "fr": "Modalidade",
+            "en": "Modalidade"
+          },
+          "help": {
+            "pt": "nome da modalidade (Aikido, Tai-chi, Iaido...)",
+            "es": "nome da modalidade (Aikido, Tai-chi, Iaido...)",
+            "fr": "nome da modalidade (Aikido, Tai-chi, Iaido...)",
+            "en": "nome da modalidade (Aikido, Tai-chi, Iaido...)"
           },
           "presentation": null,
           "options": []
