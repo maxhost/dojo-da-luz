@@ -310,10 +310,19 @@
             {
               "id": "o-ec61a3c2",
               "label": {
-                "pt": "Dojo 1, Dojo 2, Dojo 3",
+                "pt": "Dojo 1",
                 "es": "Dojo 1, Dojo 2, Dojo 3",
                 "fr": "Dojo 1, Dojo 2, Dojo 3",
                 "en": "Dojo 1, Dojo 2, Dojo 3"
+              }
+            },
+            {
+              "id": "o-2ee1672a",
+              "label": {
+                "pt": "Dojo 2",
+                "es": "Dojo 2",
+                "fr": "Dojo 2",
+                "en": "Dojo 2"
               }
             }
           ]
